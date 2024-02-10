@@ -3,7 +3,7 @@ from typing import Tuple
 
 import bpy
 import numpy as np
-from ajc27_freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
+from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
     create_keyframed_empty_from_3d_trajectory_data
 
 

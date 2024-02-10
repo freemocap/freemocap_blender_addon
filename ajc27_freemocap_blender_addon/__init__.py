@@ -28,7 +28,7 @@ root.addHandler(handler)
 logger = logging.getLogger(__name__)
 
 bl_info = {
-    'name': 'ajc27_freemocap_blender_addon',
+    'name': 'freemocap_blender_addon',
     'author': 'ajc27',
     'version': (1, 1, 7),
     'blender': (3, 0, 0),
@@ -67,7 +67,7 @@ def register():
     bpy.types.Scene.fmc_adapter_properties = bpy.props.PointerProperty(type=FMC_ADAPTER_PROPERTIES)
 
     # try:
-    #     from ajc27_freemocap_blender_addon.core_functions.fbx_export import get_io_scene_fbx_addon
+    #     from freemocap_blender_addon.core_functions.fbx_export import get_io_scene_fbx_addon
     #     get_io_scene_fbx_addon()
     # except Exception as e:
     #     print(f"Error loading io_scene_fbx addon: {str(e)}")

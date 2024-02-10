@@ -1,10 +1,10 @@
 from pathlib import Path
 
 import bpy
-from ajc27_freemocap_blender_addon.core_functions.empties import create_freemocap_empties
-from ajc27_freemocap_blender_addon.core_functions.setup_scene import create_parent_empty
-from ajc27_freemocap_blender_addon.core_functions.setup_scene import set_start_end_frame
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from freemocap_blender_addon.core_functions.empties import create_freemocap_empties
+from freemocap_blender_addon.core_functions.setup_scene import create_parent_empty
+from freemocap_blender_addon.core_functions.setup_scene import set_start_end_frame
+from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 
 
 class FMC_ADAPTER_load_freemocap_data(bpy.types.Operator):  # , bpy_extras.io_utils.ImportHelper):

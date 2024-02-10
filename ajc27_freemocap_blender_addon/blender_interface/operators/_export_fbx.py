@@ -1,7 +1,7 @@
 import math as m
 import time
 
-from ajc27_freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
+from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
 from bpy.types import Operator
 
 

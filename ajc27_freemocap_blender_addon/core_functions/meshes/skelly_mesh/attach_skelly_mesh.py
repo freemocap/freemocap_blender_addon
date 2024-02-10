@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict
 
 import bpy
-from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
+from freemocap_blender_addon import PACKAGE_ROOT_PATH
 
 SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")
 

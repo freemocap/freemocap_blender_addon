@@ -2,8 +2,8 @@ from copy import deepcopy
 from typing import Dict, Any
 
 import numpy as np
-from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BONE_DEFINITIONS
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
+from freemocap_blender_addon.data_models.bones.bone_definitions import BONE_DEFINITIONS
+from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
 from .calculate_body_dimensions import calculate_body_dimensions
 from ..enforce_rigid_bones.calculate_bone_length_statistics import calculate_bone_length_statistics

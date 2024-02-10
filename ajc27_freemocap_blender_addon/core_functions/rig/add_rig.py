@@ -7,7 +7,7 @@ import bpy
 import mathutils
 import addon_utils
 
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
+from freemocap_blender_addon.data_models.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
 
 
 def add_rig(empty_names: List[str],

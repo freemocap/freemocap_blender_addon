@@ -1,5 +1,5 @@
 
-from ajc27_freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
+from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 
 FREEMOCAP_DATA_HANDLER = None
 

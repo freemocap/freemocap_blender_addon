@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
 
 import bpy
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
+from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
 from .make_bone_mesh import make_bone_mesh
 from .put_sphere_at_location import put_sphere_mesh_at_location
