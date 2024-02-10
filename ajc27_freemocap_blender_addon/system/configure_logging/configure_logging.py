@@ -17,6 +17,14 @@ class LogLevel(Enum):
     CRITICAL = logging.CRITICAL  # 50
 
 
+class LogStrings(Enum):
+    DEBUG = "DEBUG: "
+    INFO = "INFO: "
+    WARNING = "WARNING: "
+    ERROR = "ERROR: "
+    CRITICAL = "CRITICAL: "
+
+
 logging.addLevelName(LogLevel.TRACE.value, "TRACE")
 logging.addLevelName(LogLevel.SUCCESS.value, "SUCCESS")
 
@@ -138,7 +146,8 @@ class LoggerBuilder:
                     logging.getLogger("").handlers.append(handler)
         else:
             import sys
-print("Logging already configured")
+
+            print(LogStrings.INFO, "Logging already configured")
 
 
 def configure_logging(level: LogLevel = LogLevel.INFO):

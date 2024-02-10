@@ -1,5 +1,6 @@
 from typing import List, Union
 from typing import TYPE_CHECKING
+from ajc27_freemocap_blender_addon.system.configure_logging.configure_logging import LogStrings
 
 import numpy as np
 from ajc27_freemocap_blender_addon.data_models.freemocap_data.freemocap_data_model import (
@@ -42,7 +43,7 @@ class FreemocapDataTransformer:
                 f"Rotation matrix must be a 3x3 matrix. Got {rotation_matrix.shape} instead."
             )
 
-        print(f"Applying rotation matrix {rotation_matrix}")
+        print(f"{LogStrings.DEBUG} Applying rotation matrix {rotation_matrix}")
         if component_name == "body" or component_name is None:
             self.handler.body_frame_name_xyz = self._rotate_component(
                 self.handler.body_frame_name_xyz, rotation_matrix
@@ -85,7 +86,7 @@ class FreemocapDataTransformer:
             )
 
         if data_frame_name_xyz.shape[-1] == 2:
-            print(f"2D data detected. Adding a third dimension with zeros.")
+            print(f"{LogStrings.DEBUG} 2D data detected. Adding a third dimension with zeros.")
             data_frame_name_xyz = np.concatenate(
                 [
                     data_frame_name_xyz,
@@ -207,7 +208,7 @@ class FreemocapDataTransformer:
     def apply_scale(
         self, scale: float, component_name: FREEMOCAP_DATA_COMPONENT_TYPES = None
     ):
-        print(f"Applying scale {scale}")
+        print(f"{LogStrings.INFO} Applying scale {scale}")
         if component_name == "body" or component_name is None:
             self.handler.body_frame_name_xyz *= scale
         if component_name == "right_hand" or component_name is None:

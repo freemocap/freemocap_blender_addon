@@ -1,11 +1,15 @@
 import subprocess
 import sys
 
+from ajc27_freemocap_blender_addon.system.configure_logging.configure_logging import (
+    LogStrings
+)
+
 REQUIRED_PACKAGES = ["opencv-contrib-python", "matplotlib"]
 
 
 def check_and_install_dependencies():
-    print("Checking if required packages are installed...")
+    print(LogStrings.INFO, "Checking if required packages are installed...")
     # get path of blender internal python executable
     python_executable = str(sys.executable)
 
@@ -17,14 +21,14 @@ def check_and_install_dependencies():
 
     installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
 
-    print("\nInstalled packages:", installed_packages, "\n")
+    print(LogStrings.DEBUG, "Installed packages:", installed_packages)
 
     packages_to_install = []
     for package_name in REQUIRED_PACKAGES:
         if package_name in installed_packages:
-            print(f"{package_name} already installed!")
+            print(LogStrings.DEBUG, f"{package_name} already installed!")
         else:
-            print(f"{package_name} not installed, will install...")
+            print(LogStrings.DEBUG, f"{package_name} not installed, will install...")
             packages_to_install.append(package_name)
 
     if len(packages_to_install) > 0:
@@ -33,12 +37,12 @@ def check_and_install_dependencies():
         subprocess.call([python_executable, "-m", "pip", "install", "--upgrade", "pip"])
 
     for package_name in packages_to_install:
-        print(f"Installing {package_name}...")
+        print(LogStrings.INFO, f"Installing {package_name}...")
         subprocess.call([python_executable, "-m", "pip", "install", package_name])
 
-        print(f"{package_name} installed successfully!")
+        print(LogStrings.INFO, f"{package_name} installed successfully!")
 
-    print("All required packages installed! Done!")
+    print(LogStrings.INFO, "All required packages installed! Done!")
 
 
 if __name__ == "__main__":

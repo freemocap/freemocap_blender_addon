@@ -2,6 +2,7 @@ import json
 import pickle
 from pathlib import Path
 from typing import Union, TYPE_CHECKING
+from ajc27_freemocap_blender_addon.system.configure_logging.configure_logging import LogStrings
 
 import numpy as np
 
@@ -19,7 +20,7 @@ class FreemocapDataSaver:
         try:
             save_path = Path(recording_path) / "saved_data"
             save_path.mkdir(parents=True, exist_ok=True)
-            print(f"Saving freemocap data to {save_path}")
+            print(f"{LogStrings.INFO} Saving freemocap data to {save_path}")
 
             self._save_data_readme(save_path=save_path)
 
@@ -28,11 +29,11 @@ class FreemocapDataSaver:
             self._save_npy(save_path)
             self._save_csv(save_path)
 
-            print(f"Saved freemocap data to {save_path}")
+            print(f"{LogStrings.INFO} Saved freemocap data to {save_path}")
 
         except Exception as e:
-            print(f"Failed to save data to disk: {e}")
-            print(e)
+            print(f"{LogStrings.ERROR} Failed to save data to disk: {e}")
+            print(LogStrings.ERROR, e)
             raise e
 
     def _save_csv(self, save_path: Union[str, Path]):

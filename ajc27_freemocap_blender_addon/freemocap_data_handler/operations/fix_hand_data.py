@@ -1,4 +1,5 @@
 from typing import List, TYPE_CHECKING
+from ajc27_freemocap_blender_addon.system.configure_logging.configure_logging import LogStrings
 
 import numpy as np
 from numpy import dot
@@ -17,7 +18,9 @@ def fix_hand_data(handler: 'FreemocapDataHandler'):
     3. rotate hand data so "right/left_pinky_mcp" trajectory (hand data) is on top of the "right/left_pinky" trajectory (hand data)
     """
     print(
-        "Fixing hand data (i.e. aligning the `left/right_hand...` data with the body's more impoverished hand data)")
+        LogStrings.INFO, 
+        "Fixing hand data (i.e. aligning the `left/right_hand...` data with the body's more impoverished hand data)"
+    )
 
     hand_data_frame_name_xyz = {"right": handler.right_hand_frame_name_xyz,
                                 "left": handler.left_hand_frame_name_xyz}
@@ -58,11 +61,11 @@ def fix_hand_data(handler: 'FreemocapDataHandler'):
             #                component_name=f"{side}_hand")
 
         handler.mark_processing_stage("fixed_hand_data")
-        print("Finished fixing hand data!")
+        print(LogStrings.INFO, "Finished fixing hand data!")
         return handler
     except Exception as e:
-        print(f"Error while fixing hand data:\n error:\n {e}")
-        print(e)
+        print(f"{LogStrings.ERROR}Error while fixing hand data:\n error:\n {e}")
+        print(LogStrings.ERROR, e)
         raise e
 
 
@@ -83,8 +86,8 @@ def calculate_rotation_matricies(data1_frame_xyz: np.ndarray,
             rotation_matrix = calculate_rotation_matrix(data1_xyz, data2_xyz)
             rotation_matricies.append(rotation_matrix)
     except Exception as e:
-        print(f"Error while calculating rotation matrix on frame_number `{frame_number}`:\n error:\n {e}")
-        print(e)
+        print(f"{LogStrings.ERROR} Error while calculating rotation matrix on frame_number `{frame_number}`:\n error:\n {e}")
+        print(LogStrings.ERROR, e)
         raise e
     return rotation_matricies
 
