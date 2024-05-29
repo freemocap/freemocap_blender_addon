@@ -13,7 +13,7 @@ authors = [
 license = { file = "LICENSE" }
 dynamic = ["version"]
 
-requires-python = ">=3.9,<3.12"
+requires-python = ">=3.9,<3.13"
 
 dependencies = []
 
