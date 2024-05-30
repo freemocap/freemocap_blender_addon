@@ -28,12 +28,12 @@ root.addHandler(handler)
 logger = logging.getLogger(__name__)
 
 bl_info = {
-    'name': 'ajc27_freemocap_blender_addon',
+    'name': 'freemocap_blender_addon',
     'author': 'ajc27',
     'version': (1, 1, 7),
     'blender': (3, 0, 0),
     'location': '3D Viewport > Sidebar > Freemocap Adapter',
-    'description': 'Add-on to adapt the Freemocap Blender output',
+    'description': 'Add-on for bringing `freemocap` data into a Blender scene',
     'category': 'Development',
 }
 

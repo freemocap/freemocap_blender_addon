@@ -435,7 +435,7 @@ SKELLY_BONES = {
         bones_end=(0, 0, 0),
         bones_length=0,
         mesh_length=0.42875,
-        position_offset=(0, -0.04, 0),
+        position_offset=(0, 0, 0),
         adjust_rotation=False,
     ),
     "thigh.L": SkellyBoneMeshInfo(
@@ -444,7 +444,7 @@ SKELLY_BONES = {
         bones_end=(0, 0, 0),
         bones_length=0,
         mesh_length=0.42875,
-        position_offset=(0, -0.04, 0),
+        position_offset=(0, 0, 0),
         adjust_rotation=False,
     ),
     "shin.R": SkellyBoneMeshInfo(
