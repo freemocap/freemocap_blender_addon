@@ -4,10 +4,12 @@ from typing import Dict
 import bpy
 
 from .rigid_body_meshes.helpers.put_meshes_on_empties import put_bone_meshes_on_empties
+from ...data_models.bones.bone_definitions import BoneDefinition
 
 
 def attach_mesh_to_rig(rig: bpy.types.Object,
                        parent_object: bpy.types.Object,
+                       bone_data: Dict[str, BoneDefinition],
                        body_mesh_mode: str = "custom",
                        mesh_path: str = None,
                        empties: Dict[str, bpy.types.Object] = None,
@@ -22,7 +24,9 @@ def attach_mesh_to_rig(rig: bpy.types.Object,
                 print(f"Must provide empties for custom body mesh")
                 raise ValueError(f"Must provide empties for custom body mesh")
 
-            put_bone_meshes_on_empties(empties=empties, parent_empty=parent_object)
+            put_bone_meshes_on_empties(empties=empties,
+                                        bone_data=bone_data,
+                                       parent_empty=parent_object)
 
             # Deselect all
             bpy.ops.object.select_all(action='DESELECT')

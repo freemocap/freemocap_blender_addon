@@ -8,21 +8,21 @@ from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import Bon
 
 
 def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
-                                     bones: Dict[str, BoneDefinition]):
+                                     bone_definitions: Dict[str, BoneDefinition]):
     print('Calculating bone length statistics...')
 
     # Reset the lengths list for every virtual bone
-    for bone in bones:
-        bones[bone].lengths = []
+    for bone in bone_definitions:
+        bone_definitions[bone].lengths = []
 
-    bones['hand.R'].tail = 'right_hand_middle'
-    bones['hand.L'].tail = 'left_hand_middle'
+    bone_definitions['hand.R'].tail = 'right_hand_middle'
+    bone_definitions['hand.L'].tail = 'left_hand_middle'
 
     # Iterate through the empty_positions dictionary and calculate the distance between the head and tail and append it to the lengths list
     print(f'Calculating bone length statistics...')
     for frame_number in range(0, trajectories['hips_center'].shape[0]):
         # Iterate through each bone
-        for bone_name, bone_definition in bones.items():
+        for bone_name, bone_definition in bone_definitions.items():
             # Calculate the length of the bone for this frame
             head_name = bone_definition.head
             tail_name = bone_definition.tail
@@ -32,9 +32,9 @@ def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
 
             bone_definition.lengths.append(math.dist(head_pos, tail_pos))
 
-    print(f'Bone lengths calculated successfully!\n\n bones: \n\n {bones.keys()}')
+    print(f'Bone lengths calculated successfully!\n\n bones: \n\n {bone_definitions.keys()}')
     # Update the length median and stdev values for each bone
-    for name, bone in bones.items():
+    for name, bone in bone_definitions.items():
         print(f'Calculating median and stdev for bone: {name}...')
         # Exclude posible length NaN (produced by an empty with NaN values as position) values from the median and standard deviation
         bone.median = statistics.median(
@@ -44,6 +44,6 @@ def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
             [length for length in bone.lengths if not math.isnan(length)])
         # virtual_bone['stdev'] = statistics.stdev(virtual_bone['lengths'])
 
-    print(f'Bone length statistics calculated successfully!\n\n bones: \n\n {bones.keys()}')
+    print(f'Bone length statistics calculated successfully!\n\n bones: \n\n {bone_definitions.keys()}')
 
-    return bones
+    return bone_definitions

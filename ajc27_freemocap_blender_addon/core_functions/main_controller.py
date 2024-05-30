@@ -22,7 +22,7 @@ from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from ..data_models.parameter_models.parameter_models import Config
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
-from ..freemocap_data_handler.operations.enforce_rigid_bones.enforce_rigid_bones import enforce_rigid_bones
+from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
@@ -151,7 +151,7 @@ class MainController:
     def enforce_rigid_bones(self):
         print("Enforcing rigid bones...")
         try:
-            self.freemocap_data_handler = enforce_rigid_bones(
+            self.freemocap_data_handler = enforce_rigid_bodies(
                 handler=self.freemocap_data_handler
             )
 
@@ -241,6 +241,7 @@ class MainController:
             print("Adding rigid_body_bone_meshes...")
             attach_mesh_to_rig(
                 body_mesh_mode=self.config.add_body_mesh.body_mesh_mode,
+                bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig=self.rig,
                 empties=self.empties,
                 parent_object=self._rigid_body_meshes_parent_object,

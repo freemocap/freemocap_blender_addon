@@ -6,18 +6,17 @@ from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BON
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
 from .calculate_body_dimensions import calculate_body_dimensions
-from ..enforce_rigid_bones.calculate_bone_length_statistics import calculate_bone_length_statistics
+from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_bone_length_statistics
 from ...handler import FreemocapDataHandler
 
 
-def enforce_rigid_bones(handler: FreemocapDataHandler,
-                        bones: Dict[str, BoneDefinition] = BONE_DEFINITIONS) -> FreemocapDataHandler:
-    print('Enforcing rigid bones - altering bone lengths to ensure they are the same length on each frame...')
+def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
+    print('Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
     original_trajectories = handler.trajectories
     updated_trajectories = deepcopy(original_trajectories)
 
     # Update the information of the virtual bones
-    bones = calculate_bone_length_statistics(trajectories=original_trajectories, bones=bones)
+    bones = calculate_bone_length_statistics(trajectories=original_trajectories, bone_definitions= BONE_DEFINITIONS)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=bones, type='original')
@@ -60,7 +59,7 @@ def enforce_rigid_bones(handler: FreemocapDataHandler,
     print('Bone lengths enforced successfully!')
 
     # Update the information of the virtual bones
-    updated_bones = calculate_bone_length_statistics(trajectories=updated_trajectories, bones=bones)
+    updated_bones = calculate_bone_length_statistics(trajectories=updated_trajectories, bone_definitions=bones)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=updated_bones, type='updated')

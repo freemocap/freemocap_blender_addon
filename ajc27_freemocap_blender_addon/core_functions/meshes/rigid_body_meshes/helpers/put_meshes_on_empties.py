@@ -1,8 +1,9 @@
 from typing import Dict, Tuple
 
 import bpy
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
+from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 from .make_bone_mesh import make_bone_mesh
 from .put_sphere_at_location import put_sphere_mesh_at_location
 
@@ -15,6 +16,7 @@ def create_skeleton_segment_object(child_name: str,
 
 
 def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
+                               bone_data: Dict[str, BoneDefinition],
                                parent_empty: bpy.types.Object):
     all_empties = {}
     for component in empties.values():
@@ -32,10 +34,16 @@ def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
 
         for child_name in MEDIAPIPE_HIERARCHY[parent_empty_name]["children"]:
             # segment length is the distance between the parent and child empty
-            segment_length = (all_empties[child_name].location - all_empties[parent_empty_name].location).length
-
+            def find_bone(parent_name: str, child_name: str):
+                for bone_name, bone in bone_data.items():
+                    if bone.head == parent_name and bone.tail == child_name:
+                        return bone
+                return None
+            bone = find_bone(parent_name=parent_empty_name, child_name=child_name)
+            # print(f"Segment length for {parent_empty_name} to {child_name} is {bone_data[parent_empty_name].median:.3f}m")
+            print(f"Segment length for {parent_empty_name} to {child_name} is {bone.median:.3f}m")
             bone_mesh = make_bone_mesh(name=f"{parent_empty_name}_bone_mesh",
-                                       length=segment_length,
+                                       length=bone.median,
                                        squish_scale=squish_scale,
                                        joint_color=color,
                                        cone_color=color,
@@ -50,7 +58,7 @@ def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
             bone_mesh.parent = parent_empty
 
 
-def put_spheres_on_empties(empties: Dict[str, bpy.types.Object], 
+def put_spheres_on_empties(empties: Dict[str, bpy.types.Object],
                            parent_empty: bpy.types.Object):
     meshes = []
 
