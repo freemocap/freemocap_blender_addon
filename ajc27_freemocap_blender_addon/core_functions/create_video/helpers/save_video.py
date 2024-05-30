@@ -2,7 +2,7 @@ import os
 
 from ajc27_freemocap_blender_addon.core_functions.create_video.helpers.overlay_components.frame_information_dataclass import \
     FrameInformation
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import export_profiles, render_parameters
+from ajc27_freemocap_blender_addon.data_models.pipeline_parameters.video_config import export_profiles, render_parameters
 
 
 def write_video_file_to_disk(

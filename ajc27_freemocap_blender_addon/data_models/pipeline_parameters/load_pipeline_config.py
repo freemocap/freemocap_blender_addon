@@ -28,6 +28,6 @@ def load_default_parameters_config(filename: Optional[str] = None) -> Config:
 if __name__ == "__main__":
     from pprint import pprint as print
 
-    default_parameters_filename = "default_parameters.json"
-    config = load_default_parameters_config("default_parameters.json")
+    default_parameters_filename = "default_pipeline.json"
+    config = load_default_parameters_config("default_pipeline.json")
     print(config.__dict__)

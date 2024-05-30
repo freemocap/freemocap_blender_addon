@@ -20,7 +20,7 @@ from .rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.set_start_end_frame import set_start_end_frame
-from ..data_models.parameter_models.parameter_models import Config
+from ..data_models.pipeline_parameters.parameter_models import Config
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data

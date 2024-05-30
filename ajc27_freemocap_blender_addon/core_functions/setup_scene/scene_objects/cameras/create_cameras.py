@@ -50,7 +50,7 @@ def create_cameras(
         scene: bpy.types.Scene,
         export_profile: str = 'debug'
 ) -> list:
-    from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import export_profiles, lens_FOVs
+    from ajc27_freemocap_blender_addon.data_models.pipeline_parameters.video_config import export_profiles, lens_FOVs
     
     print(f"Creating cameras for export profile: {export_profile}")
     if export_profiles[export_profile]['resolution_x'] / export_profiles[export_profile]['resolution_y'] >= 1:
