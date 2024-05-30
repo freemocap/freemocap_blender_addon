@@ -1,16 +1,16 @@
 import sys
 from pathlib import Path
 
-from ajc27_freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
-from ajc27_freemocap_blender_addon.data_models.pipeline_parameters.load_pipeline_config import \
+from freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
+from freemocap_blender_addon.models.pipeline_parameters.load_pipeline_config import \
     load_default_parameters_config
-from ajc27_freemocap_blender_addon.data_models.pipeline_parameters.parameter_models import Config
+from freemocap_blender_addon.models.pipeline_parameters.parameter_models import Config
 
 
 def ajc27_run_as_main_function(recording_path: str,
                                blend_file_path: str,
                                config: Config = load_default_parameters_config()):
-    from ajc27_freemocap_blender_addon.core_functions.main_controller import MainController
+    from freemocap_blender_addon.core_functions.main_controller import MainController
 
     controller = MainController(recording_path=recording_path,
                                 blend_file_path=blend_file_path,

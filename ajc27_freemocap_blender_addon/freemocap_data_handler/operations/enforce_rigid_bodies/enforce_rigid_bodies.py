@@ -2,8 +2,8 @@ from copy import deepcopy
 from typing import Dict, Any
 
 import numpy as np
-from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BONE_DEFINITIONS, BoneDefinition
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
+from freemocap_blender_addon.models.bones.bone_definitions import BONE_DEFINITIONS, BoneDefinition
+from freemocap_blender_addon.models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
 from .calculate_body_dimensions import calculate_body_dimensions
 from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_bone_length_statistics
@@ -105,9 +105,9 @@ def log_bone_statistics(bones: Dict[str, BoneDefinition], type: str):
     for name, bone in bones.items():
         # Get the statistic values
         median_string = str(round(bone.median * 100, 7))
-        stdev_string = str(round(bone.stdev * 100, 7))
+        stdev_string = str(round(bone.stddev * 100, 7))
         try:
-            cv_string = str(round(bone.stdev / bone.median * 100, 4))
+            cv_string = str(round(bone.stddev / bone.median * 100, 4))
         except ZeroDivisionError:
             cv_string = 'N/A'
         log_string += f"{name:<15} {median_string:>12} {stdev_string:>12} {cv_string:>12}\n"

@@ -1,8 +1,8 @@
 import math as m
 import time
 
-from ajc27_freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies import enforce_rigid_bodies
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies import enforce_rigid_bodies
+from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 from bpy.types import Operator
 
 

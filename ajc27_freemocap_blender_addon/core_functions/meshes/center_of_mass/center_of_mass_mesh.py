@@ -1,6 +1,6 @@
 import bpy
 
-from ajc27_freemocap_blender_addon.core_functions.materials.create_checkerboard_material import \
+from freemocap_blender_addon.core_functions.materials.create_checkerboard_material import \
     create_checkerboard_material
 
 

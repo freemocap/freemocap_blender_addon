@@ -1,4 +1,4 @@
-from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import (
+from freemocap_blender_addon.models.armatures.armature_bone_info import (
     ArmatureBoneInfo,
 )
 

@@ -4,7 +4,7 @@ from typing import Dict, Any
 
 import numpy as np
 
-from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from freemocap_blender_addon.models.bones.bone_definitions import BoneDefinition
 
 
 def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
@@ -40,7 +40,7 @@ def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
         bone.median = statistics.median(
             [length for length in bone.lengths if not math.isnan(length)])
         # virtual_bone['median'] = statistics.median(virtual_bone['lengths'])
-        bone.stdev = statistics.stdev(
+        bone.stddev = statistics.stdev(
             [length for length in bone.lengths if not math.isnan(length)])
         # virtual_bone['stdev'] = statistics.stdev(virtual_bone['lengths'])
 

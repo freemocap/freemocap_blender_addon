@@ -2,8 +2,8 @@ import logging
 import math as m
 import time
 
-from ajc27_freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
-from ajc27_freemocap_blender_addon.core_functions.rig.add_rig import add_rig
+from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
+from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from bpy.types import Operator
 
 from ...blender_interface.operators._add_body_mesh import REORIENT_EMPTIES_EXECUTED

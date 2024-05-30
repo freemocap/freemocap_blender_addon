@@ -2,11 +2,11 @@ from copy import deepcopy
 from typing import List, Optional, Union, Dict, Any
 
 import numpy as np
-from ajc27_freemocap_blender_addon.core_functions.empties.creation.create_virtual_trajectories import \
+from freemocap_blender_addon.core_functions.empties.creation.create_virtual_trajectories import \
     calculate_virtual_trajectories
-from ajc27_freemocap_blender_addon.data_models.freemocap_data.freemocap_data_model import FreemocapData, \
+from freemocap_blender_addon.models.freemocap_data.freemocap_data_model import FreemocapData, \
     FREEMOCAP_DATA_COMPONENT_TYPES
-from ajc27_freemocap_blender_addon.data_models.freemocap_data.helpers.freemocap_component_data import \
+from freemocap_blender_addon.models.freemocap_data.helpers.freemocap_component_data import \
     FreemocapComponentData
 
 from .operations.estimate_good_frame import estimate_good_frame

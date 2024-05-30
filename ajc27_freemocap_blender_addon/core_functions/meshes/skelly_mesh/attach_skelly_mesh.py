@@ -2,22 +2,22 @@ from enum import Enum
 import traceback
 from pathlib import Path
 from typing import Dict
-from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
-from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.armatures.armature_bone_info import ArmatureBoneInfo
+from freemocap_blender_addon.models.poses.pose_element import PoseElement
 import bpy
 from mathutils import Vector, Matrix, Euler
 
 
-from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
-from ajc27_freemocap_blender_addon.system.constants import (
+from freemocap_blender_addon import PACKAGE_ROOT_PATH
+from freemocap_blender_addon.system.constants import (
     FREEMOCAP_ARMATURE,
     UE_METAHUMAN_SIMPLE_ARMATURE,
 )
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
-from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import (
+from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
+from freemocap_blender_addon.models.armatures.bone_name_map import (
     bone_name_map,
 )
-from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import (
+from freemocap_blender_addon.models.meshes.skelly_bones import (
     SKELLY_BONES
 )
 

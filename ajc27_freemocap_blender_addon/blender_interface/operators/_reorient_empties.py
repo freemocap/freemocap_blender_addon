@@ -1,8 +1,8 @@
 import math as m
 import time
 
-from ajc27_freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
-from ajc27_freemocap_blender_addon.freemocap_data_handler.operations import \
+from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
+from freemocap_blender_addon.freemocap_data_handler.operations import \
     freemocap_empties_from_parent_object
 from bpy.types import Operator
 

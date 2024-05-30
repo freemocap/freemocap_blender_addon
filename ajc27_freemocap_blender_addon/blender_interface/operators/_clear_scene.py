@@ -1,6 +1,6 @@
 import bpy
 
-from ajc27_freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
+from freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
 
 
 class FMC_ADAPTER_clear_scene(bpy.types.Operator):

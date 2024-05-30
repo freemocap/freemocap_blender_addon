@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 import bmesh
 import bpy
 import numpy as np
-from ajc27_freemocap_blender_addon.core_functions.materials.create_material import create_material
+from freemocap_blender_addon.core_functions.materials.create_material import create_material
 
 
 def make_cone_mesh(name: str = "cone_mesh",

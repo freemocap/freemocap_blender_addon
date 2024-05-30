@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from typing import TYPE_CHECKING
 
 import numpy as np
-from ajc27_freemocap_blender_addon.data_models.freemocap_data.freemocap_data_model import (
+from freemocap_blender_addon.models.freemocap_data.freemocap_data_model import (
     FREEMOCAP_DATA_COMPONENT_TYPES,
 )
 

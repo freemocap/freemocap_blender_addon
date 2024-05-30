@@ -1,5 +1,5 @@
 import bpy
-from ajc27_freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
+from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 
 from .create_empty_from_trajectory import create_empties
 

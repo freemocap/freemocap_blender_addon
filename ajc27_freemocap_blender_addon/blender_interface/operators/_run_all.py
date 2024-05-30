@@ -11,7 +11,7 @@ class FMC_ADAPTER_run_all(bpy.types.Operator):
 
     def execute(self, context):
         from ...core_functions.main_controller import MainController
-        from ...data_models.pipeline_parameters.load_pipeline_config import load_default_parameters_config
+        from ...models.pipeline_parameters.load_pipeline_config import load_default_parameters_config
         fmc_adapter_tool = context.scene.fmc_adapter_properties
         recording_path = fmc_adapter_tool.recording_path
         if recording_path == "":

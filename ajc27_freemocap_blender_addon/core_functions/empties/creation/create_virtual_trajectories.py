@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 import numpy as np
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.virtual_trajectories import \
+from freemocap_blender_addon.models.mediapipe_names.virtual_trajectories import \
     MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS
 
 

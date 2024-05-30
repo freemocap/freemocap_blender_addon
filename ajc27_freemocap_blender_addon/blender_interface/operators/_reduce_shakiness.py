@@ -1,7 +1,7 @@
 import math as m
 import time
 
-from ajc27_freemocap_blender_addon.core_functions.empties import reduce_shakiness
+from freemocap_blender_addon.core_functions.empties import reduce_shakiness
 from bpy.types import Operator
 
 

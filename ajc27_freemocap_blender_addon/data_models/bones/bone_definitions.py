@@ -1,17 +1,29 @@
-from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Literal
+
+from dataclasses import dataclass
+
+
+# Constants
 
 
 @dataclass
 class BoneDefinition:
     head: str
     tail: str
-    lengths: list = field(default_factory=list)
-    median: float = 0.0
-    stdev: float = 0.0
+    length: float
 
 
-BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
+BoneName = str # TODO - create a custom type for this with validators for things like the .R and .001 suffixes
+
+HandName = Literal['left_hand', 'right_hand']
+
+@dataclass
+class SkeletonDefinition:
+    # TODO - add validators and whatnot
+    body: Dict[BoneName, BoneDefinition]
+    hands: Dict[HandName, Dict[BoneName, BoneDefinition]]
+
+BONE_DEFINITIONS: Dict[BoneName, BoneDefinition] = {
     'pelvis.R': BoneDefinition(
         head='hips_center',
         tail='right_hip',

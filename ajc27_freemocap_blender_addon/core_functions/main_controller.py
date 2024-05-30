@@ -3,13 +3,13 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from ajc27_freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
-from ajc27_freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
-from ajc27_freemocap_blender_addon.core_functions.rig.add_rig import add_rig, AddRigMethods
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
+from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
+from freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
+from freemocap_blender_addon.core_functions.rig.add_rig import add_rig, AddRigMethods
+from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 
 from .create_video.create_video import create_video
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
@@ -20,7 +20,7 @@ from .rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.set_start_end_frame import set_start_end_frame
-from ..data_models.pipeline_parameters.parameter_models import Config
+from ..models.pipeline_parameters.parameter_models import Config
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data

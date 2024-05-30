@@ -1,6 +1,6 @@
 import math as m
 
-from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.poses.pose_element import PoseElement
 
 freemocap_tpose = {
     "pelvis": PoseElement(

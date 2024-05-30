@@ -2,13 +2,13 @@ from enum import Enum
 import math as m
 import re
 from typing import Dict, List, Optional
-from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
-from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.armatures.armature_bone_info import ArmatureBoneInfo
+from freemocap_blender_addon.models.poses.pose_element import PoseElement
 import bpy
 import mathutils
 import addon_utils
 
-from ajc27_freemocap_blender_addon.system.constants import (
+from freemocap_blender_addon.system.constants import (
     FREEMOCAP_ARMATURE,
     UE_METAHUMAN_SIMPLE_ARMATURE,
     FREEMOCAP_TPOSE,
@@ -16,7 +16,7 @@ from ajc27_freemocap_blender_addon.system.constants import (
     UE_METAHUMAN_DEFAULT,
     UE_METAHUMAN_TPOSE,
 )
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import (
+from freemocap_blender_addon.models.bones.bone_constraints import (
     ALL_BONES_CONSTRAINT_DEFINITIONS,
     ConstraintType,
     CopyLocationConstraint,
@@ -25,14 +25,14 @@ from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import (
     LimitRotationConstraint,
     LockedTrackConstraint,
 )
-from ajc27_freemocap_blender_addon.data_models.bones.ik_control_bones import (
+from freemocap_blender_addon.models.bones.ik_control_bones import (
     ik_control_bones,
 )
-from ajc27_freemocap_blender_addon.data_models.bones.ik_pole_bones import ik_pole_bones
-from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import (
+from freemocap_blender_addon.models.bones.ik_pole_bones import ik_pole_bones
+from freemocap_blender_addon.models.armatures.bone_name_map import (
     bone_name_map,
 )
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
+from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
 
 
 class AddRigMethods(Enum):

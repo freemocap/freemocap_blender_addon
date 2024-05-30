@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict
 
 import bpy
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
+from freemocap_blender_addon.models.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
 
 
 def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,
