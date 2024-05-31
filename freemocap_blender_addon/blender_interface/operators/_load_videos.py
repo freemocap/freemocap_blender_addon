@@ -14,7 +14,7 @@ class FMC_ADAPTER_load_videos(bpy.types.Operator):
         fmc_adapter_tool = scene.fmc_adapter_properties
 
         try:
-            load_videos(recording_path=fmc_adapter_tool.recording_path)
+            load_videos(recording_path=fmc_adapter_tool.recording_path_str)
         except Exception as e:
             print(e)
             print(e)

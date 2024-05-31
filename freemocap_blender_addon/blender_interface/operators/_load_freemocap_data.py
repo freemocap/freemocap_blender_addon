@@ -1,10 +1,11 @@
 from pathlib import Path
 
 import bpy
-from freemocap_blender_addon.core_functions.empties import create_freemocap_empties
-from freemocap_blender_addon.core_functions.setup_scene import create_parent_empty
-from freemocap_blender_addon.core_functions.setup_scene import set_start_end_frame
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+
+from freemocap_blender_addon.core_functions.empties.creation.create_freemocap_empties import create_freemocap_empties
+from freemocap_blender_addon.core_functions.setup_scene.make_parent_empties import create_parent_empty
+from freemocap_blender_addon.core_functions.setup_scene.set_start_end_frame import set_start_end_frame
+from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 
 
 class FMC_ADAPTER_load_freemocap_data(bpy.types.Operator):  # , bpy_extras.io_utils.ImportHelper):
@@ -17,7 +18,7 @@ class FMC_ADAPTER_load_freemocap_data(bpy.types.Operator):  # , bpy_extras.io_ut
             scene = context.scene
             fmc_adapter_tool = scene.fmc_adapter_properties
 
-            recording_path = fmc_adapter_tool.recording_path
+            recording_path = fmc_adapter_tool.recording_path_str
             if recording_path == "":
                 print("No recording path specified")
                 return {'CANCELLED'}
@@ -28,8 +29,7 @@ class FMC_ADAPTER_load_freemocap_data(bpy.types.Operator):  # , bpy_extras.io_ut
             fmc_adapter_tool.data_parent_empty = freemocap_origin_axes
 
             print("Loading freemocap data....")
-            handler = load_freemocap_data(recording_path=recording_path)
-            handler.mark_processing_stage("original_from_file")
+            handler = FreemocapDataHandler.from_recording_path(recording_path=recording_path)
             set_start_end_frame(number_of_frames=handler.number_of_frames)
         except Exception as e:
             print(e)

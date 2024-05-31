@@ -9,11 +9,11 @@ from freemocap_blender_addon.data_models.pipeline_parameters.pipeline_parameters
 def run_as_main_function(recording_path: str,
                          blend_file_path: str,
                          config: PipelineConfig = load_default_parameters_config()):
-    from freemocap_blender_addon.core_functions.main_controller import MainController
+    from freemocap_blender_addon.main_controller import MainController
 
     controller = MainController(recording_path=recording_path,
-                                blend_file_path=blend_file_path,
-                                config=config)
+                                blend_file_path_str=blend_file_path,
+                                pipeline_config=config)
 
     clear_scene()
 

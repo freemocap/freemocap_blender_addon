@@ -16,7 +16,7 @@ class FMC_ADAPTER_OT_export_fbx(Operator):
         scene = context.scene
         fmc_adapter_tool = scene.fmc_adapter_properties
 
-        recording_path = fmc_adapter_tool.recording_path
+        recording_path = fmc_adapter_tool.recording_path_str
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}
