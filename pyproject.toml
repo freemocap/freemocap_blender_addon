@@ -15,6 +15,7 @@ Github = "https://github.com/freemocap/freemocap_blender_addon"
 python ="==3.11.*"
 bpy = "^4.1.0"
 
+toml = "^0.10.2"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
 

@@ -4,7 +4,7 @@ from threading import Lock
 # Create a generic type variable to be used for type hints in SingletonMeta
 SingletonClass = TypeVar('SingletonClass', bound='SingletonMeta')
 
-class SingletonMeta(type):
+class SingletonMetaClass(type):
     """
     A thread-safe implementation of Singleton pattern.
 

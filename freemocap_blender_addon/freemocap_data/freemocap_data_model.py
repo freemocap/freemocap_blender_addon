@@ -1,16 +1,14 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional, Union, Literal
+from typing import Any, Dict, Optional, Union
 
 import numpy as np
 from freemocap_blender_addon.core_functions.setup_scene.get_path_to_sample_data import get_path_to_sample_data
 
-from freemocap_blender_addon.data_models.freemocap_data.freemocap_component_data import FreemocapComponentData
-from freemocap_blender_addon.data_models.freemocap_data.freemocap_data_paths import FreemocapDataPaths
-from freemocap_blender_addon.data_models.freemocap_data.freemocap_data_stats import FreemocapDataStats
-from ..mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
+from freemocap_blender_addon.freemocap_data.freemocap_component_data import FreemocapComponentData
+from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths
+from freemocap_blender_addon.freemocap_data.freemocap_data_stats import FreemocapDataStats
+from freemocap_blender_addon.models.mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
-
-FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
 
 
 @dataclass

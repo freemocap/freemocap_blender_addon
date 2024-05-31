@@ -17,7 +17,7 @@ from freemocap_blender_addon.core_functions.rig.save_bone_and_joint_angles_from_
     save_bone_and_joint_angles_from_rig
 from freemocap_blender_addon.core_functions.setup_scene.make_parent_empties import create_parent_empty
 from freemocap_blender_addon.core_functions.setup_scene.set_start_end_frame import set_start_end_frame
-from freemocap_blender_addon.data_models.pipeline_parameters.pipeline_parameters import PipelineConfig
+from freemocap_blender_addon.models.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 from freemocap_blender_addon.freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
@@ -25,28 +25,30 @@ from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bod
 from freemocap_blender_addon.freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from freemocap_blender_addon.freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMetaClass
 
 
-class MainController:
+class MainController(metaclass=SingletonMetaClass):
     def __init__(self, recording_path: str, blend_file_path_str: str, pipeline_config: PipelineConfig):
+        self.pipeline_config: PipelineConfig = pipeline_config
+
+        #blender stuff
         self.rig = None
         self.empties = None
         self._data_parent_object = None
         self._empty_parent_object = None
         self._rigid_body_meshes_parent_object = None
         self._video_parent_object = None
-
-        self.pipeline_config: PipelineConfig = pipeline_config
-
-        self.recording_path_str: str = recording_path
         self.blend_file_path_str: str = blend_file_path_str
-        self.recording_name = Path(self.recording_path_str).stem
-        self._output_video_path = str(Path(self.blend_file_path_str).parent / f"{self.recording_name}_video_output.mp4")
         self.origin_name = f"{self.recording_name}_origin"
         self.rig_name = f"{self.recording_name}_rig"
         self._create_parent_empties()
+
+        # Core freemocap processing stuff
+        self.recording_path_str: str = recording_path
+        self.recording_name = Path(self.recording_path_str).stem
+        self._output_video_path = str(Path(self.blend_file_path_str).parent / f"{self.recording_name}_video_output.mp4")
         self.freemocap_data_handler: Optional[FreemocapDataHandler] = None
-        self.empties = None
 
 
     @property

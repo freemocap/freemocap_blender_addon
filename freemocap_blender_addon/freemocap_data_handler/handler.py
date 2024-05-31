@@ -4,12 +4,10 @@ from typing import List, Optional, Union, Dict, Any
 import numpy as np
 from freemocap_blender_addon.core_functions.empties.creation.create_virtual_trajectories import \
     calculate_virtual_trajectories
-from freemocap_blender_addon.models.freemocap_data.freemocap_data_model import FreemocapData, \
-    FREEMOCAP_DATA_COMPONENT_TYPES
-from freemocap_blender_addon.models.freemocap_data.helpers.freemocap_component_data import \
-    FreemocapComponentData
 
 from .operations.estimate_good_frame import estimate_good_frame
+from freemocap_blender_addon.freemocap_data import FreemocapComponentData
+from freemocap_blender_addon.freemocap_data import FreemocapData, FREEMOCAP_DATA_COMPONENT_TYPES
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransformer
 
