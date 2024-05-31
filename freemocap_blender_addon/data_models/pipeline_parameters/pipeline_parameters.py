@@ -36,7 +36,7 @@ class AddBodyMesh:
 
 
 @dataclass
-class Config:
+class PipelineConfig:
     adjust_empties: AdjustEmpties = field(default_factory=AdjustEmpties)
     reduce_bone_length_dispersion: ReduceBoneLengthDispersion = field(default_factory=ReduceBoneLengthDispersion)
     reduce_shakiness: ReduceShakiness = field(default_factory=ReduceShakiness)

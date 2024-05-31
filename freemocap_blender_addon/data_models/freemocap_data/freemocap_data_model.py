@@ -4,9 +4,9 @@ from typing import Any, Dict, Optional, Union, Literal
 import numpy as np
 from freemocap_blender_addon.core_functions.setup_scene.get_path_to_sample_data import get_path_to_sample_data
 
-from .helpers.freemocap_component_data import FreemocapComponentData
-from .helpers.freemocap_data_paths import FreemocapDataPaths
-from .helpers.freemocap_data_stats import FreemocapDataStats
+from freemocap_blender_addon.data_models.freemocap_data.freemocap_component_data import FreemocapComponentData
+from freemocap_blender_addon.data_models.freemocap_data.freemocap_data_paths import FreemocapDataPaths
+from freemocap_blender_addon.data_models.freemocap_data.freemocap_data_stats import FreemocapDataStats
 from ..mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
 

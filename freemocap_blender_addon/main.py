@@ -2,14 +2,13 @@ import sys
 from pathlib import Path
 
 from freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
-from freemocap_blender_addon.models.pipeline_parameters.load_pipeline_config import \
-    load_default_parameters_config
-from freemocap_blender_addon.models.pipeline_parameters.parameter_models import Config
+from freemocap_blender_addon.data_models.pipeline_parameters.load_pipeline_config import load_default_parameters_config
+from freemocap_blender_addon.data_models.pipeline_parameters.pipeline_parameters import PipelineConfig
 
 
-def ajc27_run_as_main_function(recording_path: str,
-                               blend_file_path: str,
-                               config: Config = load_default_parameters_config()):
+def run_as_main_function(recording_path: str,
+                         blend_file_path: str,
+                         config: PipelineConfig = load_default_parameters_config()):
     from freemocap_blender_addon.core_functions.main_controller import MainController
 
     controller = MainController(recording_path=recording_path,
@@ -50,8 +49,8 @@ if __name__ == "__main__" or __name__ == "<run_path>":
             blender_file_save_path_input = recording_path_input / (recording_path_input.stem + ".blend")
 
         print(f"Running {__file__} with recording_path={recording_path_input}")
-        ajc27_run_as_main_function(recording_path=str(recording_path_input),
-                                   blend_file_path=str(blender_file_save_path_input))
+        run_as_main_function(recording_path=str(recording_path_input),
+                             blend_file_path=str(blender_file_save_path_input))
     except Exception as e:
         print(f"ERROR RUNNING {__file__}: \n\n GOT ERROR \n\n {str(e)}")
 

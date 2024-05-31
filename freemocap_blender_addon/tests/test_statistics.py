@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ajc27_freemocap_blender_addon.data_models.sample_statistics import SampleList, CentralTendencyMeasures, \
+from freemocap_blender_addon.data_models.sample_statistics import SampleList, CentralTendencyMeasures, \
     DescriptiveStatistics, VariabilityMeasures, SampleData
 
 
