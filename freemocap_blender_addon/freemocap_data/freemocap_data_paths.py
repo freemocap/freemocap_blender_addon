@@ -55,11 +55,10 @@ class PathsDataclass:
                 if not field.exists():
                     raise FileNotFoundError(f"Path {field} does not exist")
 
-
-@dataclass
-class FreemocapVideoPaths(PathsDataclass):
-    raw: Path
-    annotated: Path
+    def __str__(self):
+        classname = self.__class__.__name__
+        fields = [f"\t{k}: {v}" for k, v in self.__dict__.items()]
+        joined_fields = "\n".join(fields)
 
 
 @dataclass
@@ -75,6 +74,13 @@ class NpyPaths(PathsDataclass):
                     raise ValueError(f"Empty npy file: {field}")
             except FileNotFoundError:
                 raise FileNotFoundError(f"Path {field} does not exist")
+    def __str__(self):
+        return super().__str__()
+
+@dataclass
+class FreemocapVideoPaths(PathsDataclass):
+    raw: Path
+    annotated: Path
 
 
 @dataclass
