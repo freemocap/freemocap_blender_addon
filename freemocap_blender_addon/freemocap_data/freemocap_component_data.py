@@ -34,7 +34,7 @@ class FreemocapComponentData:
         if not len(data.shape) == 3:
             raise ValueError("Data shape should be 3D")
 
-        cls(data=data,
+        return cls(data=data,
             component_type=component_type,
             data_source=data_source,
             trajectory_names=cls._get_trajectory_names(component_type=component_type,

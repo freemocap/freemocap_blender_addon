@@ -67,12 +67,11 @@ class SkeletonData:
                                                   data_source=data_source)
         return cls(body=body, hands=hands, face=face)
 
-    def __str__(self):
-        return str(FreemocapDataStats.from_freemocap_data(self))
+
 
 
 if __name__ == "__main__":
     recording_path_in = get_path_to_test_data()
-    freemocap_data = SkeletonData.from_recording_path(recording_path=recording_path_in,
+    skeleton_data = SkeletonData.from_recording_path(recording_path=recording_path_in,
                                                       data_source=DEFAULT_DATA_SOURCE)
-    print(str(freemocap_data))
+    print(str(skeleton_data))
