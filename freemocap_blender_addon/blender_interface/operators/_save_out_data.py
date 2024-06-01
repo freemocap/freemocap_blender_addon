@@ -11,7 +11,7 @@ class FMC_ADAPTER_save_data_to_disk(bpy.types.Operator):
 
     def execute(self, context):
         from freemocap_blender_addon.main_controller import MainController
-        from ...models.pipeline_parameters.load_pipeline_config import load_default_parameters_config
+        from freemocap_blender_addon.models.processing.pipeline_parameters.load_pipeline_config import load_default_parameters_config
         fmc_adapter_tool = context.scene.fmc_adapter_properties
         recording_path = fmc_adapter_tool.recording_path_str
         if recording_path == "":

@@ -2,10 +2,11 @@ from typing import List
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_component import ComponentType
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import TrackerSourceType
+from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_trajectory_names import MEDIAPIPE_TRAJECTORY_NAMES
 
 
-def get_trajectory_names(component_type: ComponentType,
-                         data_source: TrackerSourceType) -> List[str]:
+def get_keypoint_names(component_type: ComponentType,
+                       data_source: TrackerSourceType) -> List[str]:
     if data_source == 'mediapipe':
         if component_type == ComponentType.BODY:
             return MEDIAPIPE_TRAJECTORY_NAMES.body

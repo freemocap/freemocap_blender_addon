@@ -1,6 +1,6 @@
-from typing import Any, Dict
+from typing import Dict
 
-from freemocap_blender_addon.models.bones.bone_definitions import BoneDefinition
+from freemocap_blender_addon.models.animation.bones.bone_definitions import BoneDefinition
 
 
 def calculate_body_dimensions(bones_info: Dict[str, BoneDefinition]) -> Dict[str, float]:

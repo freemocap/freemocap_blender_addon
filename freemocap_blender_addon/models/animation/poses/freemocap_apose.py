@@ -1,6 +1,6 @@
 import math as m
 
-from freemocap_blender_addon.models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.animation.poses.pose_element import PoseElement
 
 
 freemocap_apose = {

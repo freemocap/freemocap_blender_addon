@@ -2,8 +2,8 @@ from enum import Enum
 import traceback
 from pathlib import Path
 from typing import Dict
-from freemocap_blender_addon.models.armatures.armature_bone_info import ArmatureBoneInfo
-from freemocap_blender_addon.models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.animation.armatures import ArmatureBoneInfo
+from freemocap_blender_addon.models.animation.poses import PoseElement
 import bpy
 from mathutils import Vector, Matrix, Euler
 
@@ -14,10 +14,10 @@ from freemocap_blender_addon.system.constants import (
     UE_METAHUMAN_SIMPLE_ARMATURE,
 )
 from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
-from freemocap_blender_addon.models.armatures.bone_name_map import (
+from freemocap_blender_addon.models.animation.armatures import (
     bone_name_map,
 )
-from freemocap_blender_addon.models.meshes.skelly_bones import (
+from freemocap_blender_addon.models.animation.meshes import (
     SKELLY_BONES
 )
 

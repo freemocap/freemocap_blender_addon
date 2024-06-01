@@ -1,10 +1,10 @@
 import math
 import statistics
-from typing import Dict, Any
+from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.models.bones.bone_definitions import BoneDefinition
+from freemocap_blender_addon.models.animation.bones.bone_definitions import BoneDefinition
 
 
 def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],

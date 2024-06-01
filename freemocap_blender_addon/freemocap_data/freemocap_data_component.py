@@ -6,7 +6,7 @@ import numpy as np
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import TrackerSourceType
 
-from freemocap_blender_addon.models.trajectory_names.get_trajectory_names import get_trajectory_names
+from freemocap_blender_addon.models.anatomical.keypoints import get_keypoint_names
 
 FRAME_TRAJECTORY_XYZ: List[str] = ["frame_number", "trajectory_index", "xyz"]
 
@@ -38,8 +38,8 @@ class FreemocapDataComponent:
         return cls(data=data,
                    component_type=component_type,
                    data_source=data_source,
-                   trajectory_names=get_trajectory_names(component_type=component_type,
-                                                         data_source=data_source),
+                   trajectory_names=get_keypoint_names(component_type=component_type,
+                                                       data_source=data_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ
                    )
 

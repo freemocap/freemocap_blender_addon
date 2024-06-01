@@ -2,8 +2,8 @@ from enum import Enum
 import math as m
 import re
 from typing import Dict, List, Optional
-from freemocap_blender_addon.models.armatures.armature_bone_info import ArmatureBoneInfo
-from freemocap_blender_addon.models.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.animation.armatures import ArmatureBoneInfo
+from freemocap_blender_addon.models.animation.poses import PoseElement
 import bpy
 import mathutils
 import addon_utils
@@ -16,7 +16,7 @@ from freemocap_blender_addon.system.constants import (
     UE_METAHUMAN_DEFAULT,
     UE_METAHUMAN_TPOSE,
 )
-from freemocap_blender_addon.models.bones.bone_constraints import (
+from freemocap_blender_addon.models.animation.bones.bone_constraints import (
     ALL_BONES_CONSTRAINT_DEFINITIONS,
     ConstraintType,
     CopyLocationConstraint,
@@ -25,11 +25,11 @@ from freemocap_blender_addon.models.bones.bone_constraints import (
     LimitRotationConstraint,
     LockedTrackConstraint,
 )
-from freemocap_blender_addon.models.bones.ik_control_bones import (
+from freemocap_blender_addon.models.animation.bones.ik_control_bones import (
     ik_control_bones,
 )
-from freemocap_blender_addon.models.bones.ik_pole_bones import ik_pole_bones
-from freemocap_blender_addon.models.armatures.bone_name_map import (
+from freemocap_blender_addon.models.animation.bones.ik_pole_bones import ik_pole_bones
+from freemocap_blender_addon.models.animation.armatures import (
     bone_name_map,
 )
 from freemocap_blender_addon.models.data_references import ArmatureType, PoseType

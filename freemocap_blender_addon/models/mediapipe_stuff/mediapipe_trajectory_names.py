@@ -1,9 +1,8 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import List, Optional
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import RightLeft
-from freemocap_blender_addon.models.trajectory_names.generic_trajectory_dataclasses import HumanTrajectoryNames, \
+from freemocap_blender_addon.models.anatomical.bodyparts.body_definitions import HumanTrajectoryNames, \
     HandsTrajectoryNames
 
 MEDIAPIPE_HAND_NAMES = ["wrist",
