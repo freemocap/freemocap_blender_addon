@@ -78,33 +78,33 @@ class NpyPaths(PathsDataclass):
 
 @dataclass
 class FreemocapVideoPaths(PathsDataclass):
-    raw: Path
-    annotated: Path
+    raw: str
+    annotated: str
 
 
 @dataclass
 class HandsNpyPaths(NpyPaths):
-    right: Path
-    left: Path
+    right: str
+    left: str
 
 
 @dataclass
 class SkeletonNpyPaths(NpyPaths):
-    body: Path
+    body: str
     hands: HandsNpyPaths
-    face: Path
-    reprojection_error: Path
+    face: str
+    reprojection_error: str
 
 
 @dataclass
 class CenterOfMassNpyPaths(NpyPaths):
-    total_body_center_of_mass: Path
-    segment_center_of_mass: Path
+    total_body_center_of_mass: str
+    segment_center_of_mass: str
 
 
 @dataclass
 class FreemocapDataPaths:
-    recording_folder_path: Path
+    recording_folder_path: str
     skeleton: SkeletonNpyPaths
     center_of_mass: CenterOfMassNpyPaths
     video: FreemocapVideoPaths
@@ -112,21 +112,20 @@ class FreemocapDataPaths:
     @classmethod
     def from_recording_path(cls, path: str, tracker_type: TrackerType = DEFAULT_TRACKER_TYPE) -> 'FreemocapDataPaths':
 
-        parent_path = Path(path)
-        if not parent_path.exists():
-            raise FileNotFoundError(f"Path {parent_path} does not exist")
+        if not Path(path).exists():
+            raise FileNotFoundError(f"Path {path} does not exist")
 
         replacements: Dict[str, Union[str, TrackerType]] = {
             TRACKER_TYPE_PLACEHOLDER: tracker_type.value,
-            RECORDING_PATH_PLACEHOLDER: str(parent_path),
+            RECORDING_PATH_PLACEHOLDER: path,
         }
 
-        def replace_placeholders(file_template: str, right_left: Optional[RightLeft] = None) -> Path:
+        def replace_placeholders(file_template: str, right_left: Optional[RightLeft] = None) -> str:
             for key, value in replacements.items():
                 file_template = file_template.replace(key, value)
             if right_left:
                 file_template = file_template.replace(RIGHT_LEFT_PLACEHOLDER, right_left.value)
-            return Path(file_template)
+            return file_template
 
         hands = HandsNpyPaths(
             right=replace_placeholders(SkeletonNpyFiles.HAND_NPY_FILE.value, RightLeft.RIGHT),
@@ -151,7 +150,7 @@ class FreemocapDataPaths:
         )
 
         return cls(
-            recording_folder_path=parent_path,
+            recording_folder_path=path,
             skeleton=skeleton_npy_paths,
             center_of_mass=center_of_mass_npy_paths,
             video=video_paths

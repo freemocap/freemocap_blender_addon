@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from typing import TYPE_CHECKING
 
 import numpy as np
-from freemocap_blender_addon.freemocap_data.freemocap_data_model import (
+from freemocap_blender_addon.freemocap_data.skeleton_data import (
     FREEMOCAP_DATA_COMPONENT_TYPES,
 )
 

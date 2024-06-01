@@ -62,10 +62,6 @@ MEDIAPIPE_BODY_NAMES = [
     "left_foot_index",
     "right_foot_index",
 ]
-
-NUMBER_OF_MEDIAPIPE_BODY_MARKERS = len(MEDIAPIPE_BODY_NAMES)
-NUMBER_OF_MEDIAPIPE_HAND_MARKERS = len(MEDIAPIPE_HAND_NAMES)
-NUMBER_OF_MEDIAPIPE_FACE_POINTS = 478
 MEDIAPIPE_NAMED_FACE_POINTS = ["face_right_eye",
                                "face_left_eye",
                                "nose_tip",
@@ -73,13 +69,17 @@ MEDIAPIPE_NAMED_FACE_POINTS = ["face_right_eye",
                                "right_ear_tragion",
                                "left_ear_tragion"]
 
+NUMBER_OF_MEDIAPIPE_BODY_MARKERS = len(MEDIAPIPE_BODY_NAMES)
+NUMBER_OF_MEDIAPIPE_HAND_MARKERS = len(MEDIAPIPE_HAND_NAMES)
+NUMBER_OF_MEDIAPIPE_FACE_POINTS = 478
+
 MEDIAPIPE_GENERIC_FACE_POINTS = [f"face_{i:03}" for i in range(NUMBER_OF_MEDIAPIPE_FACE_POINTS)]
 
 MEDIAPIPE_FACE_NAMES = copy(MEDIAPIPE_GENERIC_FACE_POINTS)
 MEDIAPIPE_FACE_NAMES[:len(MEDIAPIPE_NAMED_FACE_POINTS)] = MEDIAPIPE_NAMED_FACE_POINTS
 
 
-
+@dataclass
 class HandsTrajectoryNames:
     right: List[str]
     left: List[str]
