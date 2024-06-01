@@ -1,6 +1,6 @@
 from copy import copy
-from dataclasses import dataclass, field
-from typing import List, Dict
+from dataclasses import dataclass
+from typing import List, Optional
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import RightLeft
 
@@ -81,21 +81,23 @@ MEDIAPIPE_FACE_NAMES[:len(MEDIAPIPE_NAMED_FACE_POINTS)] = MEDIAPIPE_NAMED_FACE_P
 
 @dataclass
 class HandsTrajectoryNames:
-    right: List[str]
-    left: List[str]
+    right: Optional[List[str]]
+    left: Optional[List[str]]
+
 
 @dataclass
 class HumanTrajectoryNames:
-    body: List[str]
-    face: List[str]
-    hands: HandsTrajectoryNames
+    body: Optional[List[str]]
+    face: Optional[List[str]]
+    hands: Optional[HandsTrajectoryNames]
+
 
 @dataclass
 class MediapipeTrajectoryNames(HumanTrajectoryNames):
-    def __post_init__(self):
+    def __init__(self):
         self.body = MEDIAPIPE_BODY_NAMES
-        self.hands.right = [f"{RightLeft.RIGHT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES]
-        self.hands.left = [f"{RightLeft.LEFT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES]
+        self.hands = HandsTrajectoryNames(right=[f"{RightLeft.RIGHT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES],
+                                          left=[f"{RightLeft.LEFT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES])
         self.face = MEDIAPIPE_FACE_NAMES
         self._validate_name_list_lengths()
 
@@ -112,3 +114,6 @@ class MediapipeTrajectoryNames(HumanTrajectoryNames):
         if not len(self.hands.left) == NUMBER_OF_MEDIAPIPE_HAND_MARKERS:
             raise ValueError(
                 f"Number of mediapipe left hand markers {len(self.hands.left)} does not match expected {NUMBER_OF_MEDIAPIPE_HAND_MARKERS}")
+
+
+MEDIAPIPE_TRAJECTORY_NAMES = MediapipeTrajectoryNames()

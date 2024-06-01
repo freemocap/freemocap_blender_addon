@@ -6,23 +6,24 @@ from typing import Union, Optional, Dict
 
 import numpy as np
 
+
+class DataSourceType(str, Enum):
+    MEDIAPIPE = "mediapipe"
+    OPENPOSE = "openpose"
+
+
+DEFAULT_DATA_SOURCE = DataSourceType.MEDIAPIPE
+
 # Constants for placeholders
 TRACKER_TYPE_PLACEHOLDER = "TRACKER_TYPE_PLACEHOLDER"
 RIGHT_LEFT_PLACEHOLDER = "RIGHT_LEFT_PLACEHOLDER"
 RECORDING_PATH_PLACEHOLDER = "RECORDING_PATH_PLACEHOLDER"
 
 # Directory paths
-SKELETON_NPY_PARENT_DIRECTORY = "RECORDING_PATH_PLACEHOLDER/output_data"
-CENTER_OF_MASS_NPY_PARENT_DIRECTORY = "RECORDING_PATH_PLACEHOLDER/output_data/center_of_mass"
-VIDEO_PARENT_DIRECTORY = "RECORDING_PATH_PLACEHOLDER"
+SKELETON_NPY_PARENT_DIRECTORY = f"{RECORDING_PATH_PLACEHOLDER}/output_data"
+CENTER_OF_MASS_NPY_PARENT_DIRECTORY = f"{RECORDING_PATH_PLACEHOLDER}/output_data/center_of_mass"
+VIDEO_PARENT_DIRECTORY = f"{RECORDING_PATH_PLACEHOLDER}"
 
-
-# Enum Definitions
-class TrackerType(str, Enum):
-    MEDIAPIPE = "mediapipe"
-
-
-DEFAULT_TRACKER_TYPE = TrackerType.MEDIAPIPE
 
 class SkeletonNpyFiles(str, Enum):
     BODY_NPY_FILE = f"{SKELETON_NPY_PARENT_DIRECTORY}/{TRACKER_TYPE_PLACEHOLDER}_body_3d_xyz.npy"
@@ -73,13 +74,48 @@ class NpyPaths(PathsDataclass):
                     raise ValueError(f"Empty npy file: {field}")
             except FileNotFoundError:
                 raise FileNotFoundError(f"Path {field} does not exist")
+
     def __str__(self):
         return super().__str__()
 
+
+class AvailableVideoFormats(str, Enum):
+    MP4 = "mp4"
+    AVI = "avi"
+    MOV = "mov"
+
+
+DEFAULT_VIDEO_FORMAT = AvailableVideoFormats.MP4
+
+
+@dataclass
+class VideoFolder(PathsDataclass):
+    path: str
+    format: AvailableVideoFormats = DEFAULT_VIDEO_FORMAT
+
+    def __post_init__(self):
+        if not Path(self.path).exists():
+            raise FileNotFoundError(f"Path {self.path} does not exist")
+        if not Path(self.path).is_dir():
+            raise ValueError(f"Path {self.path} is not a directory")
+        if len(self.videos) == 0:
+            raise FileNotFoundError(f"No videos found in {self.path}")
+
+    @property
+    def videos(self):
+        return [video for video in Path(self.path).iterdir() if video.suffix.lower() == f".{self.format.value}"]
+
+    def __str__(self):
+        out_str = f"{Path(self.path).name} (format:{self.format.value}):\n"
+        for video in self.videos:
+            out_str += f"\t{video.name}\n"
+        return out_str
+
+
 @dataclass
 class FreemocapVideoPaths(PathsDataclass):
-    raw: str
-    annotated: str
+    raw: VideoFolder
+    annotated: VideoFolder
 
 
 @dataclass
@@ -110,13 +146,13 @@ class FreemocapDataPaths:
     video: FreemocapVideoPaths
 
     @classmethod
-    def from_recording_path(cls, path: str, tracker_type: TrackerType = DEFAULT_TRACKER_TYPE) -> 'FreemocapDataPaths':
+    def from_recording_path(cls, path: str, data_source: DataSourceType) -> 'FreemocapDataPaths':
 
         if not Path(path).exists():
             raise FileNotFoundError(f"Path {path} does not exist")
 
-        replacements: Dict[str, Union[str, TrackerType]] = {
-            TRACKER_TYPE_PLACEHOLDER: tracker_type.value,
+        replacements: Dict[str, Union[str, DataSourceType]] = {
+            TRACKER_TYPE_PLACEHOLDER: data_source.value,
             RECORDING_PATH_PLACEHOLDER: path,
         }
 
@@ -145,8 +181,8 @@ class FreemocapDataPaths:
         )
 
         video_paths = FreemocapVideoPaths(
-            raw=replace_placeholders(VideoFolders.RAW.value),
-            annotated=replace_placeholders(VideoFolders.ANNOTATED.value)
+            raw=VideoFolder(replace_placeholders(VideoFolders.RAW.value)),
+            annotated=VideoFolder(replace_placeholders(VideoFolders.ANNOTATED.value))
         )
 
         return cls(
@@ -159,6 +195,8 @@ class FreemocapDataPaths:
 
 # Example Usage
 if __name__ == "__main__":
-    test_data_path = Path().home() / "freemocap_data" / "recording_sessions" / "freemocap_test_data"
-    paths = FreemocapDataPaths.from_recording_path(path=str(test_data_path))
+    from freemocap_blender_addon.core_functions.setup_scene.get_path_to_test_data import get_path_to_test_data
+
+    paths = FreemocapDataPaths.from_recording_path(path=get_path_to_test_data(),
+                                                   data_source=DEFAULT_DATA_SOURCE)
     pprint(paths)

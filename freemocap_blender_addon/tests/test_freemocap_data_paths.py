@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 import numpy as np
 import pytest
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, TrackerType
+from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, DataSourceType
 
 VALID_NPY_DATA: np.ndarray = np.array([1, 2, 3])
 
@@ -73,5 +73,5 @@ def test_placeholder_replacement(tmp_path: Path, mock_path_exists: MagicMock, mo
 
 def test_integration_workflow(tmp_path: Path, mock_path_exists: MagicMock, mock_np_load: MagicMock) -> None:
     paths: FreemocapDataPaths = FreemocapDataPaths.from_recording_path(path=str(tmp_path),
-                                                                       tracker_type=TrackerType.MEDIAPIPE)
+                                                                       data_source=DataSourceType.MEDIAPIPE)
     assert isinstance(paths, FreemocapDataPaths)
