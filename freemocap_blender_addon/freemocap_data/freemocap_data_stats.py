@@ -42,8 +42,8 @@ class FreemocapDataStats:
     def from_freemocap_data(cls, freemocap_data):
         return cls(
             body_stats=calculate_stats(freemocap_data.body.data),
-            right_hand_stats=calculate_stats(freemocap_data.hands['right'].data),
-            left_hand_stats=calculate_stats(freemocap_data.hands['left'].data),
+            right_hand_stats=calculate_stats(freemocap_data.hands.right.data),
+            left_hand_stats=calculate_stats(freemocap_data.hands.left.data),
             face_stats=calculate_stats(freemocap_data.face.data),
         )
 

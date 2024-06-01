@@ -13,7 +13,8 @@ FRAME_TRAJECTORY_XYZ: List[str] = ["frame_number", "trajectory_index", "xyz"]
 class ComponentType(enum.Enum):
     BODY = "body"
     FACE = "face"
-    HAND = "hand"
+    RIGHT_HAND = "right_hand"
+    LEFT_HAND = "left_hand"
 
 
 @dataclass
@@ -59,5 +60,9 @@ class FreemocapComponentData:
                 return MEDIAPIPE_TRAJECTORY_NAMES.body
             elif component_type == ComponentType.FACE:
                 return MEDIAPIPE_TRAJECTORY_NAMES.face
-            elif component_type == ComponentType.HAND:
-                return MEDIAPIPE_TRAJECTORY_NAMES.hands
+            elif component_type == ComponentType.RIGHT_HAND:
+                return MEDIAPIPE_TRAJECTORY_NAMES.hands.right
+            elif component_type == ComponentType.LEFT_HAND:
+                return MEDIAPIPE_TRAJECTORY_NAMES.hands.left
+            else:
+                raise ValueError("Component type not recognized")

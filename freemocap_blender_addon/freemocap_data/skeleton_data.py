@@ -35,10 +35,10 @@ class HandsComponentData:
                        npy_paths: HandsNpyPaths,
                        data_source: DataSourceType):
         return cls(right=FreemocapComponentData.create(data=np.load(npy_paths.right),
-                                                       component_type=ComponentType.HAND_RIGHT,
+                                                       component_type=ComponentType.RIGHT_HAND,
                                                        data_source=data_source),
                    left=FreemocapComponentData.create(data=np.load(npy_paths.left),
-                                                      component_type=ComponentType.HAND_LEFT,
+                                                      component_type=ComponentType.LEFT_HAND,
                                                       data_source=data_source)
                    )
 
@@ -53,7 +53,8 @@ class SkeletonData:
     def from_recording_path(cls,
                             recording_path: str,
                             data_source: DataSourceType) -> 'SkeletonData':
-        data_paths = FreemocapDataPaths.from_recording_path(path=recording_path)
+        data_paths = FreemocapDataPaths.from_recording_path(path=recording_path,
+                                                            data_source=data_source)
 
         body = FreemocapComponentData.create(data=np.load(data_paths.skeleton.body),
                                              component_type=ComponentType.BODY,
