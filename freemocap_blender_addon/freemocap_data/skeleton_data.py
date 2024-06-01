@@ -6,7 +6,6 @@ from freemocap_blender_addon.core_functions.setup_scene.get_path_to_test_data im
 from freemocap_blender_addon.freemocap_data.freemocap_component_data import FreemocapComponentData, ComponentType
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, DEFAULT_DATA_SOURCE, \
     HandsNpyPaths, DataSourceType
-from freemocap_blender_addon.freemocap_data.freemocap_data_stats import FreemocapDataStats
 
 
 # @dataclass
@@ -68,10 +67,8 @@ class SkeletonData:
         return cls(body=body, hands=hands, face=face)
 
 
-
-
 if __name__ == "__main__":
     recording_path_in = get_path_to_test_data()
     skeleton_data = SkeletonData.from_recording_path(recording_path=recording_path_in,
-                                                      data_source=DEFAULT_DATA_SOURCE)
+                                                     data_source=DEFAULT_DATA_SOURCE)
     print(str(skeleton_data))
