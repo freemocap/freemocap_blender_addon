@@ -7,12 +7,17 @@ from typing import Union, Optional, Dict
 import numpy as np
 
 
-class DataSourceType(str, Enum):
+class TrackerSourceType(str, Enum):
     MEDIAPIPE = "mediapipe"
     OPENPOSE = "openpose"
 
 
-DEFAULT_DATA_SOURCE = DataSourceType.MEDIAPIPE
+class DataTypes(str, Enum):
+    SKELETON = "skeleton"
+    CENTER_OF_MASS = "center_of_mass"
+
+
+DEFAULT_TRACKER_TYPE = TrackerSourceType.MEDIAPIPE
 
 # Constants for placeholders
 TRACKER_TYPE_PLACEHOLDER = "TRACKER_TYPE_PLACEHOLDER"
@@ -68,12 +73,13 @@ class NpyPaths(PathsDataclass):
         for field in self.__dict__.values():
             if isinstance(field, NpyPaths):
                 continue
-            try:
-                npy_data = np.load(str(field))
-                if npy_data.size == 0:
-                    raise ValueError(f"Empty npy file: {field}")
-            except FileNotFoundError:
+            if not field.endswith(".npy"):
+                raise ValueError(f"Path {field} is not a npy file")
+            if not Path(field).exists():
                 raise FileNotFoundError(f"Path {field} does not exist")
+            if np.load(field).size == 0:
+                raise ValueError(f"Empty npy file: {field}")
+
 
     def __str__(self):
         return super().__str__()
@@ -146,13 +152,14 @@ class FreemocapDataPaths:
     video: FreemocapVideoPaths
 
     @classmethod
-    def from_recording_path(cls, path: str, data_source: DataSourceType) -> 'FreemocapDataPaths':
+    def from_recording_path(cls, path: str,
+                            tracker_type: TrackerSourceType = DEFAULT_TRACKER_TYPE) -> 'FreemocapDataPaths':
 
         if not Path(path).exists():
             raise FileNotFoundError(f"Path {path} does not exist")
 
-        replacements: Dict[str, Union[str, DataSourceType]] = {
-            TRACKER_TYPE_PLACEHOLDER: data_source.value,
+        replacements: Dict[str, Union[str, TrackerSourceType]] = {
+            TRACKER_TYPE_PLACEHOLDER: tracker_type.value,
             RECORDING_PATH_PLACEHOLDER: path,
         }
 
@@ -198,5 +205,5 @@ if __name__ == "__main__":
     from freemocap_blender_addon.core_functions.setup_scene.get_path_to_test_data import get_path_to_test_data
 
     paths = FreemocapDataPaths.from_recording_path(path=get_path_to_test_data(),
-                                                   data_source=DEFAULT_DATA_SOURCE)
+                                                   tracker_type=DEFAULT_TRACKER_TYPE)
     pprint(paths)

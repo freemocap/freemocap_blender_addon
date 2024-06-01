@@ -1,9 +1,9 @@
 import pytest
 
-from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMeta
+from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMetaClass
 
 
-class TestSingleton(metaclass=SingletonMeta):
+class TestSingleton(metaclass=SingletonMetaClass):
     """
     Example Singleton class.
 

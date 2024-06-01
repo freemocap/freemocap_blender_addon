@@ -6,8 +6,7 @@ from freemocap_blender_addon.core_functions.empties.creation.create_virtual_traj
     calculate_virtual_trajectories
 
 from .operations.estimate_good_frame import estimate_good_frame
-from freemocap_blender_addon.freemocap_data import FreemocapComponentData
-from freemocap_blender_addon.freemocap_data import FreemocapData, FREEMOCAP_DATA_COMPONENT_TYPES
+
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransformer
 

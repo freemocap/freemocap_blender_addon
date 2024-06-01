@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import RightLeft
+from freemocap_blender_addon.models.trajectory_names.generic_trajectory_dataclasses import HumanTrajectoryNames, \
+    HandsTrajectoryNames
 
 MEDIAPIPE_HAND_NAMES = ["wrist",
                         "thumb_cmc",
@@ -79,17 +81,6 @@ MEDIAPIPE_FACE_NAMES = copy(MEDIAPIPE_GENERIC_FACE_POINTS)
 MEDIAPIPE_FACE_NAMES[:len(MEDIAPIPE_NAMED_FACE_POINTS)] = MEDIAPIPE_NAMED_FACE_POINTS
 
 
-@dataclass
-class HandsTrajectoryNames:
-    right: Optional[List[str]]
-    left: Optional[List[str]]
-
-
-@dataclass
-class HumanTrajectoryNames:
-    body: Optional[List[str]]
-    face: Optional[List[str]]
-    hands: Optional[HandsTrajectoryNames]
 
 
 @dataclass
