@@ -1,6 +1,6 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoint_rigid_body_abc import KeypointABC
+from freemocap_blender_addon.models.skeleton.rigid_body_abc import KeypointABC
 
 
 class LegKeypoints(KeypointABC):
@@ -18,7 +18,13 @@ class FullFootKeypoints(KeypointABC):
     PINKY_TOE_TIP = auto()
 
 
-class SimpleFootKeypoints(KeypointABC):
-    ANKLE = auto()
-    HEEL = auto()
-    HALLUX_TIP = auto()
+class LeftFootKeypoints(KeypointABC):
+    LEFT_ANKLE = auto()
+    LEFT_HEEL = auto()
+    LEFT_HALLUX_TIP = auto()
+
+
+class RightFootKeypoints(KeypointABC):
+    RIGHT_ANKLE = auto()
+    RIGHT_HEEL = auto()
+    RIGHT_HALLUX_TIP = auto()

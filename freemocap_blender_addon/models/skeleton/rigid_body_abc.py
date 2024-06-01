@@ -1,37 +1,10 @@
 from abc import ABC
 from dataclasses import dataclass
-from enum import Enum
-from typing import List, Any
+from typing import List
+
+from freemocap_blender_addon.models.skeleton.keypoints_enum import Keypoint, Keypoints
 
 
-@dataclass
-class Keypoint:
-    name: str
-
-
-class Keypoints(Enum):
-    """An enumeration of Keypoint instances, ensuring each member is a Keypoint.
-
-    Methods
-    -------
-    __new__(cls, *args, **kwargs):
-        Creates a new Keypoint instance with the enum member name as the Keypoint name.
-    _generate_next_value_(name, start, count, last_values):
-        Generates the next value for the auto-assigned enum members.
-    """
-
-    def __new__(cls, *args: Any, **kwargs: Any) -> 'Keypoints':
-        obj = object.__new__(cls)
-        if not args:
-            name = cls._name_.lower()
-        else:
-            name = args[0].lower()
-        obj._value_ = Keypoint(name)
-        return obj
-
-    @staticmethod
-    def _generate_next_value_(name, start, count, last_values):
-        return name
 @dataclass
 class WeightedSumDefinition(ABC):
     parent_keypoints: List[Keypoint]
@@ -78,6 +51,11 @@ class CompositeRigidBodyABC(ABC):
     @property
     def secondary_axis(self) -> str:
         raise NotImplementedError("Secondary axis must be defined in the subclass")
+
+    def get_child(self, keypoint: Keypoint) -> Keypoint:
+        if keypoint not in self.children:
+            raise ValueError(f"Keypoint {keypoint.name} is not a child of {self.parent.name}")
+        return keypoint
 
     def __post_init__(self):
         if self.parent in self.children:
