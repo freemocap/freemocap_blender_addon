@@ -2,7 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
-from freemocap_blender_addon.models.skeleton.keypoints_enum import Keypoint, Keypoints
+from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoint, Keypoints
 
 
 @dataclass
@@ -24,10 +24,6 @@ class SimpleRigidBodyABC(ABC):
     """
     parent: Keypoints
     child: Keypoints
-
-    @property
-    def linkage(self) -> str:
-        return f"{self.parent.name}_{self.child.name}"
 
     @property
     def name(self) -> str:
