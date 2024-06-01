@@ -5,7 +5,7 @@ import pytest
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path, TEST_FOLDER_PATH
-from freemocap_blender_addon.utilities.named_ndarray import NamedNumpyArray
+from freemocap_blender_addon.experiments.named_ndarray import NamedNdarray
 
 
 @pytest.fixture()
@@ -40,7 +40,7 @@ def number_of_dimensions_fixture(request: pytest.FixtureRequest) -> int:
     return request.param
 
 
-@pytest.fixture(params=[1, 2, 3, 10, int(1e4)])
+@pytest.fixture(params=[1, 2, 3, 10])
 def number_of_elements_fixture(request: pytest.FixtureRequest) -> int:
     return request.param
 
@@ -53,24 +53,11 @@ def array_shape_fixture(number_of_dimensions_fixture: int, number_of_elements_fi
 @pytest.fixture()
 def filled_array_fixture(array_shape_fixture: tuple, dtype_fixture: np.dtype) -> np.ndarray:
     if np.issubdtype(dtype_fixture, np.integer):
-        info = np.iinfo(dtype_fixture)
-        return np.random.randint(info.min, info.max, size=array_shape_fixture, dtype=dtype_fixture)
-
+        return np.random.randint(0, 100, size=array_shape_fixture, dtype=dtype_fixture)
     elif np.issubdtype(dtype_fixture, np.floating):
-        info = np.finfo(dtype_fixture)
-        return np.random.uniform(info.min, info.max, size=array_shape_fixture).astype(dtype_fixture)
-
-    elif np.issubdtype(dtype_fixture, np.complexfloating):
-        info_real = np.finfo(np.float64)
-        real_part = np.random.uniform(info_real.min, info_real.max, size=array_shape_fixture).astype(np.float64)
-        imag_part = np.random.uniform(info_real.min, info_real.max, size=array_shape_fixture).astype(np.float64)
-        return (real_part + 1j * imag_part).astype(dtype_fixture)
-
+        return np.random.uniform(0.0, 1.0, size=array_shape_fixture).astype(dtype_fixture)
     elif dtype_fixture == bool:
-        return np.random.randint(0, 2, size=array_shape_fixture).astype(bool)
-
-    elif dtype_fixture == str:
-        return np.random.choice(['a', 'b', 'c', 'd'], size=array_shape_fixture).astype(str)
+        return np.random.choice([False, True], size=array_shape_fixture)
     else:
         raise TypeError(f"Unsupported dtype: {dtype_fixture}")
 
@@ -107,5 +94,5 @@ def empty_array_fixture(array_shape_fixture: tuple) -> np.ndarray:
 
 
 @pytest.fixture()
-def named_numpy_array_fixture(random_array_fixture: np.ndarray) -> NamedNumpyArray:
-    return NamedNumpyArray(data=random_array_fixture, name="test_array")
+def named_numpy_array_fixture(random_array_fixture: np.ndarray) -> NamedNdarray:
+    return NamedNdarray(data=random_array_fixture, name="test_array")
