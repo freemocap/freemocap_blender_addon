@@ -2,22 +2,32 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Optional, Union
 
 import numpy as np
-from freemocap_blender_addon.core_functions.setup_scene.get_path_to_sample_data import get_path_to_sample_data
+from freemocap_blender_addon.core_functions.setup_scene.get_path_to_sample_data import get_path_to_test_data
 
 from freemocap_blender_addon.freemocap_data.freemocap_component_data import FreemocapComponentData
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths
+from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, RightLeft, SkeletonNpyPaths
 from freemocap_blender_addon.freemocap_data.freemocap_data_stats import FreemocapDataStats
 from freemocap_blender_addon.models.mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
 
+@dataclass
+class SkeletonComponentData:
+    body: FreemocapComponentData
+    hands: Dict[RightLeft, FreemocapComponentData]
+    face: FreemocapComponentData
+
+    @classmethod
+    def from_npy_paths(cls, npy_paths: SkeletonNpyPaths, scale: float = 1000, **kwargs):
+        return cls.from_data(
+            body = FreemocapComponentData.from_npy_path(npy_path=npy_paths.body, scale=scale),
+        )
 
 @dataclass
 class FreemocapData:
     body: FreemocapComponentData
     hands: Dict[str, FreemocapComponentData]
     face: FreemocapComponentData
-    metadata: Optional[Dict[Any, Any]]
-    other: Dict[str, FreemocapComponentData] = field(default_factory=dict)
+    center_of_mass: FreemocapComponentData
 
     @classmethod
     def from_data(cls,
@@ -27,7 +37,6 @@ class FreemocapData:
                   face_frame_name_xyz: np.ndarray,
                   error: np.ndarray,
                   data_source: str = "mediapipe",
-                  error_type: str = "mean_reprojection_error",
                   other: Optional[Dict[str, Union[FreemocapComponentData, Dict[str, Any]]]] = None,
                   metadata: Optional[Dict[Any, Any]] = None) -> "FreemocapData":
 
@@ -160,11 +169,6 @@ class FreemocapData:
                         data_paths: FreemocapDataPaths,
                         scale: float = 1000,
                         **kwargs):
-        if "metadata" in kwargs.keys():
-            metadata = kwargs["metadata"]
-        else:
-            metadata = {}
-
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,
             right_hand_frame_name_xyz=np.load(data_paths.right_hand_npy) / scale,
@@ -182,13 +186,9 @@ class FreemocapData:
 
     @classmethod
     def from_recording_path(cls,
-                            recording_path: str,
-                            **kwargs):
-        data_paths = FreemocapDataPaths.from_recording_folder(recording_path)
-        metadata = {"recording_path": recording_path,
-                    "data_paths": data_paths.__dict__}
-        print(f"Loading data from paths {data_paths}")
-        return cls.from_data_paths(data_paths=data_paths, metadata=metadata, **kwargs)
+                            recording_path: str):
+        data_paths = FreemocapDataPaths.from_recording_path(path=recording_path)
+        return cls.from_data_paths(data_paths=data_paths)
 
     def __str__(self):
         return str(FreemocapDataStats.from_freemocap_data(self))
@@ -196,7 +196,6 @@ class FreemocapData:
 
 if __name__ == "__main__":
 
-    recording_path_in = get_path_to_sample_data()
-    freemocap_data = FreemocapData.from_recording_path(recording_path=recording_path_in,
-                                                       type="original")
+    recording_path_in = get_path_to_test_data()
+    freemocap_data = FreemocapData.from_recording_path(recording_path=recording_path_in)
     print(str(freemocap_data))

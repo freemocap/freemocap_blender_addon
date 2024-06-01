@@ -24,7 +24,6 @@ class TrackerType(str, Enum):
 
 DEFAULT_TRACKER_TYPE = TrackerType.MEDIAPIPE
 
-
 class SkeletonNpyFiles(str, Enum):
     BODY_NPY_FILE = f"{SKELETON_NPY_PARENT_DIRECTORY}/{TRACKER_TYPE_PLACEHOLDER}_body_3d_xyz.npy"
     HAND_NPY_FILE = f"{SKELETON_NPY_PARENT_DIRECTORY}/{TRACKER_TYPE_PLACEHOLDER}_{RIGHT_LEFT_PLACEHOLDER}_hand_3d_xyz.npy"
@@ -104,14 +103,14 @@ class CenterOfMassNpyPaths(NpyPaths):
 
 
 @dataclass
-class FreemocapNpyPaths:
+class FreemocapDataPaths:
     recording_folder_path: Path
     skeleton: SkeletonNpyPaths
     center_of_mass: CenterOfMassNpyPaths
     video: FreemocapVideoPaths
 
     @classmethod
-    def from_recording_path(cls, path: str, tracker_type: TrackerType = DEFAULT_TRACKER_TYPE) -> 'FreemocapNpyPaths':
+    def from_recording_path(cls, path: str, tracker_type: TrackerType = DEFAULT_TRACKER_TYPE) -> 'FreemocapDataPaths':
 
         parent_path = Path(path)
         if not parent_path.exists():
@@ -162,5 +161,5 @@ class FreemocapNpyPaths:
 # Example Usage
 if __name__ == "__main__":
     test_data_path = Path().home() / "freemocap_data" / "recording_sessions" / "freemocap_test_data"
-    paths = FreemocapNpyPaths.from_recording_path(path=str(test_data_path))
+    paths = FreemocapDataPaths.from_recording_path(path=str(test_data_path))
     pprint(paths)

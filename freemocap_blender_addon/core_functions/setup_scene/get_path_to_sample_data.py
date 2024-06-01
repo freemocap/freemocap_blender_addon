@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def get_path_to_sample_data():
+def get_path_to_test_data():
     sample_data_path = Path().home() / "freemocap_data" / "recording_sessions" / "freemocap_sample_data"
     sample_data_path = sample_data_path.resolve()
     if not sample_data_path.exists():
@@ -23,5 +23,5 @@ def get_path_to_sample_data():
 
 
 if __name__ == "__main__":
-    sample_data_path = get_path_to_sample_data()
+    sample_data_path = get_path_to_test_data()
     print(f"Sample data downloaded found at: {str(sample_data_path)}")

@@ -1,18 +1,16 @@
+import enum
 from dataclasses import dataclass
 from typing import List, Literal
 
 import numpy as np
 
-FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
-
+ComponentType = Literal["body", "right_hand", "left_hand", "face", "center_of_mass", "segment_center_of_mass"]
 @dataclass
 class FreemocapComponentData:
-    name: str
     data: np.ndarray
-    data_source: str
+    component_type: ComponentType
     trajectory_names: List[str]
-    data_dimension_names: List[str] = None
-    error: np.ndarray = None
+    data_dimension_names: List[str]
 
     def __post_init__(self):
         if isinstance(self.data, list):
