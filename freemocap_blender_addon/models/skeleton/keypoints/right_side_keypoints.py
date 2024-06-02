@@ -3,7 +3,7 @@ from enum import auto
 from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints
 
 
-class RightSideKeypoints(Keypoints):
+class RightBodyKeypoints(Keypoints):
     RIGHT_HIP = auto()
     RIGHT_KNEE = auto()
     RIGHT_ANKLE = auto()
@@ -16,9 +16,16 @@ class RightSideKeypoints(Keypoints):
     RIGHT_ELBOW = auto()
     RIGHT_WRIST = auto()
 
+
+
+class RightHandKeypoints(Keypoints):
     # hand
     # https://www.assh.org/handcare/safety/joints
     # https://en.wikipedia.org/wiki/Hand#/media/File:814_Radiograph_of_Hand.jpg
+    # wrist
+    RIGHT_RADIO_CARPAL = auto()
+    RIGHT_MID_CARPAL = auto()
+
     # thumb
     RIGHT_THUMB_BASAL_CARPO_METACARPAL = auto() # wrist connection
     RIGHT_THUMB_META_CARPO_PHALANGEAL = auto() # thumb knuckle
