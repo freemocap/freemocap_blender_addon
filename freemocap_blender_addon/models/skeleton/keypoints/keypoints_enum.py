@@ -1,11 +1,19 @@
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import Enum
 from typing import Any, List
 
 
 @dataclass
 class Keypoint:
     name: str
+
+    def __hash__(self):
+        return hash(self.name)
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __str__(self):
+        return self.name
 
 
 class Keypoints(Enum):
@@ -18,6 +26,10 @@ class Keypoints(Enum):
     _generate_next_value_(name, start, count, last_values):
         Generates the next value for the auto-assigned enum members.
     """
+
+    @property
+    def name(self):
+        return self.__class__.__name__
 
     def __new__(cls, *args: Any, **kwargs: Any) -> 'Keypoints':
         obj = object.__new__(cls)
@@ -33,9 +45,12 @@ class Keypoints(Enum):
         return name
 
     @classmethod
-    def to_list(cls, exclude: List[Keypoint] = None) -> List[str]:
+    def to_list(cls, exclude: List[Keypoint] = None) -> List[Keypoint]:
 
         if exclude is None:
             exclude = []
-        return [name for name, _ in cls.__members__.items() if cls[name].value not in exclude]
+        return [keypoint.value for keypoint in cls.__members__.values() if keypoint.value not in exclude]
 
+    def __str__(self):
+        out_str = f"{self.name}: \n {self.value}"
+        return out_str

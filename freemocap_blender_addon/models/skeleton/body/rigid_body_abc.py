@@ -16,7 +16,13 @@ class WeightedSumDefinition(ABC):
 
 
 @dataclass
-class SimpleRigidBodyABC(ABC):
+class RigidBodyABC(ABC):
+    @property
+    def name(self) -> str:
+        return self.__class__.__name__
+
+@dataclass
+class SimpleRigidBody(RigidBodyABC):
     """
     A simple rigid body is a pair of keypoints that are linked together, the distance between them is constant.
     The parent keypoint is the origin of the rigid body, and the child keypoint is the end of the rigid body.
@@ -25,13 +31,15 @@ class SimpleRigidBodyABC(ABC):
     parent: Keypoints
     child: Keypoints
 
-    @property
-    def name(self) -> str:
-        return self.__class__.__name__
+    def __str__(self) -> str:
+        out_str = self.name + "\n"
+        out_str += f"\tParent: {self.parent}"
+        out_str += f"\tChild: {self.child}"
+        return out_str
 
 
 @dataclass
-class CompositeRigidBodyABC(ABC):
+class CompositeRigidBody(RigidBodyABC):
     """
     A composite rigid body is a collection of keypoints that are linked together, such that the distance between all keypoints is constant.
     The parent keypoint is the origin of the rigid body
@@ -41,12 +49,13 @@ class CompositeRigidBodyABC(ABC):
     children: List[Keypoint]
 
     @property
-    def primary_axis(self) -> str:
+    def positive_x(self) -> str:
         raise NotImplementedError("Primary axis must be defined in the subclass")
 
     @property
-    def secondary_axis(self) -> str:
+    def approximate_positive_y(self) -> str:
         raise NotImplementedError("Secondary axis must be defined in the subclass")
+
 
     def get_child(self, keypoint: Keypoint) -> Keypoint:
         if keypoint not in self.children:
@@ -59,3 +68,15 @@ class CompositeRigidBodyABC(ABC):
         if len(self.children) < 2:
             raise ValueError(
                 "Composite rigid body must have at least 2 child keypoints - use SimpleRigidBodyABC instead")
+
+
+class LinkageABC(ABC):
+    """
+    A linkage comprises two or more RigidBodies that share a common Keypoint.
+
+    The distance from the linked keypoint is fixed relateive to the keypoints in the same rigid body,
+     but the distances between the unlinked keypoints may change.
+
+     #TODO- for now these are all 'universal' (ball) joints. Later we can add different constraints
+    """
+    bodies:List[Ri]

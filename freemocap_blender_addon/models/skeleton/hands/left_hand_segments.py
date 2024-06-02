@@ -1,102 +1,102 @@
-from freemocap_blender_addon.models.skeleton.body.rigid_body_abc import SimpleRigidBodyABC
+from freemocap_blender_addon.models.skeleton.body.rigid_body_abc import SimpleRigidBody
 from freemocap_blender_addon.models.skeleton.keypoints.left_side_keypoints import LeftSideKeypoints
 
 
 # thumb
-class LeftThumbMetacarpalRigidBody(SimpleRigidBodyABC):
+class LeftThumbMetacarpalRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_WRIST.value
     child = LeftSideKeypoints.LEFT_THUMB_META_CARPO_PHALANGEAL.value
 
 
-class LeftThumbProximalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftThumbProximalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_THUMB_META_CARPO_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_THUMB_INTER_PHALANGEAL.value
 
 
-class LeftThumbDistalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftThumbDistalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_THUMB_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_THUMB_TIP.value
 
 
 # index
-class LeftIndexMetacarpalRigidBody(SimpleRigidBodyABC):
+class LeftIndexMetacarpalRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_WRIST.value
     child = LeftSideKeypoints.LEFT_INDEX_META_CARPO_PHALANGEAL.value
 
 
-class LeftIndexProximalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftIndexProximalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_INDEX_META_CARPO_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_INDEX_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class LeftIndexMiddlePhalanxRigidBody(SimpleRigidBodyABC):
+class LeftIndexMiddlePhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_INDEX_PROXIMAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_INDEX_DISTAL_INTER_PHALANGEAL.value
 
 
-class LeftIndexDistalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftIndexDistalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_INDEX_DISTAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_INDEX_TIP.value
 
 
 # middle
-class LeftMiddleMetacarpalRigidBody(SimpleRigidBodyABC):
+class LeftMiddleMetacarpalRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_WRIST.value
     child = LeftSideKeypoints.LEFT_MIDDLE_META_CARPO_PHALANGEAL.value
 
 
-class LeftMiddleProximalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftMiddleProximalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_MIDDLE_META_CARPO_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_MIDDLE_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class LeftMiddleMiddlePhalanxRigidBody(SimpleRigidBodyABC):
+class LeftMiddleMiddlePhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_MIDDLE_PROXIMAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_MIDDLE_DISTAL_INTER_PHALANGEAL.value
 
 
-class LeftMiddleDistalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftMiddleDistalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_MIDDLE_DISTAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_MIDDLE_TIP.value
 
 
 # ring
-class LeftRingMetacarpalRigidBody(SimpleRigidBodyABC):
+class LeftRingMetacarpalRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_WRIST.value
     child = LeftSideKeypoints.LEFT_RING_META_CARPO_PHALANGEAL.value
 
 
-class LeftRingProximalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftRingProximalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_RING_META_CARPO_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_RING_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class LeftRingMiddlePhalanxRigidBody(SimpleRigidBodyABC):
+class LeftRingMiddlePhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_RING_PROXIMAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_RING_DISTAL_INTER_PHALANGEAL.value
 
 
-class LeftRingDistalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftRingDistalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_RING_DISTAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_RING_TIP.value
 
 
 # pinky
-class LeftPinkyMetacarpalRigidBody(SimpleRigidBodyABC):
+class LeftPinkyMetacarpalRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_WRIST.value
     child = LeftSideKeypoints.LEFT_PINKY_META_CARPO_PHALANGEAL.value
 
 
-class LeftPinkyProximalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftPinkyProximalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_PINKY_META_CARPO_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_PINKY_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class LeftPinkyMiddlePhalanxRigidBody(SimpleRigidBodyABC):
+class LeftPinkyMiddlePhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_PINKY_PROXIMAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_PINKY_DISTAL_INTER_PHALANGEAL.value
 
 
-class LeftPinkyDistalPhalanxRigidBody(SimpleRigidBodyABC):
+class LeftPinkyDistalPhalanxRigidBody(SimpleRigidBody):
     parent = LeftSideKeypoints.LEFT_PINKY_DISTAL_INTER_PHALANGEAL.value
     child = LeftSideKeypoints.LEFT_PINKY_TIP.value

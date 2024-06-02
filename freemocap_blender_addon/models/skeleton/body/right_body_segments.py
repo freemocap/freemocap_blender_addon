@@ -1,25 +1,25 @@
-from freemocap_blender_addon.models.skeleton.body.rigid_body_abc import CompositeRigidBodyABC, SimpleRigidBodyABC
+from freemocap_blender_addon.models.skeleton.body.rigid_body_abc import CompositeRigidBody, SimpleRigidBody
 from freemocap_blender_addon.models.skeleton.keypoints.axial_body_keypoints import AxialBodyKeypoints
 from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoint
 from freemocap_blender_addon.models.skeleton.keypoints.right_side_keypoints import RightSideKeypoints
 
 
-class RightClavicleRigidBody(SimpleRigidBodyABC):
+class RightClavicleRigidBody(SimpleRigidBody):
     parent = AxialBodyKeypoints.CHEST_CENTER.value
     child = RightSideKeypoints.RIGHT_SHOULDER.value
 
 
-class RightUpperArmRigidBody(SimpleRigidBodyABC):
+class RightUpperArmRigidBody(SimpleRigidBody):
     parent = RightSideKeypoints.RIGHT_SHOULDER.value
     child = RightSideKeypoints.RIGHT_ELBOW.value
 
 
-class RightForearmRigidBody(SimpleRigidBodyABC):
+class RightForearmRigidBody(SimpleRigidBody):
     parent = RightSideKeypoints.RIGHT_ELBOW.value
     child = RightSideKeypoints.RIGHT_WRIST.value
 
 
-class RightPalmRigidBody(CompositeRigidBodyABC):
+class RightPalmRigidBody(CompositeRigidBody):
     parent = RightSideKeypoints.RIGHT_WRIST.value
     children = RightSideKeypoints.to_list(exclude=[RightSideKeypoints.RIGHT_WRIST.value])
 
@@ -32,22 +32,22 @@ class RightPalmRigidBody(CompositeRigidBodyABC):
         return self.get_child(RightSideKeypoints.RIGHT_INDEX_META_CARPO_PHALANGEAL.value)
 
 
-class RightPelvisRigidBody(SimpleRigidBodyABC):
+class RightPelvisRigidBody(SimpleRigidBody):
     parent = AxialBodyKeypoints.HIPS_CENTER.value
     child = RightSideKeypoints.RIGHT_HIP.value
 
 
-class RightThighRigidBody(SimpleRigidBodyABC):
+class RightThighRigidBody(SimpleRigidBody):
     parent = RightSideKeypoints.RIGHT_HIP.value
     child = RightSideKeypoints.RIGHT_KNEE.value
 
 
-class RightLegRigidBody(SimpleRigidBodyABC):
+class RightLegRigidBody(SimpleRigidBody):
     parent = RightSideKeypoints.RIGHT_KNEE.value
     child = RightSideKeypoints.RIGHT_ANKLE.value
 
 
-class RightFootRigidBody(CompositeRigidBodyABC):
+class RightFootRigidBody(CompositeRigidBody):
     parent = RightSideKeypoints.RIGHT_ANKLE.value
     children = RightSideKeypoints.to_list(exclude=[RightSideKeypoints.RIGHT_ANKLE.value])
 
