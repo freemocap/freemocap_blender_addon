@@ -1,10 +1,11 @@
+from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, List
 
 
 @dataclass
-class Keypoint:
+class Keypoint(ABC):
     name: str
 
     def __hash__(self):
@@ -54,3 +55,13 @@ class Keypoints(Enum):
     def __str__(self):
         out_str = f"{self.name}: \n {self.value}"
         return out_str
+
+
+@dataclass
+class WeightedSumDefinition(ABC):
+    parent_keypoints: List[Keypoint]
+    weights: List[float]
+
+    def __post_init__(self):
+        if len(self.parent_keypoints) != len(self.weights):
+            raise ValueError("The number of parent keypoints must match the number of weights")

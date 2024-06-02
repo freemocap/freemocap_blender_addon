@@ -2,17 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
-from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoint, Keypoints
-
-
-@dataclass
-class WeightedSumDefinition(ABC):
-    parent_keypoints: List[Keypoint]
-    weights: List[float]
-
-    def __post_init__(self):
-        if len(self.parent_keypoints) != len(self.weights):
-            raise ValueError("The number of parent keypoints must match the number of weights")
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoint, Keypoints
 
 
 @dataclass

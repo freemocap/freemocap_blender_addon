@@ -1,6 +1,6 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoints
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints
 
 
 # "axial" means like non-mirrored

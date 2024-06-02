@@ -1,6 +1,5 @@
-from freemocap_blender_addon.models.skeleton.keypoints.axial_body_keypoints import HeadKeypoints, TorsoKeypoints
-from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoint
-from freemocap_blender_addon.models.skeleton.body.rigid_body_abc import CompositeRigidBody, \
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoint
+from freemocap_blender_addon.models.skeleton.rigid_bodies.abc_rigid_body import CompositeRigidBody, \
     SimpleRigidBody
 
 

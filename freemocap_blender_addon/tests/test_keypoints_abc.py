@@ -1,6 +1,6 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoints.keypoints_enum import Keypoints, Keypoint
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints, Keypoint
 
 
 class ExampleKeypoints(Keypoints):
