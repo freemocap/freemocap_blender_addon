@@ -6,9 +6,12 @@ from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keyp
 # "axial" means like non-mirrored
 
 class AxialBodyKeypoints(Keypoints):
+    # head
+    SKULL_CENTER = auto()
+    SKULL_BREGMA = auto()  # tippy top of the head
+
+    # face
     NOSE = auto()
-    HEAD_CENTER = auto()
-    HEAD_TOP = auto()
 
     # right-face
     RIGHT_EYE_INNER = auto()
@@ -27,6 +30,7 @@ class AxialBodyKeypoints(Keypoints):
     LEFT_MOUTH_LEFT = auto()
     LEFT_MOUTH_RIGHT = auto()
 
+    # neck
     NECK_C1 = auto()
     NECK_C7 = auto()
     CHEST_CENTER = auto()  # Center of the chest volume

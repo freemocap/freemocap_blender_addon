@@ -1,6 +1,6 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints, Keypoint
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints, KeypointABC
 
 
 class ExampleKeypoints(Keypoints):
@@ -18,7 +18,7 @@ def test_to_list():
     # Test that all keypoints are returned correctly
     expected_keypoints = ['thing1', 'thing2']
     keypoints_list = ExampleKeypoints.to_list()
-    assert all([isinstance(kp, Keypoint) for kp in keypoints_list])
+    assert all([isinstance(kp, KeypointABC) for kp in keypoints_list])
     keypoints_names = [kp.name for kp in keypoints_list]
     assert set(keypoints_names) == set(expected_keypoints)
 
@@ -27,7 +27,7 @@ def test_to_list_with_exclusion():
     # Test that excluded keypoints are not in the list
     excluded_keypoints = [ExampleKeypoints.THING2.value]
     expected_keypoints = [ExampleKeypoints.THING1.value]
-    assert all([isinstance(kp, Keypoint) for kp in excluded_keypoints])
+    assert all([isinstance(kp, KeypointABC) for kp in excluded_keypoints])
     keypoints_list = ExampleKeypoints.to_list(exclude=excluded_keypoints)
     assert set(expected_keypoints) == set(keypoints_list)
 

@@ -2,7 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
-from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoint, Keypoints
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import KeypointABC, Keypoints
 
 
 @dataclass
@@ -10,6 +10,7 @@ class RigidBodyABC(ABC):
     @property
     def name(self) -> str:
         return self.__class__.__name__
+
 
 @dataclass
 class SimpleRigidBody(RigidBodyABC):
@@ -35,8 +36,8 @@ class CompositeRigidBody(RigidBodyABC):
     The parent keypoint is the origin of the rigid body
     The primary and secondary axes must be defined when in the instantiated class.
     """
-    parent: Keypoint
-    children: List[Keypoint]
+    parent: KeypointABC
+    children: List[KeypointABC]
 
     @property
     def positive_x(self) -> str:
@@ -46,8 +47,7 @@ class CompositeRigidBody(RigidBodyABC):
     def approximate_positive_y(self) -> str:
         raise NotImplementedError("Secondary axis must be defined in the subclass")
 
-
-    def get_child(self, keypoint: Keypoint) -> Keypoint:
+    def get_child(self, keypoint: KeypointABC) -> KeypointABC:
         if keypoint not in self.children:
             raise ValueError(f"Keypoint {keypoint.name} is not a child of {self.parent.name}")
         return keypoint
@@ -60,13 +60,3 @@ class CompositeRigidBody(RigidBodyABC):
                 "Composite rigid body must have at least 2 child keypoints - use SimpleRigidBodyABC instead")
 
 
-class LinkageABC(ABC):
-    """
-    A linkage comprises two or more RigidBodies that share a common Keypoint.
-
-    The distance from the linked keypoint is fixed relateive to the keypoints in the same rigid body,
-     but the distances between the unlinked keypoints may change.
-
-     #TODO- for now these are all 'universal' (ball) joints. Later we can add different constraints
-    """
-    bodies:List[Ri]

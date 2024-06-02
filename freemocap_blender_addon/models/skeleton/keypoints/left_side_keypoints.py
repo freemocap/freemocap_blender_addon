@@ -11,6 +11,7 @@ class LeftSideKeypoints(Keypoints):
     LEFT_HALLUX_TIP = auto()  # hallux is the big toe
 
     # arm
+    LEFT_CLAVICLE = auto()
     LEFT_SHOULDER = auto()
     LEFT_ELBOW = auto()
     LEFT_WRIST = auto()

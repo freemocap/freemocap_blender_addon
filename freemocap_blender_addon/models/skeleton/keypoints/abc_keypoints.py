@@ -5,7 +5,7 @@ from typing import Any, List
 
 
 @dataclass
-class Keypoint(ABC):
+class KeypointABC(ABC):
     name: str
 
     def __hash__(self):
@@ -38,7 +38,7 @@ class Keypoints(Enum):
             name = cls._name_.lower()
         else:
             name = args[0].lower()
-        obj._value_ = Keypoint(name)
+        obj._value_ = KeypointABC(name)
         return obj
 
     @staticmethod
@@ -46,7 +46,7 @@ class Keypoints(Enum):
         return name
 
     @classmethod
-    def to_list(cls, exclude: List[Keypoint] = None) -> List[Keypoint]:
+    def to_list(cls, exclude: List[KeypointABC] = None) -> List[KeypointABC]:
 
         if exclude is None:
             exclude = []
@@ -57,9 +57,11 @@ class Keypoints(Enum):
         return out_str
 
 
+
+
 @dataclass
 class WeightedSumDefinition(ABC):
-    parent_keypoints: List[Keypoint]
+    parent_keypoints: List[KeypointABC]
     weights: List[float]
 
     def __post_init__(self):

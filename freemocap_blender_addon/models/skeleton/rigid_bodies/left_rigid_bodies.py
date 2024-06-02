@@ -1,6 +1,6 @@
 from freemocap_blender_addon.models.skeleton.rigid_bodies.abc_rigid_body import CompositeRigidBody, SimpleRigidBody
 from freemocap_blender_addon.models.skeleton.keypoints.axial_body_keypoints import AxialBodyKeypoints
-from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoint
+from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import KeypointABC
 from freemocap_blender_addon.models.skeleton.keypoints.left_side_keypoints import LeftSideKeypoints
 
 
@@ -24,11 +24,11 @@ class LeftPalmRigidBody(CompositeRigidBody):
     children = LeftSideKeypoints.to_list(exclude=[LeftSideKeypoints.LEFT_WRIST.value])
 
     @property
-    def positive_x(self) -> Keypoint:
+    def positive_x(self) -> KeypointABC:
         return self.get_child(LeftSideKeypoints.LEFT_PINKY_META_CARPO_PHALANGEAL.value)
 
     @property
-    def approximate_positive_y(self) -> Keypoint:
+    def approximate_positive_y(self) -> KeypointABC:
         return self.get_child(LeftSideKeypoints.LEFT_INDEX_META_CARPO_PHALANGEAL.value)
 
 
@@ -52,11 +52,11 @@ class LeftFootRigidBody(CompositeRigidBody):
     children = LeftSideKeypoints.to_list(exclude=[LeftSideKeypoints.LEFT_ANKLE.value])
 
     @property
-    def positive_x(self) -> Keypoint:
+    def positive_x(self) -> KeypointABC:
         return self.get_child(LeftSideKeypoints.LEFT_HALLUX_TIP.value)
 
     @property
-    def approximate_positive_y(self) -> Keypoint:
+    def approximate_positive_y(self) -> KeypointABC:
         return self.get_child(LeftSideKeypoints.LEFT_HEEL.value)
 
 
