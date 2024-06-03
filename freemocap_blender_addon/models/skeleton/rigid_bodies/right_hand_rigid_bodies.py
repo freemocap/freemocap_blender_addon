@@ -1,5 +1,5 @@
+from freemocap_blender_addon.models.skeleton.abstract_base_classes import SimpleRigidBody
 from freemocap_blender_addon.models.skeleton.keypoints.right_side_keypoints import RightHandKeypoints
-from freemocap_blender_addon.models.skeleton.rigid_bodies.abc_rigid_body import SimpleRigidBody
 
 # hand
 # https://www.assh.org/handcare/safety/joints

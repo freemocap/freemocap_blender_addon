@@ -1,11 +1,11 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints
+from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsABC
 
 
 # "axial" means like non-mirrored
 
-class AxialBodyKeypoints(Keypoints):
+class AxialBodyKeypoints(KeypointsABC):
     # head
     SKULL_CENTER = auto()
     SKULL_BREGMA = auto()  # tippy top of the head

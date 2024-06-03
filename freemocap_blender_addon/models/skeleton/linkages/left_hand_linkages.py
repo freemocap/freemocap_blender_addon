@@ -1,6 +1,6 @@
 from freemocap_blender_addon.models.skeleton.keypoints.right_side_keypoints import LeftHandKeypoints
 from freemocap_blender_addon.models.skeleton.linkages.abc_linkage import LinkageABC
-from freemocap_blender_addon.models.skeleton.rigid_bodies.left_hand_segments import LeftThumbMetacarpalRigidBody, \
+from freemocap_blender_addon.models.skeleton.rigid_bodies.left_hand_rigid_bodies import LeftThumbMetacarpalRigidBody, \
     LeftThumbProximalPhalanxRigidBody, LeftThumbDistalPhalanxRigidBody, LeftIndexFingerMetacarpalRigidBody, \
     LeftIndexFingerProximalPhalanxRigidBody, LeftIndexFingerMiddlePhalanxRigidBody, \
     LeftIndexFingerDistalPhalanxRigidBody, LeftMiddleFingerMetacarpalRigidBody, \
