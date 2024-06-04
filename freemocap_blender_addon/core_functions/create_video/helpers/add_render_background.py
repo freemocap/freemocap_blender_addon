@@ -2,7 +2,7 @@ import os
 
 import addon_utils
 import bpy
-from freemocap_blender_addon.models.processing.pipeline_parameters import export_profiles, render_background
+from freemocap_blender_addon.models.pipelines.pipeline_parameters import export_profiles, render_background
 
 
 def add_render_background(scene: bpy.types.Scene = None,

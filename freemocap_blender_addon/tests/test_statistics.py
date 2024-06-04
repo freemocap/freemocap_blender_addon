@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from freemocap_blender_addon.models.processing.sample_statistics import SampleList, CentralTendencyMeasures, \
+from freemocap_blender_addon.models.pipelines.sample_statistics import SampleList, CentralTendencyMeasures, \
     DescriptiveStatistics, VariabilityMeasures, SampleData
 
 
