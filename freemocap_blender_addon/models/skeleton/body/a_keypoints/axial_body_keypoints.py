@@ -1,13 +1,13 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsABC
+from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsEnum
 
 
 # "axial" means like non-mirrored
 
-class AxialBodyKeypoints(KeypointsABC):
+class AxialBodyKeypoints(KeypointsEnum):
     # head
-    SKULL_CENTER = auto()
+    SKULL_C1 = auto()
     SKULL_BREGMA = auto()  # tippy top of the head
 
     # face
@@ -20,7 +20,6 @@ class AxialBodyKeypoints(KeypointsABC):
     RIGHT_EAR_TRAGUS = auto()
     RIGHT_MOUTH_LEFT = auto()
     RIGHT_MOUTH_RIGHT = auto()
-    RIGHT_HEAD_CENTER = auto()
 
     # left-face
     LEFT_EYE_INNER = auto()
@@ -33,5 +32,5 @@ class AxialBodyKeypoints(KeypointsABC):
     # neck
     NECK_C1 = auto()
     NECK_C7 = auto()
-    CHEST_CENTER = auto()  # Center of the chest volume
-    HIPS_CENTER = auto()  # Center of the pelvis volume
+    CHEST_T1_CENTER = auto()  # Center of the chest volume
+    PELVIS_SACRUM = auto()  # Center of the pelvis volume

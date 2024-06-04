@@ -1,9 +1,9 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsABC
+from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsEnum
 
 
-class ExampleKeypoints(KeypointsABC):
+class ExampleKeypoints(KeypointsEnum):
     THING1 = auto()
     THING2 = auto()
 

@@ -1,21 +1,5 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.keypoints.abc_keypoints import Keypoints
-
-
-class RightBodyKeypoints(Keypoints):
-    RIGHT_HIP = auto()
-    RIGHT_KNEE = auto()
-    RIGHT_ANKLE = auto()
-    RIGHT_HEEL = auto()
-    RIGHT_HALLUX_TIP = auto() #hallux is the big toe
-
-    # arm
-    RIGHT_CLAVICLE = auto()
-    RIGHT_SHOULDER = auto()
-    RIGHT_ELBOW = auto()
-    RIGHT_WRIST = auto()
-
 
 
 class RightHandKeypoints(Keypoints):

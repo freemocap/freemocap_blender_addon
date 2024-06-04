@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Self
 
 import numpy as np
 
@@ -12,7 +13,7 @@ class CenterOfMassData:
     segments: FreemocapDataComponent
 
     @classmethod
-    def from_npy_paths(cls, npy_paths: FreemocapDataPaths) -> 'CenterOfMassComponentData':
+    def from_npy_paths(cls, npy_paths: FreemocapDataPaths) -> Self:
         return cls(
             total_body_center_of_mass=FreemocapDataComponent.create(
                 data=np.load(npy_paths.center_of_mass.total_body_center_of_mass),

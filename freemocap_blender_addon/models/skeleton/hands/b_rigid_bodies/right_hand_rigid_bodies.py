@@ -1,126 +1,126 @@
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import SimpleRigidBody
-from freemocap_blender_addon.models.skeleton.keypoints.right_side_keypoints import RightHandKeypoints
+from freemocap_blender_addon.models.skeleton.abstract_base_classes import SimpleRigidBodyABC
+from freemocap_blender_addon.models.skeleton.hands.right_hand_keypoints import RightHandKeypoints
 
 # hand
 # https://www.assh.org/handcare/safety/joints
 # https://en.wikipedia.org/wiki/Hand#/media/File:814_Radiograph_of_Hand.jpg
 
 #Thumb
-class RightThumbRadioCarpalRigidBody(SimpleRigidBody):
+class RightThumbRadioCarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
 
 
-class RightThumbMetacarpalRigidBody(SimpleRigidBody):
+class RightThumbMetacarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
     child = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
 
 
-class RightThumbProximalPhalanxRigidBody(SimpleRigidBody):
+class RightThumbProximalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
 
 
-class RightThumbDistalPhalanxRigidBody(SimpleRigidBody):
+class RightThumbDistalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_THUMB_TIP.value
 
 # Index
-class RightIndexFingerRadioCarpalRigidBody(SimpleRigidBody):
+class RightIndexFingerRadioCarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
 
 
-class RightIndexFingerMetacarpalRigidBody(SimpleRigidBody):
+class RightIndexFingerMetacarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
 
 
-class RightIndexFingerProximalPhalanxRigidBody(SimpleRigidBody):
+class RightIndexFingerProximalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class RightIndexFingerMiddlePhalanxRigidBody(SimpleRigidBody):
+class RightIndexFingerMiddlePhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
-class RightIndexFingerDistalPhalanxRigidBody(SimpleRigidBody):
+class RightIndexFingerDistalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_TIP.value
 
 #Middle
-class RightMiddleFingerRadioCarpalRigidBody(SimpleRigidBody):
+class RightMiddleFingerRadioCarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
 
 
-class RightMiddleFingerMetacarpalRigidBody(SimpleRigidBody):
+class RightMiddleFingerMetacarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
 
 
-class RightMiddleFingerProximalPhalanxRigidBody(SimpleRigidBody):
+class RightMiddleFingerProximalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class RightMiddleFingerMiddlePhalanxRigidBody(SimpleRigidBody):
+class RightMiddleFingerMiddlePhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
-class RightMiddleFingerDistalPhalanxRigidBody(SimpleRigidBody):
+class RightMiddleFingerDistalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_TIP.value
 
 # Ring
-class RightRingFingerRadioCarpalRigidBody(SimpleRigidBody):
+class RightRingFingerRadioCarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
 
 
-class RightRingFingerMetacarpalRigidBody(SimpleRigidBody):
+class RightRingFingerMetacarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
 
 
-class RightRingFingerProximalPhalanxRigidBody(SimpleRigidBody):
+class RightRingFingerProximalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class RightRingFingerMiddlePhalanxRigidBody(SimpleRigidBody):
+class RightRingFingerMiddlePhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
-class RightRingFingerDistalPhalanxRigidBody(SimpleRigidBody):
+class RightRingFingerDistalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_TIP.value
 
 # Pinky
-class RightPinkyFingerRadioCarpalRigidBody(SimpleRigidBody):
+class RightPinkyFingerRadioCarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_PINKY_FINGER_CARPO_META_CARPAL.value
 
 
-class RightPinkyFingerMetacarpalRigidBody(SimpleRigidBody):
+class RightPinkyFingerMetacarpalRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL
     child = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
 
 
-class RightPinkyFingerProximalPhalanxRigidBody(SimpleRigidBody):
+class RightPinkyFingerProximalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
-class RightPinkyFingerMiddlePhalanxRigidBody(SimpleRigidBody):
+class RightPinkyFingerMiddlePhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
-class RightPinkyFingerDistalPhalanxRigidBody(SimpleRigidBody):
+class RightPinkyFingerDistalPhalanxRigidBodyABC(SimpleRigidBodyABC):
     parent = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_PINKY_FINGER_TIP.value

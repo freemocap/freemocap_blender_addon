@@ -5,8 +5,7 @@ from typing import List
 import numpy as np
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_paths import TrackerSourceType
-
-from freemocap_blender_addon.models.anatomical.keypoints import get_keypoint_names
+from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names
 
 FRAME_TRAJECTORY_XYZ: List[str] = ["frame_number", "trajectory_index", "xyz"]
 
