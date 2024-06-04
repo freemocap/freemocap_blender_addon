@@ -46,7 +46,7 @@ class LeftThighRigidBody(SimpleRigidBodyABC):
     child = LeftBodyKeypoints.LEFT_KNEE.value
 
 
-class LeftLegRigidBody(SimpleRigidBodyABC):
+class LeftCalfRigidBody(SimpleRigidBodyABC):
     parent = LeftBodyKeypoints.LEFT_KNEE.value
     child = LeftBodyKeypoints.LEFT_ANKLE.value
 
