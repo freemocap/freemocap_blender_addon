@@ -6,6 +6,7 @@ from freemocap_blender_addon.core_functions.empties.creation.create_virtual_traj
     calculate_virtual_trajectories
 
 from .operations.estimate_good_frame import estimate_good_frame
+from ..freemocap_data.skeleton_data import SkeletonData
 
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransformer
@@ -13,9 +14,9 @@ from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransforme
 
 class FreemocapDataHandler:
     def __init__(self,
-                 freemocap_data: FreemocapData):
+                 skeleton_data: SkeletonData):
 
-        self.freemocap_data = freemocap_data
+        self.freemocap_data = skeleton_data
         self._intermediate_stages = None
         self._transformer = FreemocapDataTransformer(handler=self)
         self._saver = FreemocapDataSaver(handler=self)
@@ -25,8 +26,8 @@ class FreemocapDataHandler:
     def from_recording_path(cls,
                             recording_path: str,
                             ) -> "FreemocapDataHandler":
-        freemocap_data = FreemocapData.from_recording_path(recording_path=recording_path)
-        return cls(freemocap_data=freemocap_data)
+        freemocap_data = SkeletonData.from_recording_path(recording_path=recording_path)
+        return cls(skeleton_data=freemocap_data)
 
     @property
     def metadata(self) -> Optional[Dict[Any, Any]]:
@@ -435,16 +436,16 @@ class FreemocapDataHandler:
         self.add_metadata(metadata)
         if name in self._intermediate_stages.keys() and not overwrite:
             raise ValueError(f"Processing stage {name} already exists. Set overwrite=True to overwrite.")
-        self._intermediate_stages[name] = FreemocapData(**deepcopy(self.freemocap_data.__dict__))
+        self._intermediate_stages[name] = SkeletonData(**deepcopy(self.freemocap_data.__dict__))
 
-    def get_processing_stage(self, name: str) -> "FreemocapData":
+    def get_processing_stage(self, name: str) -> "SkeletonData":
         """
         Get the data from a processing stage (e.g. "raw", "reoriented", etc.)
         """
         if self._intermediate_stages is None:
             raise ValueError("No processing stages have been marked yet.")
 
-        return FreemocapData.from_data(**self._intermediate_stages[name])
+        return SkeletonData.from_data(**self._intermediate_stages[name])
 
     def add_metadata(self, metadata: dict):
         if self.freemocap_data.metadata is None:
