@@ -1,5 +1,6 @@
 from freemocap_blender_addon.models.skeleton.body.a_keypoints.axial_body_keypoints import AxialBodyKeypoints
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import CompoundRigidBodyABC, SimpleRigidBodyABC
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import CompoundRigidBodyABC, \
+    SimpleRigidBodyABC
 
 
 class SkullRigidBody(CompoundRigidBodyABC):
@@ -10,14 +11,12 @@ class SkullRigidBody(CompoundRigidBodyABC):
                 AxialBodyKeypoints.RIGHT_EYE_CENTER.value,
                 AxialBodyKeypoints.RIGHT_EYE_OUTER.value,
                 AxialBodyKeypoints.RIGHT_EAR_TRAGUS.value,
-                AxialBodyKeypoints.RIGHT_MOUTH_LEFT.value,
-                AxialBodyKeypoints.RIGHT_MOUTH_RIGHT.value,
+                AxialBodyKeypoints.RIGHT_MOUTH.value,
                 AxialBodyKeypoints.LEFT_EYE_INNER.value,
                 AxialBodyKeypoints.LEFT_EYE_CENTER.value,
                 AxialBodyKeypoints.LEFT_EYE_OUTER.value,
                 AxialBodyKeypoints.LEFT_EAR_TRAGUS.value,
-                AxialBodyKeypoints.LEFT_MOUTH_LEFT.value,
-                AxialBodyKeypoints.LEFT_MOUTH_RIGHT.value]
+                AxialBodyKeypoints.LEFT_MOUTH.value]
 
     shared_keypoint = AxialBodyKeypoints.SKULL_C1.value
     positive_x = AxialBodyKeypoints.NOSE.value

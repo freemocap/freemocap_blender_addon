@@ -1,6 +1,6 @@
 from enum import auto
 
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import KeypointsEnum
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointsEnum
 
 
 class RightBodyKeypoints(KeypointsEnum):

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from freemocap_blender_addon.models.pipelines.abstract_base_classes import AbstractPipelineStage, \
-    BasePipelineIOABC, AbstractPipeline
+from freemocap_blender_addon.pipelines.abstract_base_classes import BasePipelineIOABC, AbstractPipelineStage, \
+    AbstractPipeline
 
 
 @dataclass

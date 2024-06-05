@@ -1,4 +1,4 @@
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import SimpleRigidBodyABC
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import SimpleRigidBodyABC
 from freemocap_blender_addon.models.skeleton.hands.right_hand_keypoints import RightHandKeypoints
 
 # hand

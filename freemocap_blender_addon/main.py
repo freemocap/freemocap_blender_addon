@@ -2,8 +2,8 @@ import sys
 from pathlib import Path
 
 from freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
-from freemocap_blender_addon.models.pipelines.pipeline_parameters import load_default_parameters_config
-from freemocap_blender_addon.models.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
+from freemocap_blender_addon.pipelines.pipelines import load_default_parameters_config
+from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 
 
 def run_as_main_function(recording_path: str,

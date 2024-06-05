@@ -4,17 +4,10 @@ from typing import List
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import TrackerSourceType
+from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType
 from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names
 
-FRAME_TRAJECTORY_XYZ: List[str] = ["frame_number", "trajectory_index", "xyz"]
 
-
-class ComponentType(enum.Enum):
-    BODY = "body"
-    FACE = "face"
-    RIGHT_HAND = "right_hand"
-    LEFT_HAND = "left_hand"
 
 
 @dataclass

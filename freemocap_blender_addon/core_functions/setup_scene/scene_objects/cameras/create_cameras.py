@@ -50,7 +50,7 @@ def create_cameras(
         scene: bpy.types.Scene,
         export_profile: str = 'debug'
 ) -> list:
-    from freemocap_blender_addon.models.pipelines.pipeline_parameters import export_profiles, lens_FOVs
+    from freemocap_blender_addon.pipelines.pipelines import export_profiles, lens_FOVs
     
     print(f"Creating cameras for export profile: {export_profile}")
     if export_profiles[export_profile]['resolution_x'] / export_profiles[export_profile]['resolution_y'] >= 1:

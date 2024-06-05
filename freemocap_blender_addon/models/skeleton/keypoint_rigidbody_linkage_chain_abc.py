@@ -3,9 +3,13 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Any, Self
 
+import numpy as np
+
+from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+
 
 @dataclass
-class Keypoint:
+class Keypoint(TypeSafeDataclass, ABC):
     """
     A Keypoint is a named "key" location on a skeleton, used to define the position of a rigid body or linkage.
     In marker-based motion capture, keypoints could correspond to markers placed on the body.
@@ -187,13 +191,19 @@ class SkeletonABC(ABC):
 ### Abstract Enum Classes & Auxilliary Classes ###
 
 @dataclass
-class WeightedSumDefinition(ABC):
+class WeightedSumKeypoint(Keypoint):
     parent_keypoints: List[Keypoint]
-    weights: List[float]
+    weights: Optional[List[float]] = None
 
     def __post_init__(self):
+        if self.weights is None:
+            self.weights = [1 / len(self.parent_keypoints)] * len(self.parent_keypoints)
+
         if len(self.parent_keypoints) != len(self.weights):
             raise ValueError("The number of parent keypoints must match the number of weights")
+
+        if np.sum(self.weights) != 1:
+            raise ValueError("The sum of the weights must be 1")
 
 
 class KeypointsEnum(Enum):
@@ -214,7 +224,7 @@ class KeypointsEnum(Enum):
     @classmethod
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         obj = object.__new__(cls)
-        obj._value_ = Keypoint(name=args[0])
+        obj._value_ = Keypoint(name=args[1])
         return obj
 
     @staticmethod

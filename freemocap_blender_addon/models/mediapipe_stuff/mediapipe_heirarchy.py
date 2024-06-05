@@ -1,33 +1,6 @@
 # Dictionary containing the empty children for each of the capture empties.
 # This will be used to correct the position of the empties (and its children) that are outside the bone length interval defined by x*stdev
 
-MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS = {
-    "head_center": {
-        "marker_names": ["left_ear", "right_ear"],
-        "marker_weights": [0.5, 0.5],
-    },
-    "neck_center": {
-        "marker_names": ["left_shoulder", "right_shoulder"],
-        "marker_weights": [0.5, 0.5],
-    },
-    "trunk_center": {
-        "marker_names": ["left_shoulder", "right_shoulder", "left_hip", "right_hip"],
-        "marker_weights": [0.25, 0.25, 0.25, 0.25],
-    },
-    "hips_center": {
-        "marker_names": ["left_hip", "right_hip"],
-        "marker_weights": [0.5, 0.5],
-    },
-    "right_hand_middle": {
-        "marker_names": ["right_index", "right_pinky"],
-        "marker_weights": [0.5, 0.5],
-    },
-    "left_hand_middle": {
-        "marker_names": ["left_index", "left_pinky"],
-        "marker_weights": [0.5, 0.5],
-    },
-}
-
 MEDIAPIPE_HIERARCHY = {
     # BODY
     # TORSO

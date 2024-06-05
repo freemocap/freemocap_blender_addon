@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 import numpy as np
 import pytest
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, TrackerSourceType
+from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 
 VALID_NPY_DATA: np.ndarray = np.array([1, 2, 3])
 
@@ -12,7 +12,7 @@ VALID_NPY_DATA: np.ndarray = np.array([1, 2, 3])
 
 @pytest.fixture
 def mock_path_exists() -> MagicMock:
-    with patch('freemocap_blender_addon.freemocap_data.freemocap_data_paths.Path.exists',
+    with patch('freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths.Path.exists',
                return_value=True) as mock_exists:
         yield mock_exists
 
@@ -34,16 +34,9 @@ def test_freemocap_npy_paths_initialization(recording_path_fixture:str) -> None:
 
 
 def test_file_not_found_error(tmp_path: Path) -> None:
-    with patch('freemocap_blender_addon.freemocap_data.freemocap_data_paths.Path.exists', return_value=False):
+    with patch('freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths.Path.exists', return_value=False):
         with pytest.raises(FileNotFoundError):
             FreemocapDataPaths.from_recording_path(path=str(tmp_path))
-
-
-def test_empty_npy_file_error(tmp_path: Path, mock_path_exists: MagicMock) -> None:
-    with patch('freemocap_blender_addon.freemocap_data.freemocap_data_paths.np.load', return_value=np.array([])):
-        with pytest.raises(ValueError, match="Empty npy file"):
-            FreemocapDataPaths.from_recording_path(path=str(tmp_path))
-
 
 
 

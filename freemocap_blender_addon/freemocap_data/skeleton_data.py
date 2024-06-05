@@ -2,10 +2,11 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from freemocap_blender_addon.core_functions.setup_scene.get_path_to_test_data import get_path_to_test_data
+from freemocap_blender_addon.utilities.get_path_to_test_data import get_path_to_test_data
 from freemocap_blender_addon.freemocap_data.freemocap_data_component import FreemocapDataComponent, ComponentType
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths, DEFAULT_TRACKER_TYPE, \
-    HandsNpyPaths, TrackerSourceType
+from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
+from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
+from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, DEFAULT_TRACKER_TYPE
 
 
 @dataclass

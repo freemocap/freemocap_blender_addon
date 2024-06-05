@@ -1,4 +1,4 @@
-from freemocap_blender_addon.models.skeleton.abstract_base_classes import SimpleRigidBodyABC, CompoundRigidBodyABC
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import SimpleRigidBodyABC, CompoundRigidBodyABC
 from freemocap_blender_addon.models.skeleton.body.a_keypoints.axial_body_keypoints import AxialBodyKeypoints
 from freemocap_blender_addon.models.skeleton.body.a_keypoints.right_body_keypoints import RightBodyKeypoints
 

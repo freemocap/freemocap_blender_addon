@@ -1,9 +1,8 @@
 from copy import copy
 from dataclasses import dataclass
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import RightLeft
-from freemocap_blender_addon.models.anatomical.bodyparts.body_definitions import HumanTrajectoryNames, \
-    HandsTrajectoryNames
+from freemocap_blender_addon.freemocap_data.data_paths.default_path_enums import RightLeft
+from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 MEDIAPIPE_HAND_NAMES = ["wrist",
                         "thumb_cmc",
@@ -28,41 +27,6 @@ MEDIAPIPE_HAND_NAMES = ["wrist",
                         "pinky_tip",
                         ]
 
-MEDIAPIPE_BODY_NAMES = [
-    "nose",
-    "left_eye_inner",
-    "left_eye",
-    "left_eye_outer",
-    "right_eye_inner",
-    "right_eye",
-    "right_eye_outer",
-    "left_ear",
-    "right_ear",
-    "mouth_left",
-    "mouth_right",
-    "left_shoulder",
-    "right_shoulder",
-    "left_elbow",
-    "right_elbow",
-    "left_wrist",
-    "right_wrist",
-    "left_pinky",
-    "right_pinky",
-    "left_index",
-    "right_index",
-    "left_thumb",
-    "right_thumb",
-    "left_hip",
-    "right_hip",
-    "left_knee",
-    "right_knee",
-    "left_ankle",
-    "right_ankle",
-    "left_heel",
-    "right_heel",
-    "left_foot_index",
-    "right_foot_index",
-]
 MEDIAPIPE_NAMED_FACE_POINTS = ["face_right_eye",
                                "face_left_eye",
                                "nose_tip",
@@ -70,8 +34,6 @@ MEDIAPIPE_NAMED_FACE_POINTS = ["face_right_eye",
                                "right_ear_tragion",
                                "left_ear_tragion"]
 
-NUMBER_OF_MEDIAPIPE_BODY_MARKERS = len(MEDIAPIPE_BODY_NAMES)
-NUMBER_OF_MEDIAPIPE_HAND_MARKERS = len(MEDIAPIPE_HAND_NAMES)
 NUMBER_OF_MEDIAPIPE_FACE_POINTS = 478
 
 MEDIAPIPE_GENERIC_FACE_POINTS = [f"face_{i:03}" for i in range(NUMBER_OF_MEDIAPIPE_FACE_POINTS)]
@@ -80,30 +42,3 @@ MEDIAPIPE_FACE_NAMES = copy(MEDIAPIPE_GENERIC_FACE_POINTS)
 MEDIAPIPE_FACE_NAMES[:len(MEDIAPIPE_NAMED_FACE_POINTS)] = MEDIAPIPE_NAMED_FACE_POINTS
 
 
-
-
-@dataclass
-class MediapipeTrajectoryNames(HumanTrajectoryNames):
-    def __init__(self):
-        self.body = MEDIAPIPE_BODY_NAMES
-        self.hands = HandsTrajectoryNames(right=[f"{RightLeft.RIGHT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES],
-                                          left=[f"{RightLeft.LEFT.value}_{name}" for name in MEDIAPIPE_HAND_NAMES])
-        self.face = MEDIAPIPE_FACE_NAMES
-        self._validate_name_list_lengths()
-
-    def _validate_name_list_lengths(self):
-        if not len(self.body) == NUMBER_OF_MEDIAPIPE_BODY_MARKERS:
-            raise ValueError(
-                f"Number of mediapipe body markers {len(self.body)} does not match expected {NUMBER_OF_MEDIAPIPE_BODY_MARKERS}")
-        if not len(self.face) == NUMBER_OF_MEDIAPIPE_FACE_POINTS:
-            raise ValueError(
-                f"Number of mediapipe face markers {len(self.face)} does not match expected {NUMBER_OF_MEDIAPIPE_FACE_POINTS}")
-        if not len(self.hands.right) == NUMBER_OF_MEDIAPIPE_HAND_MARKERS:
-            raise ValueError(
-                f"Number of mediapipe right hand markers {len(self.hands.right)} does not match expected {NUMBER_OF_MEDIAPIPE_HAND_MARKERS}")
-        if not len(self.hands.left) == NUMBER_OF_MEDIAPIPE_HAND_MARKERS:
-            raise ValueError(
-                f"Number of mediapipe left hand markers {len(self.hands.left)} does not match expected {NUMBER_OF_MEDIAPIPE_HAND_MARKERS}")
-
-
-MEDIAPIPE_TRAJECTORY_NAMES = MediapipeTrajectoryNames()

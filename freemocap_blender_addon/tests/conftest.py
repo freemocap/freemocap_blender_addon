@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_paths import FreemocapDataPaths
+from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path, TEST_FOLDER_PATH
 from freemocap_blender_addon.experiments.named_ndarray import NamedNdarray
 
