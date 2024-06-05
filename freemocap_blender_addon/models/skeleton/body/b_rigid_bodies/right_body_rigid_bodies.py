@@ -26,6 +26,11 @@ class RightPalmRigidBody(CompoundRigidBodyABC):
         RightBodyKeypoints.RIGHT_PINKY_KNUCKLE.value,
     ]
 
+class RightIndexMetacarpalRigidBody(SimpleRigidBodyABC):
+    parent = RightBodyKeypoints.RIGHT_WRIST.value
+    child = RightBodyKeypoints.RIGHT_INDEX_KNUCKLE.value
+
+
 
 class RightThumbRigidBody(CompoundRigidBodyABC):
     parent = RightBodyKeypoints.RIGHT_WRIST.value

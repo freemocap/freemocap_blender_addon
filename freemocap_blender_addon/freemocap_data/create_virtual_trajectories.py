@@ -2,12 +2,12 @@ from typing import List, Tuple
 
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import WeightedSumDefiniton
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
 
 
 def calculate_virtual_trajectory(data: np.ndarray,
                                  names: list,
-                                 definition: WeightedSumDefiniton) -> np.ndarray:
+                                 definition: KeypointMapping) -> np.ndarray:
     """
     Create a virtual marker from a set of component markers. A 'Virtual Marker' is a 'fake' marker created by combining the data from 'real' (measured) marker/trajectory data.
     """
@@ -17,7 +17,7 @@ def calculate_virtual_trajectory(data: np.ndarray,
     number_of_dimensions = data.shape[2]
     virtual_trajectory_frame_xyz = np.zeros((number_of_frames, number_of_dimensions), dtype=np.float32)
 
-    for name, weight in zip(definition.parent_keypoints, definition.weights):
+    for name, weight in zip(definition.source_keypoints, definition.weights):
         # pull out the trajectory data for this component trajectory and scale by its weight
         component_xyz = data[:, names.index(name), :] * weight
         virtual_trajectory_frame_xyz += component_xyz
@@ -33,7 +33,7 @@ def calculate_virtual_trajectory(data: np.ndarray,
 
 def add_virtual_trajectories(data: np.ndarray,
                              names: List[str],
-                             virtual_trajectory_definitions: List[WeightedSumDefiniton]) -> Tuple[
+                             virtual_trajectory_definitions: List[KeypointMapping]) -> Tuple[
     List[str], np.ndarray]:
     """
     Create virtual markers from the body data using the marker definitions.
@@ -42,7 +42,7 @@ def add_virtual_trajectories(data: np.ndarray,
 
     for virtual_trajectory_definition in virtual_trajectory_definitions:
         print(f"Calculating virtual marker trajectory: {virtual_trajectory_definition.name} \n"
-              f"Component trajectories: {virtual_trajectory_definition.parent_keypoints} \n"
+              f"Component trajectories: {virtual_trajectory_definition.source_keypoints} \n"
               f" weights: {virtual_trajectory_definition.weights}\n")
 
         virtual_trajectory_frame_xyz = calculate_virtual_trajectory(

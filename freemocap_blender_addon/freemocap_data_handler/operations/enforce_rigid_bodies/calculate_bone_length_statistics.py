@@ -2,13 +2,12 @@ import math
 import statistics
 from typing import Dict
 
-import numpy as np
-
+from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericDataComponent
 from freemocap_blender_addon.models.animation.bones.bone_definitions import BoneDefinition
 
 
-def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
-                                     bone_definitions: Dict[str, BoneDefinition]):
+def calculate_segment_lengths(data: GenericDataComponent,
+                              bone_definitions: Dict[str, BoneDefinition]):
     print('Calculating bone length statistics...')
 
     # Reset the lengths list for every virtual bone

@@ -1,34 +1,29 @@
-from dataclasses import dataclass
-
 from freemocap_blender_addon.freemocap_data.skeleton_data import SkeletonData
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE
+from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
+    enforce_rigid_bodies
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
-@dataclass
-class PurePythonPipeline(TypeSafeDataclass):
-    recording_path_str: str
-    def run_all(self):
-        print("Running all stages...")
+def load_and_prepare_freemocap_data(recording_path_str: str,
+                                    tracker_type: str = DEFAULT_TRACKER_TYPE) -> SkeletonData:
+    print("Running all stages...")
 
-        # Pure python stuff
-        skeleton_data = self.load_skeleton_data()
-        # self.enforce_rigid_bones()
-        # self.put_data_in_inertial_reference_frame()
-        # self.fix_hand_data()
-        # self.save_data_to_disk()
+    # Pure python stuff
+    print("Loading freemocap data....")
+    og_skeleton_data = SkeletonData.load_from_recording_path(recording_path=recording_path_str)
+    rigid_skeleton_data = enforce_rigid_bodies(skeleton_data = og_skeleton_data)
 
-    def load_skeleton_data(self) -> SkeletonData:
-        print("Loading freemocap data....")
-        return SkeletonData.load_from_recording_path(recording_path=self.recording_path_str,
-                                                     tracker_type=DEFAULT_TRACKER_TYPE)
+    # self.enforce_rigid_bones()
+    # self.put_data_in_inertial_reference_frame()
+    # self.fix_hand_data()
+    # self.save_data_to_disk()
 
     # # def enforce_rigid_bones(self):
     # #     print("Enforcing rigid bones...")
     # #     try:
-    # #         self.skeleton_data = enforce_rigid_bodies(handler=self.skeleton_data)
+    # #         self.
     # #     except Exception as e:
     # #         print(f"Failed during `enforce rigid bones`, error: `{e}`")
     # #         print(e)
@@ -61,8 +56,6 @@ class PurePythonPipeline(TypeSafeDataclass):
     #         print(f"Failed to save data to disk: {e}")
     #         print(e)
     #         raise e
-
-
 
 
 if __name__ == "__main__":

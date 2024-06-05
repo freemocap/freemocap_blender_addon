@@ -1,22 +1,18 @@
-from copy import deepcopy
 from typing import Dict
 
 import numpy as np
-from freemocap_blender_addon.models.animation.bones.bone_definitions import BONE_DEFINITIONS, BoneDefinition
-from freemocap_blender_addon.models.anatomical.keypoints import MEDIAPIPE_HIERARCHY
 
-from .calculate_body_dimensions import calculate_body_dimensions
-from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_bone_length_statistics
-from ...handler import FreemocapDataHandler
+from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericDataComponent
+from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_segment_lengths
 
 
-def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
-    print('Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
-    original_trajectories = handler.trajectories
-    updated_trajectories = deepcopy(original_trajectories)
+def enforce_rigid_bodies(data_component: GenericDataComponent) -> GenericDataComponent:
+    print(
+        'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 
     # Update the information of the virtual bones
-    bones = calculate_bone_length_statistics(trajectories=original_trajectories, bone_definitions= BONE_DEFINITIONS)
+    bones = calculate_segment_lengths(data=data_component.data,
+                                      bone_definitions=BONE_DEFINITIONS)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=bones, type='original')
@@ -43,10 +39,10 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
 
             # Get the normalized bone vector by dividing the bone_vector by its length
             try:
-              bone_vector_norm = bone_vector / raw_length
+                bone_vector_norm = bone_vector / raw_length
             except ZeroDivisionError:
-              raw_length = 0.0001
-              bone_vector_norm = bone_vector / raw_length
+                raw_length = 0.0001
+                bone_vector_norm = bone_vector / raw_length
 
             # Calculate the new tail position delta by multiplying the normalized bone vector by the difference of desired_length and original_length
             position_delta = bone_vector_norm * (desired_length - raw_length)
@@ -59,7 +55,7 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
     print('Bone lengths enforced successfully!')
 
     # Update the information of the virtual bones
-    updated_bones = calculate_bone_length_statistics(trajectories=updated_trajectories, bone_definitions=bones)
+    updated_bones = calculate_segment_lengths(trajectories=updated_trajectories, bone_definitions=bones)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=updated_bones, type='updated')
@@ -68,11 +64,6 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
     for name, trajectory in updated_trajectories.items():
         handler.set_trajectory(name=name, data=trajectory)
 
-    handler.mark_processing_stage(name='enforced_rigid_bones',
-                                  metadata={"bone_data": updated_bones,
-                                            "body_dimensions": calculate_body_dimensions(bones_info=updated_bones),
-                                            "skeleton_hierarchy": MEDIAPIPE_HIERARCHY},
-                                  )
     return handler
 
 

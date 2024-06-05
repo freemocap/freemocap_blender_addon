@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Any, Self
+from typing import List, Optional, Any, Self, Dict, Union, Tuple
 
 import numpy as np
 
@@ -189,17 +189,22 @@ class SkeletonABC(ABC):
 
 
 ### Abstract Enum Classes & Auxilliary Classes ###
-
+TrackerName = str
+Mapping = Union[List[TrackerName], Dict[TrackerName, float], Dict[Keypoint, Tuple[float, float, float]]]
 @dataclass
-class WeightedSumDefiniton(Keypoint):
-    parent_keypoints: List[str]
+class KeypointMapping(TypeSafeDataclass):
+    mapping: Mapping  # map to local offset from parent keypoint
     weights: Optional[List[float]] = None
 
     def __post_init__(self):
-        if self.weights is None:
-            self.weights = [1 / len(self.parent_keypoints)] * len(self.parent_keypoints)
+        if isinstance(self.source_keypoints, dict):
+            self.source_keypoints = list(self.source_keypoints.keys())
+            self.weights = list(self.source_keypoints.values())
 
-        if len(self.parent_keypoints) != len(self.weights):
+        if self.weights is None:
+            self.weights = [1 / len(self.source_keypoints)] * len(self.source_keypoints)
+
+        if len(self.source_keypoints) != len(self.weights):
             raise ValueError("The number of parent keypoints must match the number of weights")
 
         if np.sum(self.weights) != 1:

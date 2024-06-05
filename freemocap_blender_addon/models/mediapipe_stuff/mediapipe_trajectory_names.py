@@ -1,7 +1,5 @@
 from copy import copy
 
-from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import WeightedSumDefiniton
-
 MEDIAPIPE_HAND_NAMES = ["wrist",
                         "thumb_cmc",
                         "thumb_mcp",
@@ -72,41 +70,3 @@ MEDIAPIPE_GENERIC_FACE_POINTS = [f"face_{i:03}" for i in range(NUMBER_OF_MEDIAPI
 
 MEDIAPIPE_FACE_NAMES = copy(MEDIAPIPE_GENERIC_FACE_POINTS)
 MEDIAPIPE_FACE_NAMES[:len(MEDIAPIPE_NAMED_FACE_POINTS)] = MEDIAPIPE_NAMED_FACE_POINTS
-
-MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS = [
-    WeightedSumDefiniton(
-        name="head_center",
-        parent_keypoints=["left_ear", "right_ear"]),
-    WeightedSumDefiniton(
-        name="neck_center",
-        parent_keypoints=["left_shoulder", "right_shoulder"]),
-
-    WeightedSumDefiniton(
-        name="chest_center",
-        parent_keypoints=["left_hip",
-                          "right_hip",
-                          "left_shoulder",
-                          "right_shoulder"],
-    ),
-    WeightedSumDefiniton(
-        name="hips_center",
-        parent_keypoints=["left_hip",
-                          "right_hip"]
-    ),
-
-    WeightedSumDefiniton(
-        name="right_hand_middle",
-        parent_keypoints=["right_index",
-                          "right_pinky"],
-    ),
-    WeightedSumDefiniton(
-        name="left_hand_middle",
-        parent_keypoints=["left_index",
-                          "left_pinky"],
-    )
-]
-
-for vm in MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS:
-    if not all([kp in MEDIAPIPE_BODY_NAMES for kp in vm.parent_keypoints]):
-        raise ValueError(f"Virtual trajectory {vm.name} has parent keypoints not in body names: {vm.parent_keypoints}")
-
