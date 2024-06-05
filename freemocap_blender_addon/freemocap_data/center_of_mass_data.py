@@ -3,7 +3,7 @@ from typing import Self
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_component import SkeletonDataComponent, ComponentType
+from freemocap_blender_addon.freemocap_data.data_component_abc import SkeletonDataComponent, ComponentType
 from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType
 
