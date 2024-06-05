@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import List, Optional, Union, Dict, Any
 
 import numpy as np
-from freemocap_blender_addon.core_functions.empties.creation.create_virtual_trajectories import \
+from freemocap_blender_addon.freemocap_data.create_virtual_trajectories import \
     calculate_virtual_trajectories
 
 from .operations.estimate_good_frame import estimate_good_frame
@@ -26,7 +26,7 @@ class FreemocapDataHandler:
     def from_recording_path(cls,
                             recording_path: str,
                             ) -> "FreemocapDataHandler":
-        freemocap_data = SkeletonData.from_recording_path(recording_path=recording_path)
+        freemocap_data = SkeletonData.load_from_recording_path(recording_path=recording_path)
         return cls(skeleton_data=freemocap_data)
 
     @property

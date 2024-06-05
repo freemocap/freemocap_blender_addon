@@ -20,7 +20,7 @@ class FMC_ADAPTER_OT_reduce_bone_length_dispersion(Operator):
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}
-        handler = FreemocapDataHandler.from_recording_path(recording_path=recording_path)
+        handler = FreemocapDataHandler.load_from_recording_path(recording_path=recording_path)
 
         frame_number = scene.frame_current  # grab the current frame number so we can set it back after we're done
         # Get start time

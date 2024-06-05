@@ -191,8 +191,8 @@ class SkeletonABC(ABC):
 ### Abstract Enum Classes & Auxilliary Classes ###
 
 @dataclass
-class WeightedSumKeypoint(Keypoint):
-    parent_keypoints: List[Keypoint]
+class WeightedSumDefiniton(Keypoint):
+    parent_keypoints: List[str]
     weights: Optional[List[float]] = None
 
     def __post_init__(self):
