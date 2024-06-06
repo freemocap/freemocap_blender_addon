@@ -3,7 +3,7 @@ from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_ch
 
 
 class MediapipeBodyMapping(SkeletonMappingEnum):
-    SkeletonBodyKeypointDefinitions.SKULL_CENTER_C1 = {"left_ear": .45, "right_ear": .45, "nose": .1},
+    SKULL_CENTER_C1 = {"left_ear": .45, "right_ear": .45, "nose": .1},
     NOSE_TIP = ["nose"]
     RIGHT_EYE_INNER = ["right_eye_inner"]
     RIGHT_EYE_CENTER = ["right_eye"]

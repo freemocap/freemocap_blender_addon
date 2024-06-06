@@ -218,15 +218,15 @@ class KeypointMapping(TypeSafeDataclass):
 
 
     def __post_init__(self):
-        if isinstance(self.mapping, TrackedPointName):
+        if isinstance(self.mapping, str):
             self.tracked_points = [self.mapping]
             self.weights = [1]
 
-        elif get_origin(self.mapping) is list and get_args(self.mapping)[0] is TrackedPointName:
+        elif isinstance(self.mapping, list): #TODO - fancy types
             self.tracked_points = self.mapping
             self.weights = [1 / len(self.mapping)] * len(self.mapping)
 
-        elif get_origin(self.mapping) is dict and get_args(self.mapping) == (TrackedPointName, float):
+        elif isinstance(self.mapping, dict):
             self.tracked_points = list(self.mapping.keys())
             self.weights = list(self.mapping.values())
         else:

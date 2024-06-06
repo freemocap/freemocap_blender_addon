@@ -70,7 +70,7 @@ class HandTrackedPoints(GenericTrackedPoints):
                data_source: TrackerSourceType,
                component_type: ComponentType):
 
-        return cls(data=data,
+        return cls(trajectory_data=data,
                    trajectory_names=get_keypoint_names(component_type=component_type,
                                                        data_source=data_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ

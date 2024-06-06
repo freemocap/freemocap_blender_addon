@@ -7,6 +7,7 @@ from freemocap_blender_addon.freemocap_data.freemocap_data_component import Face
     BodyTrackedPoints
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, DEFAULT_TRACKER_TYPE
 from freemocap_blender_addon.utilities.get_path_to_test_data import get_path_to_test_data
+from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -23,7 +24,7 @@ class SkeletonData(TypeSafeDataclass):
         data_paths = FreemocapDataPaths.from_recording_path(path=recording_path,
                                                             tracker_type=tracker_type)
 
-        body = BodyTrackedPoints.create(data=np.load(data_paths.skeleton.body),
+        body = BodyTrackedPoints.create(trajectory_data=np.load(data_paths.skeleton.body),
                                         data_source=tracker_type)
 
         face = FaceTrackedPoints.create(data=np.load(data_paths.skeleton.face),
@@ -35,7 +36,15 @@ class SkeletonData(TypeSafeDataclass):
         return cls(body=body, hands=hands, face=face)
 
     def __str__(self):
-        return f"SkeletonData: body={self.body}, hands={self.hands}, face={self.face}"
+        body_stats = DescriptiveStatistics.from_samples(samples=self.body.trajectory_data).__str__()
+        right_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.right.trajectory_data).__str__()
+        left_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.left.trajectory_data).__str__()
+        face_stats = DescriptiveStatistics.from_samples(samples=self.face.trajectory_data).__str__()
+        return (f"SkeletonData:\n\t "
+                f"BODY:\n{body_stats}, \n"
+                f"RIGHT_HAND:\n{right_hand_stats}, \n"
+                f"LEFT_HAND:\n{left_hand_stats}, \n"
+                f"FACE:\n{face_stats}")
 
 
 if __name__ == "__main__":
