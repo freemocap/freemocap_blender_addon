@@ -224,32 +224,3 @@ class KeypointMapping(TypeSafeDataclass):
         if np.sum(self.weights) != 1:
             raise ValueError("The sum of the weights must be 1")
 
-
-class KeypointsEnum(Enum):
-    """An enumeration of Keypoint instances, ensuring each member is a Keypoint.
-
-    Methods
-    -------
-    __new__(cls, *args, **kwargs):
-        Creates a new Keypoint instance with the enum member name as the Keypoint name.
-    _generate_next_value_(name, start, count, last_values):
-        Generates the next value for the auto-assigned enum members.
-    """
-
-    @property
-    def name(self) -> str:
-        return self.__class__.__name__
-
-    @classmethod
-    def __new__(cls, *args: Any, **kwargs: Any) -> Self:
-        obj = object.__new__(cls)
-        obj._value_ = Keypoint(name=args[1])
-        return obj
-
-    @staticmethod
-    def _generate_next_value_(name, start, count, last_values) -> str:
-        return name
-
-    def __str__(self) -> str:
-        out_str = f"{self.name}: \n {self.value}"
-        return out_str

@@ -1,6 +1,4 @@
-from enum import Enum
-
-from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
+from freemocap_blender_addon.utilities.buld_enum_from_dict import build_enum_from_dict
 
 _MEDIAPIPE_SKELETON_MAPPING = {
     "SKULL_CENTER_C1": {"left_ear": .45,
@@ -49,16 +47,6 @@ _MEDIAPIPE_SKELETON_MAPPING = {
     "LEFT_HEEL": ["left_heel"],
     "LEFT_HALLUX_TIP": ["left_foot_index"],
 }
-
-
-def build_enum_from_dict(enum_name: str,
-                         enum_dict: dict):
-    enum_members = {
-        key: KeypointMapping(mapping=value)
-        for key, value in enum_dict.items()
-    }
-    return Enum(enum_name, enum_members)
-
 
 MediapipeBodyMapping = build_enum_from_dict(
     enum_name="MediapipeSkeletonMapping",

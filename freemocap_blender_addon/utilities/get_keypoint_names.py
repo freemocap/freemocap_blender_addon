@@ -31,7 +31,7 @@ def get_mapping(component_type: ComponentType,
                 data_source: TrackerSourceType):
     if data_source == TrackerSourceType.MEDIAPIPE:
         if component_type == ComponentType.BODY:
-            from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_mapping import build_enum_from_dict
+            from freemocap_blender_addon.utilities.buld_enum_from_dict import build_enum_from_dict
             return build_enum_from_dict(enum_name='MediaPipeBodyMapping',
                                         enum_dict=MEDIAPIPE_BODY_MAPPING)
 
