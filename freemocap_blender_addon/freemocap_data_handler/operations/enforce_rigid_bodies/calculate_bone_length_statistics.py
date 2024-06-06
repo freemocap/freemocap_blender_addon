@@ -2,11 +2,11 @@ import math
 import statistics
 from typing import Dict
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericDataComponent
+from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericTrackedPoints
 from freemocap_blender_addon.models.animation.bones.bone_definitions import BoneDefinition
 
 
-def calculate_segment_lengths(data: GenericDataComponent,
+def calculate_segment_lengths(data: GenericTrackedPoints,
                               bone_definitions: Dict[str, BoneDefinition]):
     print('Calculating bone length statistics...')
 

@@ -3,86 +3,73 @@ from typing import List
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories import calculate_keypoint_trajectories
 from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType, \
     FRAME_TRAJECTORY_XYZ
-from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
-from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names, get_mapping
+from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import TrackedPointName
+from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass
-class GenericDataComponent(TypeSafeDataclass):
+class GenericTrackedPoints(TypeSafeDataclass):
     trajectory_data: np.ndarray
-    trajectory_names: List[str]
-    mapping: KeypointMapping
+    trajectory_names: List[TrackedPointName]
     dimension_names: List[str]
 
+    @property
+    def number_of_frames(self):
+        return self.trajectory_data.shape[0]
+
+    @property
+    def number_of_trajectories(self):
+        return self.trajectory_data.shape[1]
+
     def __post_init__(self):
-        if not self.data.shape[1] == len(self.trajectory_names):
+        if not len(self.trajectory_data.shape) == 3:
+            raise ValueError("Data shape should be (frame, trajectory, xyz)")
+        if not self.trajectory_data.shape[2] == 3:
+            raise ValueError("Trajectory data should be 3D (xyz)")
+        if not self.number_of_trajectories == len(self.trajectory_names):
             raise ValueError(
-                f"Data frame shape {self.data.shape} does not match trajectory names length {len(self.trajectory_names)}")
-
-        elif self.data.ndim == 2:
-            if not len(self.trajectory_names) == 1:
-                raise ValueError(
-                    f"Data frame shape {self.data.shape} does not match trajectory names length {len(self.trajectory_names)}")
+                f"Data frame shape {self.trajectory_data.shape} does not match trajectory names length {len(self.trajectory_names)}")
 
 
-class BodyDataComponent(GenericDataComponent):
+
+class BodyTrackedPoints(GenericTrackedPoints):
     @classmethod
     def create(cls,
-               data: np.ndarray,
+               trajectory_data: np.ndarray,
                data_source: TrackerSourceType,
                ):
-        if not len(data.shape) == 3:
-            raise ValueError("Data shape should be (frame, trajectory, xyz)")
-        if not data.shape[2] == 3:
-            raise ValueError("Trajectory data should be 3D (xyz)")
-
-        names, trajectory_data = calculate_keypoint_trajectories(data=data,
-                                                                 names=get_keypoint_names(
-                                                                     component_type=ComponentType.BODY,
-                                                                     data_source=data_source),
-                                                                 keypoint_mapping=get_mapping(
-                                                                     component_type=ComponentType.BODY,
-                                                                     data_source=data_source),
-                                                                 )
         return cls(trajectory_data=trajectory_data,
-                   trajectory_names=names,
+                   trajectory_names=get_keypoint_names(component_type=ComponentType.BODY,
+                                                       data_source=data_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ,
-                   mapping=get_mapping(component_type=ComponentType.BODY,
-                                       data_source=data_source)
+
                    )
 
 
-class FaceDataComponent(GenericDataComponent):
+class FaceTrackedPoints(GenericTrackedPoints):
     @classmethod
     def create(cls,
                data: np.ndarray,
                data_source: TrackerSourceType):
-        if not len(data.shape) == 3:
-            raise ValueError("Data shape should be (frame, trajectory, xyz)")
-        if not data.shape[2] == 3:
-            raise ValueError("Trajectory data should be 3D (xyz)")
-        return cls(data=data,
+
+        return cls(trajectory_data=data,
                    trajectory_names=get_keypoint_names(component_type=ComponentType.FACE,
                                                        data_source=data_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ
                    )
 
 
-class HandDataComponent(GenericDataComponent):
+class HandTrackedPoints(GenericTrackedPoints):
     @classmethod
     def create(cls,
                data: np.ndarray,
                data_source: TrackerSourceType,
                component_type: ComponentType):
-        if not len(data.shape) == 3:
-            raise ValueError("Data shape should be (frame, trajectory, xyz)")
-        if not data.shape[2] == 3:
-            raise ValueError("Trajectory data should be 3D (xyz)")
+
         return cls(data=data,
                    trajectory_names=get_keypoint_names(component_type=component_type,
                                                        data_source=data_source),
@@ -91,18 +78,18 @@ class HandDataComponent(GenericDataComponent):
 
 
 @dataclass
-class HandsComponentData(TypeSafeDataclass):
-    right: HandDataComponent
-    left: HandDataComponent
+class HandsData(TypeSafeDataclass):
+    right: HandTrackedPoints
+    left: HandTrackedPoints
 
     @classmethod
     def create(cls,
                npy_paths: HandsNpyPaths,
                data_source: TrackerSourceType):
-        return cls(right=HandDataComponent.create(data=np.load(npy_paths.right),
+        return cls(right=HandTrackedPoints.create(data=np.load(npy_paths.right),
                                                   data_source=data_source,
                                                   component_type=ComponentType.RIGHT_HAND),
-                   left=HandDataComponent.create(data=np.load(npy_paths.left),
+                   left=HandTrackedPoints.create(data=np.load(npy_paths.left),
                                                  data_source=data_source,
                                                  component_type=ComponentType.LEFT_HAND)
                    )

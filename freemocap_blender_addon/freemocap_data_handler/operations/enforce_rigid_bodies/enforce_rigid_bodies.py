@@ -2,11 +2,11 @@ from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericDataComponent
+from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericTrackedPoints
 from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_segment_lengths
 
 
-def enforce_rigid_bodies(data_component: GenericDataComponent) -> GenericDataComponent:
+def enforce_rigid_bodies(data_component: GenericTrackedPoints) -> GenericTrackedPoints:
     print(
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 

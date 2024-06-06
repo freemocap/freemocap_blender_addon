@@ -1,37 +1,44 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List, Union, Self
+
 import numpy as np
+
+from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 Z_SCORE_95_CI = 1.96  # Z-score for 95% confidence interval
 
-SampleList = List[Union[float, int]]  # custom type alias for a list of numerical samples
+SamplesType = Union[List[Union[float, int]], np.ndarray]
+
 
 def validate_samples(data: np.ndarray) -> None:
-    """ Validate the input sample data. """
+    """Validate the input sample data."""
+    if not isinstance(data, np.ndarray):
+        raise ValueError("Sample list must be a numpy array")
     if data.size == 0:
         raise ValueError("Sample list cannot be empty")
-    if data.ndim != 1:
+    if len(data.shape) != 1:
         raise ValueError("Sample list must be one-dimensional")
-    if np.all(np.isnan(data)):
-        raise ValueError("Sample list cannot contain only NaN values")
-    if np.all(np.isinf(data)):
-        raise ValueError("Sample list cannot contain only infinite values")
     if not np.issubdtype(data.dtype, np.number):
         raise ValueError("Sample list must contain only numerical values")
+    if np.isnan(data).all() or np.isinf(data).all():
+        raise ValueError("Sample list cannot contain only NaN or infinite values")
+
 
 @dataclass
-class SampleData:
+class SampleData(TypeSafeDataclass):
     data: np.ndarray
 
     def __post_init__(self):
+        if isinstance(self.data, list):
+            self.data = np.array(self.data)
+        if isinstance(self.data, np.ndarray):
+            self.data = self.data.ravel()  # flatten the array to 1D (we'll handle multi-dimensional data later)
+        else:
+            raise ValueError("Samples must be a list or numpy array")
         validate_samples(self.data)
 
-    @classmethod
-    def from_samples(cls, samples: SampleList) -> 'SampleData':
-        return cls(data=np.array(samples))
-
     @property
-    def samples(self) -> SampleList:
+    def samples(self) -> SamplesType:
         return self.data.tolist()
 
     @property
@@ -41,57 +48,56 @@ class SampleData:
     def __repr__(self) -> str:
         return f"SampleData(data={self.data.shape})"
 
+
 @dataclass
-class CentralTendencyMeasures:
+class CentralTendencyMeasures(TypeSafeDataclass):
     mean: float
     median: float
 
     @classmethod
-    def from_samples(cls, samples: SampleList) -> 'CentralTendencyMeasures':
-        data = np.array(samples)
-        validate_samples(data)
+    def from_samples(cls, samples: SampleData) -> 'CentralTendencyMeasures':
         return cls(
-            mean=np.nanmean(data),
-            median=np.nanmedian(data),
+            mean=np.nanmean(samples.data),
+            median=np.nanmedian(samples.data),
         )
 
+
 @dataclass
-class VariabilityMeasures:
+class VariabilityMeasures(TypeSafeDataclass):
     stddev: float
     mad: float
     iqr: float
     ci95: float
 
     @classmethod
-    def from_samples(cls, samples: SampleList) -> 'VariabilityMeasures':
-        data = np.array(samples)
-        validate_samples(data)
+    def from_samples(cls, samples: SampleData) -> 'VariabilityMeasures':
         return cls(
-            stddev=np.nanstd(data),
-            mad=np.nanmedian(np.abs(data - np.nanmedian(data))),
-            iqr=np.nanpercentile(data, 75) - np.nanpercentile(data, 25),
-            ci95=Z_SCORE_95_CI * np.nanstd(data) / np.sqrt(data.size),
+            stddev=np.nanstd(samples.data),
+            mad=np.nanmedian(np.abs(samples.data - np.nanmedian(samples.data))),
+            iqr=np.nanpercentile(samples.data, 75) - np.nanpercentile(samples.data, 25),
+            ci95=Z_SCORE_95_CI * np.nanstd(samples.data) / np.sqrt(samples.data.size),
         )
 
+
 @dataclass
-class DescriptiveStatistics:
+class DescriptiveStatistics(TypeSafeDataclass):
     sample_data: SampleData
 
     @classmethod
-    def from_samples(cls, samples: SampleList) -> 'DescriptiveStatistics':
-        return cls(sample_data=SampleData.from_samples(samples))
+    def from_samples(cls, samples: SamplesType) -> 'DescriptiveStatistics':
+        return cls(sample_data=SampleData(data=samples))
 
     @property
-    def samples(self) -> SampleList:
+    def samples(self) -> SamplesType:
         return self.sample_data.samples
 
     @property
     def measures_of_central_tendency(self) -> CentralTendencyMeasures:
-        return CentralTendencyMeasures.from_samples(self.samples)
+        return CentralTendencyMeasures.from_samples(self.sample_data)
 
     @property
     def measures_of_variability(self) -> VariabilityMeasures:
-        return VariabilityMeasures.from_samples(self.samples)
+        return VariabilityMeasures.from_samples(self.sample_data)
 
     @property
     def data(self) -> np.ndarray:
@@ -134,11 +140,12 @@ class DescriptiveStatistics:
             f"\tStandard Deviation: {self.stddev:.3f}\n"
             f"\tMedian Absolute Deviation: {self.mad:.3f}\n"
             f"\tInterquartile Range: {self.iqr:.3f}\n"
-            f"\t95% Confidence Interval: ±{self.ci95:.3f}\n"
+            f"\t95% Confidence Interval: {self.ci95:.3f}\n"
         )
 
+
 if __name__ == "__main__":
-    dummy_samples = [1.0, 2.0, 3.0, 4.0, 5.0]
-    stats = DescriptiveStatistics.from_samples(dummy_samples)
+    dummy_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    stats = DescriptiveStatistics.from_samples(samples=dummy_data)
 
     print(stats)

@@ -1,61 +1,67 @@
+from dataclasses import dataclass
+
 from freemocap_blender_addon.freemocap_data.skeleton_data import SkeletonData
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE
 from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
     enforce_rigid_bodies
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
+from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
-def load_and_prepare_freemocap_data(recording_path_str: str,
-                                    tracker_type: str = DEFAULT_TRACKER_TYPE) -> SkeletonData:
+@dataclass
+class PurePythonPipeline(TypeSafeDataclass):
+    recording_path_str: str
+    tracker_type: str = DEFAULT_TRACKER_TYPE
     print("Running all stages...")
 
-    # Pure python stuff
-    print("Loading freemocap data....")
-    og_skeleton_data = SkeletonData.load_from_recording_path(recording_path=recording_path_str)
-    rigid_skeleton_data = enforce_rigid_bodies(skeleton_data = og_skeleton_data)
+    def run(self):
+        # Pure python stuff
+        print("Loading freemocap data....")
+        og_skeleton_data = SkeletonData.load_from_recording_path(recording_path=self.recording_path_str)
+        # rigid_skeleton_data = enforce_rigid_bodies(skeleton_data = og_skeleton_data)
 
-    # self.enforce_rigid_bones()
-    # self.put_data_in_inertial_reference_frame()
-    # self.fix_hand_data()
-    # self.save_data_to_disk()
+        # self.enforce_rigid_bones()
+        # self.put_data_in_inertial_reference_frame()
+        # self.fix_hand_data()
+        # self.save_data_to_disk()
 
-    # # def enforce_rigid_bones(self):
-    # #     print("Enforcing rigid bones...")
-    # #     try:
-    # #         self.
-    # #     except Exception as e:
-    # #         print(f"Failed during `enforce rigid bones`, error: `{e}`")
-    # #         print(e)
-    # #         raise e
-    # #
-    # # def put_data_in_inertial_reference_frame(self):
-    # #     try:
-    # #         print("Putting freemocap data in inertial reference frame....")
-    # #         put_skeleton_on_ground(handler=self.skeleton_data)
-    # #     except Exception as e:
-    # #         print(f"Failed to put freemocap data in inertial reference frame: {e}")
-    # #         print(traceback.format_exc())
-    # #         raise e
-    # #
-    # #
-    # # def fix_hand_data(self):
-    # #     try:
-    # #         print("Fixing hand data...")
-    # #         self.skeleton_data = fix_hand_data(handler=self.skeleton_data)
-    # #     except Exception as e:
-    # #         print(f"Failed during `fix hand data`, error: `{e}`")
-    # #         print(e)
-    # #         raise e
-    #
-    # def save_data_to_disk(self):
-    #     try:
-    #         print("Saving data to disk...")
-    #         FreemocapDataSaver(handler=self.skeleton_data).save(recording_path=self.recording_path_str)
-    #     except Exception as e:
-    #         print(f"Failed to save data to disk: {e}")
-    #         print(e)
-    #         raise e
+        # # def enforce_rigid_bones(self):
+        # #     print("Enforcing rigid bones...")
+        # #     try:
+        # #         self.
+        # #     except Exception as e:
+        # #         print(f"Failed during `enforce rigid bones`, error: `{e}`")
+        # #         print(e)
+        # #         raise e
+        # #
+        # # def put_data_in_inertial_reference_frame(self):
+        # #     try:
+        # #         print("Putting freemocap data in inertial reference frame....")
+        # #         put_skeleton_on_ground(handler=self.skeleton_data)
+        # #     except Exception as e:
+        # #         print(f"Failed to put freemocap data in inertial reference frame: {e}")
+        # #         print(traceback.format_exc())
+        # #         raise e
+        # #
+        # #
+        # # def fix_hand_data(self):
+        # #     try:
+        # #         print("Fixing hand data...")
+        # #         self.skeleton_data = fix_hand_data(handler=self.skeleton_data)
+        # #     except Exception as e:
+        # #         print(f"Failed during `fix hand data`, error: `{e}`")
+        # #         print(e)
+        # #         raise e
+        #
+        # def save_data_to_disk(self):
+        #     try:
+        #         print("Saving data to disk...")
+        #         FreemocapDataSaver(handler=self.skeleton_data).save(recording_path=self.recording_path_str)
+        #     except Exception as e:
+        #         print(f"Failed to save data to disk: {e}")
+        #         print(e)
+        #         raise e
 
 
 if __name__ == "__main__":
