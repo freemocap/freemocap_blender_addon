@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Any, Self, Dict, Union, Tuple
+from typing import List, Optional, Dict, Union, Tuple, Type, get_args, get_origin
 
 import numpy as np
 
@@ -15,8 +15,11 @@ class Keypoint(TypeSafeDataclass, ABC):
     In marker-based motion capture, keypoints could correspond to markers placed on the body.
     In markerless motion capture, keypoints could correspond to a tracked point in the image.
     When a Keypoint is hydrated with data, it becomes a Trajectory.
+
+    `definition` is a human-oriented description of the keypoint's location
     """
     name: str
+    definition: str
 
 
 @dataclass
@@ -189,12 +192,14 @@ class SkeletonABC(ABC):
 
 
 ### Abstract Enum Classes & Auxilliary Classes ###
-TrackerName = str
-TrackerList = List[TrackerName]
-WeightedTrackerNames = Dict[TrackerName, float]
-OffsetKeypoint = Dict[Keypoint, Tuple[float, float, float]]
+TrackedPointName = str
+TrackedPointList = List[TrackedPointName]
+WeightedTrackedPoints = Dict[TrackedPointName, float]
+# OffsetKeypoint = Dict[Keypoint, Tuple[float, float, float]] # TODO - implement this
 
-KeypointMappingType = Union[TrackerName, TrackerList, WeightedTrackerNames, OffsetKeypoint]
+KeypointMappingType = Union[TrackedPointName, TrackedPointList, WeightedTrackedPoints]#, OffsetKeypoint]
+
+
 
 @dataclass
 class KeypointMapping(TypeSafeDataclass):
@@ -208,19 +213,53 @@ class KeypointMapping(TypeSafeDataclass):
 
     """
     mapping: KeypointMappingType
+    tracked_points: Optional[List[TrackedPointName]] = None
     weights: Optional[List[float]] = None
 
+
     def __post_init__(self):
-        if isinstance(self.mapping, dict):
-            self.source_keypoints = list(self.source_keypoints.keys())
-            self.weights = list(self.source_keypoints.values())
+        if isinstance(self.mapping, TrackedPointName):
+            self.tracked_points = [self.mapping]
+            self.weights = [1]
 
-        if self.weights is None:
-            self.weights = [1 / len(self.source_keypoints)] * len(self.source_keypoints)
+        elif get_origin(self.mapping) is list and get_args(self.mapping)[0] is TrackedPointName:
+            self.tracked_points = self.mapping
+            self.weights = [1 / len(self.mapping)] * len(self.mapping)
 
-        if len(self.source_keypoints) != len(self.weights):
-            raise ValueError("The number of parent keypoints must match the number of weights")
+        elif get_origin(self.mapping) is dict and get_args(self.mapping) == (TrackedPointName, float):
+            self.tracked_points = list(self.mapping.keys())
+            self.weights = list(self.mapping.values())
+        else:
+            raise ValueError("Mapping must be a TrackedPointName, TrackedPointList, or WeightedTrackedPoints")
 
         if np.sum(self.weights) != 1:
             raise ValueError("The sum of the weights must be 1")
+
+    def calculate_trajectory(self, data: np.ndarray, names: List[str]) -> np.ndarray:
+        """
+        Calculate a trajectory from a mapping of tracked points and their weights.
+        """
+        number_of_frames = data.shape[0]
+        number_of_dimensions = data.shape[2]
+        trajectories_frame_xyz = np.zeros((number_of_frames, number_of_dimensions), dtype=np.float32)
+
+        for tracked_point_name, weight in self.mapping.items():
+            if tracked_point_name not in names:
+                raise ValueError(f"Key {tracked_point_name} not found in trajectory names")
+
+            keypoint_index = names.index(tracked_point_name)
+            keypoint_xyz = data[:, keypoint_index, :]
+            trajectories_frame_xyz += keypoint_xyz * weight
+
+        return trajectories_frame_xyz
+
+
+class SkeletonMappingEnum(Enum):
+    """An Enum that can hold different types of keypoint mappings."""
+    def __new__(cls, value: KeypointMappingType):
+        obj = object.__new__(cls)
+        obj._value_ = KeypointMapping(mapping=value)
+        return obj
+
+
 

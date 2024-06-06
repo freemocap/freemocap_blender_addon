@@ -1,13 +1,13 @@
 from typing import List
 
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType
+from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_mapping import MediapipeBodyMapping
 from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_trajectory_names import MEDIAPIPE_BODY_NAMES, \
-    MEDIAPIPE_FACE_NAMES, MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS, MEDIAPIPE_HAND_NAMES
+    MEDIAPIPE_FACE_NAMES, MEDIAPIPE_HAND_NAMES
 
 
 def get_keypoint_names(component_type: ComponentType,
                        data_source: TrackerSourceType) -> List[str]:
-
     if data_source == TrackerSourceType.MEDIAPIPE:
         if component_type == ComponentType.BODY:
             return MEDIAPIPE_BODY_NAMES
@@ -21,21 +21,13 @@ def get_keypoint_names(component_type: ComponentType,
             raise ValueError("Component type not recognized")
 
 
-def get_virtual_trajectory_definitions(data_source: TrackerSourceType):
-    if data_source == 'mediapipe':
-        return MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS
-    else:
-        raise ValueError("Data source not recognized")
-
 def get_mapping(component_type: ComponentType,
                 data_source: TrackerSourceType):
     if data_source == TrackerSourceType.MEDIAPIPE:
         if component_type == ComponentType.BODY:
-            from freemocap_blender_addon.utilities.buld_enum_from_dict import build_enum_from_dict
-            return build_enum_from_dict(enum_name='MediaPipeBodyMapping',
-                                        enum_dict=MEDIAPIPE_BODY_MAPPING)
+            return MediapipeBodyMapping
 
         else:
             raise ValueError("Component type not recognized")
     else:
-        raise ValueError("Data source not recognized"
+        raise ValueError("Data source not recognized")

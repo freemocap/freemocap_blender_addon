@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import List, Optional, Union, Dict, Any
 
 import numpy as np
-from freemocap_blender_addon.freemocap_data.create_virtual_trajectories import \
+from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories import \
     calculate_virtual_trajectories
 
 from .operations.estimate_good_frame import estimate_good_frame

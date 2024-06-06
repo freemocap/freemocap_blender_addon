@@ -3,19 +3,18 @@ from typing import List
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.create_virtual_trajectories import add_virtual_trajectories
+from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories import calculate_keypoint_trajectories
 from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType, \
     FRAME_TRAJECTORY_XYZ
-from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
-from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names, get_virtual_trajectory_definitions, \
-    get_mapping
+from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
+from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names, get_mapping
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass
 class GenericDataComponent(TypeSafeDataclass):
-    data: np.ndarray
+    trajectory_data: np.ndarray
     trajectory_names: List[str]
     mapping: KeypointMapping
     dimension_names: List[str]
@@ -42,14 +41,16 @@ class BodyDataComponent(GenericDataComponent):
         if not data.shape[2] == 3:
             raise ValueError("Trajectory data should be 3D (xyz)")
 
-        all_names, all_data = add_virtual_trajectories(data=data,
-                                                       names=get_keypoint_names(component_type=ComponentType.BODY,
-                                                                                data_source=data_source),
-                                                       virtual_trajectory_definitions=get_virtual_trajectory_definitions(
-                                                           data_source=data_source)
-                                                       )
-        return cls(data=all_data,
-                   trajectory_names=all_names,
+        names, trajectory_data = calculate_keypoint_trajectories(data=data,
+                                                                 names=get_keypoint_names(
+                                                                     component_type=ComponentType.BODY,
+                                                                     data_source=data_source),
+                                                                 keypoint_mapping=get_mapping(
+                                                                     component_type=ComponentType.BODY,
+                                                                     data_source=data_source),
+                                                                 )
+        return cls(trajectory_data=trajectory_data,
+                   trajectory_names=names,
                    dimension_names=FRAME_TRAJECTORY_XYZ,
                    mapping=get_mapping(component_type=ComponentType.BODY,
                                        data_source=data_source)
