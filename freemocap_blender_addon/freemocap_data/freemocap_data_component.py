@@ -7,6 +7,7 @@ from freemocap_blender_addon.freemocap_data.create_virtual_trajectories import a
 from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType, \
     FRAME_TRAJECTORY_XYZ
+from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
 from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names, get_virtual_trajectory_definitions
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
@@ -15,6 +16,7 @@ from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDatacl
 class GenericDataComponent(TypeSafeDataclass):
     data: np.ndarray
     trajectory_names: List[str]
+    mapping: KeypointMapping
     dimension_names: List[str]
 
     def __post_init__(self):
@@ -47,7 +49,9 @@ class BodyDataComponent(GenericDataComponent):
                                                        )
         return cls(data=all_data,
                    trajectory_names=all_names,
-                   dimension_names=FRAME_TRAJECTORY_XYZ
+                   dimension_names=FRAME_TRAJECTORY_XYZ,
+                   mapping=get_mapping(component_type=ComponentType.BODY,
+                                       data_source=data_source)
                    )
 
 

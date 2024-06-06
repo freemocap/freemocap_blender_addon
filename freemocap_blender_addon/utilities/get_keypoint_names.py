@@ -26,3 +26,16 @@ def get_virtual_trajectory_definitions(data_source: TrackerSourceType):
         return MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS
     else:
         raise ValueError("Data source not recognized")
+
+def get_mapping(component_type: ComponentType,
+                data_source: TrackerSourceType):
+    if data_source == TrackerSourceType.MEDIAPIPE:
+        if component_type == ComponentType.BODY:
+            from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_mapping import build_enum_from_dict
+            return build_enum_from_dict(enum_name='MediaPipeBodyMapping',
+                                        enum_dict=MEDIAPIPE_BODY_MAPPING)
+
+        else:
+            raise ValueError("Component type not recognized")
+    else:
+        raise ValueError("Data source not recognized"

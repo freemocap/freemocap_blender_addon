@@ -11,7 +11,7 @@ def enforce_rigid_bodies(data_component: GenericDataComponent) -> GenericDataCom
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 
     # Update the information of the virtual bones
-    bones = calculate_segment_lengths(data=data_component.data,
+    bones = calculate_segment_lengths(data=data_component,
                                       bone_definitions=BONE_DEFINITIONS)
 
     # Print the current bones length median, standard deviation and coefficient of variation

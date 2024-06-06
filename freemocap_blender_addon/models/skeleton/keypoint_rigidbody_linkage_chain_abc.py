@@ -190,14 +190,28 @@ class SkeletonABC(ABC):
 
 ### Abstract Enum Classes & Auxilliary Classes ###
 TrackerName = str
-Mapping = Union[List[TrackerName], Dict[TrackerName, float], Dict[Keypoint, Tuple[float, float, float]]]
+TrackerList = List[TrackerName]
+WeightedTrackerNames = Dict[TrackerName, float]
+OffsetKeypoint = Dict[Keypoint, Tuple[float, float, float]]
+
+KeypointMappingType = Union[TrackerName, TrackerList, WeightedTrackerNames, OffsetKeypoint]
+
 @dataclass
 class KeypointMapping(TypeSafeDataclass):
-    mapping: Mapping  # map to local offset from parent keypoint
+    """
+    A KeypointMapping provides information on how to map a keypoint to data from a TrackingDataSource trajectory.
+    It can represent:
+     a single keypoint (maps to the keypoint)
+     a list of keypoints (maps to the geometric mean of the keypoints),
+     a dictionary of keypoints with weights (maps to the weighted sum of the tracked points), or
+     a dictionary of keypoints with offsets (maps to the tracked point with an offset defined in the local reference frame of the RigidBody).
+
+    """
+    mapping: KeypointMappingType
     weights: Optional[List[float]] = None
 
     def __post_init__(self):
-        if isinstance(self.source_keypoints, dict):
+        if isinstance(self.mapping, dict):
             self.source_keypoints = list(self.source_keypoints.keys())
             self.weights = list(self.source_keypoints.values())
 

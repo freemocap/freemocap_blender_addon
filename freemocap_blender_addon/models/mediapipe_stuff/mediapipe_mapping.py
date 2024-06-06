@@ -1,10 +1,12 @@
+from enum import Enum
+
 from freemocap_blender_addon.models.skeleton.keypoint_rigidbody_linkage_chain_abc import KeypointMapping
 
 _MEDIAPIPE_SKELETON_MAPPING = {
     "SKULL_CENTER_C1": {"left_ear": .45,
                         "right_ear": .45,
                         "nose": .1},
-    "SKULL_TOP_BREGMA": {"SKULL_CENTER_C1":(0, 0, 1)},
+    "SKULL_TOP_BREGMA": {"SKULL_CENTER_C1": (0, 0, 1)},
     "NOSE_TIP": ["nose"],
     "RIGHT_EYE_INNER": ["right_eye_inner"],
     "RIGHT_EYE_CENTER": ["right_eye"],
@@ -48,18 +50,19 @@ _MEDIAPIPE_SKELETON_MAPPING = {
     "LEFT_HALLUX_TIP": ["left_foot_index"],
 }
 
-def build_enum_from_dict(enum_name: str, mappings: dict):
+
+def build_enum_from_dict(enum_name: str,
+                         enum_dict: dict):
     enum_members = {
-        key: KeypointMapping(name=key,
-                             mapping=value)
-        for key, value in mappings.items()
+        key: KeypointMapping(mapping=value)
+        for key, value in enum_dict.items()
     }
     return Enum(enum_name, enum_members)
 
 
-MediapipeSkeletonMapping = build_enum_from_dict(
-    "MediapipeSkeletonMapping",
-    _MEDIAPIPE_SKELETON_MAPPING
+MediapipeBodyMapping = build_enum_from_dict(
+    enum_name="MediapipeSkeletonMapping",
+    enum_dict=_MEDIAPIPE_SKELETON_MAPPING
 )
 
-print(MediapipeSkeletonMapping)
+print(MediapipeBodyMapping)
