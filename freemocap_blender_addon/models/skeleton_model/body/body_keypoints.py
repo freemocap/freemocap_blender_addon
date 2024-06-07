@@ -28,7 +28,7 @@ class AxialSkeletonKeypoints(StrEnum):
     NECK_BASE_C7 = "Base of the neck, geometric center of the bottom surface of the seventh cervical vertebra (C7)",
 
     ## chest,
-    CHEST_CENTER_T1 = "Geometric center of the top surface of the first thoracic vertebra (T1)",
+    CHEST_CENTER_T12 = "Geometric center of the top surface of the first thoracic vertebra (T1)",
 
     ## root,
     PELVIS_CENTER = "Geometric center of the left and right hip sockets, anterior to the Sacrum",

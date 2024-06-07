@@ -3,6 +3,7 @@ from typing import List
 
 
 class TrackerSourceType(str, Enum):
+    GENERIC = "generic"
     MEDIAPIPE = "mediapipe"
     OPENPOSE = "openpose"
 
@@ -23,5 +24,6 @@ class ComponentType(Enum):
     FACE = "face"
     RIGHT_HAND = "right_hand"
     LEFT_HAND = "left_hand"
+
 
 FRAME_TRAJECTORY_XYZ: List[str] = ["frame_number", "trajectory_index", "xyz"]

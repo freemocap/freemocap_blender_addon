@@ -1,8 +1,8 @@
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import SkeletonBodyKeypointDefinitions
-from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import SkeletonMappingEnum
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
+from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import KeypointMappingsEnum
 
 
-class MediapipeBodyMapping(SkeletonMappingEnum):
+class MediapipeBodyMapping(KeypointMappingsEnum):
     SKULL_CENTER_C1 = {"left_ear": .45, "right_ear": .45, "nose": .1},
     NOSE_TIP = ["nose"]
     RIGHT_EYE_INNER = ["right_eye_inner"]
@@ -17,9 +17,9 @@ class MediapipeBodyMapping(SkeletonMappingEnum):
     LEFT_MOUTH = ["mouth_left"]
     NECK_TOP_C1_ATLAS = ["left_ear", "right_ear"]
     NECK_BASE_C7 = ["left_shoulder", "right_shoulder"]
-    CHEST_CENTER_T1 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
+    CHEST_CENTER_L1 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
     PELVIS_CENTER = ["left_hip", "right_hip"]
-    RIGHT_CLAVICLE = {"chest_center": .95, "right_shoulder": .05},
+    RIGHT_CLAVICLE = {"right_shoulder": .55, "left_shoulder": .45},
     RIGHT_SHOULDER = ["right_shoulder"]
     RIGHT_ELBOW = ["right_elbow"]
     RIGHT_WRIST = ["right_wrist"]
@@ -31,7 +31,7 @@ class MediapipeBodyMapping(SkeletonMappingEnum):
     RIGHT_ANKLE = ["right_ankle"]
     RIGHT_HEEL = ["right_heel"]
     RIGHT_HALLUX_TIP = ["right_foot_index"]
-    LEFT_CLAVICLE = {"chest_center": .95, "left_shoulder": .05},
+    LEFT_CLAVICLE = {"left_shoulder": .55, "right_shoulder": .45},
     LEFT_SHOULDER = ["left_shoulder"]
     LEFT_ELBOW = ["left_elbow"]
     LEFT_WRIST = ["left_wrist"]
@@ -47,7 +47,10 @@ class MediapipeBodyMapping(SkeletonMappingEnum):
 
 for key in MediapipeBodyMapping.__members__.keys():
     missing_keys = []
-    if not hasattr(SkeletonBodyKeypointDefinitions, key):
+    if not hasattr(BodyKeypoints, key):
         missing_keys.append(key)
     if missing_keys:
         raise ValueError(f"Keys [{missing_keys}] are missing from SkeletonBodyKeypointDefinitions")
+
+if __name__ == "__main__":
+    print("\n".join([f"{key}: {value.value}" for key, value in MediapipeBodyMapping.__members__.items()]))

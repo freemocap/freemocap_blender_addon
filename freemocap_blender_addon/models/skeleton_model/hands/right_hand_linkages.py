@@ -1,15 +1,15 @@
 from freemocap_blender_addon.models.skeleton_model.hands.right_hand_keypoints import RightHandKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.c_linkages import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_hand_rigid_bodies import RightThumbMetacarpalRigidBodyABC, \
-    RightThumbProximalPhalanxRigidBodyABC, RightThumbDistalPhalanxRigidBodyABC, RightIndexFingerMetacarpalRigidBodyABC, \
-    RightIndexFingerProximalPhalanxRigidBodyABC, RightIndexFingerMiddlePhalanxRigidBodyABC, \
-    RightIndexFingerDistalPhalanxRigidBodyABC, RightMiddleFingerMetacarpalRigidBodyABC, \
-    RightMiddleFingerProximalPhalanxRigidBodyABC, RightMiddleFingerMiddlePhalanxRigidBodyABC, \
-    RightMiddleFingerDistalPhalanxRigidBodyABC, RightRingFingerMetacarpalRigidBodyABC, \
-    RightRingFingerProximalPhalanxRigidBodyABC, RightRingFingerMiddlePhalanxRigidBodyABC, \
-    RightRingFingerDistalPhalanxRigidBodyABC, RightPinkyFingerMetacarpalRigidBodyABC, \
-    RightPinkyFingerProximalPhalanxRigidBodyABC, RightPinkyFingerMiddlePhalanxRigidBodyABC, \
-    RightPinkyFingerDistalPhalanxRigidBodyABC
+from freemocap_blender_addon.models.skeleton_model.body.linkages import LinkageABC
+from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_hand_rigid_bodies import RightThumbMetacarpalSegmentABC, \
+    RightThumbProximalPhalanxSegmentABC, RightThumbDistalPhalanxSegmentABC, RightIndexFingerMetacarpalSegmentABC, \
+    RightIndexFingerProximalPhalanxSegmentABC, RightIndexFingerMiddlePhalanxSegmentABC, \
+    RightIndexFingerDistalPhalanxSegmentABC, RightMiddleFingerMetacarpalSegmentABC, \
+    RightMiddleFingerProximalPhalanxSegmentABC, RightMiddleFingerMiddlePhalanxSegmentABC, \
+    RightMiddleFingerDistalPhalanxSegmentABC, RightRingFingerMetacarpalSegmentABC, \
+    RightRingFingerProximalPhalanxSegmentABC, RightRingFingerMiddlePhalanxSegmentABC, \
+    RightRingFingerDistalPhalanxSegmentABC, RightPinkyFingerMetacarpalSegmentABC, \
+    RightPinkyFingerProximalPhalanxSegmentABC, RightPinkyFingerMiddlePhalanxSegmentABC, \
+    RightPinkyFingerDistalPhalanxSegmentABC
 
 # hand
 # https://www.assh.org/handcare/safety/joints
@@ -18,62 +18,62 @@ from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_ha
 
 # Thumb
 class RightThumbKnuckleLinkage(LinkageABC):
-    bodies = [RightThumbMetacarpalRigidBodyABC, RightThumbProximalPhalanxRigidBodyABC]
+    bodies = [RightThumbMetacarpalSegmentABC, RightThumbProximalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
 
 class RightThumbJointLinkage(LinkageABC):
-    bodies = [RightThumbProximalPhalanxRigidBodyABC, RightThumbDistalPhalanxRigidBodyABC]
+    bodies = [RightThumbProximalPhalanxSegmentABC, RightThumbDistalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
 
 
 # Index
 class RightIndexFingerKnuckleLinkage(LinkageABC):
-    bodies = [RightIndexFingerMetacarpalRigidBodyABC, RightIndexFingerProximalPhalanxRigidBodyABC]
+    bodies = [RightIndexFingerMetacarpalSegmentABC, RightIndexFingerProximalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
 
 class RightIndexFingerProximalJointLinkage(LinkageABC):
-    bodies = [RightIndexFingerProximalPhalanxRigidBodyABC, RightIndexFingerMiddlePhalanxRigidBodyABC]
+    bodies = [RightIndexFingerProximalPhalanxSegmentABC, RightIndexFingerMiddlePhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 class RightIndexFingerDistalJointLinkage(LinkageABC):
-    bodies = [RightIndexFingerMiddlePhalanxRigidBodyABC, RightIndexFingerDistalPhalanxRigidBodyABC]
+    bodies = [RightIndexFingerMiddlePhalanxSegmentABC, RightIndexFingerDistalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 # Middle
 class RightMiddleFingerKnuckleLinkage(LinkageABC):
-    bodies = [RightMiddleFingerMetacarpalRigidBodyABC, RightMiddleFingerProximalPhalanxRigidBodyABC]
+    bodies = [RightMiddleFingerMetacarpalSegmentABC, RightMiddleFingerProximalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
 
 class RightMiddleFingerProximalJointLinkage(LinkageABC):
-    bodies = [RightMiddleFingerProximalPhalanxRigidBodyABC, RightMiddleFingerMiddlePhalanxRigidBodyABC]
+    bodies = [RightMiddleFingerProximalPhalanxSegmentABC, RightMiddleFingerMiddlePhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 class RightMiddleFingerDistalJointLinkage(LinkageABC):
-    bodies = [RightMiddleFingerMiddlePhalanxRigidBodyABC, RightMiddleFingerDistalPhalanxRigidBodyABC]
+    bodies = [RightMiddleFingerMiddlePhalanxSegmentABC, RightMiddleFingerDistalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 # Ring
 class RightRingFingerKnuckleLinkage(LinkageABC):
-    bodies = [RightRingFingerMetacarpalRigidBodyABC, RightRingFingerProximalPhalanxRigidBodyABC]
+    bodies = [RightRingFingerMetacarpalSegmentABC, RightRingFingerProximalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
 
 class RightRingFingerProximalJointLinkage(LinkageABC):
-    bodies = [RightRingFingerProximalPhalanxRigidBodyABC, RightRingFingerMiddlePhalanxRigidBodyABC]
+    bodies = [RightRingFingerProximalPhalanxSegmentABC, RightRingFingerMiddlePhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 class RightRingFingerDistalJointLinkage(LinkageABC):
-    bodies = [RightRingFingerMiddlePhalanxRigidBodyABC, RightRingFingerDistalPhalanxRigidBodyABC]
+    bodies = [RightRingFingerMiddlePhalanxSegmentABC, RightRingFingerDistalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 # Pinky
 class RightPinkyFingerKnuckleLinkage(LinkageABC):
-    bodies = [RightPinkyFingerMetacarpalRigidBodyABC, RightPinkyFingerProximalPhalanxRigidBodyABC]
+    bodies = [RightPinkyFingerMetacarpalSegmentABC, RightPinkyFingerProximalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
 
 class RightPinkyFingerProximalJointLinkage(LinkageABC):
-    bodies = [RightPinkyFingerProximalPhalanxRigidBodyABC, RightPinkyFingerMiddlePhalanxRigidBodyABC]
+    bodies = [RightPinkyFingerProximalPhalanxSegmentABC, RightPinkyFingerMiddlePhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 class RightPinkyFingerDistalJointLinkage(LinkageABC):
-    bodies = [RightPinkyFingerMiddlePhalanxRigidBodyABC, RightPinkyFingerDistalPhalanxRigidBodyABC]
+    bodies = [RightPinkyFingerMiddlePhalanxSegmentABC, RightPinkyFingerDistalPhalanxSegmentABC]
     linked_keypoint = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
