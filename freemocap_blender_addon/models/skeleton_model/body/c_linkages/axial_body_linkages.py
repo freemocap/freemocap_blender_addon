@@ -1,9 +1,9 @@
 from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import LinkageABC
 from freemocap_blender_addon.models.skeleton_model.body.a_keypoints.axial_body_keypoints import AxialBodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.b_rigid_bodies.axial_rigid_bodies import CervicalRigidBody, \
+from freemocap_blender_addon.models.skeleton_model.body.rigid_bodies.axial_rigid_bodies import CervicalRigidBody, \
     LumbarRigidBody, ThoracicRigidBody
-from freemocap_blender_addon.models.skeleton_model.body.b_rigid_bodies.skull_rigid_bodies import SkullRigidBody
-from freemocap_blender_addon.models.skeleton_model.body.b_rigid_bodies.right_body_rigid_bodies import RightClavicleRigidBody, \
+from freemocap_blender_addon.models.skeleton_model.body.rigid_bodies.skull_rigid_bodies import SkullRigidBody
+from freemocap_blender_addon.models.skeleton_model.body.rigid_bodies.right_body_rigid_bodies import RightClavicleRigidBody, \
     RightPelvisRigidBody
 
 

@@ -3,15 +3,6 @@ import numpy as np
 from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import SkeletonMappingEnum, \
     KeypointMappingType
 
-# names, trajectory_data = calculate_keypoint_trajectories(data=data,
-#                                                          names=get_keypoint_names(
-#                                                              component_type=ComponentType.BODY,
-#                                                              data_source=data_source),
-#                                                          keypoint_mapping=get_mapping(
-#                                                              component_type=ComponentType.BODY,
-#                                                              data_source=data_source),
-#                                                          )
-
 
 def calculate_keypoint_trajectories(data: np.ndarray,
                                     names: list,

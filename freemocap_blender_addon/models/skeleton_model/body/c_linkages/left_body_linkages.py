@@ -1,6 +1,6 @@
 from freemocap_blender_addon.models.skeleton_model.keypoint_rigidbody_linkage_chain_abc import LinkageABC
 from freemocap_blender_addon.models.skeleton_model.body.a_keypoints.left_body_keypoints import LeftBodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.b_rigid_bodies.left_body_rigid_bodies import LeftThumbRigidBody, \
+from freemocap_blender_addon.models.skeleton_model.body.rigid_bodies.left_body_rigid_bodies import LeftThumbRigidBody, \
     LeftClavicleRigidBody, LeftUpperArmRigidBody, LeftForearmRigidBody, LeftPalmRigidBody, LeftFootRigidBody, \
     LeftThighRigidBody, LeftPelvisRigidBody, LeftCalfRigidBody
 
