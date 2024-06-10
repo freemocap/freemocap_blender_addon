@@ -7,7 +7,7 @@ from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDatacl
 
 
 @dataclass
-class Keypoint(TypeSafeDataclass, ABC):
+class KeypointDefinition(TypeSafeDataclass, ABC):
     """
     A Keypoint is a named "key" location on a skeleton, used to define the position of a rigid body or linkage.
     In marker-based motion capture, keypoints could correspond to markers placed on the body.
@@ -27,10 +27,11 @@ class Keypoint(TypeSafeDataclass, ABC):
         return f"Keypoint: {self.name}"
 
 @dataclass
-class KeypointTrajectory(Keypoint):
+class KeypointTrajectory(TypeSafeDataclass, ABC):
     """
     A KeypointTrajectory is a Keypoint that has been hydrated with data.
     """
+    name: str
     data: np.ndarray
 
     def __post_init__(self):
@@ -42,7 +43,7 @@ class KeypointTrajectory(Keypoint):
         print(f"Instantiated KeypointTrajectory: {self}")
 
     def __str__(self):
-        out_str = super().__str__()
+        out_str = f"KeypointTrajectory: {self.name}"
         out_str += f"\n\tTrajectory Data shape: {self.data.shape}\n"
         return out_str
 

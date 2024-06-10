@@ -1,12 +1,10 @@
 from abc import ABC
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import Keypoint, \
-    KeypointTrajectory
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.chain_abc import ChainABC
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC
 
 
 @dataclass
@@ -22,27 +20,14 @@ class SkeletonABC(ABC):
         return self.__class__.__name__
 
     @property
-    def root(self) -> Keypoint:
+    def root(self) -> KeypointDefinition:
         # Skeleton -> Chain -> Linkage -> Segment -> Keypoint
         return self.parent.root
 
-    @classmethod
-    def from_keypoint_trajectories(cls, keypoint_trajectories: KeypointTrajectories):
-        """
-        Create a SkeletonABC instance from trajectory data.
+    def get_segments(self) -> List[SegmentABC]:
 
-        Parameters
-        ----------
-        keypoint_trajectories : Dict[str, np.ndarray]
-            A dictionary of KeypointTrajectories.
+        segments = []
+        for chain in self.children:
+            segments.extend(chain.get_segments())
+        return segments
 
-        Returns
-        -------
-        SkeletonABC
-            An instance of SkeletonABC hydrated with KeypointTrajectories.
-        """
-
-        parent = cls.parent.from_keypoint_trajectories(keypoint_trajectories)
-        children = [child.from_keypoint_trajectories(keypoint_trajectories) for child in cls.children]
-
-        return cls(parent=parent, children=children)

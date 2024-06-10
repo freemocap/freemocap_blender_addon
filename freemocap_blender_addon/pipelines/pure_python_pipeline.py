@@ -2,6 +2,10 @@ from dataclasses import dataclass
 
 from freemocap_blender_addon.freemocap_data.freemocap_recording_data import FreemocapRecordingData
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
+    calculate_rigid_body_trajectories
+from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
+from freemocap_blender_addon.models.skeleton_model.body.body_skeleton import BodySkeletonDefinition
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
@@ -19,12 +23,10 @@ class PurePythonPipeline(TypeSafeDataclass):
         recording_data = FreemocapRecordingData.load_from_recording_path(recording_path=self.recording_path_str,
                                                                          tracker_type=self.tracker_type)
 
-        keypoint_trajectories = recording_data.body.map_to_keypoints()
+        og_keypoint_trajectories = recording_data.body.map_to_keypoints()
 
-        f = 9
-
-        # rigid_skeleton_data = enforce_rigid_bodies(skeleton_data = og_skeleton_data)
-
+        rigid_skeleton_data = calculate_rigid_body_trajectories(og_keypoint_trajectories=og_keypoint_trajectories,
+                                                                skeleton_definition=SkeletonTypes.BODY_ONLY)
         # self.enforce_rigid_bones()
         # self.put_data_in_inertial_reference_frame()
         # self.fix_hand_data()

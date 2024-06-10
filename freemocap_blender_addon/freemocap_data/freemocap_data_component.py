@@ -1,13 +1,15 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List
 
 import numpy as np
 
 from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType, \
     FRAME_TRAJECTORY_XYZ
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import TrackedPointName
-from freemocap_blender_addon.utilities.get_keypoint_names import get_keypoint_names, get_mapping
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointTrajectory
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+    TrackedPointName, KeypointTrajectories
+from freemocap_blender_addon.utilities.get_from_tracker_type import get_keypoint_names, get_mapping
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -35,12 +37,13 @@ class GenericTrackedPoints(TypeSafeDataclass):
             raise ValueError(
                 f"Data frame shape {self.trajectory_data.shape} does not match trajectory names length {len(self.trajectory_names)}")
 
-    def map_to_keypoints(self) -> Dict[str, np.ndarray]:
+    def map_to_keypoints(self) -> KeypointTrajectories:
         mapping = get_mapping(component_type=ComponentType.BODY,
                               tracker_source=self.tracker_source)
         keypoint_trajectories = {
-            keypoint_name.lower(): mapping.value.calculate_trajectory(data=self.trajectory_data,
-                                                        names=self.trajectory_names)
+            keypoint_name.lower(): KeypointTrajectory(name=keypoint_name.lower(),
+                                                      data=mapping.value.calculate_trajectory(data=self.trajectory_data,
+                                                                                              names=self.trajectory_names))
             for keypoint_name, mapping in mapping.__members__.items()}
         return keypoint_trajectories
 

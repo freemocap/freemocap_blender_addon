@@ -4,7 +4,7 @@ from freemocap_blender_addon.models.skeleton_model.body.chains.right_body_chains
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.skeleton_abc import SkeletonABC
 
 
-class FullBodySkeleton(SkeletonABC):
+class BodySkeletonDefinition(SkeletonABC):
     parent = AxialBodyChain
     children = [RightArmChain,
                 RightLegChain,
@@ -13,9 +13,4 @@ class FullBodySkeleton(SkeletonABC):
 
 
 
-if __name__ == "__main__":
-    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_rest_recording
 
-    recording_data = load_freemocap_rest_recording()
-    keypoint_trajectories = recording_data.body.map_to_keypoints()
-    skeleton = FullBodySkeleton.from_keypoint_trajectories(keypoint_trajectories)

@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import Keypoint
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, \
     SimpleSegmentABC, CompoundSegmentABC
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
@@ -21,14 +21,14 @@ class LinkageABC(ABC):
     parent: SegmentABC
     children: [SegmentABC]
     # TODO - calculate the linked_point on instantiation rather than defining it manually
-    linked_keypoint: [Keypoint]
+    linked_keypoint: [KeypointDefinition]
 
     @property
     def name(self) -> str:
         return self.__class__.__name__
 
     @property
-    def root(self) -> Keypoint:
+    def root(self) -> KeypointDefinition:
         return self.parent.root
 
     def __post_init__(self):
@@ -45,26 +45,9 @@ class LinkageABC(ABC):
                 raise ValueError(f"Body {body} is not a valid rigid body type")
         print(f"Linkage: {self.name} instantiated with parent {self.parent} and children {self.children}")
 
-    @classmethod
-    def from_keypoint_trajectories(cls, keypoint_trajectories: KeypointTrajectories):
-        """
-        Create a LinkageABC instance from trajectory data.
-
-        Parameters
-        ----------
-        keypoint_trajectories : Dict[str, np.ndarray]
-            A dictionary of KeypointTrajectories.
-
-        Returns
-        -------
-        LinkageABC
-            An instance of LinkageABC hydrated with KeypointTrajectories.
-        """
-
-        parent = cls.parent.from_keypoint_trajectories(keypoint_trajectories)
-        children = [child.from_keypoint_trajectories(keypoint_trajectories) for child in cls.children]
-
-        return cls(parent=parent, children=children, linked_keypoint=cls.linked_keypoint)
+    def get_segments(self) -> [SegmentABC]:
+        segments = [self.parent] + self.children
+        return segments
 
     def __str__(self) -> str:
         out_str = super().__str__()

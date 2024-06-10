@@ -3,24 +3,28 @@ from typing import Dict
 import numpy as np
 
 from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericTrackedPoints
+from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.skeleton_abc import SkeletonABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+    KeypointTrajectories
 from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_segment_lengths
 
 
-def enforce_rigid_bodies(data_component: GenericTrackedPoints) -> GenericTrackedPoints:
+def calculate_rigid_body_trajectories(og_keypoint_trajectories: KeypointTrajectories,
+                                      skeleton_definition: SkeletonTypes) -> KeypointTrajectories:
     print(
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 
     # Update the information of the virtual bones
-    bones = calculate_segment_lengths(data=data_component,
-                                      bone_definitions=BONE_DEFINITIONS)
+    og_segment_lengths = calculate_segment_lengths(keypoint_trajectories=og_keypoint_trajectories, skeleton_definition=skeleton_definition)
 
     # Print the current bones length median, standard deviation and coefficient of variation
-    log_bone_statistics(bones=bones, type='original')
+    log_bone_statistics(bones=og_segment_lengths, type='original')
 
     # Iterate through the lengths array of each bone and check if the length is outside the interval defined by x*stdev with x as a factor
     # If the bone length is outside the interval, adjust the coordinates of the tail empty and its children so the new bone length is at the border of the interval
 
-    for name, bone in bones.items():
+    for name, bone in og_segment_lengths.items():
         print(f"Enforcing rigid length for bone: {name}...")
 
         desired_length = bone.median
@@ -55,7 +59,7 @@ def enforce_rigid_bodies(data_component: GenericTrackedPoints) -> GenericTracked
     print('Bone lengths enforced successfully!')
 
     # Update the information of the virtual bones
-    updated_bones = calculate_segment_lengths(trajectories=updated_trajectories, bone_definitions=bones)
+    updated_bones = calculate_segment_lengths(trajectories=updated_trajectories, bone_definitions=og_segment_lengths)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=updated_bones, type='updated')

@@ -21,7 +21,7 @@ from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters i
 from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 from freemocap_blender_addon.freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
-    enforce_rigid_bodies
+    calculate_rigid_body_trajectories
 from freemocap_blender_addon.freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from freemocap_blender_addon.freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
@@ -149,7 +149,7 @@ class MainController(metaclass=SingletonMetaClass):
     def enforce_rigid_bones(self):
         print("Enforcing rigid bones...")
         try:
-            self.freemocap_data_handler = enforce_rigid_bodies(
+            self.freemocap_data_handler = calculate_rigid_body_trajectories(
                 handler=self.freemocap_data_handler
             )
 
