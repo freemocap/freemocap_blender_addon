@@ -1,17 +1,14 @@
-import math
-import statistics
-
 import numpy as np
 
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories, SegmentStats
+from freemocap_blender_addon.utilities.print_table_from_dicts import print_table
 from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 
 
 def calculate_segment_lengths(keypoint_trajectories: KeypointTrajectories,
                               skeleton_definition: SkeletonTypes) -> SegmentStats:
-    print('Calculating segment lengths...')
     segment_stats = {}
     for segment in skeleton_definition.value.get_segments():
         print(f'Calculating bone length statistics...')
@@ -21,7 +18,6 @@ def calculate_segment_lengths(keypoint_trajectories: KeypointTrajectories,
         )
 
         segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(lengths)
-        print(f"Segment {segment.name.lower()} statistics:\n {segment_stats[segment.name.lower()]}")
 
 
     print(f'Bone length statistics calculated successfully :D')
@@ -72,4 +68,12 @@ if __name__ == "__main__":
 
     recording_data = load_freemocap_rest_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
-    calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer, skeleton_definition=SkeletonTypes.BODY_ONLY)
+    segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer, skeleton_definition=SkeletonTypes.BODY_ONLY)
+
+    stats = []
+    for name, segment in segment_lengths.items():
+        stats_dict = segment.to_dict()
+        stats_dict['segment'] = name
+        stats.append(stats_dict)
+    print_table(stats)
+

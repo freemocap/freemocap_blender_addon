@@ -131,6 +131,16 @@ class DescriptiveStatistics(TypeSafeDataclass):
     def number_of_samples(self) -> int:
         return self.sample_data.number_of_samples
 
+    def to_dict(self):
+        return {
+            "mean": self.mean,
+            "median": self.median,
+            "stddev": self.stddev,
+            "mad": self.mad,
+            "iqr": self.iqr,
+            "ci95": self.ci95,
+            "number_of_samples": self.number_of_samples,
+        }
     def __str__(self) -> str:
         return (
             f"Descriptive Statistics:\n"
