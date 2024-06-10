@@ -45,8 +45,9 @@ class LinkageABC(ABC):
                 raise ValueError(f"Body {body} is not a valid rigid body type")
         print(f"Linkage: {self.name} instantiated with parent {self.parent} and children {self.children}")
 
-    def get_segments(self) -> [SegmentABC]:
-        segments = [self.parent] + self.children
+    @classmethod
+    def get_segments(cls) -> [SegmentABC]:
+        segments = [cls.parent] + cls.children
         return segments
 
     def __str__(self) -> str:

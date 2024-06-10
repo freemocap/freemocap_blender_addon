@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from freemocap_blender_addon.freemocap_data.freemocap_recording_data import FreemocapRecordingData
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
-from freemocap_blender_addon.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import \
+from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.body.body_skeleton import BodySkeletonDefinition

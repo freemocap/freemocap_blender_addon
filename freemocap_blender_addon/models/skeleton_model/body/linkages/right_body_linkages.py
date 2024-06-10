@@ -22,14 +22,14 @@ class RightWristLinkage(LinkageABC):
     children = [RightBodySegments.RIGHT_FOREARM,
                 RightBodySegments.RIGHT_WRIST_THUMB,
                 RightBodySegments.RIGHT_WRIST_PINKY,
-                RightBodySegments.RIGHT_WRIST_INDEX],
+                RightBodySegments.RIGHT_WRIST_INDEX]
 
     linked_keypoint = BodyKeypoints.RIGHT_WRIST
 
 
 class RightHipLinkage(LinkageABC):
     parent = RightBodySegments.RIGHT_PELVIS
-    chidren = [RightBodySegments.RIGHT_PELVIS,
+    children = [RightBodySegments.RIGHT_PELVIS,
                RightBodySegments.RIGHT_THIGH]
     linked_keypoint = BodyKeypoints.RIGHT_HIP
 

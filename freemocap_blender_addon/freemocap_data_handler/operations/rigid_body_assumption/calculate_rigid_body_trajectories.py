@@ -7,7 +7,7 @@ from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.skeleton_abc import SkeletonABC
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
-from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_segment_lengths
+from ..rigid_body_assumption.calculate_segment_lengths import calculate_segment_lengths
 
 
 def calculate_rigid_body_trajectories(og_keypoint_trajectories: KeypointTrajectories,
@@ -16,7 +16,8 @@ def calculate_rigid_body_trajectories(og_keypoint_trajectories: KeypointTrajecto
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 
     # Update the information of the virtual bones
-    og_segment_lengths = calculate_segment_lengths(keypoint_trajectories=og_keypoint_trajectories, skeleton_definition=skeleton_definition)
+    og_segment_lengths = calculate_segment_lengths(keypoint_trajectories=og_keypoint_trajectories,
+                                                   skeleton_definition=skeleton_definition)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=og_segment_lengths, type='original')

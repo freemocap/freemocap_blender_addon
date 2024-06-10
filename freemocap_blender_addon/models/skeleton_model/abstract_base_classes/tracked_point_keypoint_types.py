@@ -1,8 +1,7 @@
 from typing import List, Dict, Union
 
-import numpy as np
-
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointTrajectory
+from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 
 TrackedPointName = str
 TrackedPointList = List[TrackedPointName]
@@ -11,3 +10,4 @@ KeypointMappingType = Union[TrackedPointName, TrackedPointList, WeightedTrackedP
 # OffsetKeypoint = Dict[Keypoint, Tuple[float, float, float]] # TODO - implement this
 
 KeypointTrajectories = Dict[TrackedPointName, KeypointTrajectory]
+SegmentStats = Dict[str, DescriptiveStatistics]

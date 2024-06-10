@@ -24,10 +24,11 @@ class SkeletonABC(ABC):
         # Skeleton -> Chain -> Linkage -> Segment -> Keypoint
         return self.parent.root
 
-    def get_segments(self) -> List[SegmentABC]:
+    @classmethod
+    def get_segments(cls) -> List[SegmentABC]:
 
         segments = []
-        for chain in self.children:
+        for chain in cls.children:
             segments.extend(chain.get_segments())
         return segments
 

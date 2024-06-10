@@ -34,8 +34,9 @@ class ChainABC(ABC):
             f"Chain: {self.name} instantiated with parent {self.parent} and children {[child.name for child in self.children]}")
 
 
-    def get_segments(self) -> List[SegmentABC]:
-        segments = self.parent.get_segments()
-        for linkage in self.children:
+    @classmethod
+    def get_segments(cls) -> List[SegmentABC]:
+        segments = cls.parent.get_segments()
+        for linkage in cls.children:
             segments.extend(linkage.get_segments())
         return segments
