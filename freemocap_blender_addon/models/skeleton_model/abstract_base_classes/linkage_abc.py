@@ -1,11 +1,10 @@
 from abc import ABC
 from dataclasses import dataclass
+from typing import Union, List
 
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, \
-    SimpleSegmentABC, CompoundSegmentABC
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
+    CompoundSegmentABC
 
 
 @dataclass
@@ -18,8 +17,8 @@ class LinkageABC(ABC):
 
      #for now these are all 'universal' (ball) joints. Later we can add different constraints
     """
-    parent: SegmentABC
-    children: [SegmentABC]
+    parent: Union[SimpleSegmentABC, CompoundSegmentABC]
+    children: List[Union[SimpleSegmentABC, CompoundSegmentABC]]
     # TODO - calculate the linked_point on instantiation rather than defining it manually
     linked_keypoint: [KeypointDefinition]
 
@@ -46,9 +45,16 @@ class LinkageABC(ABC):
         print(f"Linkage: {self.name} instantiated with parent {self.parent} and children {self.children}")
 
     @classmethod
-    def get_segments(cls) -> [SegmentABC]:
+    def get_segments(cls) -> List[SimpleSegmentABC]:
         segments = [cls.parent] + cls.children
         return segments
+
+    @classmethod
+    def get_keypoints(cls) -> [KeypointDefinition]:
+        keypoints = cls.parent.get_keypoints()
+        for linkage in cls.children:
+            keypoints.extend(linkage.get_keypoints())
+        return keypoints
 
     def __str__(self) -> str:
         out_str = super().__str__()

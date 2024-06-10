@@ -11,16 +11,12 @@ def calculate_segment_lengths(keypoint_trajectories: KeypointTrajectories,
                               skeleton_definition: SkeletonTypes) -> SegmentStats:
     segment_stats = {}
     for segment in skeleton_definition.value.get_segments():
-        print(f'Calculating bone length statistics...')
-        lengths = calculate_distance_between_trajectories(
+        length_stats = calculate_distance_between_trajectories(
             trajectory_1=keypoint_trajectories[segment.value.parent.name.lower()].data,
             trajectory_2=keypoint_trajectories[segment.value.child.name.lower()].data
         )
 
-        segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(lengths)
-
-
-    print(f'Bone length statistics calculated successfully :D')
+        segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
 
     return segment_stats
 
@@ -61,6 +57,13 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
     return np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
 
 
+def print_length_stats(segment_lengths: SegmentStats):
+    stats = []
+    for name, segment in segment_lengths.items():
+        segment_dict = {'segment': name}
+        segment_dict.update(segment.to_dict())
+        stats.append(segment_dict)
+    print_table(stats)
 
 
 if __name__ == "__main__":
@@ -70,10 +73,5 @@ if __name__ == "__main__":
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer, skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-    stats = []
-    for name, segment in segment_lengths.items():
-        stats_dict = segment.to_dict()
-        stats_dict['segment'] = name
-        stats.append(stats_dict)
-    print_table(stats)
+    print_length_stats(segment_lengths)
 

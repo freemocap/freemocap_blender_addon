@@ -34,7 +34,7 @@ def test_central_tendency_measures_from_samples(sample_data_fixture: SampleData)
 
 def test_variability_measures_from_samples(sample_data_fixture: SampleData) -> None:
     vm = VariabilityMeasures.from_samples(samples=sample_data_fixture)
-    assert vm.stddev == np.nanstd(sample_data_fixture.data)
+    assert vm.standard_deviation == np.nanstd(sample_data_fixture.data)
     assert vm.mad == np.nanmedian(np.abs(sample_data_fixture.data - np.nanmedian(sample_data_fixture.data)))
     assert vm.iqr == np.nanpercentile(sample_data_fixture.data, 75) - np.nanpercentile(sample_data_fixture.data, 25)
     assert vm.ci95 == 1.96 * np.nanstd(sample_data_fixture.data) / np.sqrt(len(sample_data_fixture.data))
@@ -55,8 +55,8 @@ def test_descriptive_statistics(sample_statistics_fixture: DescriptiveStatistics
     stats = sample_statistics_fixture
     assert stats.mean == np.nanmean(stats.sample_data.data)
     assert stats.median == np.nanmedian(stats.sample_data.data)
-    assert stats.stddev == np.nanstd(stats.sample_data.data)
-    assert stats.mad == np.nanmedian(np.abs(stats.sample_data.data - np.nanmedian(stats.sample_data.data)))
-    assert stats.iqr == np.nanpercentile(stats.sample_data.data, 75) - np.nanpercentile(stats.sample_data.data, 25)
-    assert stats.ci95 == 1.96 * np.nanstd(stats.sample_data.data) / np.sqrt(len(stats.sample_data.data))
+    assert stats.standard_deviation == np.nanstd(stats.sample_data.data)
+    assert stats.median_absolute_deviation == np.nanmedian(np.abs(stats.sample_data.data - np.nanmedian(stats.sample_data.data)))
+    assert stats.interquartile_range == np.nanpercentile(stats.sample_data.data, 75) - np.nanpercentile(stats.sample_data.data, 25)
+    assert stats.confidence_interval_95 == 1.96 * np.nanstd(stats.sample_data.data) / np.sqrt(len(stats.sample_data.data))
     assert stats.number_of_samples == len(stats.sample_data.data)

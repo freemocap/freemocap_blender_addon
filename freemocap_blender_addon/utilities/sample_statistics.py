@@ -64,18 +64,20 @@ class CentralTendencyMeasures(TypeSafeDataclass):
 
 @dataclass
 class VariabilityMeasures(TypeSafeDataclass):
-    stddev: float
-    mad: float
-    iqr: float
-    ci95: float
+    standard_deviation: float
+    median_absolute_deviation: float
+    interquartile_range: float
+    confidence_interval_95: float
+    coefficient_of_variation: float
 
     @classmethod
     def from_samples(cls, samples: SampleData) -> 'VariabilityMeasures':
         return cls(
-            stddev=np.nanstd(samples.data),
-            mad=np.nanmedian(np.abs(samples.data - np.nanmedian(samples.data))),
-            iqr=np.nanpercentile(samples.data, 75) - np.nanpercentile(samples.data, 25),
-            ci95=Z_SCORE_95_CI * np.nanstd(samples.data) / np.sqrt(samples.data.size),
+            standard_deviation=np.nanstd(samples.data),
+            median_absolute_deviation=np.nanmedian(np.abs(samples.data - np.nanmedian(samples.data))),
+            interquartile_range=np.nanpercentile(samples.data, 75) - np.nanpercentile(samples.data, 25),
+            confidence_interval_95=Z_SCORE_95_CI * np.nanstd(samples.data) / np.sqrt(samples.data.size),
+            coefficient_of_variation=np.nanstd(samples.data) / np.nanmean(samples.data),
         )
 
 
@@ -112,20 +114,20 @@ class DescriptiveStatistics(TypeSafeDataclass):
         return self.measures_of_central_tendency.median
 
     @property
-    def stddev(self) -> float:
-        return self.measures_of_variability.stddev
+    def standard_deviation(self) -> float:
+        return self.measures_of_variability.standard_deviation
 
     @property
-    def mad(self) -> float:
-        return self.measures_of_variability.mad
+    def median_absolute_deviation(self) -> float:
+        return self.measures_of_variability.median_absolute_deviation
 
     @property
-    def iqr(self) -> float:
-        return self.measures_of_variability.iqr
+    def interquartile_range(self) -> float:
+        return self.measures_of_variability.interquartile_range
 
     @property
-    def ci95(self) -> float:
-        return self.measures_of_variability.ci95
+    def confidence_interval_95(self) -> float:
+        return self.measures_of_variability.confidence_interval_95
 
     @property
     def number_of_samples(self) -> int:
@@ -135,10 +137,10 @@ class DescriptiveStatistics(TypeSafeDataclass):
         return {
             "mean": self.mean,
             "median": self.median,
-            "stddev": self.stddev,
-            "mad": self.mad,
-            "iqr": self.iqr,
-            "ci95": self.ci95,
+            "stddev": self.standard_deviation,
+            "mad": self.median_absolute_deviation,
+            "iqr": self.interquartile_range,
+            "ci95": self.confidence_interval_95,
             "number_of_samples": self.number_of_samples,
         }
     def __str__(self) -> str:
@@ -147,10 +149,10 @@ class DescriptiveStatistics(TypeSafeDataclass):
             f"\tNumber of Samples: {self.number_of_samples}\n"
             f"\tMean: {self.mean:.3f}\n"
             f"\tMedian: {self.median:.3f}\n"
-            f"\tStandard Deviation: {self.stddev:.3f}\n"
-            f"\tMedian Absolute Deviation: {self.mad:.3f}\n"
-            f"\tInterquartile Range: {self.iqr:.3f}\n"
-            f"\t95% Confidence Interval: {self.ci95:.3f}\n"
+            f"\tStandard Deviation: {self.standard_deviation:.3f}\n"
+            f"\tMedian Absolute Deviation: {self.median_absolute_deviation:.3f}\n"
+            f"\tInterquartile Range: {self.interquartile_range:.3f}\n"
+            f"\t95% Confidence Interval: {self.confidence_interval_95:.3f}\n"
         )
 
 

@@ -1,9 +1,10 @@
 from abc import ABC
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, \
+    CompoundSegmentABC, SimpleSegmentABC
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
 
@@ -35,8 +36,15 @@ class ChainABC(ABC):
 
 
     @classmethod
-    def get_segments(cls) -> List[SegmentABC]:
+    def get_segments(cls) -> List[SimpleSegmentABC]:
         segments = cls.parent.get_segments()
         for linkage in cls.children:
             segments.extend(linkage.get_segments())
         return segments
+
+    @classmethod
+    def get_keypoints(cls) -> List[KeypointDefinition]:
+        keypoints = cls.parent.get_keypoints()
+        for linkage in cls.children:
+            keypoints.extend(linkage.get_keypoints())
+        return keypoints

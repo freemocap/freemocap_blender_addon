@@ -3,12 +3,13 @@ from typing import Dict, TYPE_CHECKING
 import numpy as np
 
 from .estimate_good_frame import estimate_good_frame
+from ...models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import KeypointTrajectories
 
 if TYPE_CHECKING:
     from ..handler import FreemocapDataHandler
 
 
-def put_skeleton_on_ground(handler: 'FreemocapDataHandler'):
+def put_skeleton_on_ground(keypoint_trajectories: KeypointTrajectories):
     print(f"Putting freemocap data in inertial reference frame...")
 
     ground_reference_trajectories_with_error = handler.get_trajectories(

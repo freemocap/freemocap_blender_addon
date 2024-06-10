@@ -1,111 +1,73 @@
-from typing import Dict
+from copy import deepcopy
+from typing import Tuple
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.freemocap_data_component import GenericTrackedPoints
+from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_segment_lengths import \
+    calculate_segment_lengths, print_length_stats
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.skeleton_abc import SkeletonABC
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
-from ..rigid_body_assumption.calculate_segment_lengths import calculate_segment_lengths
+    KeypointTrajectories, SegmentStats
 
 
-def calculate_rigid_body_trajectories(og_keypoint_trajectories: KeypointTrajectories,
-                                      skeleton_definition: SkeletonTypes) -> KeypointTrajectories:
+def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectories,
+                                      skeleton_definition: SkeletonTypes) -> Tuple[KeypointTrajectories, SegmentStats]:
     print(
-        'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
+        'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...\n\n')
 
     # Update the information of the virtual bones
-    og_segment_lengths = calculate_segment_lengths(keypoint_trajectories=og_keypoint_trajectories,
+    og_segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories,
                                                    skeleton_definition=skeleton_definition)
+    print("Original body segment lengths 👇")
+    print_length_stats(segment_lengths=og_segment_lengths)
+    print("Original body segment lengths 👆")
 
-    # Print the current bones length median, standard deviation and coefficient of variation
-    log_bone_statistics(bones=og_segment_lengths, type='original')
+    rigidified_keypoints = deepcopy(keypoint_trajectories)
 
-    # Iterate through the lengths array of each bone and check if the length is outside the interval defined by x*stdev with x as a factor
-    # If the bone length is outside the interval, adjust the coordinates of the tail empty and its children so the new bone length is at the border of the interval
+    # Iterate through the skeleton segments and enforce rigid body assumption by translating each child-keypoint
+    # and its children so the new bone length is the same as the target length on each frame
 
-    for name, bone in og_segment_lengths.items():
-        print(f"Enforcing rigid length for bone: {name}...")
+    for segment in skeleton_definition.value.get_segments():
+        segment_name = segment.name.lower()
 
-        desired_length = bone.median
+        print(f"Enforcing rigid length for segment: {segment_name}...")
+        if segment_name not in og_segment_lengths:
+            raise ValueError(f"Segment {segment_name} not found in segment lengths")
 
-        head_name = bone.head
-        tail_name = bone.tail
+        target_length = og_segment_lengths[segment_name].median
+        raw_lengths = og_segment_lengths[segment_name].samples
 
-        for frame_number, raw_length in enumerate(bone.lengths):
-            if np.isnan(raw_length) or raw_length == 0:
-                continue
+        # TODO - support compound segments with multiple children
+        segment_parent_kp_name = segment.value.parent.name.lower()
+        segment_child_kp_name = segment.value.child.name.lower()
+        parent_trajectory = rigidified_keypoints[segment_parent_kp_name].data
+        child_trajectory = rigidified_keypoints[segment_child_kp_name].data
 
-            head_position = original_trajectories[head_name][frame_number, :]
-            tail_position = original_trajectories[tail_name][frame_number, :]
+        # calculate the child trajectory relative to the parent trajectory
+        # (i.e. set the parent trajectory as the origin and the child trajectory as the relative position)
+        child_trajectory_zeroed = child_trajectory - parent_trajectory
 
-            bone_vector = tail_position - head_position
+        # calculate the necessary scaling factors to make the child trajectory the same length as the target length
+        scaling_factors = (target_length / raw_lengths) - 1
 
-            # Get the normalized bone vector by dividing the bone_vector by its length
-            try:
-                bone_vector_norm = bone_vector / raw_length
-            except ZeroDivisionError:
-                raw_length = 0.0001
-                bone_vector_norm = bone_vector / raw_length
+        # calculate necessary translations on each frame to make the child trajectory the same length as the target length
+        translations = child_trajectory_zeroed * scaling_factors[:, np.newaxis]
+        rigidified_keypoints[segment_child_kp_name] = child_trajectory + translations
 
-            # Calculate the new tail position delta by multiplying the normalized bone vector by the difference of desired_length and original_length
-            position_delta = bone_vector_norm * (desired_length - raw_length)
+        # translate all child keypoints of the segment
+        children = skeleton_definition.value.get_keypoint_children(keypoint_name=segment_child_kp_name)
+        for child_keypoint in children:
+            child_name = child_keypoint.name.lower()
+            rigidified_keypoints[child_name].data += translations
 
-            updated_trajectories = translate_trajectory_and_its_children(name=tail_name,
-                                                                         position_delta=position_delta,
-                                                                         frame_number=frame_number,
-                                                                         updated_trajectories=updated_trajectories)
-
-    print('Bone lengths enforced successfully!')
-
-    # Update the information of the virtual bones
-    updated_bones = calculate_segment_lengths(trajectories=updated_trajectories, bone_definitions=og_segment_lengths)
-
-    # Print the current bones length median, standard deviation and coefficient of variation
-    log_bone_statistics(bones=updated_bones, type='updated')
-
-    print('Updating freemocap data handler with the new trajectories...')
-    for name, trajectory in updated_trajectories.items():
-        handler.set_trajectory(name=name, data=trajectory)
-
-    return handler
+    return rigidified_keypoints, og_segment_lengths
 
 
-def translate_trajectory_and_its_children(name: str,
-                                          position_delta: np.ndarray,
-                                          frame_number: int,
-                                          updated_trajectories: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
-    # recursively translate the tail empty and its children by the position delta.
-    try:
-        updated_trajectories[name][frame_number, :] = updated_trajectories[name][frame_number, :] + position_delta
+if __name__ == "__main__":
+    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_rest_recording
 
-        if name in MEDIAPIPE_HIERARCHY.keys():
-            for child_name in MEDIAPIPE_HIERARCHY[name]['children']:
-                translate_trajectory_and_its_children(name=child_name,
-                                                      position_delta=position_delta,
-                                                      frame_number=frame_number,
-                                                      updated_trajectories=updated_trajectories)
-    except Exception as e:
-        print(f"Error while adjusting trajectory `{name}` and its children:\n error:\n {e}")
-        print(e)
-        raise Exception(f"Error while adjusting trajectory and its children: {e}")
-
-    return updated_trajectories
-
-
-def log_bone_statistics(bones: Dict[str, BoneDefinition], type: str):
-    log_string = f'\n\n[{type}] Bone Length Statistics:\n'
-    header_string = f"{'BONE':<15} {'MEDIAN (cm)':>12} {'STDEV (cm)':>12} {'CV (%)':>12}"
-    log_string += header_string + '\n'
-    for name, bone in bones.items():
-        # Get the statistic values
-        median_string = str(round(bone.median * 100, 7))
-        stdev_string = str(round(bone.stddev * 100, 7))
-        try:
-            cv_string = str(round(bone.stddev / bone.median * 100, 4))
-        except ZeroDivisionError:
-            cv_string = 'N/A'
-        log_string += f"{name:<15} {median_string:>12} {stdev_string:>12} {cv_string:>12}\n"
-
-    print(log_string)
+    recording_data = load_freemocap_rest_recording()
+    keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
+    keypoint_trajectories, og_segment_lengths = calculate_rigid_body_trajectories(
+        keypoint_trajectories=keypoint_trajectories_outer,
+        skeleton_definition=SkeletonTypes.BODY_ONLY)

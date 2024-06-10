@@ -50,6 +50,10 @@ class SimpleSegmentABC(SegmentABC):
             raise ValueError("Parent and child keypoints must be different")
         print(f"SimpleSegment: {self.name} instantiated with parent {self.parent} and child {self.child}")
 
+    @classmethod
+    def get_children(cls) -> List[KeypointDefinition]:
+        return [cls.child]
+
     def __str__(self):
         out_str = f"Segment: {self.name}"
         out_str += f"\n\tParent: {self.parent}"
@@ -102,3 +106,7 @@ class CompoundSegmentABC(SegmentABC):
     @property
     def orthonormal_basis(self):
         raise NotImplementedError("TODO - this lol")
+
+    @classmethod
+    def get_children(cls) -> List[KeypointDefinition]:
+        return cls.children
