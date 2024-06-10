@@ -1,7 +1,7 @@
 from freemocap_blender_addon.models.skeleton_model.body.chains.axial_body_chain import AxialBodyChain
 from freemocap_blender_addon.models.skeleton_model.body.chains.left_body_chains import LeftArmChain, LeftLegChain
 from freemocap_blender_addon.models.skeleton_model.body.chains.right_body_chains import RightArmChain, RightLegChain
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import SkeletonABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.skeleton_abc import SkeletonABC
 
 
 class FullBodySkeleton(SkeletonABC):

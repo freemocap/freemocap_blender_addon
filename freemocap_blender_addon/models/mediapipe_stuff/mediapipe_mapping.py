@@ -1,9 +1,8 @@
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import KeypointMappingsEnum
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_mapping_abc import KeypointMappingsEnum
 
 
 class MediapipeBodyMapping(KeypointMappingsEnum):
-    SKULL_CENTER_C1 = {"left_ear": .45, "right_ear": .45, "nose": .1},
     NOSE_TIP = ["nose"]
     RIGHT_EYE_INNER = ["right_eye_inner"]
     RIGHT_EYE_CENTER = ["right_eye"]
@@ -15,9 +14,10 @@ class MediapipeBodyMapping(KeypointMappingsEnum):
     LEFT_EYE_OUTER = ["left_eye_outer"]
     LEFT_EAR_TRAGUS = ["left_ear"]
     LEFT_MOUTH = ["mouth_left"]
-    NECK_TOP_C1_ATLAS = ["left_ear", "right_ear"]
+    SKULL_CENTER_ATLAS_C1 = {"left_ear": .45, "right_ear": .45, "left_shoulder": .05, "right_shoulder": .05}
+    NECK_TOP_AXIS_C2 = {"left_ear": .4, "right_ear": .4, "left_shoulder": .1, "right_shoulder": .1}
     NECK_BASE_C7 = ["left_shoulder", "right_shoulder"]
-    CHEST_CENTER_L1 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
+    CHEST_CENTER_T12 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
     PELVIS_CENTER = ["left_hip", "right_hip"]
     RIGHT_CLAVICLE = {"right_shoulder": .55, "left_shoulder": .45},
     RIGHT_SHOULDER = ["right_shoulder"]
@@ -50,7 +50,7 @@ for key in MediapipeBodyMapping.__members__.keys():
     if not hasattr(BodyKeypoints, key):
         missing_keys.append(key)
     if missing_keys:
-        raise ValueError(f"Keys [{missing_keys}] are missing from SkeletonBodyKeypointDefinitions")
+        raise ValueError(f"Keys [{missing_keys}] are missing from BodyKeypoints")
 
-if __name__ == "__main__":
-    print("\n".join([f"{key}: {value.value}" for key, value in MediapipeBodyMapping.__members__.items()]))
+print(f"MediapipeBodyMapping enum created successfully with {len(MediapipeBodyMapping.__members__)} keys\n")
+print("\n".join([f"{key}: {value.value}" for key, value in MediapipeBodyMapping.__members__.items()]))

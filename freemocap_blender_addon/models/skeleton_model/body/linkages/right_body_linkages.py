@@ -1,40 +1,49 @@
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.body.a_keypoints.right_body_keypoints import RightBodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightUpperArmSegment, \
-    RightClavicleSegment, RightForearmSegment, RightPalmSegment, RightThumbSegment, RightPelvisSegment, \
-    RightThighSegment, RightCalfSegment, RightFootSegment
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
 
 
 class RightShoulderLinkage(LinkageABC):
-    bodies = [RightClavicleSegment,
-              RightUpperArmSegment]
-    linked_keypoint = RightBodyKeypoints.RIGHT_SHOULDER.value
+    parent = RightBodySegments.RIGHT_CLAVICLE
+    children = [RightBodySegments.RIGHT_CLAVICLE,
+                RightBodySegments.RIGHT_UPPER_ARM]
+    linked_keypoint = BodyKeypoints.RIGHT_SHOULDER
 
 
 class RightElbowLinkage(LinkageABC):
-    bodies = [RightUpperArmSegment,
-              RightForearmSegment]
-    linked_keypoint = RightBodyKeypoints.RIGHT_ELBOW.value
+    parent = RightBodySegments.RIGHT_UPPER_ARM
+    children = [RightBodySegments.RIGHT_UPPER_ARM,
+                RightBodySegments.RIGHT_FOREARM]
+    linked_keypoint = BodyKeypoints.RIGHT_ELBOW.value
 
 
 class RightWristLinkage(LinkageABC):
-    bodies = [RightForearmSegment,
-              RightPalmSegment,
-              RightThumbSegment,
-              ]
-    linked_keypoint = RightBodyKeypoints.RIGHT_WRIST.value
+    parent = RightBodySegments.RIGHT_FOREARM
+    children = [RightBodySegments.RIGHT_FOREARM,
+                RightBodySegments.RIGHT_WRIST_THUMB,
+                RightBodySegments.RIGHT_WRIST_PINKY,
+                RightBodySegments.RIGHT_WRIST_INDEX],
+
+    linked_keypoint = BodyKeypoints.RIGHT_WRIST
+
 
 class RightHipLinkage(LinkageABC):
-    bodies = [RightPelvisSegment,
-              RightThighSegment]
-    linked_keypoint = RightBodyKeypoints.RIGHT_HIP.value
+    parent = RightBodySegments.RIGHT_PELVIS
+    chidren = [RightBodySegments.RIGHT_PELVIS,
+               RightBodySegments.RIGHT_THIGH]
+    linked_keypoint = BodyKeypoints.RIGHT_HIP
+
 
 class RightKneeLinkage(LinkageABC):
-    bodies = [RightThighSegment,
-              RightCalfSegment]
-    linked_keypoint = RightBodyKeypoints.RIGHT_KNEE.value
+    parent = RightBodySegments.RIGHT_THIGH
+    children = [RightBodySegments.RIGHT_THIGH,
+                RightBodySegments.RIGHT_CALF]
+    linked_keypoint = BodyKeypoints.RIGHT_KNEE
+
 
 class RightAnkleLinkage(LinkageABC):
-    bodies = [RightCalfSegment,
-              RightFootSegment]
-    linked_keypoint = RightBodyKeypoints.RIGHT_ANKLE.value
+    parent = RightBodySegments.RIGHT_CALF
+    children = [RightBodySegments.RIGHT_CALF,
+                RightBodySegments.RIGHT_HEEL,
+                RightBodySegments.RIGHT_FORE_FOOT]
+    linked_keypoint = BodyKeypoints.RIGHT_ANKLE.value

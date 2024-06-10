@@ -1,11 +1,9 @@
-from enum import Enum
 from typing import List
 
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType
 from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_mapping import MediapipeBodyMapping
 from freemocap_blender_addon.models.mediapipe_stuff.mediapipe_trajectory_names import MEDIAPIPE_BODY_NAMES, \
     MEDIAPIPE_FACE_NAMES, MEDIAPIPE_HAND_NAMES
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import KeypointMappingsEnum
 
 
 def get_keypoint_names(component_type: ComponentType,

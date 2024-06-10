@@ -2,13 +2,12 @@ from enum import Enum
 
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, RightArmKeypoints, \
     RightMittenHandKeypoints, RightLegKeypoints
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import CompoundSegmentABC, \
-    SimpleSegmentABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
 
 
 # arm
 class RightClavicleSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.CHEST_CENTER_T12
+    parent = AxialSkeletonKeypoints.NECK_BASE_C7
     child = RightArmKeypoints.RIGHT_SHOULDER
 
 
@@ -22,17 +21,17 @@ class RightForearmSegment(SimpleSegmentABC):
     child = RightArmKeypoints.RIGHT_WRIST
 
 
-class RightWristIndexSegment(CompoundSegmentABC):
+class RightWristIndexSegment(SimpleSegmentABC):
     parent = RightArmKeypoints.RIGHT_WRIST
     child = RightMittenHandKeypoints.RIGHT_INDEX_KNUCKLE
 
 
-class RightWristPinkySegment(CompoundSegmentABC):
+class RightWristPinkySegment(SimpleSegmentABC):
     parent = RightArmKeypoints.RIGHT_WRIST
     child = RightMittenHandKeypoints.RIGHT_PINKY_KNUCKLE
 
 
-class RightThumbSegment(SimpleSegmentABC):
+class RightWristThumbSegment(SimpleSegmentABC):
     parent = RightArmKeypoints.RIGHT_WRIST
     child = RightMittenHandKeypoints.RIGHT_THUMB_KNUCKLE
 
@@ -67,13 +66,13 @@ class RightBodySegments(Enum):
     RIGHT_CLAVICLE: SimpleSegmentABC = RightClavicleSegment
     RIGHT_UPPER_ARM: SimpleSegmentABC = RightUpperArmSegment
     RIGHT_FOREARM: SimpleSegmentABC = RightForearmSegment
-    RIGHT_WRIST_INDEX: CompoundSegmentABC = RightWristIndexSegment
-    RIGHT_WRIST_PINKY: CompoundSegmentABC = RightWristPinkySegment
-    RIGHT_THUMB: SimpleSegmentABC = RightThumbSegment
+    RIGHT_WRIST_INDEX: SimpleSegmentABC = RightWristIndexSegment
+    RIGHT_WRIST_PINKY: SimpleSegmentABC = RightWristPinkySegment
+    RIGHT_WRIST_THUMB: SimpleSegmentABC = RightWristThumbSegment
     RIGHT_PELVIS: SimpleSegmentABC = RightPelvisSegment
     RIGHT_THIGH: SimpleSegmentABC = RightThighSegment
     RIGHT_CALF: SimpleSegmentABC = RightCalfSegment
-    RIGHT_FOOT: SimpleSegmentABC = RightFootSegment
+    RIGHT_FORE_FOOT: SimpleSegmentABC = RightFootSegment
     RIGHT_HEEL: SimpleSegmentABC = RightHeelSegment
 
 

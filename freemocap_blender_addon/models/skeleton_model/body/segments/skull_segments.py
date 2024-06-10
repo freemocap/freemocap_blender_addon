@@ -1,14 +1,13 @@
 from enum import Enum
 
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import SkullKeypoints
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import CompoundSegmentABC, \
-    SimpleSegmentABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, CompoundSegmentABC
 
 
 class SkullSegment(CompoundSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1,
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     children = [SkullKeypoints.NOSE_TIP,
-                SkullKeypoints.SKULL_TOP_BREGMA,
+                # SkullKeypoints.SKULL_TOP_BREGMA,
                 SkullKeypoints.RIGHT_EYE_INNER,
                 SkullKeypoints.RIGHT_EYE_CENTER,
                 SkullKeypoints.RIGHT_EYE_OUTER,
@@ -20,68 +19,68 @@ class SkullSegment(CompoundSegmentABC):
                 SkullKeypoints.LEFT_EAR_TRAGUS,
                 SkullKeypoints.LEFT_MOUTH]
 
-    shared_keypoint = SkullKeypoints.SKULL_CENTER_C1
+    shared_keypoint = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     positive_x = SkullKeypoints.NOSE_TIP
     approximate_positive_y = SkullKeypoints.LEFT_EAR_TRAGUS
 
 
 class SkullNoseSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.NOSE_TIP
 
 
-class SkullTopSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
-    child = SkullKeypoints.SKULL_TOP_BREGMA
+# class SkullTopSegment(SimpleSegmentABC):
+#     parent = SkullKeypoints.SKULL_CENTER_C1
+#     child = SkullKeypoints.SKULL_TOP_BREGMA
 
 
 class SkullRightEyeInnerSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.RIGHT_EYE_INNER
 
 
 class SkullRightEyeCenterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.RIGHT_EYE_CENTER
 
 
 class SkullRightEyeOuterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.RIGHT_EYE_OUTER
 
 
 class SkullRightEarTragusSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.RIGHT_EAR_TRAGUS
 
 
 class SkullRightMouthSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.RIGHT_MOUTH
 
 
 class SkullLeftEyeInnerSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.LEFT_EYE_INNER
 
 
 class SkullLeftEyeCenterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.LEFT_EYE_CENTER
 
 
 class SkullLeftEyeOuterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.LEFT_EYE_OUTER
 
 
 class SkullLeftEarTragusSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.LEFT_EAR_TRAGUS
 
 
 class SkullLeftMouthSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_C1
+    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
     child = SkullKeypoints.LEFT_MOUTH
 
 
@@ -89,7 +88,7 @@ class SkullSegments(Enum):
     # TODO - go even harder on the naming convention - https://www.sciencedirect.com/science/article/pii/S0169260721004545
     # COMPOUND: CompoundSegmentABC = SkullSegment
     NOSE: SimpleSegmentABC = SkullNoseSegment
-    TOP: SimpleSegmentABC = SkullTopSegment
+    # TOP: SimpleSegmentABC = SkullTopSegment
     RIGHT_EYE_INNER: SimpleSegmentABC = SkullRightEyeInnerSegment
     RIGHT_EYE_CENTER: SimpleSegmentABC = SkullRightEyeCenterSegment
     RIGHT_EYE_OUTER: SimpleSegmentABC = SkullRightEyeOuterSegment
@@ -106,4 +105,3 @@ class SkullSegments(Enum):
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}" for rb in
                      list(SkullSegments)]))
-

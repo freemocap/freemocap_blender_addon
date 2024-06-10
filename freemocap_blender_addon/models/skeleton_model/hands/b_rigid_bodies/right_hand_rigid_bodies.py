@@ -1,4 +1,4 @@
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import SimpleSegmentABC
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
 from freemocap_blender_addon.models.skeleton_model.hands.right_hand_keypoints import RightHandKeypoints
 
 # hand

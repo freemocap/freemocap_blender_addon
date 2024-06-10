@@ -4,8 +4,8 @@ from typing import Type
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import combine_enums, LeftLegKeypoints, \
     LeftMittenHandKeypoints, LeftArmKeypoints, RightLegKeypoints, RightMittenHandKeypoints, RightArmKeypoints, \
     AxialSkeletonKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_rigid_segments import SkullSegments
-from freemocap_blender_addon.models.skeleton_model.keypoint_segments_linkage_chain_abc import SegmentABC
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC
 
 
 class SegmentEnum(Enum):

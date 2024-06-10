@@ -3,10 +3,10 @@ from enum import StrEnum
 
 class SkullKeypoints(StrEnum):
     ## head
-    SKULL_CENTER_C1 = "Center of the skull volume (like, rotational center, not necessarily the center of mass)",
+    SKULL_CENTER_ATLAS_C1 = "Center of the skull volume (like, rotational center, not necessarily the center of mass)",
 
     ### face
-    SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures",
+    # SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures",
     NOSE_TIP = "Tip of the nose",
     #### right-face
     RIGHT_EYE_INNER = "Inner corner of the right eye, the tear duct, intersection of the frontal bone and the maxilla",
@@ -24,7 +24,7 @@ class SkullKeypoints(StrEnum):
 
 class AxialSkeletonKeypoints(StrEnum):
     ## neck,
-    NECK_TOP_C1_ATLAS = "Top of the neck, geometric center of the top surface the first cervical vertebra (C1)",
+    NECK_TOP_AXIS_C2 = "Top of the neck segment, the geometric center of the top surface of the second cervical vertebra (C2) aka the `Axis`",
     NECK_BASE_C7 = "Base of the neck, geometric center of the bottom surface of the seventh cervical vertebra (C7)",
 
     ## chest,
