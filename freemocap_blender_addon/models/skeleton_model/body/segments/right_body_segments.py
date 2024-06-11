@@ -59,7 +59,7 @@ class RightFootSegment(SimpleSegmentABC):
 
 class RightHeelSegment(SimpleSegmentABC):
     parent = RightLegKeypoints.RIGHT_ANKLE
-    child = RightLegKeypoints.RIGHT_HALLUX_TIP
+    child = RightLegKeypoints.RIGHT_HEEL
 
 
 class RightBodySegments(Enum):

@@ -59,7 +59,7 @@ class LeftForeFootSegment(SimpleSegmentABC):
 
 class LeftHeelSegment(SimpleSegmentABC):
     parent = LeftLegKeypoints.LEFT_ANKLE
-    child = LeftLegKeypoints.LEFT_HALLUX_TIP
+    child = LeftLegKeypoints.LEFT_HEEL
 
 
 class LeftBodySegments(Enum):

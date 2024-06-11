@@ -4,7 +4,7 @@ from typing import Tuple
 import numpy as np
 
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_segment_lengths import \
-    calculate_segment_lengths, print_length_stats
+    calculate_segment_lengths, print_length_stats_table
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories, SegmentStats
@@ -19,7 +19,7 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectorie
     og_segment_length_stats = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories,
                                                         skeleton_definition=skeleton_definition)
     print("Original body segment lengths 👇")
-    print_length_stats(segment_lengths=og_segment_length_stats)
+    print_length_stats_table(segment_lengths=og_segment_length_stats)
     print("Original body segment lengths 👆")
 
     rigidified_keypoints = rigidify_keypoint_trajectories(keypoint_trajectories=deepcopy(keypoint_trajectories),
@@ -28,7 +28,7 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectorie
     rigidified_segment_length_stats = calculate_segment_lengths(keypoint_trajectories=rigidified_keypoints,
                                                                 skeleton_definition=skeleton_definition)
     print("Rigidified body segment lengths 👇")
-    print_length_stats(segment_lengths=rigidified_segment_length_stats)
+    print_length_stats_table(segment_lengths=rigidified_segment_length_stats)
     print("Rigidified body segment lengths 👆")
     return rigidified_keypoints, og_segment_length_stats
 
@@ -69,8 +69,6 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: KeypointTrajectories,
 
         # translate all child keypoints of the segment
         children = skeleton_definition.value.get_keypoint_children(keypoint_name=segment_child_kp_name)
-        if len(children) == 0:
-            f=9
         for child_keypoint in children:
             child_name = child_keypoint.name.lower()
             child_keypoint = keypoint_trajectories[child_name]

@@ -57,14 +57,14 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
     return np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
 
 
-def print_length_stats(segment_lengths: SegmentStats, squash_less_than=1e-4):
+def print_length_stats_table(segment_lengths: SegmentStats, squash_less_than=1e-3):
     stats = []
     for name, segment in segment_lengths.items():
         segment_dict = {'segment': name}
         segment_dict.update(segment.to_dict())
         for key in list(segment_dict.keys()):
-            if isinstance(segment_dict[key], float) and segment_dict[key] < squash_less_than:
-                segment_dict[key] = 0
+            if not isinstance(segment_dict[key], str) and segment_dict[key] < squash_less_than:
+                segment_dict[key] = 0.0
         stats.append(segment_dict)
     print_table(stats)
 
@@ -77,4 +77,4 @@ if __name__ == "__main__":
     segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer,
                                                 skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-    print_length_stats(segment_lengths)
+    print_length_stats_table(segment_lengths)

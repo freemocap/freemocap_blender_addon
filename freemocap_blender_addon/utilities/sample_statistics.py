@@ -77,7 +77,7 @@ class VariabilityMeasures(TypeSafeDataclass):
             median_absolute_deviation=np.nanmedian(np.abs(samples.data - np.nanmedian(samples.data))),
             interquartile_range=np.nanpercentile(samples.data, 75) - np.nanpercentile(samples.data, 25),
             confidence_interval_95=Z_SCORE_95_CI * np.nanstd(samples.data) / np.sqrt(samples.data.size),
-            coefficient_of_variation=np.nanstd(samples.data) / np.nanmean(samples.data),
+            coefficient_of_variation= np.nanstd(samples.data) / np.nanmean(samples.data),
         )
 
 
