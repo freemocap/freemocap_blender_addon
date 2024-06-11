@@ -42,7 +42,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
                               tracker_source=self.tracker_source)
         keypoint_trajectories = {
             keypoint_name.lower(): KeypointTrajectory(name=keypoint_name.lower(),
-                                                      data=mapping.value.calculate_trajectory(data=self.trajectory_data,
+                                                      trajectory_data=mapping.value.calculate_trajectory(data=self.trajectory_data,
                                                                                               names=self.trajectory_names))
             for keypoint_name, mapping in mapping.__members__.items()}
         return keypoint_trajectories

@@ -31,7 +31,7 @@ class SkeletonABC(ABC):
         segments = []
         for chain in cls.children:
             segments.extend(chain.get_segments())
-        return segments
+        return list(set(segments))
 
     @classmethod
     def get_keypoints(cls) -> List[KeypointDefinition]:

@@ -12,8 +12,8 @@ def calculate_segment_lengths(keypoint_trajectories: KeypointTrajectories,
     segment_stats = {}
     for segment in skeleton_definition.value.get_segments():
         length_stats = calculate_distance_between_trajectories(
-            trajectory_1=keypoint_trajectories[segment.value.parent.name.lower()].data,
-            trajectory_2=keypoint_trajectories[segment.value.child.name.lower()].data
+            trajectory_1=keypoint_trajectories[segment.value.parent.name.lower()].trajectory_data,
+            trajectory_2=keypoint_trajectories[segment.value.child.name.lower()].trajectory_data
         )
 
         segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
@@ -57,11 +57,14 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
     return np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
 
 
-def print_length_stats(segment_lengths: SegmentStats):
+def print_length_stats(segment_lengths: SegmentStats, squash_less_than=1e-4):
     stats = []
     for name, segment in segment_lengths.items():
         segment_dict = {'segment': name}
         segment_dict.update(segment.to_dict())
+        for key in list(segment_dict.keys()):
+            if isinstance(segment_dict[key], float) and segment_dict[key] < squash_less_than:
+                segment_dict[key] = 0
         stats.append(segment_dict)
     print_table(stats)
 
@@ -71,7 +74,7 @@ if __name__ == "__main__":
 
     recording_data = load_freemocap_rest_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
-    segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer, skeleton_definition=SkeletonTypes.BODY_ONLY)
+    segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer,
+                                                skeleton_definition=SkeletonTypes.BODY_ONLY)
 
     print_length_stats(segment_lengths)
-

@@ -34,19 +34,19 @@ class KeypointTrajectory(TypeSafeDataclass, ABC):
     A KeypointTrajectory is a Keypoint that has been hydrated with data.
     """
     name: str
-    data: np.ndarray
+    trajectory_data: np.ndarray
 
     def __post_init__(self):
-        if not len(self.data.shape) == 2:
+        if not len(self.trajectory_data.shape) == 2:
             raise ValueError("Data shape should be (frame, xyz)")
-        if not self.data.shape[1] == 3:
+        if not self.trajectory_data.shape[1] == 3:
             raise ValueError("Trajectory data should be 3D (xyz)")
 
         print(f"Instantiated KeypointTrajectory: {self}")
 
     def __str__(self):
         out_str = f"KeypointTrajectory: {self.name}"
-        out_str += f"\n\tTrajectory Data shape: {self.data.shape}\n"
+        out_str += f"\n\tTrajectory Data shape: {self.trajectory_data.shape}\n"
         return out_str
 
 
