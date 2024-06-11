@@ -41,6 +41,7 @@ class BlenderController(metaclass=SingletonMetaClass):
                 handler=self.freemocap_data_handler,
                 parent_object=self._empty_parent_object,
                 center_of_mass_data_parent=self._center_of_mass_parent_object,
+
             )
             print(f"Finished creating keyframed empties: {self.empties.keys()}")
         except Exception as e:

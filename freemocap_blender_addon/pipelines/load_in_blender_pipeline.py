@@ -24,7 +24,8 @@ class LoadInBlenderPipeline(TypeSafeDataclass):
         parents = {}
         for stage, trajectories in freemocap_data.trajectories_by_stage.items():
             trajectories = {key: value.trajectory_data * scale for key, value in trajectories.items()}
-            empties[stage], parents[stage] = create_empties_from_trajectories(trajectories=trajectories, name=stage)
+            empties[stage], parents[stage] = create_empties_from_trajectories(trajectories=trajectories,
+                                                                              name=stage)
             put_spheres_on_empties(empties=empties[stage],
                                    parent_empty=parents[stage],
                                    name_prefix=stage)

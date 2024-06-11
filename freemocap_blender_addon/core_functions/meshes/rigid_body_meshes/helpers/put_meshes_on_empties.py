@@ -49,7 +49,7 @@ def put_spheres_on_empties(empties: Dict[str, bpy.types.Object],
 
     for empty_name, empty in empties.items():
         bpy.ops.object.mode_set(mode="OBJECT")
-        put_sphere_mesh_at_location(name=f"{name_prefix}empty_name",
+        put_sphere_mesh_at_location(name=f"{name_prefix}{empty_name}",
                                     location=empty.location,
                                     sphere_scale=sphere_scale,
                                     color=color,
@@ -120,14 +120,14 @@ def random_color_offset(base_colors: Dict[str, Tuple[int, int, int]],\
 
     # Set colors for 'right' with Red channel pinned at max (255)
     base_right = base_colors['right']
-    random_green = clamp(base_right[1] + random.randint(-offset_range, offset_range))
-    random_blue = clamp(base_right[2] + random.randint(-offset_range, offset_range))
+    random_green = clamp(base_right[1] + np.random.randint(-offset_range, offset_range))
+    random_blue = clamp(base_right[2] + np.random.randint(-offset_range, offset_range))
     colors['right'] = (255, random_green, random_blue)
 
     # Set colors for 'left' with Blue channel pinned at max (255)
     base_left = base_colors['left']
-    random_red = clamp(base_left[0] + random.randint(-offset_range, offset_range))
-    random_green = clamp(base_left[1] + random.randint(-offset_range, offset_range))
+    random_red = clamp(base_left[0] + np.random.randint(-offset_range, offset_range))
+    random_green = clamp(base_left[1] + np.random.randint(-offset_range, offset_range))
     colors['left'] = (random_red, random_green, 255)
 
     return colors
