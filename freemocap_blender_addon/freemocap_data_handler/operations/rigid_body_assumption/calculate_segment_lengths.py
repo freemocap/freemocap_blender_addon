@@ -7,8 +7,8 @@ from freemocap_blender_addon.utilities.print_table_from_dicts import print_table
 from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 
 
-def calculate_segment_lengths(keypoint_trajectories: KeypointTrajectories,
-                              skeleton_definition: SkeletonTypes) -> SegmentStats:
+def calculate_segment_length_stats(keypoint_trajectories: KeypointTrajectories,
+                                   skeleton_definition: SkeletonTypes) -> SegmentStats:
     segment_stats = {}
     for segment in skeleton_definition.value.get_segments():
         length_stats = calculate_distance_between_trajectories(
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     recording_data = load_freemocap_rest_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
-    segment_lengths = calculate_segment_lengths(keypoint_trajectories=keypoint_trajectories_outer,
-                                                skeleton_definition=SkeletonTypes.BODY_ONLY)
+    segment_lengths = calculate_segment_length_stats(keypoint_trajectories=keypoint_trajectories_outer,
+                                                     skeleton_definition=SkeletonTypes.BODY_ONLY)
 
     print_length_stats_table(segment_lengths)

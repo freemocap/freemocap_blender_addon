@@ -1,10 +1,11 @@
 from dataclasses import dataclass
+from typing import Dict
 
 from freemocap_blender_addon.freemocap_data.freemocap_recording_data import FreemocapRecordingData
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
 from freemocap_blender_addon.freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
-    calculate_rigid_body_trajectories
+    calculate_rigid_body_trajectories, RigidSegmentDefinitions
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
@@ -17,6 +18,13 @@ class DataStages(TypeSafeDataclass):
     raw_from_disk: KeypointTrajectories
     rigidified: KeypointTrajectories
     inertial_aligned: KeypointTrajectories
+    segment_definitions: RigidSegmentDefinitions
+
+    @property
+    def trajectories_by_stage(self) -> Dict[str, KeypointTrajectories]:
+        return {"raw_from_disk": self.raw_from_disk,
+                "rigidified": self.rigidified,
+                "inertial_aligned": self.inertial_aligned}
 
 
 @dataclass
@@ -33,16 +41,17 @@ class PurePythonPipeline(TypeSafeDataclass):
 
         og_keypoint_trajectories = recording_data.body.map_to_keypoints()
 
-        rigidified_keypoint_trajectories, segment_length_statistics = calculate_rigid_body_trajectories(
+        rigidified_keypoint_trajectories, rigid_body_definitions = calculate_rigid_body_trajectories(
             keypoint_trajectories=og_keypoint_trajectories,
             skeleton_definition=SkeletonTypes.BODY_ONLY)
 
         inertial_aligned_keypoint_trajectories = put_skeleton_on_ground(
             keypoint_trajectories=rigidified_keypoint_trajectories)
 
-        return {"raw_from_disk": og_keypoint_trajectories,
-                "rigidified": rigidified_keypoint_trajectories,
-                "inertial_aligned": inertial_aligned_keypoint_trajectories}
+        return DataStages(raw_from_disk=og_keypoint_trajectories,
+                          rigidified=rigidified_keypoint_trajectories,
+                          inertial_aligned=inertial_aligned_keypoint_trajectories,
+                          segment_definitions=rigid_body_definitions)
 
         # self.fix_hand_data()
         # self.save_data_to_disk()

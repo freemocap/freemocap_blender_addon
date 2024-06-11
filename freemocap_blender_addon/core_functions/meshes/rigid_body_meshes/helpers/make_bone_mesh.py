@@ -96,13 +96,13 @@ def make_joint_sphere_mesh(name: str = "joint_sphere_mesh",
     return object
 
 
-def make_bone_mesh(name: str = "bone_mesh",
-                   joint_color: Union[str, Tuple, List, np.ndarray] = "#aa0055",
-                   cone_color: Union[str, Tuple, List, np.ndarray] = "#00FFFF",
-                   axis_visible: bool = True,
-                   squish_scale: tuple = (.6, 1, 1),
-                   length: float = 1,
-                   ) -> bpy.types.Object:
+def make_rigid_body_mesh(name: str = "bone_mesh",
+                         joint_color: Union[str, Tuple, List, np.ndarray] = "#aa0055",
+                         cone_color: Union[str, Tuple, List, np.ndarray] = "#00FFFF",
+                         axis_visible: bool = True,
+                         squish_scale: tuple = (.6, 1, 1),
+                         length: float = 1,
+                         ) -> bpy.types.Object:
     cone = make_cone_mesh(name=f"{name}_cone_mesh",
                           color=cone_color, )
 
@@ -128,11 +128,11 @@ def make_bone_mesh(name: str = "bone_mesh",
 
 
 if __name__ == "__main__" or __name__ == "<run_path>":
-    bone_mesh = make_bone_mesh(name="bone_mesh")
+    bone_mesh = make_rigid_body_mesh(name="bone_mesh")
     bone_mesh.location = (0, 0, 0)
-    bone_mesh_small = make_bone_mesh(name="bone_mesh_small",
-                                     length=.5)
+    bone_mesh_small = make_rigid_body_mesh(name="bone_mesh_small",
+                                           length=.5)
     bone_mesh_small.location = (-2, 0, 0)
-    bone_mesh_large = make_bone_mesh(name="bone_mesh_large",
-                                     length=1.5)
+    bone_mesh_large = make_rigid_body_mesh(name="bone_mesh_large",
+                                           length=1.5)
     bone_mesh_large.location = (2, 0, 0)
