@@ -38,6 +38,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
                 f"Data frame shape {self.trajectory_data.shape} does not match trajectory names length {len(self.trajectory_names)}")
 
     def map_to_keypoints(self) -> KeypointTrajectories:
+        print("Mapping TrackedPoints to KeypointsTrajectories....")
         mapping = get_mapping(component_type=ComponentType.BODY,
                               tracker_source=self.tracker_source)
         keypoint_trajectories = {

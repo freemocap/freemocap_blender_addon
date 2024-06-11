@@ -16,14 +16,14 @@ class LoadInBlenderPipeline(TypeSafeDataclass):
     tracker_type: TrackerSourceType = DEFAULT_TRACKER_TYPE
     print("Running all stages...")
 
-    def run(self):
+    def run(self, scale=.001):
         # Pure python stuff
         print("Loading freemocap data....")
         freemocap_data = PurePythonPipeline(recording_path_str=self.recording_path_str).run()
         empties = {}
         parents = {}
         for stage, trajectories in freemocap_data.trajectories_by_stage.items():
-            trajectories = {key: value.trajectory_data * .001 for key, value in trajectories.items()}
+            trajectories = {key: value.trajectory_data * scale for key, value in trajectories.items()}
             empties[stage], parents[stage] = create_empties_from_trajectories(trajectories=trajectories, name=stage)
             put_spheres_on_empties(empties=empties[stage],
                                    parent_empty=parents[stage],

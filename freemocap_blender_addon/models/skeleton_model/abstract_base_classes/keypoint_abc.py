@@ -42,11 +42,10 @@ class KeypointTrajectory(TypeSafeDataclass, ABC):
         if not self.trajectory_data.shape[1] == 3:
             raise ValueError("Trajectory data should be 3D (xyz)")
 
-        print(f"Instantiated KeypointTrajectory: {self}")
+        print(f"Initialized: {self}")
 
     def __str__(self):
-        out_str = f"KeypointTrajectory: {self.name}"
-        out_str += f"\n\tTrajectory Data shape: {self.trajectory_data.shape}\n"
+        out_str = f"KeypointTrajectory: {self.name} (Trajectory shape: {self.trajectory_data.shape})"
         return out_str
 
 

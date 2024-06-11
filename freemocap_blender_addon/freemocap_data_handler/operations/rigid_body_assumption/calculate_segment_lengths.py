@@ -10,7 +10,8 @@ from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStati
 def calculate_segment_length_stats(keypoint_trajectories: KeypointTrajectories,
                                    skeleton_definition: SkeletonTypes) -> SegmentStats:
     segment_stats = {}
-    for segment in skeleton_definition.value.get_segments():
+    segments = skeleton_definition.value.get_segments()
+    for segment in segments:
         length_stats = calculate_distance_between_trajectories(
             trajectory_1=keypoint_trajectories[segment.value.parent.name.lower()].trajectory_data,
             trajectory_2=keypoint_trajectories[segment.value.child.name.lower()].trajectory_data

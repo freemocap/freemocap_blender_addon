@@ -29,6 +29,7 @@ class SkeletonABC(ABC):
     def get_segments(cls) -> List[SimpleSegmentABC]:
 
         segments = []
+        segments.extend(cls.parent.get_segments())
         for chain in cls.children:
             segments.extend(chain.get_segments())
         return list(set(segments))

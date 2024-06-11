@@ -43,10 +43,10 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectorie
                                                                      skeleton_definition=skeleton_definition)
 
     rigid_segment_definitions = {segment.name.lower(): RigidSegmentDefinition(name=segment.name.lower(),
-                                                                      length=rigidified_segment_length_stats[
-                                                                          segment.name.lower()].median*.001,
-                                                                      parent=segment.value.parent.name.lower(),
-                                                                      child=segment.value.child.name.lower())
+                                                                              length=rigidified_segment_length_stats[
+                                                                                         segment.name.lower()].median * .001,
+                                                                              parent=segment.value.parent.name.lower(),
+                                                                              child=segment.value.child.name.lower())
                                  for segment in skeleton_definition.value.get_segments()}
 
     print("Rigidified body segment lengths 👇")

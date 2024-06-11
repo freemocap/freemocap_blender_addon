@@ -1,41 +1,37 @@
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, SkullKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import CervicalSegment, \
-    LumbarSegment, ThoracicSegment
-from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftClavicleSegment
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightClavicleSegment
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullLeftMouthSegment, SkullLeftEarTragusSegment, SkullLeftEyeOuterSegment, SkullLeftEyeCenterSegment, \
-    SkullLeftEyeInnerSegment, SkullRightMouthSegment, SkullRightEarTragusSegment, SkullRightEyeOuterSegment, \
-    SkullRightEyeCenterSegment, SkullRightEyeInnerSegment, SkullNoseSegment
 from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, SkullKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
 
 
 class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervical vertebra (C1)
-    parent = CervicalSegment
-    children = [SkullNoseSegment,
-                # SkullTopSegment,
-                SkullRightEyeInnerSegment,
-                SkullRightEyeCenterSegment,
-                SkullRightEyeOuterSegment,
-                SkullRightEarTragusSegment,
-                SkullRightMouthSegment,
-                SkullLeftEyeInnerSegment,
-                SkullLeftEyeCenterSegment,
-                SkullLeftEyeOuterSegment,
-                SkullLeftEarTragusSegment,
-                SkullLeftMouthSegment]
+    parent = AxialSegments.CERVICAL
+    children = [SkullSegments.NOSE,
+                SkullSegments.RIGHT_EYE_INNER,
+                SkullSegments.RIGHT_EYE_CENTER,
+                SkullSegments.RIGHT_EYE_OUTER,
+                SkullSegments.RIGHT_EAR_TRAGUS,
+                SkullSegments.RIGHT_MOUTH,
+                SkullSegments.LEFT_EYE_INNER,
+                SkullSegments.LEFT_EYE_CENTER,
+                SkullSegments.LEFT_EYE_OUTER,
+                SkullSegments.LEFT_EAR_TRAGUS,
+                SkullSegments.LEFT_MOUTH]
     linked_keypoint = SkullKeypoints.SKULL_CENTER_ATLAS_C1
 
 
 class NeckC7Linkage(LinkageABC):
-    parent = ThoracicSegment
-    children = [CervicalSegment,
-                RightClavicleSegment,
-                LeftClavicleSegment
-                ]
+    parent = AxialSegments.THORACIC
+    children = [AxialSegments.CERVICAL,
+                RightBodySegments.RIGHT_CLAVICLE,
+                LeftBodySegments.LEFT_CLAVICLE]
     linked_keypoint = AxialSkeletonKeypoints.NECK_BASE_C7
 
 
 class ChestT12Linkage(LinkageABC):
-    parent = LumbarSegment
-    children = [LumbarSegment, ThoracicSegment]
+    parent = AxialSegments.LUMBAR
+    children = [AxialSegments.LUMBAR,
+                AxialSegments.THORACIC]
     linked_keypoint = AxialSkeletonKeypoints.CHEST_CENTER_T12
