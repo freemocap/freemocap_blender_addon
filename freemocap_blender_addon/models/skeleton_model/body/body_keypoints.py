@@ -10,16 +10,16 @@ class SkullKeypoints(Enum):
     NOSE_TIP = "Tip of the nose",
     #### right-face
     RIGHT_EYE_INNER = "Inner corner of the right eye, the tear duct, intersection of the frontal bone and the maxilla",
-    RIGHT_EYE_CENTER = "Geometric center of the `inner` and `outer` eye keypoints - NOTE - not the center of the orbit",
+    RIGHT_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the right eye keypoints - NOTE - not the center of the orbit",
     RIGHT_EYE_OUTER = "Outer corner of the right eye, intersection of the frontal bone and the zygomatic bone",
     RIGHT_EAR_TRAGUS = "The little nubbin on the front of the ear,  intersection of the temporal bone and the mandible",
-    RIGHT_MOUTH = "outer corner of the mouth",
+    RIGHT_MOUTH = "Right outer corner of the mouth",
     #### left-face,
     LEFT_EYE_INNER = "Inner corner of the left eye, the tear duct, intersection of the frontal bone and the maxilla",
-    LEFT_EYE_CENTER = "Geometric center of the `inner` and `outer` eye keypoints - NOTE - not the center of the orbit",
+    LEFT_EYE_CENTER = "Geometric center of the `inner` and `outer` of the left eye keypoints - NOTE - not the center of the orbit",
     LEFT_EYE_OUTER = "Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone",
     LEFT_EAR_TRAGUS = "The little nubbin on the front of the ear, intersection of the temporal bone and the mandible",
-    LEFT_MOUTH = "outer corner of the mouth",
+    LEFT_MOUTH = "Left outer corner of the mouth",
 
 
 class AxialSkeletonKeypoints(Enum):
