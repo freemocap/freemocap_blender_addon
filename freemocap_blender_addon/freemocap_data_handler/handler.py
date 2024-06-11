@@ -5,7 +5,7 @@ import numpy as np
 from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories import \
     calculate_virtual_trajectories
 
-from .operations.estimate_good_frame import estimate_good_frame
+from .operations.get_low_velocity_frame import get_low_velocity_frame
 from ..freemocap_data.freemocap_recording_data import FreemocapRecordingData
 
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
@@ -208,7 +208,7 @@ class FreemocapDataHandler:
             raise ValueError("Body dimensions not found in metadata - please run `enforce_rigid_bones()`/`estimate_body_dimensions()` first.")
 
     def estimate_good_clean_frame(self):
-        return estimate_good_frame(trajectories_with_error=self.get_trajectories(with_error=True))
+        return get_low_velocity_frame(trajectories_with_error=self.get_trajectories(with_error=True))
 
 
     def add_trajectory(self,

@@ -25,11 +25,12 @@ class PurePythonPipeline(TypeSafeDataclass):
 
         og_keypoint_trajectories = recording_data.body.map_to_keypoints()
 
-        rigidified_keypoint_trajectories = calculate_rigid_body_trajectories(
+        rigidified_keypoint_trajectories, segment_length_statistics = calculate_rigid_body_trajectories(
             keypoint_trajectories=og_keypoint_trajectories,
             skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-        put_skeleton_on_ground(keypoint_trajectories= rigidified_keypoint_trajectories)
+        inertial_aligned_keypoints = put_skeleton_on_ground(keypoint_trajectories=rigidified_keypoint_trajectories)
+        f=9
         # self.fix_hand_data()
         # self.save_data_to_disk()
 
