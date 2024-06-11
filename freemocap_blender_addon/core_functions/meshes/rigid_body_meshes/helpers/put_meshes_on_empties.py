@@ -2,35 +2,17 @@ from typing import Dict, Tuple
 
 import bpy
 
-from freemocap_blender_addon.models.animation.bones.bone_definitions import BoneDefinition
-from freemocap_blender_addon.models.anatomical.keypoints import MEDIAPIPE_HIERARCHY
-from .make_bone_mesh import make_bone_mesh
-from .put_sphere_at_location import put_sphere_mesh_at_location
+from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_sphere_at_location import \
+    put_sphere_mesh_at_location
 
 
-def create_skeleton_segment_object(child_name: str,
-                                   child_empty: bpy.types.Object,
-                                   parent_empty: bpy.types.Object,
-                                   parent_name: str):
-    pass
+def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
+                                     segment_lengths: Dict[str, float],
+                                     parent_empty: bpy.types.Object):
 
-
-def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
-                               bone_data: Dict[str, BoneDefinition],
-                               parent_empty: bpy.types.Object):
-    all_empties = {}
-    for component in empties.values():
-        all_empties.update(component)
-        if component == empties["hands"]:
-            for hand_component in component.values():
-                all_empties.update(hand_component)
-        if component == empties["other"]:
-            for other_component in component.values():
-                all_empties.update(other_component)
-
-    for parent_empty_name in MEDIAPIPE_HIERARCHY.keys():
+    for parent_empty_name in empties.keys():
         print(f"Creating bone mesh for {parent_empty_name}...")
-        color, squish_scale = get_bone_mesh_color_and_squish(parent_empty_name)
+        color, squish_scale = get_rigid_body_mesh_color_and_squish(parent_empty_name)
 
         for child_name in MEDIAPIPE_HIERARCHY[parent_empty_name]["children"]:
             # segment length is the distance between the parent and child empty
@@ -61,39 +43,28 @@ def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
 def put_spheres_on_empties(empties: Dict[str, bpy.types.Object],
                            parent_empty: bpy.types.Object):
     meshes = []
+    emission_strength = 1.0
+    color, emission_strength, sphere_scale = get_segment_mesh_settings(emission_strength=emission_strength)
 
-    components = {}
-    components["body"] = empties["body"]
-    components["right_hand"] = empties["hands"]["right"]
-    components["left_hand"] = empties["hands"]["left"]
-    components["other"] = {}
-    for other_name, other_component_dict in empties["other"].items():
-        for name, empty in other_component_dict.items():
-            components["other"][name] = empty
+    for empty_name, empty in empties.items():
 
-    for component_name, component_dict in components.items():
-        emission_strength = 1.0
+        bpy.ops.object.mode_set(mode="OBJECT")
+        sphere_mesh = put_sphere_mesh_at_location(name=empty_name,
+                                                  location=empty.location,
+                                                  sphere_scale=sphere_scale,
+                                                  color=color,
+                                                  emission_strength=emission_strength)
 
-        color, emission_strength, sphere_scale = get_segment_settings(component_name, emission_strength)
-
-        for empty_name, empty in component_dict.items():
-            bpy.ops.object.mode_set(mode="OBJECT")
-            sphere_mesh = put_sphere_mesh_at_location(name=empty_name,
-                                                      location=empty.location,
-                                                      sphere_scale=sphere_scale,
-                                                      color=color,
-                                                      emission_strength=emission_strength)
-
-            bpy.ops.object.mode_set(mode="OBJECT")
-            sphere_mesh = bpy.context.active_object
-            constraint = sphere_mesh.constraints.new(type="COPY_LOCATION")
-            constraint.target = empty
-            sphere_mesh.parent = parent_empty
+        bpy.ops.object.mode_set(mode="OBJECT")
+        sphere_mesh = bpy.context.active_object
+        constraint = sphere_mesh.constraints.new(type="COPY_LOCATION")
+        constraint.target = empty
+        sphere_mesh.parent = parent_empty
 
     return meshes
 
 
-def get_bone_mesh_color_and_squish(parent_empty_name: str) -> Tuple[str, Tuple[float, float, float]]:
+def get_rigid_body_mesh_color_and_squish(parent_empty_name: str) -> Tuple[str, Tuple[float, float, float]]:
     squish_scale = (.8, 1, 1)
     if not "hand" in parent_empty_name:
 
@@ -116,8 +87,29 @@ def get_bone_mesh_color_and_squish(parent_empty_name: str) -> Tuple[str, Tuple[f
             raise ValueError(f"All hand bones must have 'right' or 'left' in their name, not {parent_empty_name}")
     return color, squish_scale
 
+import random
 
-def get_segment_settings(component_name, emission_strength):
+def generate_random_hex_color() -> str:
+    """
+    Generate a random hex color code.
+
+    Returns
+    -------
+    str
+        A string representing a random hex color code in the format '#RRGGBB'.
+
+    Examples
+    --------
+    >>> generate_random_hex_color()
+    '#1A2B3C'
+    """
+    return f'#{random.randint(0, 0xFFFFFF):06X}'
+
+def get_segment_mesh_settings(component_name: str=None,
+                              emission_strength: float=None) -> Tuple[str, float, float]:
+    color = generate_random_hex_color()
+    sphere_scale = .025
+
     if component_name == "body":
         if "right" in component_name:
             color = "#FF0000"

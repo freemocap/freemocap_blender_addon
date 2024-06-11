@@ -3,7 +3,7 @@ from typing import Dict
 
 import bpy
 
-from .rigid_body_meshes.helpers.put_meshes_on_empties import put_bone_meshes_on_empties
+from .rigid_body_meshes.helpers.put_meshes_on_empties import put_rigid_body_meshes_on_empties
 from freemocap_blender_addon.models.animation.bones import BoneDefinition
 
 
@@ -24,9 +24,9 @@ def attach_mesh_to_rig(rig: bpy.types.Object,
                 print(f"Must provide empties for custom body mesh")
                 raise ValueError(f"Must provide empties for custom body mesh")
 
-            put_bone_meshes_on_empties(empties=empties,
-                                        bone_data=bone_data,
-                                       parent_empty=parent_object)
+            put_rigid_body_meshes_on_empties(empties=empties,
+                                             bone_data=bone_data,
+                                             parent_empty=parent_object)
 
             # Deselect all
             bpy.ops.object.select_all(action='DESELECT')

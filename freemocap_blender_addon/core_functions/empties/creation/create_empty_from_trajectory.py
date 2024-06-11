@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple
 
 import bpy
 import numpy as np
@@ -7,7 +7,7 @@ import numpy as np
 def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
                                      name: str,
                                      empty_scale: float = 0.01,
-                                     empty_type: str = "SPHERE") -> Dict[str, bpy.types.Object]:
+                                     empty_type: str = "SPHERE") -> Tuple[Dict[str, bpy.types.Object], bpy.types.Object]:
     """
     Create empties for each trajectory in the dictionary and parent them to a new parent empty object.
 
@@ -20,7 +20,6 @@ def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
     parent_object = bpy.context.editable_objects[-1]
     parent_object.name = name
 
-
     for trajectory_name, trajectory_data in trajectories.items():
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
             trajectory_fr_xyz=trajectory_data,
@@ -30,7 +29,7 @@ def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
             empty_type=empty_type,
         )
 
-    return empties
+    return empties, parent_object
 
 
 def create_keyframed_empty_from_3d_trajectory_data(
