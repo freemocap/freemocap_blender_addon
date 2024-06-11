@@ -1,6 +1,8 @@
+from random import random
 from typing import Dict, Tuple
 
 import bpy
+import numpy as np
 
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_sphere_at_location import \
     put_sphere_mesh_at_location
@@ -9,7 +11,6 @@ from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put
 def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
                                      segment_lengths: Dict[str, float],
                                      parent_empty: bpy.types.Object):
-
     for parent_empty_name in empties.keys():
         print(f"Creating bone mesh for {parent_empty_name}...")
         color, squish_scale = get_rigid_body_mesh_color_and_squish(parent_empty_name)
@@ -21,6 +22,7 @@ def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
                     if bone.head == parent_name and bone.tail == child_name:
                         return bone
                 return None
+
             bone = find_bone(parent_name=parent_empty_name, child_name=child_name)
             # print(f"Segment length for {parent_empty_name} to {child_name} is {bone_data[parent_empty_name].median:.3f}m")
             print(f"Segment length for {parent_empty_name} to {child_name} is {bone.median:.3f}m")
@@ -47,13 +49,12 @@ def put_spheres_on_empties(empties: Dict[str, bpy.types.Object],
     color, emission_strength, sphere_scale = get_segment_mesh_settings(emission_strength=emission_strength)
 
     for empty_name, empty in empties.items():
-
         bpy.ops.object.mode_set(mode="OBJECT")
-        sphere_mesh = put_sphere_mesh_at_location(name=empty_name,
-                                                  location=empty.location,
-                                                  sphere_scale=sphere_scale,
-                                                  color=color,
-                                                  emission_strength=emission_strength)
+        put_sphere_mesh_at_location(name=empty_name,
+                                    location=empty.location,
+                                    sphere_scale=sphere_scale,
+                                    color=color,
+                                    emission_strength=emission_strength)
 
         bpy.ops.object.mode_set(mode="OBJECT")
         sphere_mesh = bpy.context.active_object
@@ -87,7 +88,8 @@ def get_rigid_body_mesh_color_and_squish(parent_empty_name: str) -> Tuple[str, T
             raise ValueError(f"All hand bones must have 'right' or 'left' in their name, not {parent_empty_name}")
     return color, squish_scale
 
-import random
+
+
 
 def generate_random_hex_color() -> str:
     """
@@ -103,10 +105,11 @@ def generate_random_hex_color() -> str:
     >>> generate_random_hex_color()
     '#1A2B3C'
     """
-    return f'#{random.randint(0, 0xFFFFFF):06X}'
+    return f'#{np.random.randint(0, 0xFFFFFF):06X}'
 
-def get_segment_mesh_settings(component_name: str=None,
-                              emission_strength: float=None) -> Tuple[str, float, float]:
+
+def get_segment_mesh_settings(component_name: str = None,
+                              emission_strength: float = None) -> Tuple[str, float, float]:
     color = generate_random_hex_color()
     sphere_scale = .025
 
