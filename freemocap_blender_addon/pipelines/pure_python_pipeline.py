@@ -6,9 +6,17 @@ from freemocap_blender_addon.freemocap_data_handler.operations.put_skeleton_on_g
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
+from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+    KeypointTrajectories
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+
+
+@dataclass
+class DataStages(TypeSafeDataclass):
+    raw_from_disk: KeypointTrajectories
+    rigidified: KeypointTrajectories
+    inertial_aligned: KeypointTrajectories
 
 
 @dataclass
@@ -29,8 +37,13 @@ class PurePythonPipeline(TypeSafeDataclass):
             keypoint_trajectories=og_keypoint_trajectories,
             skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-        inertial_aligned_keypoints = put_skeleton_on_ground(keypoint_trajectories=rigidified_keypoint_trajectories)
-        f=9
+        inertial_aligned_keypoint_trajectories = put_skeleton_on_ground(
+            keypoint_trajectories=rigidified_keypoint_trajectories)
+
+        return {"raw_from_disk": og_keypoint_trajectories,
+                "rigidified": rigidified_keypoint_trajectories,
+                "inertial_aligned": inertial_aligned_keypoint_trajectories}
+
         # self.fix_hand_data()
         # self.save_data_to_disk()
 
@@ -73,7 +86,6 @@ class PurePythonPipeline(TypeSafeDataclass):
 
 
 if __name__ == "__main__":
-    pipeline_config_outer = PipelineConfig()
     recording_path_str_outer = get_test_data_path()
     pipeline = PurePythonPipeline(recording_path_str=recording_path_str_outer)
     pipeline.run()

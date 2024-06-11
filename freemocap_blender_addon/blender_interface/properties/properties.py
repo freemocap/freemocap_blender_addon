@@ -1,7 +1,7 @@
 import bpy
 from bpy.props import StringProperty, BoolProperty
 
-
+from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 
 
 class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
@@ -22,7 +22,7 @@ class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
     recording_path: StringProperty(
         name="FreeMoCap recording path",
         description="Path to a freemocap recording",
-        default="",
+        default=get_test_data_path(),
         subtype='FILE_PATH',
     )
     center_of_mass_past_frames: bpy.props.IntProperty(

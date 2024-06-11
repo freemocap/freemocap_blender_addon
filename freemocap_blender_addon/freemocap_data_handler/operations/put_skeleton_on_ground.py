@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Tuple
 
 import numpy as np
@@ -58,13 +59,34 @@ def put_skeleton_on_ground(keypoint_trajectories: KeypointTrajectories):
     assert np.allclose(rotation_matrix @ z_hat, [0, 0, 1], atol=1e-6), "z_hat is not rotated to [0, 0, 1]"
     assert np.allclose(np.linalg.det(rotation_matrix), 1, atol=1e-6), "rotation matrix is not a rotation matrix"
 
-    transformation_matrix = create_transformation_matrix(rotation_matrix=rotation_matrix,
-                                                         translation_vector=center_reference_point)
-    transformed_keypoints = {key: transform_points(points=keypoint_trajectories[key].trajectory_data,
-                                                   transformation_matrix=transformation_matrix)
-                             for key in keypoint_trajectories.keys()}
+    # transformation_matrix = create_transformation_matrix(rotation_matrix=rotation_matrix,
+    #                                                      translation_vector=-center_reference_point)
 
-    return transformed_keypoints
+    transformed_trajectories = deepcopy(keypoint_trajectories)
+    # Perform translation
+    for key in transformed_trajectories.keys():
+        transformed_trajectories[key].trajectory_data = transform_points(
+            points=keypoint_trajectories[key].trajectory_data,
+            translation_vector=-center_reference_point,
+            rotation_matrix=rotation_matrix)
+
+    return transformed_trajectories
+
+
+def transform_points(points: np.ndarray,
+                     translation_vector: np.ndarray,
+                     rotation_matrix: np.ndarray) -> np.ndarray:
+    translated_points = translate_points(points=points, translation_vector=translation_vector)
+    rotated_points = rotate_points(points=translated_points, rotation_matrix=rotation_matrix)
+    return rotated_points
+
+
+def translate_points(points: np.ndarray, translation_vector: np.ndarray) -> np.ndarray:
+    return points + translation_vector
+
+
+def rotate_points(points: np.ndarray, rotation_matrix: np.ndarray) -> np.ndarray:
+    return points @ rotation_matrix.T
 
 
 def estimate_orthonormal_basis(center_reference_point: np.ndarray,
@@ -125,65 +147,65 @@ def estimate_orthonormal_basis(center_reference_point: np.ndarray,
 
     return x_hat, y_hat, z_hat
 
-
-def create_transformation_matrix(rotation_matrix: np.ndarray, translation_vector: np.ndarray) -> np.ndarray:
-    """
-    Create a 4x4 transformation matrix from a 3x3 rotation matrix and a 3x1 translation vector.
-
-    Parameters
-    ----------
-    rotation_matrix : np.ndarray
-        3x3 rotation matrix.
-    translation_vector : np.ndarray
-        3x1 translation vector.
-
-    Returns
-    -------
-    np.ndarray
-        4x4 transformation matrix.
-    """
-    if not rotation_matrix.shape == (3, 3):
-        raise ValueError("Rotation matrix must be 3x3.")
-    if not translation_vector.shape == (3,):
-        raise ValueError("Translation vector must be 3x1.")
-
-    transformation_matrix = np.eye(4)
-    transformation_matrix[:3, :3] = rotation_matrix
-    transformation_matrix[:3, 3] = translation_vector
-
-    return transformation_matrix
-
-
-def transform_points(points: np.ndarray, transformation_matrix: np.ndarray) -> np.ndarray:
-    """
-    Apply a 4x4 transformation matrix to a set of 3D points.
-
-    Parameters
-    ----------
-    points : np.ndarray
-        Nx3 array of 3D points.
-    transformation_matrix : np.ndarray
-        4x4 transformation matrix.
-
-    Returns
-    -------
-    np.ndarray
-        Nx3 array of transformed 3D points.
-    """
-
-    if not points.shape[1] == 3:
-        raise ValueError("Points array must be Nx3.")
-    if not transformation_matrix.shape == (4, 4):
-        raise ValueError("Transformation matrix must be 4x4.")
-
-    # Convert points to homogeneous coordinates
-    ones = np.ones((points.shape[0], 1))
-    homogeneous_points = np.hstack([points, ones])
-
-    # Apply the transformation matrix
-    transformed_homogeneous_points = homogeneous_points @ transformation_matrix.T
-
-    # Convert back to 3D coordinates
-    transformed_points = transformed_homogeneous_points[:, :3]
-
-    return transformed_points
+#
+# def create_transformation_matrix(rotation_matrix: np.ndarray, translation_vector: np.ndarray) -> np.ndarray:
+#     """
+#     Create a 4x4 transformation matrix from a 3x3 rotation matrix and a 3x1 translation vector.
+#
+#     Parameters
+#     ----------
+#     rotation_matrix : np.ndarray
+#         3x3 rotation matrix.
+#     translation_vector : np.ndarray
+#         3x1 translation vector.
+#
+#     Returns
+#     -------
+#     np.ndarray
+#         4x4 transformation matrix.
+#     """
+#     if not rotation_matrix.shape == (3, 3):
+#         raise ValueError("Rotation matrix must be 3x3.")
+#     if not translation_vector.shape == (3,):
+#         raise ValueError("Translation vector must be 3x1.")
+#
+#     transformation_matrix = np.eye(4)
+#     transformation_matrix[:3, :3] = rotation_matrix
+#     transformation_matrix[:3, 3] = translation_vector
+#
+#     return transformation_matrix
+#
+#
+# def transform_points(points: np.ndarray, transformation_matrix: np.ndarray) -> np.ndarray:
+#     """
+#     Apply a 4x4 transformation matrix to a set of 3D points.
+#
+#     Parameters
+#     ----------
+#     points : np.ndarray
+#         Nx3 array of 3D points.
+#     transformation_matrix : np.ndarray
+#         4x4 transformation matrix.
+#
+#     Returns
+#     -------
+#     np.ndarray
+#         Nx3 array of transformed 3D points.
+#     """
+#
+#     if not points.shape[1] == 3:
+#         raise ValueError("Points array must be Nx3.")
+#     if not transformation_matrix.shape == (4, 4):
+#         raise ValueError("Transformation matrix must be 4x4.")
+#
+#     # Convert points to homogeneous coordinates
+#     ones = np.ones((points.shape[0], 1))
+#     homogeneous_points = np.hstack([points, ones])
+#
+#     # Apply the transformation matrix
+#     transformed_homogeneous_points = homogeneous_points @ transformation_matrix.T
+#
+#     # Convert back to 3D coordinates
+#     transformed_points = transformed_homogeneous_points[:, :3]
+#
+#     return transformed_points

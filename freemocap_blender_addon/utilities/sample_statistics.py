@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Union, Self
+from typing import List, Union
 
 import numpy as np
 

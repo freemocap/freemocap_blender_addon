@@ -2,6 +2,7 @@ import traceback
 from pathlib import Path
 
 import bpy
+from freemocap_blender_addon.pipelines.load_in_blender_pipeline import LoadInBlenderPipeline
 
 
 class FMC_ADAPTER_run_all(bpy.types.Operator):
@@ -10,23 +11,20 @@ class FMC_ADAPTER_run_all(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
 
     def execute(self, context):
-        from freemocap_blender_addon.main_controller import MainController
-        from freemocap_blender_addon.pipelines.pipeline_parameters.load_pipeline_config import load_default_parameters_config
         fmc_adapter_tool = context.scene.fmc_adapter_properties
-        recording_path = fmc_adapter_tool.recording_path_str
+        recording_path = fmc_adapter_tool.recording_path
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}
-        config = load_default_parameters_config()
         try:
-            print(f"Executing `main_controller.run_all() with config:{config}")
-            controller = MainController(recording_path=recording_path,
-                                        blend_file_path_str=str(Path(recording_path) / (Path(recording_path).stem + ".blend")),
-                                        pipeline_config=config)
-            fmc_adapter_tool.data_parent_empty = controller.data_parent_object
-            controller.run_all()
+            bpy.ops.object.empty_add(type="ARROWS")
+            empty_object = bpy.context.editable_objects[-1]
+            empty_object.name = Path(recording_path).stem
+            fmc_adapter_tool.data_parent_empty = empty_object
+            pipeline = LoadInBlenderPipeline(recording_path_str=recording_path)
+            pipeline.run()
+            
         except Exception as e:
-            print(f"Failed to run main_controller.run_all() with config:{config}: `{e}`")
             print(traceback.format_exc())
             return {'CANCELLED'}
         return {'FINISHED'}
