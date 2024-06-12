@@ -19,7 +19,7 @@ class MediapipeBodyMapping(KeypointMappingsEnum):
     NECK_BASE_C7 = ["left_shoulder", "right_shoulder"]
     CHEST_CENTER_T12 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
     PELVIS_CENTER = ["left_hip", "right_hip"]
-    RIGHT_CLAVICLE = {"right_shoulder": .55, "left_shoulder": .45},
+    # RIGHT_CLAVICLE = {"right_shoulder": .55, "left_shoulder": .45},
     RIGHT_SHOULDER = ["right_shoulder"]
     RIGHT_ELBOW = ["right_elbow"]
     RIGHT_WRIST = ["right_wrist"]
@@ -31,7 +31,7 @@ class MediapipeBodyMapping(KeypointMappingsEnum):
     RIGHT_ANKLE = ["right_ankle"]
     RIGHT_HEEL = ["right_heel"]
     RIGHT_HALLUX_TIP = ["right_foot_index"]
-    LEFT_CLAVICLE = {"left_shoulder": .55, "right_shoulder": .45},
+    # LEFT_CLAVICLE = {"left_shoulder": .55, "right_shoulder": .45},
     LEFT_SHOULDER = ["left_shoulder"]
     LEFT_ELBOW = ["left_elbow"]
     LEFT_WRIST = ["left_wrist"]

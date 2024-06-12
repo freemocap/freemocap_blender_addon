@@ -2,7 +2,7 @@ import traceback
 from pathlib import Path
 
 import bpy
-from freemocap_blender_addon.pipelines.load_in_blender_pipeline import LoadInBlenderPipeline
+from freemocap_blender_addon.pipelines.blender_skeleton_builder_pipeline import BlenderSkeletonBuilderPipeline
 
 
 class FMC_ADAPTER_run_all(bpy.types.Operator):
@@ -21,7 +21,7 @@ class FMC_ADAPTER_run_all(bpy.types.Operator):
             empty_object = bpy.context.editable_objects[-1]
             empty_object.name = Path(recording_path).stem
             fmc_adapter_tool.data_parent_empty = empty_object
-            pipeline = LoadInBlenderPipeline(recording_path_str=recording_path)
+            pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path)
             pipeline.run()
             
         except Exception as e:

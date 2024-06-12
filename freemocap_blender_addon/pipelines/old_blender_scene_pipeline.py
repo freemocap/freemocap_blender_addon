@@ -19,7 +19,7 @@ from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters i
 from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMetaClass
 
 
-class BlenderController(metaclass=SingletonMetaClass):
+class OldBlenderController(metaclass=SingletonMetaClass):
     def __init__(self, recording_path: str, blend_file_path_str: str, pipeline_config: PipelineConfig):
         self.pipeline_config: PipelineConfig = pipeline_config
         self.blend_file_path_str: str = blend_file_path_str

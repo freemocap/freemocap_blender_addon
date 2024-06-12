@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Dict
 
 from freemocap_blender_addon.freemocap_data.freemocap_recording_data import FreemocapRecordingData
@@ -26,12 +27,22 @@ class DataStages(TypeSafeDataclass):
                 "rigidified": self.rigidified,
                 "inertial_aligned": self.inertial_aligned}
 
+    @property
+    def keypoint_trajectories(self) -> Dict[str, KeypointTrajectories]:
+        """
+        Returns the keypoint trajectories at the most processed stage
+        """
+        return {"inertial_aligned": self.inertial_aligned}
+
 
 @dataclass
 class PurePythonPipeline(TypeSafeDataclass):
     recording_path_str: str
     tracker_type: TrackerSourceType = DEFAULT_TRACKER_TYPE
-    print("Running all stages...")
+
+    @property
+    def recording_name(self) -> str:
+        return Path(self.recording_path_str).stem
 
     def run(self):
         # Pure python stuff
@@ -51,7 +62,7 @@ class PurePythonPipeline(TypeSafeDataclass):
         inertial_aligned_keypoint_trajectories = put_skeleton_on_ground(
             keypoint_trajectories=rigidified_keypoint_trajectories)
 
-        print(f"{self.__class__.__name__}.run() completed successfully!")
+        print(f"{self.__class__.__name__}.run() completed successfully for recording: {self.recording_name}")
         return DataStages(raw_from_disk=og_keypoint_trajectories,
                           rigidified=rigidified_keypoint_trajectories,
                           inertial_aligned=inertial_aligned_keypoint_trajectories,

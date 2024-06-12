@@ -1,8 +1,12 @@
 from dataclasses import dataclass, field
+from enum import Enum
+
+from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
+from freemocap_blender_addon.models.animation.poses.pose_types import PoseType
 
 
 @dataclass
-class AdjustEmpties:
+class AdjustEmptiesConfig:
     vertical_align_reference: str = "left_knee"
     vertical_align_angle_offset: float = 0.0
     ground_align_reference: str = "left_foot_index"
@@ -12,7 +16,7 @@ class AdjustEmpties:
 
 
 @dataclass
-class ReduceBoneLengthDispersion:
+class ReduceBoneLengthDispersionConfig:
     interval_variable: str = "median"
     interval_factor: float = 0.0
 
@@ -21,9 +25,16 @@ class ReduceBoneLengthDispersion:
 class ReduceShakiness:
     recording_fps: float = 30.0
 
+class AddRigMethods(Enum):
+    RIGIFY = "rigify"
+    BY_BONE = "by_bone"
 
 @dataclass
-class AddRig:
+class AddRigConfig:
+    add_rig_method: AddRigMethods = AddRigMethods.BY_BONE
+    armature_type: ArmatureType = ArmatureType.FREEMOCAP
+    pose_type: PoseType = PoseType.FREEMOCAP_TPOSE
+    add_ik_constraints: bool = False
     bone_length_method: str = "median_length"
     keep_symmetry: bool = False
     add_fingers_constraints: bool = True
@@ -31,14 +42,14 @@ class AddRig:
 
 
 @dataclass
-class AddBodyMesh:
+class AddBodyMeshConfig:
     body_mesh_mode: str = "custom"
 
 
 @dataclass
 class PipelineConfig:
-    adjust_empties: AdjustEmpties = field(default_factory=AdjustEmpties)
-    reduce_bone_length_dispersion: ReduceBoneLengthDispersion = field(default_factory=ReduceBoneLengthDispersion)
+    adjust_empties: AdjustEmptiesConfig = field(default_factory=AdjustEmptiesConfig)
+    reduce_bone_length_dispersion: ReduceBoneLengthDispersionConfig = field(default_factory=ReduceBoneLengthDispersionConfig)
     reduce_shakiness: ReduceShakiness = field(default_factory=ReduceShakiness)
-    add_rig: AddRig = field(default_factory=AddRig)
-    add_body_mesh: AddBodyMesh = field(default_factory=AddBodyMesh)
+    add_rig: AddRigConfig = field(default_factory=AddRigConfig)
+    add_body_mesh: AddBodyMeshConfig = field(default_factory=AddBodyMeshConfig)

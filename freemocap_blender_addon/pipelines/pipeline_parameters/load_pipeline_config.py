@@ -2,7 +2,7 @@ import json
 from typing import Optional
 
 from .pipeline_parameters import \
-    PipelineConfig, AdjustEmpties, ReduceShakiness, ReduceBoneLengthDispersion, AddRig, AddBodyMesh
+    PipelineConfig, AdjustEmptiesConfig, ReduceShakiness, ReduceBoneLengthDispersionConfig, AddRigConfig, AddBodyMeshConfig
 
 
 # Define the data classes to represent the JSON structure
@@ -15,11 +15,11 @@ def load_default_parameters_config(filename: Optional[str] = None) -> PipelineCo
         # Parse JSON data into the dataclass structure
         return PipelineConfig(
             # recording_path=data['recording_path'],
-            adjust_empties=AdjustEmpties(**data['adjust_empties']),
-            reduce_bone_length_dispersion=ReduceBoneLengthDispersion(**data['reduce_bone_length_dispersion']),
+            adjust_empties=AdjustEmptiesConfig(**data['adjust_empties']),
+            reduce_bone_length_dispersion=ReduceBoneLengthDispersionConfig(**data['reduce_bone_length_dispersion']),
             reduce_shakiness=ReduceShakiness(**data['reduce_shakiness']),
-            add_rig=AddRig(**data['add_rig']),
-            add_body_mesh=AddBodyMesh(**data['add_body_mesh'])
+            add_rig=AddRigConfig(**data['add_rig']),
+            add_body_mesh=AddBodyMeshConfig(**data['add_body_mesh'])
         )
     else:
         return PipelineConfig()
