@@ -7,8 +7,9 @@ from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put
     put_rigid_body_meshes_on_empties
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_sphere_meshes_on_empties import \
     put_spheres_on_empties
-# from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
+from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
@@ -18,7 +19,7 @@ from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDatacl
 class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
     recording_path_str: str
     tracker_type: TrackerSourceType = DEFAULT_TRACKER_TYPE
-    # pipeline_config: PipelineConfig = PipelineConfig()
+    pipeline_config: PipelineConfig = PipelineConfig()
 
     @property
     def recording_name(self) -> str:
@@ -50,12 +51,12 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                                              parent_empty=parents[stage],
                                              name_prefix=stage)
 
-            # add_rig(
-            #     segment_definitions=freemocap_data.segment_definitions,
-            #     rig_name=f"{self.recording_name}_rig",
-            #     parent_object=parents[stage],
-            #     config=self.pipeline_config.add_rig,
-            # )
+            add_rig(
+                segment_definitions=freemocap_data.segment_definitions,
+                rig_name=f"{self.recording_name}_rig",
+                parent_object=parents[stage],
+                config=self.pipeline_config.add_rig,
+            )
 
 
 if __name__ == "__main__":
