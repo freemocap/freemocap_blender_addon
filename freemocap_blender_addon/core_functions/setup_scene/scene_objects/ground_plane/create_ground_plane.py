@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import bpy
+
 from freemocap_blender_addon.core_functions.materials.create_checkerboard_material import \
     create_checkerboard_material
 

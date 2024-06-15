@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import get_type_hints, List, Dict, Any, Union
+from typing import get_type_hints, Any
 
 import numpy as np
 

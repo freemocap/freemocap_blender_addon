@@ -2,10 +2,11 @@ import math as m
 import time
 
 import bpy
+from bpy.types import Operator
+
 from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
 from freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
 from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
-from bpy.types import Operator
 
 REORIENT_EMPTIES_EXECUTED = True
 

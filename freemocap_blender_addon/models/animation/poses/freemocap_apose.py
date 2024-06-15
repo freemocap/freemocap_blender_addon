@@ -2,7 +2,6 @@ import math as m
 
 from freemocap_blender_addon.models.animation.poses.pose_element import PoseElement
 
-
 freemocap_apose = {
     "pelvis": PoseElement(
         rotation=(m.radians(-90), 0, 0),

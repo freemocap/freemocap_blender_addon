@@ -5,7 +5,6 @@ import numpy as np
 from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from freemocap_blender_addon.freemocap_data.freemocap_data_component import BodyTrackedPoints, HandsData, \
     FaceTrackedPoints
-
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, DEFAULT_TRACKER_TYPE
 from freemocap_blender_addon.utilities.get_path_to_test_data import get_path_to_test_data
 from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics

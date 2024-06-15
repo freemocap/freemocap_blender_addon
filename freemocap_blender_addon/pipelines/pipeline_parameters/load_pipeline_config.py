@@ -2,7 +2,8 @@ import json
 from typing import Optional
 
 from .pipeline_parameters import \
-    PipelineConfig, AdjustEmptiesConfig, ReduceShakiness, ReduceBoneLengthDispersionConfig, AddRigConfig, AddBodyMeshConfig
+    PipelineConfig, AdjustEmptiesConfig, ReduceShakiness, ReduceBoneLengthDispersionConfig, AddRigConfig, \
+    AddBodyMeshConfig
 
 
 # Define the data classes to represent the JSON structure

@@ -1,5 +1,5 @@
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_mapping_abc import KeypointMappingsEnum
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_mapping_abc import KeypointMappingsEnum
 
 
 class MediapipeBodyMapping(KeypointMappingsEnum):

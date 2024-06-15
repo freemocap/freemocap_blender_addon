@@ -1,8 +1,9 @@
 import math as m
 import time
 
-from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
 from bpy.types import Operator
+
+from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
 
 
 class FMC_ADAPTER_OT_export_fbx(Operator):

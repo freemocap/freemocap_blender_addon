@@ -7,7 +7,7 @@ import numpy as np
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_segment_lengths import \
     calculate_segment_length_stats, print_length_stats_table
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories, SegmentStats
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 

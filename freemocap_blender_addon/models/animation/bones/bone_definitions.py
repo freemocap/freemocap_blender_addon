@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Literal, Union, Tuple, List
+from typing import Dict, Literal
 
 BoneName = str  # TODO - create a custom type for this with validators for things like the .R and .001 suffixes
 HandName = Literal['left_hand', 'right_hand']

@@ -1,24 +1,24 @@
-from enum import Enum
 import traceback
+from enum import Enum
 from pathlib import Path
 from typing import Dict
-from freemocap_blender_addon.models.animation.armatures import ArmatureBoneInfo
-from freemocap_blender_addon.models.animation.poses import PoseElement
+
 import bpy
+from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
 from mathutils import Vector, Matrix, Euler
 
-
 from freemocap_blender_addon import PACKAGE_ROOT_PATH
-from freemocap_blender_addon.system.constants import (
-    FREEMOCAP_ARMATURE,
-    UE_METAHUMAN_SIMPLE_ARMATURE,
-)
-from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
+from freemocap_blender_addon.models.animation.armatures import ArmatureBoneInfo
 from freemocap_blender_addon.models.animation.armatures import (
     bone_name_map,
 )
 from freemocap_blender_addon.models.animation.meshes import (
     SKELLY_BONES
+)
+from freemocap_blender_addon.models.animation.poses import PoseElement
+from freemocap_blender_addon.system.constants import (
+    FREEMOCAP_ARMATURE,
+    UE_METAHUMAN_SIMPLE_ARMATURE,
 )
 
 SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")

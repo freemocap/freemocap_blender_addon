@@ -1,7 +1,7 @@
 import numpy as np
 
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories, SegmentStats
 from freemocap_blender_addon.utilities.print_table_from_dicts import print_table
 from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics

@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict
 
 import bpy
+
 from freemocap_blender_addon.models.animation.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
 
 

@@ -1,8 +1,6 @@
 import math as m
 import time
 
-from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption import calculate_rigid_body_trajectories
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 from bpy.types import Operator
 
 

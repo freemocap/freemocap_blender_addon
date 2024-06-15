@@ -1,9 +1,9 @@
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, SkullKeypoints
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
 
 
 class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervical vertebra (C1)

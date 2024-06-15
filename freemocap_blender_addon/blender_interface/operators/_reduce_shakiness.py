@@ -1,8 +1,9 @@
 import math as m
 import time
 
-from freemocap_blender_addon.core_functions.empties import reduce_shakiness
 from bpy.types import Operator
+
+from freemocap_blender_addon.core_functions.empties import reduce_shakiness
 
 
 class FMC_ADAPTER_OT_reduce_shakiness(Operator):

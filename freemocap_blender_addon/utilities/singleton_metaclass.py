@@ -1,5 +1,5 @@
-from typing import Type, TypeVar, Optional
 from threading import Lock
+from typing import Type, TypeVar, Optional
 
 # Create a generic type variable to be used for type hints in SingletonMeta
 SingletonClass = TypeVar('SingletonClass', bound='SingletonMeta')

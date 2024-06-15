@@ -35,9 +35,6 @@ class VIEW3D_PT_freemocap(Panel):
         # self._add_body_mesh_panel(fmc_adapter_tool, layout)
         #
         # self._fbx_export_panel(layout)
-    def _custom_checkbox_panel(self, fmc_adapter_tool, layout):
-        # Make sure to include this attribute in your tool properties beforehand
-        layout.prop(fmc_adapter_tool, "custom_checkbox", text="Custom Checkbox")  
 
     def _center_of_mass_trail_panel(self, fmc_adapter_tool, layout):
         box = layout.box()
@@ -57,6 +54,8 @@ class VIEW3D_PT_freemocap(Panel):
         row.label(text="FreeMoCap Recording:")
         row.prop(fmc_adapter_tool, "recording_path", text="")
         box.operator('fmc_adapter._run_all', text='RUN ALL')
+        box.prop(fmc_adapter_tool, "show_stages", text="Show intermediate processing stages")
+
 
     def _save_data_to_disk_panel(self, fmc_adapter_tool, layout):
         box = layout.box()

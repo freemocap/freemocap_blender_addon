@@ -1,6 +1,6 @@
 from freemocap_blender_addon.models.skeleton_model.body.linkages.right_body_linkages import RightShoulderLinkage, \
     RightElbowLinkage, RightAnkleLinkage, RightKneeLinkage, RightHipLinkage, RightWristLinkage
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.chain_abc import ChainABC
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.chain_abc import ChainABC
 
 
 class RightArmChain(ChainABC):

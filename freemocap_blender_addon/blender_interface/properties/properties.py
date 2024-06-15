@@ -6,9 +6,9 @@ from freemocap_blender_addon.utilities.download_test_data import get_test_data_p
 
 class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
     print("Initializing FMC_ADAPTER_PROPERTIES class...")
-    custom_checkbox: bpy.props.BoolProperty(
-        name="Custom Checkbox",
-        description="This is a custom checkbox",
+    show_stages: bpy.props.BoolProperty(
+        name="Show intermediate processing stages",
+        description="If checked, a skeleton will be produced for each available stage of the processing pipeline",
         default = False
     )
 

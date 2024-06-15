@@ -2,10 +2,10 @@ import logging
 import math as m
 import time
 
-from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
-from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from bpy.types import Operator
 
+from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
+from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from ...blender_interface.operators._add_body_mesh import REORIENT_EMPTIES_EXECUTED
 from ...freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
     freemocap_empties_from_parent_object

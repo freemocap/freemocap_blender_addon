@@ -1,6 +1,7 @@
 from typing import Union, List
 
 import bpy
+
 from freemocap_blender_addon.core_functions.materials.create_material import create_material
 
 

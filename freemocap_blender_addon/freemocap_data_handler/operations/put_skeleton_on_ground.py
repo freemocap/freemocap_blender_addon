@@ -4,7 +4,7 @@ from typing import Tuple
 import numpy as np
 
 from freemocap_blender_addon.freemocap_data_handler.operations.get_low_velocity_frame import get_low_velocity_frame
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 

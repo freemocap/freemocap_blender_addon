@@ -1,10 +1,8 @@
 from abc import ABC
 from dataclasses import dataclass
-from typing import List
 
 import numpy as np
 
-from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 

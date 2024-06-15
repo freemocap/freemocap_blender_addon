@@ -2,7 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List, Optional
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointDefinition
 
 
 @dataclass

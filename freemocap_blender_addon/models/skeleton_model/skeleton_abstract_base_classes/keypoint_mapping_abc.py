@@ -4,7 +4,8 @@ from typing import Optional, List
 
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import TrackedPointName, \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
+    TrackedPointName, \
     KeypointMappingType
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 

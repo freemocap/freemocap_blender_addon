@@ -1,7 +1,8 @@
 from enum import Enum
 
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import SkullKeypoints
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, CompoundSegmentABC
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC, \
+    CompoundSegmentABC
 
 
 class SkullSegment(CompoundSegmentABC):

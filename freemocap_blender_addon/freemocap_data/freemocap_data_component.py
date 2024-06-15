@@ -6,8 +6,8 @@ import numpy as np
 from freemocap_blender_addon.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import TrackerSourceType, ComponentType, \
     FRAME_TRAJECTORY_XYZ
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointTrajectory
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointTrajectory
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     TrackedPointName, KeypointTrajectories
 from freemocap_blender_addon.utilities.get_from_tracker_type import get_keypoint_names, get_mapping
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass

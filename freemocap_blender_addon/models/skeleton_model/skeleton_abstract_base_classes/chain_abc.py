@@ -1,12 +1,10 @@
 from abc import ABC
-from typing import List, Dict, Union
+from typing import List
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, \
-    CompoundSegmentABC, SimpleSegmentABC
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointDefinition
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SegmentABC, \
+    SimpleSegmentABC
 
 
 class ChainABC(ABC):

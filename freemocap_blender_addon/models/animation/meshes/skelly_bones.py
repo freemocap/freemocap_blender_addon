@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Union
+
 from mathutils import Vector
 
 

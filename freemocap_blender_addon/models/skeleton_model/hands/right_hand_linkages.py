@@ -1,6 +1,6 @@
-from freemocap_blender_addon.models.skeleton_model.hands.right_hand_keypoints import RightHandKeypoints
 from freemocap_blender_addon.models.skeleton_model.body.linkages import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_hand_rigid_bodies import RightThumbMetacarpalSegmentABC, \
+from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_hand_rigid_bodies import \
+    RightThumbMetacarpalSegmentABC, \
     RightThumbProximalPhalanxSegmentABC, RightThumbDistalPhalanxSegmentABC, RightIndexFingerMetacarpalSegmentABC, \
     RightIndexFingerProximalPhalanxSegmentABC, RightIndexFingerMiddlePhalanxSegmentABC, \
     RightIndexFingerDistalPhalanxSegmentABC, RightMiddleFingerMetacarpalSegmentABC, \
@@ -10,6 +10,8 @@ from freemocap_blender_addon.models.skeleton_model.hands.b_rigid_bodies.right_ha
     RightRingFingerDistalPhalanxSegmentABC, RightPinkyFingerMetacarpalSegmentABC, \
     RightPinkyFingerProximalPhalanxSegmentABC, RightPinkyFingerMiddlePhalanxSegmentABC, \
     RightPinkyFingerDistalPhalanxSegmentABC
+from freemocap_blender_addon.models.skeleton_model.hands.right_hand_keypoints import RightHandKeypoints
+
 
 # hand
 # https://www.assh.org/handcare/safety/joints

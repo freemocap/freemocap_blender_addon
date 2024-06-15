@@ -3,11 +3,33 @@ from typing import Dict, Tuple
 import bpy
 import numpy as np
 
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
+    KeypointTrajectories
+from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
-def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
-                                     name: str,
+
+class ParentedEmpties(TypeSafeDataclass):
+    empties: Dict[str, bpy.types.Object]
+    parent_object: bpy.types.Object
+
+    def __post_init__(self):
+        for empty in self.empties.values():
+            if empty.parent != self.parent_object:
+                raise ValueError(f"Empty `{empty.name}` is not parented to the parent object `{self.parent_object.name}`")
+
+    @property
+    def parent_name(self):
+        return self.parent_object.name
+
+
+    def __str__(self):
+        return f"ParentedEmpties: {self.empties.keys()} parented to {self.parent_name}"
+
+
+def create_empties_from_trajectories(keypoint_trajectories: KeypointTrajectories,
+                                     parent_name: str,
                                      empty_scale: float = 0.01,
-                                     empty_type: str = "SPHERE") -> Tuple[Dict[str, bpy.types.Object], bpy.types.Object]:
+                                     empty_type: str = "SPHERE") -> ParentedEmpties:
     """
     Create empties for each trajectory in the dictionary and parent them to a new parent empty object.
 
@@ -18,18 +40,18 @@ def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
     # Create a parent empty object
     bpy.ops.object.empty_add(type="ARROWS")
     parent_object = bpy.context.editable_objects[-1]
-    parent_object.name = name
+    parent_object.name = parent_name
 
-    for trajectory_name, trajectory_data in trajectories.items():
-        empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
-            trajectory_fr_xyz=trajectory_data,
-            trajectory_name=f"{name}_{trajectory_name}",
+    for parent_name, trajectory in keypoint_trajectories.items():
+        empties[parent_name] = create_keyframed_empty_from_3d_trajectory_data(
+            trajectory_fr_xyz=trajectory.trajectory_data,
+            trajectory_name=f"{parent_name}_{parent_name}",
             parent_object=parent_object,
             empty_scale=empty_scale,
             empty_type=empty_type,
         )
 
-    return empties, parent_object
+    return ParentedEmpties(empties=empties, parent_object=parent_object)
 
 
 def create_keyframed_empty_from_3d_trajectory_data(
@@ -60,7 +82,7 @@ def create_keyframed_empty_from_3d_trajectory_data(
     bpy.types.Object
         The created empty object.
     """
-    print(f"Creating keyframed empty from: {trajectory_name}...")
+    print(f"Creating keyframed empty: `{trajectory_name}`")
     bpy.ops.object.empty_add(type=empty_type)
     empty_object = bpy.context.editable_objects[-1]
     empty_object.name = trajectory_name

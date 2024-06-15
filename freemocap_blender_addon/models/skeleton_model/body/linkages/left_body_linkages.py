@@ -1,6 +1,6 @@
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
 
 
 class LeftShoulderLinkage(LinkageABC):

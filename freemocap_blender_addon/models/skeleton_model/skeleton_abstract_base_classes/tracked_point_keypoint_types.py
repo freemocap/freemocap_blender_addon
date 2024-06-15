@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.keypoint_abc import KeypointTrajectory
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointTrajectory
 from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
 
 TrackedPointName = str

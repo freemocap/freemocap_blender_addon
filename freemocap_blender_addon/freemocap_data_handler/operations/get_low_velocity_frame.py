@@ -3,7 +3,7 @@ from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model.abstract_base_classes.tracked_point_keypoint_types import \
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
 
 def get_low_velocity_frame(trajectories: KeypointTrajectories, ignore_first_n_frames: int = 30) -> int:

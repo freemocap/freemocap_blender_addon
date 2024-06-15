@@ -12,8 +12,6 @@ from freemocap_blender_addon.freemocap_data.tracker_and_data_types import Tracke
     TRACKER_TYPE_PLACEHOLDER, RIGHT_LEFT_PLACEHOLDER, RECORDING_PATH_PLACEHOLDER
 
 
-
-
 @dataclass
 class FreemocapDataPaths:
     recording_folder_path: str

@@ -1,5 +1,3 @@
-import pytest
-
 from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMetaClass
 
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from typing import List, Union, Dict, Optional
 from enum import Enum
+from typing import List, Union, Dict, Optional
 
 
 # Enums for specific keys to avoid spelling issues
