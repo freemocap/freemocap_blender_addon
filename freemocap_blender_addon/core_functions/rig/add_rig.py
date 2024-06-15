@@ -17,8 +17,7 @@ def add_rig(
         config: AddRigConfig,
 ) -> bpy.types.Object:
     # Deselect all objects
-    for object in bpy.data.objects:
-        object.select_set(False)
+    deselect_all_bpy_objects()
 
     if config.add_rig_method == AddRigMethods.RIGIFY:
         raise NotImplementedError("Rigify is not implemented yet")
@@ -30,8 +29,9 @@ def add_rig(
         # )
     elif config.add_rig_method == AddRigMethods.BY_BONE:
         rig = add_rig_by_bone(
+            rig_name=rig_name,
             segment_definitions=segment_definitions,
-            armature=config.armature_type,
+            armature_bones=config.armature_type,
             pose=config.pose_type,
             add_ik_constraints=config.add_ik_constraints,
         )
@@ -64,6 +64,11 @@ def add_rig(
     bpy.ops.object.select_all(action="DESELECT")
 
     return rig
+
+
+def deselect_all_bpy_objects():
+    for object in bpy.data.objects:
+        object.select_set(False)
 
 
 def get_appended_number_from_blender_object(base_name: str) -> Optional[str]:

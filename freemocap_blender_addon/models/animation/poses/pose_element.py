@@ -5,4 +5,7 @@ from typing import Tuple
 @dataclass
 class PoseElement:
     rotation: Tuple[float, float, float]
-    roll: float = 0
+
+    def __str__(self):
+        rotation_str = ", ".join([f"{r:.3f}" for r in self.rotation])
+        return f"PoseElement(rotation={rotation_str}) [radians]"

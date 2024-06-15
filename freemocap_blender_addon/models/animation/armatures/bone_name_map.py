@@ -3,14 +3,9 @@ Dictionary to map the default armature bone names with the different
 armatures bone names.
 """
 
-from freemocap_blender_addon.system.constants import (
-    UE_METAHUMAN_SIMPLE_ARMATURE,
-    FREEMOCAP_ARMATURE,
-)
-
 
 bone_name_map = {
-    UE_METAHUMAN_SIMPLE_ARMATURE: {
+    "armature_ue_metahuman_simple": {
         "pelvis": "pelvis",
         "pelvis.R": "pelvis_r",
         "pelvis.L": "pelvis_l",
@@ -83,7 +78,7 @@ bone_name_map = {
         "leg_pole_target.R": "leg_pole_target.R",
         "leg_pole_target.L": "leg_pole_target.L",
     },
-    FREEMOCAP_ARMATURE: {
+    "armature_freemocap": {
         "pelvis": "pelvis",
         "pelvis.R": "pelvis.R",
         "pelvis.L": "pelvis.L",
