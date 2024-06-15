@@ -47,11 +47,11 @@ class FreemocapRecordingData(TypeSafeDataclass):
                 f"FACE:\n{face_stats}")
 
 
-def load_freemocap_rest_recording():
+def load_freemocap_test_recording():
     recording_path_in = get_path_to_test_data()
     return FreemocapRecordingData.load_from_recording_path(recording_path=recording_path_in,
                                                            tracker_type=DEFAULT_TRACKER_TYPE)
 
 
 if __name__ == "__main__":
-    print(str(load_freemocap_rest_recording()))
+    print(str(load_freemocap_test_recording()))

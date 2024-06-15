@@ -6,99 +6,101 @@ from freemocap_blender_addon.models.skeleton_model.body.segments import SkullSeg
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 
 _FREEMOCAP_BODY_TPOSE_DEFINTIONS = {
     # Axial segments
-    AxialSegments.LUMBAR.name: PoseElement(
+    blenderize_name(AxialSegments.LUMBAR.name): PoseElement(
         rotation=(m.radians(-90), 0, 0),
+        is_root=True,
     ),
-    AxialSegments.THORACIC.name: PoseElement(
+    blenderize_name(AxialSegments.THORACIC.name): PoseElement(
         rotation=(0, 0, 0),
     ),
-    AxialSegments.CERVICAL.name: PoseElement(
+    blenderize_name(AxialSegments.CERVICAL.name): PoseElement(
         rotation=(0, 0, 0),
     ),
-    SkullSegments.NOSE.name: PoseElement(
+    blenderize_name(SkullSegments.NOSE.name): PoseElement(
         rotation=(m.radians(110), 0, 0),
     ),
-    SkullSegments.RIGHT_EYE_CENTER.name: PoseElement(
+    blenderize_name(SkullSegments.RIGHT_EYE_CENTER.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    SkullSegments.LEFT_EYE_CENTER.name: PoseElement(
+    blenderize_name(SkullSegments.LEFT_EYE_CENTER.name): PoseElement(
         rotation=(0, m.radians(90), 0),
     ),
 
     # Right upper limb
-    RightBodySegments.RIGHT_CLAVICLE.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_CLAVICLE.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_UPPER_ARM.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_UPPER_ARM.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_FOREARM.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_FOREARM.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(1)),
     ),
-    RightBodySegments.RIGHT_WRIST_INDEX.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_WRIST_INDEX.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(45)),
     ),
-    RightBodySegments.RIGHT_WRIST_PINKY.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_WRIST_PINKY.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(-45)),
     ),
-    RightBodySegments.RIGHT_WRIST_THUMB.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_WRIST_THUMB.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
 
     # Right lower limb
-    RightBodySegments.RIGHT_PELVIS.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_PELVIS.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_THIGH.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_THIGH.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_CALF.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_CALF.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_FORE_FOOT.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_FORE_FOOT.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    RightBodySegments.RIGHT_HEEL.name: PoseElement(
+    blenderize_name(RightBodySegments.RIGHT_HEEL.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
 
     # Left upper limb
-    LeftBodySegments.LEFT_CLAVICLE.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_CLAVICLE.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_UPPER_ARM.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_UPPER_ARM.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_FOREARM.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_FOREARM.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(1)),
     ),
-    LeftBodySegments.LEFT_WRIST_INDEX.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_WRIST_INDEX.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(45)),
     ),
-    LeftBodySegments.LEFT_WRIST_PINKY.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_WRIST_PINKY.name): PoseElement(
         rotation=(0, m.radians(-90), m.radians(-45)),
     ),
-    LeftBodySegments.LEFT_WRIST_THUMB.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_WRIST_THUMB.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
 
     # Left lower limb
-    LeftBodySegments.LEFT_PELVIS.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_PELVIS.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_THIGH.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_THIGH.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_CALF.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_CALF.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_FORE_FOOT.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_FORE_FOOT.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
-    LeftBodySegments.LEFT_HEEL.name: PoseElement(
+    blenderize_name(LeftBodySegments.LEFT_HEEL.name): PoseElement(
         rotation=(0, m.radians(-90), 0),
     ),
 }

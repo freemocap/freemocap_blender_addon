@@ -2,7 +2,7 @@ import re
 from copy import copy
 
 
-def create_blender_formatted_name(original_name: str) -> str:
+def blenderize_name(original_name: str) -> str:
     """
     Create a Blender formatted name from the original name.
 
@@ -18,10 +18,10 @@ def create_blender_formatted_name(original_name: str) -> str:
 
     Examples
     --------
-    >>> create_blender_formatted_name("Upper Arm Right")
+    >>> blenderize_name("Upper Arm Right")
     'upper_arm.R'
 
-    >>> create_blender_formatted_name("Lower-Leg (Left)")
+    >>> blenderize_name("Lower-Leg (Left)")
     'lower-leg.L'
     """
     name = copy(original_name)
@@ -102,12 +102,12 @@ if __name__ == "__main__":
     print(camel_to_snake("camelCase"))  # Expected Output: camel_case
     print(camel_to_snake("PascalCaseExample"))  # Expected Output: pascal_case_example
     print(camel_to_snake("exampleWithNumbers123"))  # Expected Output: example_with_numbers123
-    print(create_blender_formatted_name("Upper Arm Right"))  # Expected Output: upper_arm.R
-    print(create_blender_formatted_name("Lower-Leg (Left)"))  # Expected Output: lower-leg.L
-    print(create_blender_formatted_name("ELBOW_LEFT"))  # Expected Output: elbow.L
-    print(create_blender_formatted_name("left_elbow"))  # Expected Output: elbow.L
-    print(create_blender_formatted_name("RightArm"))  # Expected Output: arm.R
-    print(create_blender_formatted_name("LEFT_ARM"))  # Expected Output: arm.L
-    print(create_blender_formatted_name("arm-Right"))  # Expected Output: arm.R
-    print(create_blender_formatted_name("upper_right_arm"))  # Expected Output: upper_arm.R
-    print(create_blender_formatted_name("upper_.R_arm"))  # Expected Output: upper_arm.R
+    print(blenderize_name("Upper Arm Right"))  # Expected Output: upper_arm.R
+    print(blenderize_name("Lower-Leg (Left)"))  # Expected Output: lower-leg.L
+    print(blenderize_name("ELBOW_LEFT"))  # Expected Output: elbow.L
+    print(blenderize_name("left_elbow"))  # Expected Output: elbow.L
+    print(blenderize_name("RightArm"))  # Expected Output: arm.R
+    print(blenderize_name("LEFT_ARM"))  # Expected Output: arm.L
+    print(blenderize_name("arm-Right"))  # Expected Output: arm.R
+    print(blenderize_name("upper_right_arm"))  # Expected Output: upper_arm.R
+    print(blenderize_name("upper_.R_arm"))  # Expected Output: upper_arm.R

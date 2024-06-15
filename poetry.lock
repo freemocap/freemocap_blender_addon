@@ -294,6 +294,16 @@ files = [
 ]
 
 [[package]]
+name = "mathutils"
+version = "3.3.0"
+description = "A general math utilities library providing Matrix, Vector, Quaternion, Euler and Color classes, written in C for speed."
+optional = false
+python-versions = "*"
+files = [
+    {file = "mathutils-3.3.0.tar.gz", hash = "sha256:b9371af8149f3f3f05ee165cb583b2df7b3fbc9935406d1c505a5276b8e563af"},
+]
+
+[[package]]
 name = "numpy"
 version = "1.26.4"
 description = "Fundamental package for array computing in Python"
@@ -508,4 +518,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "==3.11.*"
-content-hash = "692f81a2cf7cbd91f4b40d1d5862808ad8c5ff6aa6a8b52a48ea45e883b12140"
+content-hash = "7de6240d91a4a1cc0f28dd3e9dbcde276f447c3392763037b9206dd0a8bc2399"

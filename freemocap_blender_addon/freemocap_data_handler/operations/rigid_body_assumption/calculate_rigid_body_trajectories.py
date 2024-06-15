@@ -100,9 +100,9 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: KeypointTrajectories,
 
 
 if __name__ == "__main__":
-    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_rest_recording
+    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
 
-    recording_data = load_freemocap_rest_recording()
+    recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     keypoint_trajectories, og_segment_lengths = calculate_rigid_body_trajectories(
         keypoint_trajectories=keypoint_trajectories_outer,

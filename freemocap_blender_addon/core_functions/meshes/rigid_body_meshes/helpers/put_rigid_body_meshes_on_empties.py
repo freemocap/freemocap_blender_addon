@@ -7,7 +7,7 @@ from freemocap_blender_addon.freemocap_data.data_paths.default_path_enums import
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
 from freemocap_blender_addon.utilities.color_generator import generate_color, ColorType
-from freemocap_blender_addon.utilities.create_blender_formatted_name import create_blender_formatted_name
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 
 DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH = (.8, 1, 1)
 
@@ -46,7 +46,7 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
         color, squish_scale = get_color_and_squish(segment_name)
 
         bone_mesh = make_rigid_body_mesh(
-            name=create_blender_formatted_name(f"{parented_empties.parent_name}_{segment_name}_rigid_body_mesh"),
+            name=blenderize_name(f"{parented_empties.parent_name}_{segment_name}_rigid_body_mesh"),
             length=segment.length,
             squish_scale=squish_scale,
             joint_color=color,

@@ -32,7 +32,7 @@ def add_rig(
             rig_name=rig_name,
             segment_definitions=segment_definitions,
             armature_bones=config.armature_type,
-            pose=config.pose_type,
+            pose_definition=config.pose_type,
             add_ik_constraints=config.add_ik_constraints,
         )
     else:

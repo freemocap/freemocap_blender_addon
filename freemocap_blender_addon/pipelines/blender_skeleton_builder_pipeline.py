@@ -13,7 +13,7 @@ from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classe
     KeypointTrajectories
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
-from freemocap_blender_addon.utilities.create_blender_formatted_name import create_blender_formatted_name
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
@@ -41,7 +41,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             stages_to_show = freemocap_data.keypoint_trajectories
 
         for stage, trajectories in stages_to_show.items():
-            trajectories = self.blenderize_trajectories(trajectories=trajectories, scale=scale)
+            trajectories = blenderize_trajectories(trajectories=trajectories, scale=scale)
 
             parented_empties = create_empties_from_trajectories(keypoint_trajectories=trajectories,
                                                                 parent_name=stage)
@@ -61,7 +61,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
 
 def blenderize_trajectories(scale: float,
                             trajectories: dict) -> KeypointTrajectories:
-    return {create_blender_formatted_name(original_name=key): value.trajectory_data * scale for key, value in
+    return {blenderize_name(original_name=key): value.trajectory_data * scale for key, value in
             trajectories.items()}
 
 

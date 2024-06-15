@@ -71,9 +71,9 @@ def print_length_stats_table(segment_lengths: SegmentStats, squash_less_than=1e-
 
 
 if __name__ == "__main__":
-    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_rest_recording
+    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
 
-    recording_data = load_freemocap_rest_recording()
+    recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     segment_lengths = calculate_segment_length_stats(keypoint_trajectories=keypoint_trajectories_outer,
                                                      skeleton_definition=SkeletonTypes.BODY_ONLY)

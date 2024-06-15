@@ -16,6 +16,7 @@ python ="==3.11.*"
 bpy = "^4.1.0"
 
 toml = "^0.10.2"
+mathutils = "^3.3.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
 

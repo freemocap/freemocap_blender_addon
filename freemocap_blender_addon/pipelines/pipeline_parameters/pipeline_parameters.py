@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
-from freemocap_blender_addon.models.animation.poses.pose_types import PoseType
+from freemocap_blender_addon.models.animation.poses.pose_types import PoseTypes
 
 
 @dataclass
@@ -25,17 +25,18 @@ class ReduceBoneLengthDispersionConfig:
 class ReduceShakiness:
     recording_fps: float = 30.0
 
+
 class AddRigMethods(Enum):
     RIGIFY = "rigify"
     BY_BONE = "by_bone"
+
 
 @dataclass
 class AddRigConfig:
     add_rig_method: AddRigMethods = AddRigMethods.BY_BONE
     armature_type: ArmatureType = ArmatureType.FREEMOCAP
-    pose_type: PoseType = PoseType.FREEMOCAP_TPOSE
+    pose_type: PoseTypes = PoseTypes.FREEMOCAP_TPOSE
     add_ik_constraints: bool = False
-    bone_length_method: str = "median_length"
     keep_symmetry: bool = False
     add_fingers_constraints: bool = True
     use_limit_rotation: bool = False
@@ -49,7 +50,8 @@ class AddBodyMeshConfig:
 @dataclass
 class PipelineConfig:
     adjust_empties: AdjustEmptiesConfig = field(default_factory=AdjustEmptiesConfig)
-    reduce_bone_length_dispersion: ReduceBoneLengthDispersionConfig = field(default_factory=ReduceBoneLengthDispersionConfig)
+    reduce_bone_length_dispersion: ReduceBoneLengthDispersionConfig = field(
+        default_factory=ReduceBoneLengthDispersionConfig)
     reduce_shakiness: ReduceShakiness = field(default_factory=ReduceShakiness)
     add_rig: AddRigConfig = field(default_factory=AddRigConfig)
     add_body_mesh: AddBodyMeshConfig = field(default_factory=AddBodyMeshConfig)
