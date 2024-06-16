@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Tuple
 
-ROOT_BONE_PARENT_NAME = "ROOT"
+ROOT_BONE_NAME = "ROOT"
 
 
 @dataclass

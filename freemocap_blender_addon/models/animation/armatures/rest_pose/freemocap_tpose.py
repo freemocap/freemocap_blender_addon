@@ -1,7 +1,7 @@
 import math as m
 from enum import Enum
 
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_PARENT_NAME, \
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME, \
     BonePoseDefinition
 from freemocap_blender_addon.models.skeleton_model.body.segments import SkullSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
@@ -13,7 +13,7 @@ _FREEMOCAP_BODY_TPOSE_DEFINITIONS = {
     # Axial segments
     blenderize_name(AxialSegments.LUMBAR.name): BonePoseDefinition(
         rotation=(m.radians(-90), 0, 0),
-        parent_bone_name=ROOT_BONE_PARENT_NAME
+        parent_bone_name=ROOT_BONE_NAME
     ),
     blenderize_name(AxialSegments.THORACIC.name): BonePoseDefinition(
         rotation=(0, 0, 0),

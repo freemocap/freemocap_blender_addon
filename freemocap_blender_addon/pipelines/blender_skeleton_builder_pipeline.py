@@ -58,7 +58,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                 parent_object=parented_empties.parent_object,
                 config=self.pipeline_config.add_rig,
             )
-
+        print(f"Finished building blender skeleton for recording: {self.recording_name}")
 
 def blenderize_trajectories(scale: float,
                             trajectories: dict) -> Dict[str, np.ndarray]:

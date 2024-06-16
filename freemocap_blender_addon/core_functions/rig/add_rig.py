@@ -35,7 +35,7 @@ def generate_rig(
     # add_ik_constraints_to_rig(rig)
 
     # Change mode to object mode
-    bpy.ops.object.mode_set(mode="OBJECT")
+    # bpy.ops.object.mode_set(mode="OBJECT")
 
     # add_constraints(
     #     rig=rig,
@@ -46,14 +46,14 @@ def generate_rig(
     #     use_limit_rotation=config.use_limit_rotation,
     # )
 
-    ### Bake animation to the rig ###
-    # Get the empties ending frame
-    ending_frame = int(bpy.data.actions[0].frame_range[1])
-    # Bake animation
-    bpy.ops.nla.bake(frame_start=1, frame_end=ending_frame, bake_types={"POSE"})
+    # ### Bake animation to the rig ###
+    # # Get the empties ending frame
+    # ending_frame = int(bpy.data.actions[0].frame_range[1])
+    # # Bake animation
+    # bpy.ops.nla.bake(frame_start=1, frame_end=ending_frame, bake_types={"POSE"})
 
     # Change back to Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
+    # bpy.ops.object.mode_set(mode="OBJECT")
 
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")

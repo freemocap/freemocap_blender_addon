@@ -3,7 +3,7 @@ from typing import Dict
 
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_PARENT_NAME, \
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME, \
     BonePoseDefinition
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name, BlenderizedName
@@ -17,7 +17,7 @@ class ArmatureBoneDefinition:
 
     @property
     def is_root(self):
-        return self.rest_pose.parent_bone_name == ROOT_BONE_PARENT_NAME
+        return self.rest_pose.parent_bone_name == ROOT_BONE_NAME
 
     @property
     def parent(self):
