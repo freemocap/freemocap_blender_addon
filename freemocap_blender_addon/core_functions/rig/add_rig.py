@@ -3,55 +3,48 @@ from typing import List, Optional
 
 import bpy
 
-from freemocap_blender_addon.core_functions.rig.add_rig_by_bone import add_rig_by_bone
-from freemocap_blender_addon.core_functions.rig.apply_bone_constraints import add_constraints
+from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
-from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig, AddRigMethods
+from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
+from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
 
-def add_rig(
-        segment_definitions: RigidSegmentDefinitions,
-        skeleton_definition: SkeletonTypes,
+def generate_rig(
         rig_name: str,
+        segment_definitions: RigidSegmentDefinitions,
+        pose_definition: PoseTypes,
         parent_object: bpy.types.Object,
         config: AddRigConfig,
 ) -> bpy.types.Object:
+    """
+    Armature - bone lengths and rest pose definitions which define the basic structure of the skeleton
+    Rig - Armature + constraints, IK, drivers, etc
+    """
     # Deselect all objects
     deselect_all_bpy_objects()
 
-    if config.add_rig_method == AddRigMethods.RIGIFY:
-        raise NotImplementedError("Rigify is not implemented yet")
-        # rig = add_rig_rigify(
-        #     bone_data=bone_data,
-        #     rig_name=rig_name,
-        #     parent_object=parent_object,
-        #     keep_symmetry=keep_symmetry,
-        # )
-    elif config.add_rig_method == AddRigMethods.BY_BONE:
-        rig = add_rig_by_bone(
-            rig_name=rig_name,
-            segment_definitions=segment_definitions,
-            skeleton_definition=skeleton_definition,
-            pose_definition=config.pose_type,
-            add_ik_constraints=config.add_ik_constraints,
-        )
-    else:
-        raise ValueError(f"Invalid add rig method: {config.add_rig_method}")
+    print("Generating armature from segment legnths and rest pose defintions...")
+    armature = generate_armature(armature_definition=ArmatureDefinition.create(
+        rig_name=rig_name,
+        segment_definitions=segment_definitions,
+        pose_definition=pose_definition,
+    ))
+
+    # add_ik_constraints_to_rig(rig)
 
     # Change mode to object mode
     bpy.ops.object.mode_set(mode="OBJECT")
 
-    # TODO: make sure this still adds constraints properly
-    add_constraints(
-        rig=rig,
-        add_fingers_constraints=config.add_fingers_constraints,
-        parent_object=parent_object,
-        armature=config.armature_type,
-        pose=config.pose_type,
-        use_limit_rotation=config.use_limit_rotation,
-    )
+    # add_constraints(
+    #     rig=rig,
+    #     add_fingers_constraints=config.add_fingers_constraints,
+    #     parent_object=parent_object,
+    #     armature=config.armature_type,
+    #     pose=config.pose_type,
+    #     use_limit_rotation=config.use_limit_rotation,
+    # )
 
     ### Bake animation to the rig ###
     # Get the empties ending frame
@@ -65,7 +58,7 @@ def add_rig(
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")
 
-    return rig
+    # return rig
 
 
 def deselect_all_bpy_objects():

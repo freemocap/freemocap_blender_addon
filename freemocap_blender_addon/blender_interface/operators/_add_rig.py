@@ -5,7 +5,7 @@ import time
 from bpy.types import Operator
 
 from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
-from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
+from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 from ...blender_interface.operators._add_body_mesh import REORIENT_EMPTIES_EXECUTED
 from ...freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
     freemocap_empties_from_parent_object
@@ -47,11 +47,11 @@ class FMC_ADAPTER_OT_add_rig(Operator):
 
         print('Executing Add Rig...')
 
-        rig = add_rig(empties=empties,
-                      bone_length_method=fmc_adapter_tool.bone_length_method,
-                      keep_symmetry=fmc_adapter_tool.keep_symmetry,
-                      add_fingers_constraints=fmc_adapter_tool.add_fingers_constraints,
-                      use_limit_rotation=fmc_adapter_tool.use_limit_rotation)
+        rig = generate_rig(empties=empties,
+                           bone_length_method=fmc_adapter_tool.bone_length_method,
+                           keep_symmetry=fmc_adapter_tool.keep_symmetry,
+                           add_fingers_constraints=fmc_adapter_tool.add_fingers_constraints,
+                           use_limit_rotation=fmc_adapter_tool.use_limit_rotation)
 
         # Get end time and print execution time
         end = time.time()

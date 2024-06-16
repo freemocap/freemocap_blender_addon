@@ -23,7 +23,7 @@ class FMC_ADAPTER_run_all(bpy.types.Operator):
             empty_object.name = Path(recording_path).stem
             fmc_adapter_tool.data_parent_empty = empty_object
             pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path)
-            pipeline.run()
+            pipeline.run(show_stages=fmc_adapter_tool.show_stages)
             
         except Exception as e:
             print(traceback.format_exc())

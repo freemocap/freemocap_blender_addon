@@ -1,20 +1,19 @@
 import math as m
 from enum import Enum
 
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BonePoseDefinition, \
-    ROOT_BONE_PARENT_NAME
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_PARENT_NAME, \
+    BonePoseDefinition
 from freemocap_blender_addon.models.skeleton_model.body.segments import SkullSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 
-
-_FREEMOCAP_BODY_TPOSE_DEFINTIONS = {
+_FREEMOCAP_BODY_TPOSE_DEFINITIONS = {
     # Axial segments
     blenderize_name(AxialSegments.LUMBAR.name): BonePoseDefinition(
         rotation=(m.radians(-90), 0, 0),
-        parent_bone_name = ROOT_BONE_PARENT_NAME
+        parent_bone_name=ROOT_BONE_PARENT_NAME
     ),
     blenderize_name(AxialSegments.THORACIC.name): BonePoseDefinition(
         rotation=(0, 0, 0),
@@ -134,7 +133,7 @@ _FREEMOCAP_BODY_TPOSE_DEFINTIONS = {
     ),
 }
 
-BodySkeletonTPoseDefinition = Enum('BodySkeletonTPoseDefinition', _FREEMOCAP_BODY_TPOSE_DEFINTIONS)
+BodySkeletonTPoseDefinition = Enum('BodySkeletonTPoseDefinition', _FREEMOCAP_BODY_TPOSE_DEFINITIONS)
 
 if __name__ == "__main__":
     for name, member in BodySkeletonTPoseDefinition.__members__.items():

@@ -2,16 +2,16 @@ import math as m
 from typing import Dict
 
 import bpy
+from freemocap_blender_addon.models.animation.armatures.armature_bone_info import ArmatureBoneDefinition
 
 from freemocap_blender_addon.core_functions.rig.add_rig import get_appended_number_from_blender_object
 from freemocap_blender_addon.models.animation.armatures import bone_name_map
-from freemocap_blender_addon.models.animation.armatures.armature_bone_info import ArmatureBoneDefinition
 from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
+from freemocap_blender_addon.models.animation.armatures.rest_pose import BonePoseDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseType
 from freemocap_blender_addon.models.animation.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS, \
     ConstraintType, LimitRotationConstraint, CopyLocationConstraint, LockedTrackConstraint, DampedTrackConstraint, \
     IKConstraint
-from freemocap_blender_addon.models.animation.armatures.rest_pose import BonePoseDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseType
 from freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE, FREEMOCAP_TPOSE, \
     FREEMOCAP_APOSE, UE_METAHUMAN_DEFAULT, UE_METAHUMAN_TPOSE
 

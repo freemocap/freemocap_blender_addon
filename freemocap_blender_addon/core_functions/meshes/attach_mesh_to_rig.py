@@ -4,7 +4,7 @@ from typing import Dict
 import bpy
 
 from freemocap_blender_addon.models.animation.bones import BoneDefinition
-from .rigid_body_meshes.helpers.put_rigid_body_meshes_on_empties import put_rigid_body_meshes_on_empties
+from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import put_rigid_body_meshes_on_empties
 
 
 def attach_mesh_to_rig(rig: bpy.types.Object,

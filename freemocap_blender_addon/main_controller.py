@@ -13,7 +13,7 @@ from freemocap_blender_addon.core_functions.meshes.center_of_mass.center_of_mass
 from freemocap_blender_addon.core_functions.meshes.center_of_mass.center_of_mass_trails import \
     create_center_of_mass_trails
 from freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
-from freemocap_blender_addon.core_functions.rig.add_rig import add_rig, AddRigMethods
+from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig, AddRigMethods
 from freemocap_blender_addon.core_functions.rig.save_bone_and_joint_angles_from_rig import \
     save_bone_and_joint_angles_from_rig
 from freemocap_blender_addon.core_functions.setup_scene.make_parent_empties import create_parent_empty
@@ -196,7 +196,7 @@ class MainController(metaclass=SingletonMetaClass):
     def add_rig(self):
         try:
             print("Adding rig...")
-            self.rig = add_rig(
+            self.rig = generate_rig(
                 bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig_name=self.rig_name,
                 parent_object=self._data_parent_object,

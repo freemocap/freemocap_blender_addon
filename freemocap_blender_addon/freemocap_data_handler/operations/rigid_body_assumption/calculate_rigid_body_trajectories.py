@@ -24,7 +24,8 @@ RigidSegmentDefinitions = Dict[str, RigidSegmentDefinition]
 
 
 def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectories,
-                                      skeleton_definition: SkeletonTypes) -> Tuple[
+                                      skeleton_definition: SkeletonTypes,
+                                      scale:float=0.001) -> Tuple[
     KeypointTrajectories, RigidSegmentDefinitions]:
     print(
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
@@ -44,9 +45,10 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectorie
 
     rigid_segment_definitions = {segment.name.lower(): RigidSegmentDefinition(name=segment.name.lower(),
                                                                               length=rigidified_segment_length_stats[
-                                                                                         segment.name.lower()].median * .001,
+                                                                                  segment.name.lower()].median*scale,
                                                                               parent=segment.value.parent.name.lower(),
-                                                                              child=segment.value.child.name.lower())
+                                                                              child=segment.value.child.name.lower()
+                                                                              )
                                  for segment in skeleton_definition.value.get_segments()}
 
     print("Rigidified body segment lengths 👇")

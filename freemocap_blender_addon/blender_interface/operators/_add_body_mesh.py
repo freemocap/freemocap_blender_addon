@@ -6,7 +6,7 @@ from bpy.types import Operator
 
 from freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
 from freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
-from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
+from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 
 REORIENT_EMPTIES_EXECUTED = True
 
@@ -46,7 +46,7 @@ class FMC_ADAPTER_OT_add_body_mesh(Operator):
             root = bpy.data.objects['root']
         except:
             print('Executing Add Rig to have a rig for the mesh...')
-            add_rig(use_limit_rotation=fmc_adapter_tool.use_limit_rotation)
+            generate_rig(use_limit_rotation=fmc_adapter_tool.use_limit_rotation)
 
         try:
             print('Executing Add Body Mesh...')
