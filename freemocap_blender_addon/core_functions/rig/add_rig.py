@@ -7,11 +7,13 @@ from freemocap_blender_addon.core_functions.rig.add_rig_by_bone import add_rig_b
 from freemocap_blender_addon.core_functions.rig.apply_bone_constraints import add_constraints
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
+from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig, AddRigMethods
 
 
 def add_rig(
         segment_definitions: RigidSegmentDefinitions,
+        skeleton_definition: SkeletonTypes,
         rig_name: str,
         parent_object: bpy.types.Object,
         config: AddRigConfig,
@@ -31,7 +33,7 @@ def add_rig(
         rig = add_rig_by_bone(
             rig_name=rig_name,
             segment_definitions=segment_definitions,
-            armature_bones=config.armature_type,
+            skeleton_definition=skeleton_definition,
             pose_definition=config.pose_type,
             add_ik_constraints=config.add_ik_constraints,
         )

@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
-from freemocap_blender_addon.models.animation.poses.pose_types import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
 
 
 @dataclass

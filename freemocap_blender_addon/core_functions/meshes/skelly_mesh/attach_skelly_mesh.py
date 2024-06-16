@@ -15,7 +15,7 @@ from freemocap_blender_addon.models.animation.armatures import (
 from freemocap_blender_addon.models.animation.meshes import (
     SKELLY_BONES
 )
-from freemocap_blender_addon.models.animation.poses import PoseElement
+from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseElement
 from freemocap_blender_addon.system.constants import (
     FREEMOCAP_ARMATURE,
     UE_METAHUMAN_SIMPLE_ARMATURE,

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
+from freemocap_blender_addon.models.animation.armatures.rest_pose import BonePoseDefinition
+
 
 @dataclass
-class ArmatureBoneInfo:
-    parent_bone: str
-    connected: bool = True
-    parent_position: str = "tail"
-    default_length: float = 0
+class ArmatureBoneDefinition:
+    rest_pose: BonePoseDefinition
+    length: float

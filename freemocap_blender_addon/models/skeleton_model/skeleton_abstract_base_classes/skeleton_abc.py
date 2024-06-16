@@ -4,6 +4,7 @@ from typing import List, Set
 
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.chain_abc import ChainABC
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointDefinition
+from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
 
 
@@ -23,6 +24,14 @@ class SkeletonABC(ABC):
     def root(self) -> KeypointDefinition:
         # Skeleton -> Chain -> Linkage -> Segment -> Keypoint
         return self.parent.root
+
+    @classmethod
+    def get_linkages(cls) -> List[LinkageABC]:
+        linkages = []
+        linkages.extend(cls.parent.get_linkages())
+        for chain in cls.children:
+            linkages.extend(chain.get_linkages())
+        return list(set(linkages))
 
     @classmethod
     def get_segments(cls) -> List[SimpleSegmentABC]:

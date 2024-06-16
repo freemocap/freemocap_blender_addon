@@ -1,199 +1,199 @@
 import math as m
 
-from freemocap_blender_addon.models.animation.poses.pose_element import PoseElement
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BonePoseDefinition
 
 freemocap_apose = {
-    "pelvis": PoseElement(
+    "pelvis": BonePoseDefinition(
         rotation=(m.radians(-90), 0, 0),
     ),
-    "pelvis.R": PoseElement(
+    "pelvis.R": BonePoseDefinition(
         rotation=(0, m.radians(-90), 0),
     ),
-    "pelvis.L": PoseElement(
+    "pelvis.L": BonePoseDefinition(
         rotation=(0, m.radians(90), 0),
     ),
-    "spine": PoseElement(
+    "spine": BonePoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "spine.001": PoseElement(
+    "spine.001": BonePoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "neck": PoseElement(
+    "neck": BonePoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "face": PoseElement(
+    "face": BonePoseDefinition(
         rotation=(m.radians(110), 0, 0),
     ),
-    "shoulder.R": PoseElement(
+    "shoulder.R": BonePoseDefinition(
         rotation=(0, m.radians(-90), 0),
     ),
-    "shoulder.L": PoseElement(
+    "shoulder.L": BonePoseDefinition(
         rotation=(0, m.radians(90), 0),
     ),
-    "upper_arm.R": PoseElement(
+    "upper_arm.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
         roll=m.radians(-135),
     ),
-    "upper_arm.L": PoseElement(
+    "upper_arm.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
         roll=m.radians(135),
     ),
-    "forearm.R": PoseElement(
+    "forearm.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(1)),
         roll=m.radians(-135),
     ),
-    "forearm.L": PoseElement(
+    "forearm.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-1)),
         roll=m.radians(135),
     ),
-    "hand.R": PoseElement(
+    "hand.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "hand.L": PoseElement(
+    "hand.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "thumb.carpal.R": PoseElement(
+    "thumb.carpal.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.carpal.L": PoseElement(
+    "thumb.carpal.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.01.R": PoseElement(
+    "thumb.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.01.L": PoseElement(
+    "thumb.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.02.R": PoseElement(
+    "thumb.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.02.L": PoseElement(
+    "thumb.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.03.R": PoseElement(
+    "thumb.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.03.L": PoseElement(
+    "thumb.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "palm.01.R": PoseElement(
+    "palm.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(17)),
     ),
-    "palm.01.L": PoseElement(
+    "palm.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-17)),
     ),
-    "f_index.01.R": PoseElement(
+    "f_index.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.01.L": PoseElement(
+    "f_index.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_index.02.R": PoseElement(
+    "f_index.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.02.L": PoseElement(
+    "f_index.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_index.03.R": PoseElement(
+    "f_index.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.03.L": PoseElement(
+    "f_index.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.02.R": PoseElement(
+    "palm.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(5.5)),
     ),
-    "palm.02.L": PoseElement(
+    "palm.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(-5.5)),
     ),
-    "f_middle.01.R": PoseElement(
+    "f_middle.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.01.L": PoseElement(
+    "f_middle.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_middle.02.R": PoseElement(
+    "f_middle.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.02.L": PoseElement(
+    "f_middle.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_middle.03.R": PoseElement(
+    "f_middle.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.03.L": PoseElement(
+    "f_middle.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.03.R": PoseElement(
+    "palm.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(-7.3)),
     ),
-    "palm.03.L": PoseElement(
+    "palm.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(7.3)),
     ),
-    "f_ring.01.R": PoseElement(
+    "f_ring.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.01.L": PoseElement(
+    "f_ring.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_ring.02.R": PoseElement(
+    "f_ring.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.02.L": PoseElement(
+    "f_ring.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_ring.03.R": PoseElement(
+    "f_ring.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.03.L": PoseElement(
+    "f_ring.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.04.R": PoseElement(
+    "palm.04.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), m.radians(-19)),
     ),
-    "palm.04.L": PoseElement(
+    "palm.04.L": BonePoseDefinition(
         rotation=(0, m.radians(135), m.radians(19)),
     ),
-    "f_pinky.01.R": PoseElement(
+    "f_pinky.01.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.01.L": PoseElement(
+    "f_pinky.01.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_pinky.02.R": PoseElement(
+    "f_pinky.02.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.02.L": PoseElement(
+    "f_pinky.02.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_pinky.03.R": PoseElement(
+    "f_pinky.03.R": BonePoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.03.L": PoseElement(
+    "f_pinky.03.L": BonePoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "thigh.R": PoseElement(
+    "thigh.R": BonePoseDefinition(
         rotation=(m.radians(1), m.radians(180), 0),
     ),
-    "thigh.L": PoseElement(
+    "thigh.L": BonePoseDefinition(
         rotation=(m.radians(1), m.radians(180), 0),
     ),
-    "shin.R": PoseElement(
+    "shin.R": BonePoseDefinition(
         rotation=(m.radians(-1), m.radians(180), 0),
     ),
-    "shin.L": PoseElement(
+    "shin.L": BonePoseDefinition(
         rotation=(m.radians(-1), m.radians(180), 0),
     ),
-    "foot.R": PoseElement(
+    "foot.R": BonePoseDefinition(
         rotation=(m.radians(113), 0, 0),
     ),
-    "foot.L": PoseElement(
+    "foot.L": BonePoseDefinition(
         rotation=(m.radians(113), 0, 0),
     ),
-    "heel.02.R": PoseElement(
+    "heel.02.R": BonePoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
-    "heel.02.L": PoseElement(
+    "heel.02.L": BonePoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
 }

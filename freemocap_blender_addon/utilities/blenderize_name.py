@@ -1,8 +1,8 @@
 import re
 from copy import copy
 
-
-def blenderize_name(original_name: str) -> str:
+BlenderizedName = str
+def blenderize_name(original_name: str) -> BlenderizedName:
     """
     Create a Blender formatted name from the original name.
 

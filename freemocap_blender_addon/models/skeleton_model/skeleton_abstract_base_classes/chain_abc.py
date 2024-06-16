@@ -34,15 +34,20 @@ class ChainABC(ABC):
 
 
     @classmethod
+    def get_keypoints(cls) -> List[KeypointDefinition]:
+        keypoints = cls.parent.get_keypoints()
+        for linkage in cls.children:
+            keypoints.extend(linkage.get_keypoints())
+        return keypoints
+
+    @classmethod
     def get_segments(cls) -> List[SimpleSegmentABC]:
         segments = cls.parent.get_segments()
         for linkage in cls.children:
             segments.extend(linkage.get_segments())
         return segments
 
-    @classmethod
-    def get_keypoints(cls) -> List[KeypointDefinition]:
-        keypoints = cls.parent.get_keypoints()
-        for linkage in cls.children:
-            keypoints.extend(linkage.get_keypoints())
-        return keypoints
+    def get_linkages(self) -> List[LinkageABC]:
+        linkages = [self.parent]
+        linkages.extend(self.children)
+        return linkages

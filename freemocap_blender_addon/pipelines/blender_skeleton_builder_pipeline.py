@@ -9,6 +9,7 @@ from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put
     put_spheres_on_parented_empties
 from freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     KeypointTrajectories
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
@@ -54,6 +55,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
 
             add_rig(
                 segment_definitions=freemocap_data.segment_definitions,
+                skeleton_definition=SkeletonTypes.BODY_ONLY,
                 rig_name=f"{self.recording_name}_rig",
                 parent_object=parented_empties.parent_object,
                 config=self.pipeline_config.add_rig,
