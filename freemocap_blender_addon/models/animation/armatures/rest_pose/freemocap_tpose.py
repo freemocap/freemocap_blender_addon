@@ -23,18 +23,53 @@ _FREEMOCAP_BODY_TPOSE_DEFINITIONS = {
         rotation=(0, 0, 0),
         parent_bone_name=blenderize_name(AxialSegments.THORACIC.name)
     ),
+
+    # Skull segments
     blenderize_name(SkullSegments.NOSE.name): BonePoseDefinition(
         rotation=(m.radians(110), 0, 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.RIGHT_EYE_INNER.name): BonePoseDefinition(
+        rotation=(0, m.radians(-85), 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.RIGHT_EYE_CENTER.name): BonePoseDefinition(
         rotation=(0, m.radians(-90), 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
-    blenderize_name(SkullSegments.LEFT_EYE_CENTER.name): BonePoseDefinition(
+    blenderize_name(SkullSegments.RIGHT_EYE_OUTER.name): BonePoseDefinition(
+        rotation=(0, m.radians(-95), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.RIGHT_EAR_TRAGUS.name): BonePoseDefinition(
+        rotation=(0, m.radians(-100), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.RIGHT_MOUTH.name): BonePoseDefinition(
+        rotation=(0, m.radians(-105), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.LEFT_EYE_INNER.name): BonePoseDefinition(
         rotation=(0, m.radians(90), 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
+    blenderize_name(SkullSegments.LEFT_EYE_CENTER.name): BonePoseDefinition(
+        rotation=(0, m.radians(95), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.LEFT_EYE_OUTER.name): BonePoseDefinition(
+        rotation=(0, m.radians(100), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.LEFT_EAR_TRAGUS.name): BonePoseDefinition(
+        rotation=(0, m.radians(105), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+    blenderize_name(SkullSegments.LEFT_MOUTH.name): BonePoseDefinition(
+        rotation=(0, m.radians(110), 0),
+        parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
+    ),
+
 
     # Right upper limb
     blenderize_name(RightBodySegments.RIGHT_CLAVICLE.name): BonePoseDefinition(

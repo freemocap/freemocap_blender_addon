@@ -46,7 +46,9 @@ def generate_armature(
             # Set the tail position
             rig_bone.tail = rig_bone.head + rotation_matrix @ bone_vector
 
-            rig_bone.parent = armature.data.edit_bones[bone_definition.parent]
+            if not bone_definition.is_root:
+                rig_bone.parent = armature.data.edit_bones[bone_definition.parent]
+
             rig_bone.use_connect = bone_definition.rest_pose.is_connected
 
     # Change mode to object mode

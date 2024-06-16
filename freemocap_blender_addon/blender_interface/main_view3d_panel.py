@@ -54,7 +54,7 @@ class VIEW3D_PT_freemocap(Panel):
         row.label(text="FreeMoCap Recording:")
         row.prop(fmc_adapter_tool, "recording_path", text="")
         box.operator('fmc_adapter._run_all', text='RUN ALL')
-        box.prop(fmc_adapter_tool, "show_stages", text="Show intermediate processing stages")
+        box.prop(fmc_adapter_tool, "show_stages", text="Show intermediate stages")
 
 
     def _save_data_to_disk_panel(self, fmc_adapter_tool, layout):

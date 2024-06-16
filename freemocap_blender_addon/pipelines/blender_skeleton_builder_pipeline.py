@@ -33,8 +33,6 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
         # Pure python stuff
         print("Loading freemocap data....")
         freemocap_data = PurePythonPipeline(recording_path_str=self.recording_path_str).run()
-        empties = {}
-        parents = {}
 
         if show_stages:
             stages_to_show = freemocap_data.trajectories_by_stage
@@ -53,13 +51,13 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                                              segment_definitions=freemocap_data.segment_definitions,
                                              )
 
-            # generate_rig(
-            #         rig_name=f"{self.recording_name}_rig",
-            #         segment_definitions=freemocap_data.segment_definitions,
-            #         pose_definition=PoseTypes.TPOSE,
-            #     parent_object=parented_empties.parent_object,
-            #     config=self.pipeline_config.add_rig,
-            # )
+            generate_rig(
+                rig_name=f"{self.recording_name}_rig",
+                segment_definitions=freemocap_data.segment_definitions,
+                pose_definition=PoseTypes.DEFAULT_TPOSE,
+                parent_object=parented_empties.parent_object,
+                config=self.pipeline_config.add_rig,
+            )
 
 
 def blenderize_trajectories(scale: float,

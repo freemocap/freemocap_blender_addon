@@ -36,7 +36,7 @@ class ArmatureDefinition(TypeSafeDataclass):
         bone_definitions = {}
         for segment_name, segment in segment_definitions.items():
             bone_definitions[blenderize_name(segment_name)] = ArmatureBoneDefinition(
-                rest_pose=pose_definition.value.__members__[blenderize_name(segment_name)],
+                rest_pose=pose_definition.value[blenderize_name(segment_name)].value,
                 length=segment.length,
             )
 
