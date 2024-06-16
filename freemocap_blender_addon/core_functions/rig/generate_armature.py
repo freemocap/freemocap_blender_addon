@@ -13,15 +13,20 @@ def generate_armature(
 
     armature = create_new_armature_and_enter_edit_mode(name=armature_definition.armature_name)
 
-    for bone_name, bone_definition in armature_definition.bone_definitions.items():
-
+    # First loop: Create all bones without setting their positions
+    for bone_name in armature_definition.bone_definitions:
         print(f"Creating armature bone: {bone_name}")
-        # Add the new bone
-        armature_bone = armature.data.edit_bones.new(name=bone_name)
+        armature.data.edit_bones.new(name=bone_name)
 
-        bone_vector = mathutils.Vector(
-            [0, 0, bone_definition.length]
-        )
+    # Second loop: Set positions, rotations, and parent relationships
+    for bone_name, bone_definition in armature_definition.bone_definitions.items():
+        armature_bone = armature.data.edit_bones[bone_name]
+
+        # Set the head position for root bones
+        if bone_definition.is_root:
+            armature_bone.head = (0, 0, 0)  # or whatever the root position should be
+
+        bone_vector = mathutils.Vector([0, 0, bone_definition.length])
 
         # Get the rotation matrix
         rotation_matrix = mathutils.Euler(
@@ -32,12 +37,13 @@ def generate_armature(
         # Set the tail position
         armature_bone.tail = armature_bone.head + rotation_matrix @ bone_vector
 
+    # Third loop: Set head positions relative to parents and parent relationships
     for bone_name, bone_definition in armature_definition.bone_definitions.items():
         armature_bone = armature.data.edit_bones[bone_name]
-        # Set the bone head position relative to its parent
-        armature_bone.head = armature.data.edit_bones[bone_definition.parent].tail
         if not bone_definition.is_root:
-            armature_bone.parent = armature.data.edit_bones[bone_definition.parent]
+            parent_bone = armature.data.edit_bones[bone_definition.parent]
+            armature_bone.head = parent_bone.tail
+            armature_bone.parent = parent_bone
 
         armature_bone.use_connect = bone_definition.rest_pose.is_connected
 

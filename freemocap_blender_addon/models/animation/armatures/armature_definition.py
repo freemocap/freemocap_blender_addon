@@ -23,6 +23,14 @@ class ArmatureBoneDefinition:
     def parent(self):
         return self.rest_pose.parent_bone_name
 
+ROOT_ARMATURE_BONE_DEFINTIION = ArmatureBoneDefinition(
+    rest_pose=BonePoseDefinition(
+        rotation=(0, 0, 0),
+        is_connected=False,
+        parent_bone_name=None,
+    ),
+    length=0.1,
+)
 @dataclass
 class ArmatureDefinition(TypeSafeDataclass):
     armature_name: str
@@ -33,7 +41,7 @@ class ArmatureDefinition(TypeSafeDataclass):
                rig_name: str,
                segment_definitions: RigidSegmentDefinitions,
                pose_definition: PoseTypes):
-        bone_definitions = {}
+        bone_definitions = {ROOT_BONE_NAME: ROOT_ARMATURE_BONE_DEFINTIION}
         for segment_name, segment in segment_definitions.items():
             bone_definitions[blenderize_name(segment_name)] = ArmatureBoneDefinition(
                 rest_pose=pose_definition.value[blenderize_name(segment_name)].value,
