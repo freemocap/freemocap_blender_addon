@@ -54,7 +54,6 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             generate_rig(
                 rig_name=f"{self.recording_name}_rig",
                 segment_definitions=freemocap_data.segment_definitions,
-                pose_definition=PoseTypes.DEFAULT_TPOSE,
                 parent_object=parented_empties.parent_object,
                 config=self.pipeline_config.add_rig,
             )

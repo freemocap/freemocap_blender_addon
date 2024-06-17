@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from enum import Enum
 
-# from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.bones.armature_bone_constraints import \
+    ArmatureBoneConstraintsTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
 
 
 @dataclass
@@ -34,8 +35,8 @@ class AddRigMethods(Enum):
 @dataclass
 class AddRigConfig:
     add_rig_method: AddRigMethods = AddRigMethods.BY_BONE
-    # armature_type: ArmatureType = ArmatureType.FREEMOCAP
-    pose_type: PoseTypes = PoseTypes.DEFAULT_TPOSE
+    rest_pose_definition: RestPoseTypes = RestPoseTypes.DEFAULT_TPOSE
+    bone_constraints: ArmatureBoneConstraintsTypes = ArmatureBoneConstraintsTypes.DEFAULT_SKELETON
     add_ik_constraints: bool = False
     keep_symmetry: bool = False
     add_fingers_constraints: bool = True

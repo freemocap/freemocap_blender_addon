@@ -8,7 +8,7 @@ from freemocap_blender_addon.models.animation.armatures.bones.armature_bone_cons
     ArmatureBoneConstraintsTypes
 from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
-from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name, BlenderizedName
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
@@ -40,7 +40,7 @@ class ArmatureDefinition(TypeSafeDataclass):
     def create(cls,
                rig_name: str,
                segment_definitions: RigidSegmentDefinitions,
-               pose_definition: PoseTypes,
+               pose_definition: RestPoseTypes,
                bone_constraints: ArmatureBoneConstraintsTypes) -> 'ArmatureDefinition':
         bone_definitions = {}
         for segment_name, segment in segment_definitions.items():
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     armature_definition = ArmatureDefinition.create(
         rig_name="rig",
         segment_definitions=segment_definitions_outer,
-        pose_definition=PoseTypes.DEFAULT_TPOSE,
-        bone_constraints=ArmatureBoneConstraintsTypes.DEFAULT,
+        pose_definition=RestPoseTypes.DEFAULT_TPOSE,
+        bone_constraints=ArmatureBoneConstraintsTypes.DEFAULT_SKELETON
     )
     print(armature_definition)

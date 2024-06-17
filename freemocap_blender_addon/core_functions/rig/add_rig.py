@@ -9,14 +9,12 @@ from freemocap_blender_addon.core_functions.rig.generate_armature import generat
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
 
 def generate_rig(
         rig_name: str,
         segment_definitions: RigidSegmentDefinitions,
-        pose_definition: PoseTypes,
         parent_object: bpy.types.Object,
         config: AddRigConfig,
 ) -> bpy.types.Object:
@@ -28,11 +26,13 @@ def generate_rig(
     deselect_all_bpy_objects()
 
     print("Generating armature from segment legnths and rest pose defintions...")
-    armature = generate_armature(armature_definition=ArmatureDefinition.create(
+    armature_definition = ArmatureDefinition.create(
         rig_name=rig_name,
         segment_definitions=segment_definitions,
-        pose_definition=pose_definition,
-    ))
+        pose_definition=config.rest_pose_definition,
+        bone_constraints=config.bone_constraints,
+    )
+    armature = generate_armature(armature_definition=armature_definition)
     if config.add_ik_constraints:
         add_ik_constraints_to_armature(armature=armature)
 
@@ -41,10 +41,8 @@ def generate_rig(
 
     add_bone_constraints(
         armature=armature,
-        add_fingers_constraints=config.add_fingers_constraints,
+        bone_constraints = config.bone_constraints,
         parent_object=parent_object,
-        armature=config.armature_type,
-        pose=config.pose_type,
         use_limit_rotation=config.use_limit_rotation,
     )
 
