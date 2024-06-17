@@ -32,8 +32,8 @@ def generate_rig(
         segment_definitions=segment_definitions,
         pose_definition=pose_definition,
     ))
-
-    add_ik_constraints_to_armature(armature=armature, config=config)
+    if config.add_ik_constraints:
+        add_ik_constraints_to_armature(armature=armature)
 
     # Change mode to object mode
     # bpy.ops.object.mode_set(mode="OBJECT")
