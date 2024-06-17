@@ -16,7 +16,7 @@ from freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATUR
     FREEMOCAP_APOSE, UE_METAHUMAN_DEFAULT, UE_METAHUMAN_TPOSE
 
 
-def add_constraints(
+def add_bone_constraints(
         rig: bpy.types.Object,
         add_fingers_constraints: bool,
         parent_object: bpy.types.Object,
@@ -43,7 +43,7 @@ def add_constraints(
         raise ValueError("Invalid pose name")
 
     print("Adding bone constraints...")
-    # TODO: getting key error in this function with Failed to add rig: 'bpy_prop_collection[key]: key "pelvis.R" not found'
+
     # Change to pose mode
     bpy.context.view_layer.objects.active = rig
     bpy.ops.object.mode_set(mode="POSE")

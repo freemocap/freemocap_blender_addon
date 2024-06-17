@@ -5,7 +5,7 @@ from typing import Dict, Tuple, List
 
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BonePoseDefinition, \
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name, BlenderizedName
@@ -14,7 +14,7 @@ from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDatacl
 
 @dataclass
 class ArmatureBoneDefinition:
-    rest_pose: BonePoseDefinition
+    rest_pose: BoneRestPoseDefinition
     length: float
 
     @property

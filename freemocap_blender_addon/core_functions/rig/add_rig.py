@@ -38,8 +38,8 @@ def generate_rig(
     # Change mode to object mode
     # bpy.ops.object.mode_set(mode="OBJECT")
 
-    # add_constraints(
-    #     rig=rig,
+    # add_bone_constraints(
+    #     armature=armature,
     #     add_fingers_constraints=config.add_fingers_constraints,
     #     parent_object=parent_object,
     #     armature=config.armature_type,

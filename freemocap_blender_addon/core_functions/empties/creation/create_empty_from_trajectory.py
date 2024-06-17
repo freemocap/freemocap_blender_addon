@@ -9,7 +9,7 @@ from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classe
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
-@dataclass
+@dataclass  
 class ParentedEmpties(TypeSafeDataclass):
     empties: Dict[str, bpy.types.Object]
     parent_object: bpy.types.Object

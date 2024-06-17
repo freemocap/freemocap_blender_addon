@@ -1,199 +1,199 @@
 import math as m
 
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BonePoseDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition
 
 freemocap_apose = {
-    "pelvis": BonePoseDefinition(
+    "pelvis": BoneRestPoseDefinition(
         rotation=(m.radians(-90), 0, 0),
     ),
-    "pelvis.R": BonePoseDefinition(
+    "pelvis.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-90), 0),
     ),
-    "pelvis.L": BonePoseDefinition(
+    "pelvis.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(90), 0),
     ),
-    "spine": BonePoseDefinition(
+    "spine": BoneRestPoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "spine.001": BonePoseDefinition(
+    "spine.001": BoneRestPoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "neck": BonePoseDefinition(
+    "neck": BoneRestPoseDefinition(
         rotation=(0, 0, 0),
     ),
-    "face": BonePoseDefinition(
+    "face": BoneRestPoseDefinition(
         rotation=(m.radians(110), 0, 0),
     ),
-    "shoulder.R": BonePoseDefinition(
+    "shoulder.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-90), 0),
     ),
-    "shoulder.L": BonePoseDefinition(
+    "shoulder.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(90), 0),
     ),
-    "upper_arm.R": BonePoseDefinition(
+    "upper_arm.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
         roll=m.radians(-135),
     ),
-    "upper_arm.L": BonePoseDefinition(
+    "upper_arm.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
         roll=m.radians(135),
     ),
-    "forearm.R": BonePoseDefinition(
+    "forearm.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(1)),
         roll=m.radians(-135),
     ),
-    "forearm.L": BonePoseDefinition(
+    "forearm.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-1)),
         roll=m.radians(135),
     ),
-    "hand.R": BonePoseDefinition(
+    "hand.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "hand.L": BonePoseDefinition(
+    "hand.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "thumb.carpal.R": BonePoseDefinition(
+    "thumb.carpal.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.carpal.L": BonePoseDefinition(
+    "thumb.carpal.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.01.R": BonePoseDefinition(
+    "thumb.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.01.L": BonePoseDefinition(
+    "thumb.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.02.R": BonePoseDefinition(
+    "thumb.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.02.L": BonePoseDefinition(
+    "thumb.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "thumb.03.R": BonePoseDefinition(
+    "thumb.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(45)),
     ),
-    "thumb.03.L": BonePoseDefinition(
+    "thumb.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-45)),
     ),
-    "palm.01.R": BonePoseDefinition(
+    "palm.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(17)),
     ),
-    "palm.01.L": BonePoseDefinition(
+    "palm.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-17)),
     ),
-    "f_index.01.R": BonePoseDefinition(
+    "f_index.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.01.L": BonePoseDefinition(
+    "f_index.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_index.02.R": BonePoseDefinition(
+    "f_index.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.02.L": BonePoseDefinition(
+    "f_index.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_index.03.R": BonePoseDefinition(
+    "f_index.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_index.03.L": BonePoseDefinition(
+    "f_index.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.02.R": BonePoseDefinition(
+    "palm.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(5.5)),
     ),
-    "palm.02.L": BonePoseDefinition(
+    "palm.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(-5.5)),
     ),
-    "f_middle.01.R": BonePoseDefinition(
+    "f_middle.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.01.L": BonePoseDefinition(
+    "f_middle.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_middle.02.R": BonePoseDefinition(
+    "f_middle.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.02.L": BonePoseDefinition(
+    "f_middle.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_middle.03.R": BonePoseDefinition(
+    "f_middle.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_middle.03.L": BonePoseDefinition(
+    "f_middle.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.03.R": BonePoseDefinition(
+    "palm.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(-7.3)),
     ),
-    "palm.03.L": BonePoseDefinition(
+    "palm.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(7.3)),
     ),
-    "f_ring.01.R": BonePoseDefinition(
+    "f_ring.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.01.L": BonePoseDefinition(
+    "f_ring.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_ring.02.R": BonePoseDefinition(
+    "f_ring.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.02.L": BonePoseDefinition(
+    "f_ring.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_ring.03.R": BonePoseDefinition(
+    "f_ring.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_ring.03.L": BonePoseDefinition(
+    "f_ring.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "palm.04.R": BonePoseDefinition(
+    "palm.04.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), m.radians(-19)),
     ),
-    "palm.04.L": BonePoseDefinition(
+    "palm.04.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), m.radians(19)),
     ),
-    "f_pinky.01.R": BonePoseDefinition(
+    "f_pinky.01.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.01.L": BonePoseDefinition(
+    "f_pinky.01.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_pinky.02.R": BonePoseDefinition(
+    "f_pinky.02.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.02.L": BonePoseDefinition(
+    "f_pinky.02.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "f_pinky.03.R": BonePoseDefinition(
+    "f_pinky.03.R": BoneRestPoseDefinition(
         rotation=(0, m.radians(-135), 0),
     ),
-    "f_pinky.03.L": BonePoseDefinition(
+    "f_pinky.03.L": BoneRestPoseDefinition(
         rotation=(0, m.radians(135), 0),
     ),
-    "thigh.R": BonePoseDefinition(
+    "thigh.R": BoneRestPoseDefinition(
         rotation=(m.radians(1), m.radians(180), 0),
     ),
-    "thigh.L": BonePoseDefinition(
+    "thigh.L": BoneRestPoseDefinition(
         rotation=(m.radians(1), m.radians(180), 0),
     ),
-    "shin.R": BonePoseDefinition(
+    "shin.R": BoneRestPoseDefinition(
         rotation=(m.radians(-1), m.radians(180), 0),
     ),
-    "shin.L": BonePoseDefinition(
+    "shin.L": BoneRestPoseDefinition(
         rotation=(m.radians(-1), m.radians(180), 0),
     ),
-    "foot.R": BonePoseDefinition(
+    "foot.R": BoneRestPoseDefinition(
         rotation=(m.radians(113), 0, 0),
     ),
-    "foot.L": BonePoseDefinition(
+    "foot.L": BoneRestPoseDefinition(
         rotation=(m.radians(113), 0, 0),
     ),
-    "heel.02.R": BonePoseDefinition(
+    "heel.02.R": BoneRestPoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
-    "heel.02.L": BonePoseDefinition(
+    "heel.02.L": BoneRestPoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
 }

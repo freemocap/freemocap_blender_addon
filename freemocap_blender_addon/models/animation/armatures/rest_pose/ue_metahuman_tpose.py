@@ -1,72 +1,72 @@
 import math as m
 
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BonePoseDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition
 
 ue_metahuman_tpose = {
-    "pelvis": BonePoseDefinition(
+    "pelvis": BoneRestPoseDefinition(
         rotation=(
             m.radians(-90),
             0,
             0,
         ),
     ),
-    "pelvis_r": BonePoseDefinition(
+    "pelvis_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
             0,
         ),
     ),
-    "pelvis_l": BonePoseDefinition(
+    "pelvis_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
             0,
         ),
     ),
-    "spine_01": BonePoseDefinition(
+    "spine_01": BoneRestPoseDefinition(
         rotation=(
             m.radians(6),
             0,
             0,
         ),
     ),
-    "spine_04": BonePoseDefinition(
+    "spine_04": BoneRestPoseDefinition(
         rotation=(
             m.radians(-9.86320126530132),
             0,
             0,
         ),
     ),
-    "neck_01": BonePoseDefinition(
+    "neck_01": BoneRestPoseDefinition(
         rotation=(
             m.radians(11.491515802111422),
             0,
             0,
         ),
     ),
-    "face": BonePoseDefinition(
+    "face": BoneRestPoseDefinition(
         rotation=(
             m.radians(110),
             0,
             0,
         ),
     ),
-    "clavicle_r": BonePoseDefinition(
+    "clavicle_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
             0,
         ),
     ),
-    "clavicle_l": BonePoseDefinition(
+    "clavicle_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
             0,
         ),
     ),
-    "upperarm_r": BonePoseDefinition(
+    "upperarm_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -74,7 +74,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-90),
     ),
-    "upperarm_l": BonePoseDefinition(
+    "upperarm_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -82,7 +82,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(90),
     ),
-    "lowerarm_r": BonePoseDefinition(
+    "lowerarm_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -90,7 +90,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-90),
     ),
-    "lowerarm_l": BonePoseDefinition(
+    "lowerarm_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -98,7 +98,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(90),
     ),
-    "hand_r": BonePoseDefinition(
+    "hand_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -106,7 +106,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-90),
     ),
-    "hand_l": BonePoseDefinition(
+    "hand_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -114,7 +114,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(90),
     ),
-    "thumb_metacarpal_r": BonePoseDefinition(
+    "thumb_metacarpal_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -122,7 +122,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-69),
     ),
-    "thumb_01_r": BonePoseDefinition(
+    "thumb_01_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -130,7 +130,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-69),
     ),
-    "thumb_02_r": BonePoseDefinition(
+    "thumb_02_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -138,7 +138,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-69),
     ),
-    "thumb_03_r": BonePoseDefinition(
+    "thumb_03_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -146,7 +146,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-69),
     ),
-    "thumb_metacarpal_l": BonePoseDefinition(
+    "thumb_metacarpal_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -154,7 +154,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(69),
     ),
-    "thumb_01_l": BonePoseDefinition(
+    "thumb_01_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -162,7 +162,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(69),
     ),
-    "thumb_02_l": BonePoseDefinition(
+    "thumb_02_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -170,7 +170,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(69),
     ),
-    "thumb_03_l": BonePoseDefinition(
+    "thumb_03_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -178,7 +178,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(69),
     ),
-    "index_metacarpal_r": BonePoseDefinition(
+    "index_metacarpal_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -186,7 +186,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_01_r": BonePoseDefinition(
+    "index_01_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -194,7 +194,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_02_r": BonePoseDefinition(
+    "index_02_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -202,7 +202,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_03_r": BonePoseDefinition(
+    "index_03_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -210,7 +210,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_metacarpal_l": BonePoseDefinition(
+    "index_metacarpal_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -218,7 +218,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_01_l": BonePoseDefinition(
+    "index_01_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -226,7 +226,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_02_l": BonePoseDefinition(
+    "index_02_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -234,7 +234,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "index_03_l": BonePoseDefinition(
+    "index_03_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -242,7 +242,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_metacarpal_r": BonePoseDefinition(
+    "middle_metacarpal_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -250,7 +250,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_01_r": BonePoseDefinition(
+    "middle_01_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -258,7 +258,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_02_r": BonePoseDefinition(
+    "middle_02_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -266,7 +266,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_03_r": BonePoseDefinition(
+    "middle_03_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -274,7 +274,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_metacarpal_l": BonePoseDefinition(
+    "middle_metacarpal_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -282,7 +282,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_01_l": BonePoseDefinition(
+    "middle_01_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -290,7 +290,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_02_l": BonePoseDefinition(
+    "middle_02_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -298,7 +298,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "middle_03_l": BonePoseDefinition(
+    "middle_03_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -306,7 +306,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_metacarpal_r": BonePoseDefinition(
+    "ring_metacarpal_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -314,7 +314,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_01_r": BonePoseDefinition(
+    "ring_01_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -322,7 +322,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_02_r": BonePoseDefinition(
+    "ring_02_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -330,7 +330,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_03_r": BonePoseDefinition(
+    "ring_03_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -338,7 +338,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_metacarpal_l": BonePoseDefinition(
+    "ring_metacarpal_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -346,10 +346,10 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "ring_01_l": BonePoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
-    "ring_02_l": BonePoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
-    "ring_03_l": BonePoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
-    "pinky_metacarpal_r": BonePoseDefinition(
+    "ring_01_l": BoneRestPoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
+    "ring_02_l": BoneRestPoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
+    "ring_03_l": BoneRestPoseDefinition(rotation=(0, m.radians(90), 0), roll=m.radians(0)),
+    "pinky_metacarpal_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -357,7 +357,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_01_r": BonePoseDefinition(
+    "pinky_01_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -365,7 +365,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_02_r": BonePoseDefinition(
+    "pinky_02_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -373,7 +373,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_03_r": BonePoseDefinition(
+    "pinky_03_r": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(-90),
@@ -381,7 +381,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_metacarpal_l": BonePoseDefinition(
+    "pinky_metacarpal_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -389,7 +389,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_01_l": BonePoseDefinition(
+    "pinky_01_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -397,7 +397,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_02_l": BonePoseDefinition(
+    "pinky_02_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -405,7 +405,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "pinky_03_l": BonePoseDefinition(
+    "pinky_03_l": BoneRestPoseDefinition(
         rotation=(
             0,
             m.radians(90),
@@ -413,7 +413,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(0),
     ),
-    "thigh_r": BonePoseDefinition(
+    "thigh_r": BoneRestPoseDefinition(
         rotation=(
             m.radians(1),
             m.radians(-176.63197042733134),
@@ -421,7 +421,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(101),
     ),
-    "thigh_l": BonePoseDefinition(
+    "thigh_l": BoneRestPoseDefinition(
         rotation=(
             m.radians(1),
             m.radians(176.63197042733134),
@@ -429,7 +429,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-101),
     ),
-    "calf_r": BonePoseDefinition(
+    "calf_r": BoneRestPoseDefinition(
         rotation=(
             m.radians(-175.12260790378525),
             m.radians(-2.6481038282450826),
@@ -437,7 +437,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(101),
     ),
-    "calf_l": BonePoseDefinition(
+    "calf_l": BoneRestPoseDefinition(
         rotation=(
             m.radians(-175.12259424340692),
             m.radians(2.648141394285518),
@@ -445,7 +445,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-101),
     ),
-    "foot_r": BonePoseDefinition(
+    "foot_r": BoneRestPoseDefinition(
         rotation=(
             m.radians(106.8930615673465),
             m.radians(-8.188085418524645),
@@ -453,7 +453,7 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(90),
     ),
-    "foot_l": BonePoseDefinition(
+    "foot_l": BoneRestPoseDefinition(
         rotation=(
             m.radians(107.86645231653254),
             m.radians(8.93590490150277),
@@ -461,10 +461,10 @@ ue_metahuman_tpose = {
         ),
         roll=m.radians(-90),
     ),
-    "heel_r": BonePoseDefinition(
+    "heel_r": BoneRestPoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
-    "heel_l": BonePoseDefinition(
+    "heel_l": BoneRestPoseDefinition(
         rotation=(m.radians(195), 0, 0),
     ),
 }

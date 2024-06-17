@@ -6,10 +6,11 @@ import math as m
 
 ROOT_BONE_NAME = "ROOT"
 @dataclass
-class BonePoseDefinition:
+class BoneRestPoseDefinition:
     parent_bone_name: Optional[str]
     world_rotation_degrees: Tuple[float, float, float] = (0, 0, 0) #rotation defined relative to parent bone's reference frame
     offset: Tuple[float, float, float] = (0, 0, 0)
+    roll: float = 0
     is_connected: bool = True
 
     def __str__(self):
