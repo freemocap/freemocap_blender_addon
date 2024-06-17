@@ -47,7 +47,7 @@ def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
     for trajectory_name, trajectory in trajectories.items():
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
             trajectory_fr_xyz=trajectory,
-            trajectory_name=f"{trajectory_name}",
+            trajectory_name=trajectory_name,
             parent_object=parent_object,
             empty_scale=empty_scale,
             empty_type=empty_type,

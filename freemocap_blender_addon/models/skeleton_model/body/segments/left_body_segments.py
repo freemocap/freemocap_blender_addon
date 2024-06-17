@@ -3,6 +3,7 @@ from enum import Enum
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, LeftArmKeypoints, \
     LeftMittenHandKeypoints, LeftLegKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 
 
 # arm
@@ -75,7 +76,11 @@ class LeftBodySegments(Enum):
     LEFT_FORE_FOOT: SimpleSegmentABC = LeftForeFootSegment
     LEFT_HEEL: SimpleSegmentABC = LeftHeelSegment
 
+BlenderizedLeftBodySegments = Enum("BlenderizedLeftBodySegments", {name: blenderize_name(name) for name in list(LeftBodySegments.__members__.keys())})
 
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}"
                      for rb in list(LeftBodySegments)]))
+
+    print("Blenderized names:")
+    print("\n".join([f"{rb.name}: {rb.value}" for rb in list(BlenderizedLeftBodySegments)]))

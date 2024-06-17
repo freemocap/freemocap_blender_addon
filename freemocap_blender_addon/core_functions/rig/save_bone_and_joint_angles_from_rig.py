@@ -4,7 +4,7 @@ from typing import Dict
 
 import bpy
 
-from freemocap_blender_addon.models.animation.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS
+from freemocap_blender_addon.models.animation.armatures.bones import BODY_SKELETON_BONE_CONSTRAINTS
 
 
 def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,
@@ -22,7 +22,7 @@ def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,
         frame_data = {}
         all_bone_data[frame_number] = frame_data
         for bone in rig.pose.bones:
-            if bone.name not in ALL_BONES_CONSTRAINT_DEFINITIONS.keys():
+            if bone.name not in BODY_SKELETON_BONE_CONSTRAINTS.keys():
                 continue
             frame_data[bone.name] = get_bone_data(bone)
 

@@ -1,8 +1,8 @@
 import bpy
 import mathutils
 
-from freemocap_blender_addon.models.animation.bones.ik_control_bones import ik_control_bones
-from freemocap_blender_addon.models.animation.bones.ik_pole_bones import ik_pole_bones
+from freemocap_blender_addon.models.animation.armatures.bones import ik_control_bones
+from freemocap_blender_addon.models.animation.armatures.bones.ik_pole_bones import ik_pole_bones
 
 
 def add_ik_constraints_to_armature(armature=bpy.types.Object) -> bpy.types.Object:

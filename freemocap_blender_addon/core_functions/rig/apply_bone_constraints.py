@@ -9,9 +9,9 @@ from freemocap_blender_addon.models.animation.armatures import bone_name_map
 from freemocap_blender_addon.models.animation.armatures.armature_types import ArmatureType
 from freemocap_blender_addon.models.animation.armatures.rest_pose import BonePoseDefinition
 from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseType
-from freemocap_blender_addon.models.animation.bones.bone_constraints import ALL_BONES_CONSTRAINT_DEFINITIONS, \
-    ConstraintType, LimitRotationConstraint, CopyLocationConstraint, LockedTrackConstraint, DampedTrackConstraint, \
-    IKConstraint
+from freemocap_blender_addon.models.animation.armatures.bones import BODY_SKELETON_BONE_CONSTRAINTS
+from freemocap_blender_addon.models.animation.armatures.bones import ConstraintType, CopyLocationConstraint, \
+    LockedTrackConstraint, DampedTrackConstraint, LimitRotationConstraint, IKConstraint
 from freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE, FREEMOCAP_TPOSE, \
     FREEMOCAP_APOSE, UE_METAHUMAN_DEFAULT, UE_METAHUMAN_TPOSE
 
@@ -61,7 +61,7 @@ def add_bone_constraints(
     for (
             bone_name,
             constraint_definitions,
-    ) in ALL_BONES_CONSTRAINT_DEFINITIONS.items():
+    ) in BODY_SKELETON_BONE_CONSTRAINTS.items():
         # If pose bone does not exist, skip it
         if bone_name not in rig.pose.bones:
             continue

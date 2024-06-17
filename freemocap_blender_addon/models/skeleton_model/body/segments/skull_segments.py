@@ -3,6 +3,7 @@ from enum import Enum
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import SkullKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 
 
 class SkullSegment(CompoundSegmentABC):
@@ -101,8 +102,12 @@ class SkullSegments(Enum):
     LEFT_EAR_TRAGUS: SimpleSegmentABC = SkullLeftEarTragusSegment
     LEFT_MOUTH: SimpleSegmentABC = SkullLeftMouthSegment
 
+BlenderizedSkullSegments = Enum("BlenderizedSkullSegments", {name: blenderize_name(name) for name in list(SkullSegments.__members__.keys())})
 
 # Example usage
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}" for rb in
                      list(SkullSegments)]))
+
+    print("Blenderized Skull Segments:")
+    print("\n".join([f"{sk.name}: {sk.value}" for sk in list(BlenderizedSkullSegments)]))

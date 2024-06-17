@@ -2,11 +2,9 @@ import bpy
 import mathutils
 
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
-from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose import ROOT_BONE_NAME
+from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-
-
 
 
 def generate_armature(
@@ -28,7 +26,6 @@ def generate_armature(
 
             bone_vector = mathutils.Vector([0, 0, bone_definition.length])
 
-
             parent_bone = armature.data.edit_bones[bone_definition.parent]
 
             armature_bone.head = parent_bone.tail
@@ -47,9 +44,9 @@ def assign_bone_color(bone: bpy.types.EditBone):
     if bone.name.endswith('.L'):
         bone.color.palette = 'THEME04'  # Blue
     elif bone.name.endswith('.R'):
-        bone.color.palette = 'THEME01' # Red
+        bone.color.palette = 'THEME01'  # Red
     else:
-        bone.color.palette = 'THEME09' # Yellow
+        bone.color.palette = 'THEME03'  # Green
 
 
 def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:

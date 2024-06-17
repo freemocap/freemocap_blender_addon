@@ -11,7 +11,7 @@ from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put
     put_spheres_on_parented_empties
 from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
-from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name

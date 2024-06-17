@@ -1,10 +1,11 @@
-from collections import defaultdict, deque
-from dataclasses import dataclass
 import pprint
-from typing import Dict, Tuple, List
+from dataclasses import dataclass
+from typing import Dict
 
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
+from freemocap_blender_addon.models.animation.armatures.bones.armature_bone_constraints import \
+    ArmatureBoneConstraintsTypes
 from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
@@ -15,6 +16,7 @@ from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDatacl
 @dataclass
 class ArmatureBoneDefinition:
     rest_pose: BoneRestPoseDefinition
+    constraints: ArmatureBoneConstraintsTypes
     length: float
 
     @property
@@ -29,8 +31,6 @@ class ArmatureBoneDefinition:
         return f"ArmatureBoneDefinition: {self.rest_pose} with length {self.length}"
 
 
-
-
 @dataclass
 class ArmatureDefinition(TypeSafeDataclass):
     armature_name: str
@@ -40,11 +40,13 @@ class ArmatureDefinition(TypeSafeDataclass):
     def create(cls,
                rig_name: str,
                segment_definitions: RigidSegmentDefinitions,
-               pose_definition: PoseTypes):
+               pose_definition: PoseTypes,
+               bone_constraints: ArmatureBoneConstraintsTypes) -> 'ArmatureDefinition':
         bone_definitions = {}
         for segment_name, segment in segment_definitions.items():
             bone_definitions[blenderize_name(segment_name)] = ArmatureBoneDefinition(
                 rest_pose=pose_definition.value[blenderize_name(segment_name)].value,
+                constraints=bone_constraints.value[blenderize_name(segment_name)].value,
                 length=segment.length,
             )
 
@@ -55,7 +57,6 @@ class ArmatureDefinition(TypeSafeDataclass):
 
     def __str__(self):
         return f"ArmatureDefinition: {self.armature_name} with bones: {pprint.pformat(self.bone_definitions, indent=4)}"
-
 
 
 if __name__ == "__main__":
@@ -69,9 +70,10 @@ if __name__ == "__main__":
         keypoint_trajectories=recording_data.body.map_to_keypoints(),
         skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-    armature_definition=ArmatureDefinition.create(
+    armature_definition = ArmatureDefinition.create(
         rig_name="rig",
         segment_definitions=segment_definitions_outer,
         pose_definition=PoseTypes.DEFAULT_TPOSE,
+        bone_constraints=ArmatureBoneConstraintsTypes.DEFAULT,
     )
     print(armature_definition)

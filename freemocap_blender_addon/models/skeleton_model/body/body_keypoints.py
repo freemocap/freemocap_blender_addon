@@ -1,5 +1,7 @@
 from enum import Enum
 
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+
 
 class SkullKeypoints(Enum):
     ## head
@@ -105,6 +107,11 @@ combined_keypoints = combine_enums(
 
 BodyKeypoints = Enum('BodyKeypoints', combined_keypoints)
 
+BlenderizedKeypointNames = Enum('BlenderizedKeypointNames',
+                                {key: blenderize_name(key) for key in combined_keypoints.keys()})
 # Example usage
 if __name__ == "__main__":
     print("\n".join([f"{kp.name}: {kp.value}" for kp in list(BodyKeypoints)]))
+
+    print("Blenderized Keypoint Names:")
+    print("\n".join([f"{bpn.name}: {bpn.value}" for bpn in list(BlenderizedKeypointNames)]))

@@ -7,7 +7,7 @@ from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classe
 
 
 class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervical vertebra (C1)
-    parent = AxialSegments.CERVICAL
+    parent = AxialSegments.CERVICAL_SPINE
     children = [SkullSegments.NOSE,
                 SkullSegments.RIGHT_EYE_INNER,
                 SkullSegments.RIGHT_EYE_CENTER,
@@ -23,15 +23,15 @@ class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervi
 
 
 class NeckC7Linkage(LinkageABC):
-    parent = AxialSegments.THORACIC
-    children = [AxialSegments.CERVICAL,
+    parent = AxialSegments.THORACIC_SPINE
+    children = [AxialSegments.CERVICAL_SPINE,
                 RightBodySegments.RIGHT_CLAVICLE,
                 LeftBodySegments.LEFT_CLAVICLE]
     linked_keypoint = AxialSkeletonKeypoints.NECK_BASE_C7
 
 
 class ChestT12Linkage(LinkageABC):
-    parent = AxialSegments.LUMBAR
-    children = [AxialSegments.LUMBAR,
-                AxialSegments.THORACIC]
+    parent = AxialSegments.LUMBAR_SPINE
+    children = [AxialSegments.LUMBAR_SPINE,
+                AxialSegments.THORACIC_SPINE]
     linked_keypoint = AxialSkeletonKeypoints.CHEST_CENTER_T12
