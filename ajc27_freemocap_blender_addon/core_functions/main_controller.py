@@ -243,7 +243,7 @@ class MainController:
                 parent_object=self._rigid_body_meshes_parent_object,
             )
         except Exception as e:
-            print(f"Failed to attach mesh to rig: {e}")
+            print(f"Failed to attach rigid bone meshes to rig: {e}")
             print(e)
             raise e
 
@@ -259,7 +259,7 @@ class MainController:
                 empties=self.empties
             )
         except Exception as e:
-            print(f"Failed to attach mesh to rig: {e}")
+            print(f"Failed to attach skelly mesh to rig: {e}")
             print(e)
             raise e
 
@@ -272,7 +272,7 @@ class MainController:
                 center_of_mass_empty=self.center_of_mass_empty,
             )
         except Exception as e:
-            print(f"Failed to attach mesh to rig: {e}")
+            print(f"Failed to attach center of mass mesh to rig: {e}")
             print(e)
             raise e
 
@@ -292,7 +292,7 @@ class MainController:
             )
 
         except Exception as e:
-            print(f"Failed to attach mesh to rig: {e}")
+            print(f"Failed to attach Center of Mass trail meshes to rig: {e}")
             print(e)
             raise e
 

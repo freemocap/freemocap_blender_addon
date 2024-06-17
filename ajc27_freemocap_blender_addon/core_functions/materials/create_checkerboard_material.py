@@ -19,7 +19,8 @@ def create_checker_texture(material,
                            noise_scale: float,
                            square_scale: float) -> Tuple[bpy.types.NodeTree, bpy.types.Node]:
     nodes = material.node_tree.nodes
-    nodes.remove(nodes.get('Principled BSDF'))
+    if nodes.get('Principled BSDF'):
+        nodes.remove(nodes.get('Principled BSDF'))
     checker_node = nodes.new(type='ShaderNodeTexChecker')
 
     checker_node.inputs[1].default_value = color1
