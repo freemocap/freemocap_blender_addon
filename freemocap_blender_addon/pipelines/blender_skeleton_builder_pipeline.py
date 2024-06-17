@@ -8,6 +8,7 @@ from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_t
     create_empties_from_trajectories
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
+from freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_bone_meshes
 from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
@@ -56,11 +57,14 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                                              segment_definitions=blenderized_segment_definitions,
                                              )
 
-            generate_rig(
+            rig = generate_rig(
                 rig_name=f"{self.recording_name}_rig",
                 segment_definitions=blenderized_segment_definitions,
                 parent_object=parented_empties.parent_object,
                 config=self.pipeline_config.add_rig,
+            )
+            attach_skelly_bone_meshes(
+                rig=rig,
             )
         print(f"Finished building blender skeleton for recording: {self.recording_name}")
 

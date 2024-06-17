@@ -1,69 +1,20 @@
 import traceback
-from enum import Enum
 from pathlib import Path
 from typing import Dict
 
 import bpy
-from freemocap_blender_addon.models.data_references import ArmatureType, PoseType
 from mathutils import Vector, Matrix, Euler
 
 from freemocap_blender_addon import PACKAGE_ROOT_PATH
-from freemocap_blender_addon.models.animation.armatures import ArmatureBoneInfo
 from freemocap_blender_addon.models.animation.armatures import (
     bone_name_map,
 )
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseElement
-from freemocap_blender_addon.models.animation.meshes import (
-    SKELLY_BONES
-)
-from freemocap_blender_addon.system.constants import (
-    FREEMOCAP_ARMATURE,
-    UE_METAHUMAN_SIMPLE_ARMATURE,
-)
+from freemocap_blender_addon.models.animation.meshes.skelly_bones import SKELLY_BONES
 
-SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")
-SKELLY_BONES_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones")
+SKELLY_BONE_MESHES_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones")
 
 
-class AddSkellyMeshMethods(Enum):
-    BY_BONE_MESH = "by_bone_mesh"
-    COMPLETE_MESH = "complete_mesh"
-
-
-def attach_skelly_mesh_to_rig(
-        rig: bpy.types.Object,
-        body_dimensions: Dict[str, float],
-        add_mesh_method: AddSkellyMeshMethods = AddSkellyMeshMethods.BY_BONE_MESH,
-) -> None:
-    # Change to object mode
-    if bpy.context.selected_objects != []:
-        bpy.ops.object.mode_set(mode='OBJECT')
-
-    if add_mesh_method == AddSkellyMeshMethods.BY_BONE_MESH:
-        attach_skelly_by_bone_mesh(
-            rig=rig,
-        )
-    elif add_mesh_method == AddSkellyMeshMethods.COMPLETE_MESH:
-        attach_skelly_complete_mesh(
-            rig=rig,
-            body_dimensions=body_dimensions,
-        )
-    else:
-        raise ValueError("Invalid add_mesh_method")
-
-
-def attach_skelly_by_bone_mesh(
-        rig: bpy.types.Object,
-        armature: Dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
-        pose: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
-) -> None:
-    if armature == ArmatureType.UE_METAHUMAN_SIMPLE:
-        armature_name = UE_METAHUMAN_SIMPLE_ARMATURE
-    elif armature == ArmatureType.FREEMOCAP:
-        armature_name = FREEMOCAP_ARMATURE
-    else:
-        raise ValueError("Invalid armature name")
-
+def attach_skelly_bone_meshes(rig: bpy.types.Object) -> None:
     # Deselect all objects
     for object in bpy.data.objects:
         object.select_set(False)
@@ -79,9 +30,9 @@ def attach_skelly_by_bone_mesh(
     #  default origin, length and normalized direction
     for mesh in SKELLY_BONES:
         SKELLY_BONES[mesh].bones_origin = Vector(
-            rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh].bones[0]]].head)
+            rig.data.edit_bones[bone_name_map[rig.name][SKELLY_BONES[mesh].bones[0]]].head)
         SKELLY_BONES[mesh].bones_end = Vector(
-            rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh].bones[-1]]].tail)
+            rig.data.edit_bones[bone_name_map[rig.name][SKELLY_BONES[mesh].bones[-1]]].tail)
         SKELLY_BONES[mesh].bones_length = (SKELLY_BONES[mesh].bones_end - SKELLY_BONES[mesh].bones_origin).length
 
     # Change to object mode
@@ -95,7 +46,7 @@ def attach_skelly_by_bone_mesh(
         print("Adding Skelly_" + mesh + " mesh...")
         try:
             # Import the skelly mesh
-            mesh_path = SKELLY_BONES_PATH + '/Skelly_' + mesh + '.fbx'
+            mesh_path = SKELLY_BONE_MESHES_PATH + '/Skelly_' + mesh + '.fbx'
             if not Path(mesh_path).is_file():
                 raise FileNotFoundError(f"Could not find skelly mesh at {mesh_path}")
             bpy.ops.import_scene.fbx(filepath=str(mesh_path))
@@ -115,7 +66,7 @@ def attach_skelly_by_bone_mesh(
             rotation_matrix = Matrix.Identity(4)
         else:
             rotation_matrix = Euler(
-                Vector(pose[bone_name_map[armature_name][mesh]].rotation),
+                Vector(pose[bone_name_map[rig.name][mesh]].rotation),
                 'XYZ',
             ).to_matrix()
 
@@ -130,7 +81,7 @@ def attach_skelly_by_bone_mesh(
         # Get the bone length
         if SKELLY_BONES[mesh].adjust_rotation:
             bone_length = (SKELLY_BONES[mesh].bones_end - (SKELLY_BONES[mesh].bones_origin + (
-                        rotation_matrix @ Vector(SKELLY_BONES[mesh].position_offset)))).length
+                    rotation_matrix @ Vector(SKELLY_BONES[mesh].position_offset)))).length
         elif mesh == 'head':
             # bone_length = rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh]['bones'][0]]].length
             bone_length = SKELLY_BONES['spine'].bones_length / 3.123  # Head length to spine length ratio
@@ -190,83 +141,3 @@ def attach_skelly_by_bone_mesh(
     bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 
 
-def attach_skelly_complete_mesh(
-        rig: bpy.types.Object,
-        body_dimensions: Dict[str, float],
-        skelly_mesh_path: str = SKELLY_MESH_PATH
-) -> None:
-    try:
-        # Get the script filepath
-        # Import the skelly mesh
-
-        # skelly_mesh_path = file_path.parent.parent.parent /"assets"/"skelly_lowpoly_mesh.fbx"
-        if not Path(skelly_mesh_path).is_file():
-            raise FileNotFoundError(f"Could not find skelly mesh at {skelly_mesh_path}")
-        bpy.ops.import_scene.fbx(filepath=str(skelly_mesh_path))
-
-    except Exception as e:
-        print(f"Error while importing skelly mesh: {e}")
-        print(traceback.format_exc())
-
-    # Deselect all objects
-    for object in bpy.data.objects:
-        object.select_set(False)
-
-    # Select the rig
-    rig.select_set(True)
-    bpy.context.view_layer.objects.active = rig
-
-    # Change to edit mode
-    bpy.ops.object.mode_set(mode='EDIT')
-
-    # Get reference to the neck bone
-    neck = rig.data.edit_bones['neck']
-
-    # Change to object mode
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-    # Get the skelly mesh
-    skelly_mesh = bpy.data.objects['Skelly_LowPoly_Mesh']
-
-    # Get the neck bone tail position and save it as the head position
-    head_location = (neck.tail[0], neck.tail[1], neck.tail[2])
-    # Set the location of the skelly mesh
-    skelly_mesh.location = head_location
-
-    # Get the body mesh z dimension
-    raw_body_mesh_wingspan_width = skelly_mesh.dimensions.x
-    raw_body_mesh_toe_to_heel_depth = skelly_mesh.dimensions.y
-    raw_body_mesh_height = skelly_mesh.dimensions.z
-
-    # Calculate the proportion between the rig and the mesh
-    rig_to_body_mesh_height_ratio = body_dimensions['total_height'] / raw_body_mesh_height
-    rig_to_body_mesh_wingspan_ratio = body_dimensions['total_wingspan'] / raw_body_mesh_wingspan_width
-    rig_to_body_mesh_toe_to_toe_ratio = body_dimensions['mean_foot_length'] / raw_body_mesh_toe_to_heel_depth
-
-    # Scale the mesh by the rig and body_mesh proportions multiplied by a scale factor
-    skelly_mesh.scale = (rig_to_body_mesh_wingspan_ratio,
-                         rig_to_body_mesh_toe_to_toe_ratio,
-                         rig_to_body_mesh_height_ratio)
-
-    # Set rig as active
-    bpy.context.view_layer.objects.active = skelly_mesh
-
-    # Select the skelly_mesh
-    skelly_mesh.select_set(True)
-
-    # Apply transformations to the mesh
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
-    # Change skelly mesh origin to (0, 0, 0)
-    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-
-    ### Parent the skelly_mesh with the rig
-    # Select the rig
-    rig.select_set(True)
-    # Set rig as active
-    bpy.context.view_layer.objects.active = rig
-    # Parent the body_mesh and the rig with automatic weights
-    bpy.ops.object.parent_set(type='ARMATURE_AUTO')
-
-    # Rename the skelly mesh to fmc_mesh
-    skelly_mesh.name = 'skelly_mesh'

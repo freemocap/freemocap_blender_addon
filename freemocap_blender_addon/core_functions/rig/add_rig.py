@@ -49,11 +49,12 @@ def generate_rig(
         use_limit_rotation=config.use_limit_rotation,
     )
 
+    # TODO - I don't really know what the effect of the following code is. Running it returns `Info: Nothing to bake`
     # ### Bake animation to the rig ###
     # # Get the empties ending frame
     # ending_frame = int(bpy.data.actions[0].frame_range[1])
     # # Bake animation
-    # bpy.ops.nla.bake(frame_start=1, frame_end=ending_frame, bake_types={"POSE"})
+    # bpy.ops.nla.bake(frame_start=0, frame_end=ending_frame, bake_types={"POSE"})
 
     # Change back to Object Mode
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -61,7 +62,7 @@ def generate_rig(
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")
 
-    # return rig
+    return armature
 
 
 def deselect_all_bpy_objects():
