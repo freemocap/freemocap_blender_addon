@@ -5,5 +5,5 @@ base_path = Path(r"C:\Users\jonma\github_repos\freemocap_organization\freemocap_
 body_bones_path = base_path / "body"
 axial_bones_path = body_bones_path / "axial"
 
-mesh_filename = 'skelly_sparkles.fbx'
-bpy.ops.import_scene.fbx(filepath=str(axial_bones_path/mesh_filename)).
+mesh_filename = 'skelly_lumbar_spine.fbx'
+bpy.ops.import_scene.fbx(filepath=str(axial_bones_path/mesh_filename))
