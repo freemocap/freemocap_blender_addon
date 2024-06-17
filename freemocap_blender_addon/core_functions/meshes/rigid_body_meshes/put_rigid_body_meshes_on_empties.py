@@ -29,10 +29,10 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
     appendicular_squish = DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH
 
     def get_color_and_squish(segment_name: str) -> Tuple[str, Tuple[float, float, float]]:
-        if RightLeft.RIGHT.value in segment_name:
+        if ".R" in segment_name:
             mesh_color = right_color
             mesh_squish = appendicular_squish
-        elif RightLeft.LEFT.value in segment_name:
+        elif ".L" in segment_name:
             mesh_color = left_color
             mesh_squish = appendicular_squish
         else:
