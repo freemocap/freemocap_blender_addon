@@ -55,7 +55,7 @@ def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:
     default_bone = armature.data.edit_bones[0]
     default_bone.name = ROOT_BONE_NAME
     default_bone.tail = (0, 0, 0)
-    default_bone.head = (-.1, 0, 0)
+    default_bone.head = (0, -.1, 0)
     return armature
 
 

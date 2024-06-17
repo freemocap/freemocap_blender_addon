@@ -13,160 +13,160 @@ from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 _FREEMOCAP_BODY_TPOSE_DEFINITIONS = {
     # Axial segments
     blenderize_name(AxialSegments.LUMBAR.name): BonePoseDefinition(
-        local_rotation_degrees=(0, 0, 0),
+        world_rotation_degrees=(0, 0, 0),
         parent_bone_name=ROOT_BONE_NAME
     ),
     blenderize_name(AxialSegments.THORACIC.name): BonePoseDefinition(
-        local_rotation_degrees=(0, 0, 0),
+        world_rotation_degrees=(0, 0, 0),
         parent_bone_name=blenderize_name(AxialSegments.LUMBAR.name)
     ),
     blenderize_name(AxialSegments.CERVICAL.name): BonePoseDefinition(
-        local_rotation_degrees=(0, 0, 0),
+        world_rotation_degrees=(0, 0, 0),
         parent_bone_name=blenderize_name(AxialSegments.THORACIC.name)
     ),
 
     # Skull segments
     blenderize_name(SkullSegments.NOSE.name): BonePoseDefinition(
-        local_rotation_degrees=(110, 0, 0),
+        world_rotation_degrees=(-100, 0, 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     #right face
     blenderize_name(SkullSegments.RIGHT_EYE_INNER.name): BonePoseDefinition(
-        local_rotation_degrees=(90, 20, 0),
+        world_rotation_degrees=(-80, 0, -20),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.RIGHT_EYE_CENTER.name): BonePoseDefinition(
-        local_rotation_degrees=(90, 25, 0),
+        world_rotation_degrees=(-80, 0, -30),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.RIGHT_EYE_OUTER.name): BonePoseDefinition(
-        local_rotation_degrees=(90, 30, 0),
+        world_rotation_degrees=(-80, 0, -40),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.RIGHT_EAR_TRAGUS.name): BonePoseDefinition(
-        local_rotation_degrees=(110, 90, 0),
+        world_rotation_degrees=(-90, 0, -90),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.RIGHT_MOUTH.name): BonePoseDefinition(
-        local_rotation_degrees=(120, -20, 0),
+        world_rotation_degrees=(-120, -20, 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     #left face
     blenderize_name(SkullSegments.LEFT_EYE_INNER.name): BonePoseDefinition(
-        local_rotation_degrees=(90, -20, 0),
+        world_rotation_degrees=(-80, 0, 20),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.LEFT_EYE_CENTER.name): BonePoseDefinition(
-        local_rotation_degrees=(90, -25, 0),
+        world_rotation_degrees=(-80, 0, 30),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.LEFT_EYE_OUTER.name): BonePoseDefinition(
-        local_rotation_degrees=(900, -30, 0),
+        world_rotation_degrees=(-80, 0, 40),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.LEFT_EAR_TRAGUS.name): BonePoseDefinition(
-        local_rotation_degrees=(110, 90, 0),
+        world_rotation_degrees=(-90, 0, 90),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
     blenderize_name(SkullSegments.LEFT_MOUTH.name): BonePoseDefinition(
-        local_rotation_degrees=(120, -20, 0),
+        world_rotation_degrees=(-120, 20, 0),
         parent_bone_name=blenderize_name(AxialSegments.CERVICAL.name)
     ),
 
 
     # Right upper limb
     blenderize_name(RightBodySegments.RIGHT_CLAVICLE.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 90, 0),
         parent_bone_name=blenderize_name(AxialSegments.THORACIC.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_UPPER_ARM.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 90, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_CLAVICLE.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_FOREARM.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 1),
+        world_rotation_degrees=(0, 90, 1),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_UPPER_ARM.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_WRIST_INDEX.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 45),
+        world_rotation_degrees=(0, 90, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_FOREARM.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_WRIST_PINKY.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, -45),
+        world_rotation_degrees=(0, 90, -45),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_FOREARM.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_WRIST_THUMB.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 90, 45),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_FOREARM.name)
     ),
 
     # Right lower limb
     blenderize_name(RightBodySegments.RIGHT_PELVIS.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
-        parent_bone_name=blenderize_name(AxialSegments.LUMBAR.name)
+        world_rotation_degrees=(0, 90, 0),
+        parent_bone_name=ROOT_BONE_NAME
     ),
     blenderize_name(RightBodySegments.RIGHT_THIGH.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 180, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_PELVIS.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_CALF.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 180, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_THIGH.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_FORE_FOOT.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(70, 170, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_CALF.name)
     ),
     blenderize_name(RightBodySegments.RIGHT_HEEL.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(-70, 170, 0),
         parent_bone_name=blenderize_name(RightBodySegments.RIGHT_CALF.name)
     ),
 
     # Left upper limb
     blenderize_name(LeftBodySegments.LEFT_CLAVICLE.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, -90, 0),
         parent_bone_name=blenderize_name(AxialSegments.THORACIC.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_UPPER_ARM.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, -90, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_CLAVICLE.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_FOREARM.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 1),
+        world_rotation_degrees=(0, -90, 1),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_UPPER_ARM.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_WRIST_INDEX.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 45),
+        world_rotation_degrees=(0, -90, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_FOREARM.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_WRIST_PINKY.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, -45),
+        world_rotation_degrees=(0, -90, -45),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_FOREARM.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_WRIST_THUMB.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, -90, 45),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_FOREARM.name)
     ),
 
     # Left lower limb
     blenderize_name(LeftBodySegments.LEFT_PELVIS.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
-        parent_bone_name=blenderize_name(AxialSegments.LUMBAR.name)
+        world_rotation_degrees=(0, -90, 0),
+        parent_bone_name=ROOT_BONE_NAME
     ),
     blenderize_name(LeftBodySegments.LEFT_THIGH.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 180, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_PELVIS.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_CALF.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(0, 180, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_THIGH.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_FORE_FOOT.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(70, 170, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_CALF.name)
     ),
     blenderize_name(LeftBodySegments.LEFT_HEEL.name): BonePoseDefinition(
-        local_rotation_degrees=(0, -90, 0),
+        world_rotation_degrees=(-70, 190, 0),
         parent_bone_name=blenderize_name(LeftBodySegments.LEFT_CALF.name)
     ),
 }
