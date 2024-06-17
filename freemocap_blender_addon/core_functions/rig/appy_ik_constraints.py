@@ -5,7 +5,7 @@ from freemocap_blender_addon.models.animation.bones.ik_control_bones import ik_c
 from freemocap_blender_addon.models.animation.bones.ik_pole_bones import ik_pole_bones
 
 
-def add_ik_constraints_to_rig(armature=bpy.types.Object) -> bpy.types.Object:
+def add_ik_constraints_to_armature(armature=bpy.types.Object) -> bpy.types.Object:
     for ik_control in ik_control_bones:
         ik_bone = armature.data.edit_bones.new(ik_control)
         ik_bone.head = armature.data.edit_bones[ik_control.controlled_bone].head

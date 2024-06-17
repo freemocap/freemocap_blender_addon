@@ -3,6 +3,7 @@ from typing import List, Optional
 
 import bpy
 
+from freemocap_blender_addon.core_functions.rig.appy_ik_constraints import add_ik_constraints_to_armature
 from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
@@ -32,7 +33,7 @@ def generate_rig(
         pose_definition=pose_definition,
     ))
 
-    # add_ik_constraints_to_rig(rig)
+    add_ik_constraints_to_armature(armature=armature, config=config)
 
     # Change mode to object mode
     # bpy.ops.object.mode_set(mode="OBJECT")
