@@ -1,14 +1,17 @@
+import math as m
 from dataclasses import dataclass
 from typing import Tuple, Optional
 
 import mathutils
-import math as m
 
 ROOT_BONE_NAME = "ROOT"
+
+
 @dataclass
 class BoneRestPoseDefinition:
     parent_bone_name: Optional[str]
-    world_rotation_degrees: Tuple[float, float, float] = (0, 0, 0) #rotation defined relative to parent bone's reference frame
+    world_rotation_degrees: Tuple[float, float, float] = (
+    0, 0, 0)  # rotation defined relative to parent bone's reference frame
     offset: Tuple[float, float, float] = (0, 0, 0)
     roll: float = 0
     is_connected: bool = True
@@ -29,4 +32,3 @@ class BoneRestPoseDefinition:
             mathutils.Vector(self.rotation_as_radians),
             "XYZ",
         ).to_matrix()
-

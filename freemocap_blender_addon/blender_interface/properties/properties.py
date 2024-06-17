@@ -9,7 +9,7 @@ class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
     show_stages: bpy.props.BoolProperty(
         name="Show intermediate processing stages",
         description="If checked, a skeleton will be produced for each available stage of the processing pipeline",
-        default = False
+        default=False
     )
 
     data_parent_empty: bpy.props.PointerProperty(

@@ -1,5 +1,6 @@
 import bpy
 
+
 def rearrange_background_videos(
         scene: bpy.types.Scene = None,
         videos_x_separation: float = 0.1
@@ -22,4 +23,4 @@ def rearrange_background_videos(
     for video_index in range(len(background_videos)):
         # Set the location of the video
         background_videos[video_index].location[0] = first_video_x_position + video_index * (
-                    videos_x_dimension + videos_x_separation)
+                videos_x_dimension + videos_x_separation)

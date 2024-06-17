@@ -16,11 +16,13 @@ def recording_path_fixture() -> str:
     assert Path(Path(test_recording_path) / 'output_data').exists()
     return test_recording_path
 
+
 @pytest.fixture
 def freemocap_data_paths_fixture(recording_path_fixture: str) -> FreemocapDataPaths:
     paths: FreemocapDataPaths = FreemocapDataPaths.from_recording_path(path=recording_path_fixture)
     assert isinstance(paths, FreemocapDataPaths)
     return paths
+
 
 @pytest.fixture(params=[np.uint8, np.uint16, np.uint32, np.uint64,
                         np.int8, np.int16, np.int32, np.int64,
@@ -30,7 +32,6 @@ def freemocap_data_paths_fixture(recording_path_fixture: str) -> FreemocapDataPa
                         # np.complex64, np.complex128,
                         # complex, str, bytes, np.void
                         ])
-
 def dtype_fixture(request: pytest.FixtureRequest) -> np.dtype:
     return request.param
 

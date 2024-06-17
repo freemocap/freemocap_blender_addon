@@ -26,6 +26,7 @@ class KeypointDefinition(TypeSafeDataclass, ABC):
     def __str__(self):
         return f"Keypoint: {self.name}"
 
+
 @dataclass
 class KeypointTrajectory(TypeSafeDataclass, ABC):
     """
@@ -45,6 +46,3 @@ class KeypointTrajectory(TypeSafeDataclass, ABC):
     def __str__(self):
         out_str = f"KeypointTrajectory: {self.name} (Trajectory shape: {self.trajectory_data.shape})"
         return out_str
-
-
-

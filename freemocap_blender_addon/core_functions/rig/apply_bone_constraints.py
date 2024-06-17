@@ -8,7 +8,6 @@ from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_ty
 def add_bone_constraints(
         armature: bpy.types.Object,
         bone_constraints: ArmatureBoneConstraintsTypes,
-        parent_object: bpy.types.Object,
         use_limit_rotation: bool = False,
 ) -> None:
     print("Adding bone constraints...")
@@ -18,15 +17,15 @@ def add_bone_constraints(
     bpy.ops.object.mode_set(mode="POSE")
 
     # Create each constraint
-    for bone_name, constraint_definitions in bone_constraints.items():
+    for bone_name, constraint_definitions in bone_constraints.value.__members__.items():
         # If pose bone does not exist, skip it
         if bone_name not in armature.pose.bones:
             continue
 
-        for constraint in constraint_definitions:
+        for constraint in constraint_definitions.value:
             # Add new constraint determined by type
-            if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION:
+            if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION.value:
                 continue
             else:
-                print(f"Adding constraint {constraint} to bone {bone_name}")
+                print(f"Adding constraint `{constraint}` to bone `{bone_name}`")
                 constraint.apply_constraint(bone=armature.pose.bones[bone_name])

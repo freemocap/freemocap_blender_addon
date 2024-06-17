@@ -1,5 +1,3 @@
-
-
 def clear_scene():
     ###%% clear the scene - Scorch the earth \o/
     import bpy

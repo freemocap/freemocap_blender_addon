@@ -6,6 +6,7 @@ import numpy as np
 
 class TypeHintError(TypeError):
     """Custom error for type hint mismatches."""
+
     def __init__(self, field, expected_type, actual_value):
         self.field = field
         self.expected_type = expected_type
@@ -17,6 +18,8 @@ class TypeHintError(TypeError):
             f"Expected type '{self.expected_type}' for field '{self.field}', "
             f"but got '{type(self.actual_value)}' with value '{self.actual_value}'"
         )
+
+
 def is_compatible_type(value: Any, expected_type: Any) -> bool:
     """
     Check if the value is compatible with the expected type.
@@ -33,6 +36,7 @@ def is_compatible_type(value: Any, expected_type: Any) -> bool:
     if hasattr(expected_type, '__origin') and expected_type.__origin in (list, dict):
         return isinstance(value, expected_type.__origin)
     return False
+
 
 def enforce_type_hints(instance):
     def _enforce(instance, hints):
@@ -60,6 +64,7 @@ def enforce_type_hints(instance):
 
     hints = get_type_hints(instance.__class__)
     _enforce(instance, hints)
+
 
 @dataclass
 class TypeSafeDataclass:

@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-    - name: Install zip utility
-      run: sudo apt-get install -y zip
+      - name: Install zip utility
+        run: sudo apt-get install -y zip
 
-    - name: Create zip file
-      run: zip -r freemocap_blender_addon.zip freemocap_blender_addon
+      - name: Create zip file
+        run: zip -r freemocap_blender_addon.zip freemocap_blender_addon
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: freemocap_blender_addon
-        path: freemocap_blender_addon.zip
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: freemocap_blender_addon
+          path: freemocap_blender_addon.zip

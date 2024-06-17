@@ -3,7 +3,6 @@ Dictionary to map the default armature bone names with the different
 armatures bone names.
 """
 
-
 bone_name_map = {
     "armature_ue_metahuman_simple": {
         "pelvis": "pelvis",

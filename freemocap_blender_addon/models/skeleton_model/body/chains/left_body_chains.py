@@ -9,6 +9,7 @@ class LeftArmChain(ChainABC):
                 LeftWristLinkage,
                 ]
 
+
 class LeftLegChain(ChainABC):
     parent = LeftHipLinkage
     children = [LeftKneeLinkage,

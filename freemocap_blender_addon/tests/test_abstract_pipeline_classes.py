@@ -18,10 +18,12 @@ class SampleOutput1(BasePipelineIOABC):
 class SampleOutput2(BasePipelineIOABC):
     result: int
 
+
 @dataclass
 class SamplePipelineStage1(AbstractPipelineStage[SampleInput1, SampleOutput1]):
     def process(self, data: SampleInput1) -> SampleOutput1:
         return SampleOutput1(value=data.value + 1)
+
 
 @dataclass
 class SamplePipelineStage2(AbstractPipelineStage[SampleOutput1, SampleOutput2]):
@@ -38,9 +40,9 @@ class OneStageSamplePipeline(AbstractPipeline):
             data = stage.process(data)
         return data
 
+
 @dataclass
 class TwoStageSamplePipeline(AbstractPipeline):
-
     stages = [SamplePipelineStage1(), SamplePipelineStage2()]
 
     def run(self, data: SampleInput1) -> SampleOutput2:
@@ -87,6 +89,3 @@ def test_two_stage_pipeline_run() -> None:
     result: SampleOutput2 = pipeline.run(data=SampleInput1(value=0))
     assert isinstance(result, SampleOutput2)
     assert result.result == 3
-
-
-

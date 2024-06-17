@@ -56,8 +56,10 @@ class VisualComponentPlotComBos:
 
         # Create the plot with size according to the component size
         fig, ax = plt.subplots(figsize=(6.4,
-                                        6.4 * frame_info.height * visual_components['VisualComponentComBos']['height_pct'] / (
-                                                frame_info.width * visual_components['VisualComponentComBos']['width_pct'])))
+                                        6.4 * frame_info.height * visual_components['VisualComponentComBos'][
+                                            'height_pct'] / (
+                                                frame_info.width * visual_components['VisualComponentComBos'][
+                                            'width_pct'])))
 
         # Plot the COM
         ax.scatter(0, 0, marker='o', color=color_palette['dark_terra_cotta']['hex'], zorder=2)
@@ -243,8 +245,9 @@ class VisualComponentPlotFootDeviation:
         ### Plot setup ###
 
         # Create the plot objects
-        fig, ax = plt.subplots(figsize=(6.4, 6.4 * frame_info.height * visual_components['VisualComponentFootDeviation'][
-            'height_pct'] / (frame_info.width * visual_components['VisualComponentFootDeviation']['width_pct'])))
+        fig, ax = plt.subplots(
+            figsize=(6.4, 6.4 * frame_info.height * visual_components['VisualComponentFootDeviation'][
+                'height_pct'] / (frame_info.width * visual_components['VisualComponentFootDeviation']['width_pct'])))
 
         # Plot the fixed points
         for fixed_point in fixed_points:

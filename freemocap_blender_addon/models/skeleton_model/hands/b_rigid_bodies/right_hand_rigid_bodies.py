@@ -6,7 +6,7 @@ from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classe
 # https://www.assh.org/handcare/safety/joints
 # https://en.wikipedia.org/wiki/Hand#/media/File:814_Radiograph_of_Hand.jpg
 
-#Thumb
+# Thumb
 class RightThumbRadioCarpalSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
@@ -25,6 +25,7 @@ class RightThumbProximalPhalanxSegmentABC(SimpleSegmentABC):
 class RightThumbDistalPhalanxSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_THUMB_TIP.value
+
 
 # Index
 class RightIndexFingerRadioCarpalSegmentABC(SimpleSegmentABC):
@@ -51,7 +52,8 @@ class RightIndexFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_INDEX_FINGER_TIP.value
 
-#Middle
+
+# Middle
 class RightMiddleFingerRadioCarpalSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
@@ -75,6 +77,7 @@ class RightMiddleFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
 class RightMiddleFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_TIP.value
+
 
 # Ring
 class RightRingFingerRadioCarpalSegmentABC(SimpleSegmentABC):
@@ -100,6 +103,7 @@ class RightRingFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
 class RightRingFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
     parent = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
     child = RightHandKeypoints.RIGHT_RING_FINGER_TIP.value
+
 
 # Pinky
 class RightPinkyFingerRadioCarpalSegmentABC(SimpleSegmentABC):

@@ -56,7 +56,7 @@ def add_videos_to_scene(videos_path: Union[Path, str],
 
 
 def load_videos(recording_path: str,
-                parent_object: bpy.types.Object = None,):
+                parent_object: bpy.types.Object = None, ):
     """
     ############################
     Load videos into scene using `videos_as_planes` addon

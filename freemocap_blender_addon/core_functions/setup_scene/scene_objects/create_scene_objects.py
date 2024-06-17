@@ -18,7 +18,6 @@ def create_scene_objects(scene: bpy.types.Scene, export_profile: str = 'debug') 
     create_lights(scene, cameras_positions)
 
 
-
 if __name__ == "__main__":
     print('hiiii')
     create_scene_objects(bpy.context.scene, export_profile='debug')

@@ -138,6 +138,8 @@ class LoggerBuilder:
                     logging.getLogger("").handlers.append(handler)
         else:
             import sys
+
+
 print("Logging already configured")
 
 

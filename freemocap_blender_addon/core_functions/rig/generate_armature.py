@@ -2,8 +2,8 @@ import bpy
 import mathutils
 
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose import ROOT_BONE_NAME
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
+from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 
 
@@ -40,7 +40,7 @@ def generate_armature(
 
 
 def assign_bone_color(bone: bpy.types.EditBone):
-    # Check for .L, .R, or axial in the bone name and assign colors accordingly
+    # Check for .L or .R, or axial in the bone name and assign colors accordingly
     if bone.name.endswith('.L'):
         bone.color.palette = 'THEME04'  # Blue
     elif bone.name.endswith('.R'):
@@ -84,6 +84,6 @@ if __name__ == "__main__":
         armature_definition=ArmatureDefinition.create(
             rig_name="test_armature",
             segment_definitions=segment_definitions_outer,
-            pose_definition=PoseTypes.DEFAULT_TPOSE,
+            pose_definition=RestPoseTypes.DEFAULT_TPOSE,
         )
     )

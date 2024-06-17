@@ -32,7 +32,6 @@ if __name__ == "__main__" or __name__ == "<run_path>":
         recording_path_input = Path(argv[0])
         blender_file_save_path_input = Path(argv[1])
 
-
         if not recording_path_input:
             if __name__ == "<run_path>":
                 print("No recording path specified!")
@@ -54,4 +53,3 @@ if __name__ == "__main__" or __name__ == "<run_path>":
                              blend_file_path=str(blender_file_save_path_input))
     except Exception as e:
         print(f"ERROR RUNNING {__file__}: \n\n GOT ERROR \n\n {str(e)}")
-

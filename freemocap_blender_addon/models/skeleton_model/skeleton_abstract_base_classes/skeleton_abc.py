@@ -64,6 +64,7 @@ class SkeletonABC(ABC):
         Set[KeypointDefinition]
             A set of all children keypoints.
         """
+
         def recursive_find_children(name: str,
                                     segments: List[SimpleSegmentABC],
                                     found_children: Set[KeypointDefinition]) -> None:

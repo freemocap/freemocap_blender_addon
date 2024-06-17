@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 # from freemocap_blender_addon.models.animation.armatures.armature_bone_info import (
 #     ArmatureBoneDefinition,
 # )

@@ -102,7 +102,9 @@ class SkullSegments(Enum):
     LEFT_EAR_TRAGUS: SimpleSegmentABC = SkullLeftEarTragusSegment
     LEFT_MOUTH: SimpleSegmentABC = SkullLeftMouthSegment
 
-BlenderizedSkullSegments = Enum("BlenderizedSkullSegments", {name: blenderize_name(name) for name in list(SkullSegments.__members__.keys())})
+
+BlenderizedSkullSegments = Enum("BlenderizedSkullSegments",
+                                {name: blenderize_name(name) for name in list(SkullSegments.__members__.keys())})
 
 # Example usage
 if __name__ == "__main__":

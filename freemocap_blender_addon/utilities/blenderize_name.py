@@ -2,6 +2,8 @@ import re
 from copy import copy
 
 BlenderizedName = str
+
+
 def blenderize_name(original_name: str) -> BlenderizedName:
     """
     Create a Blender formatted name from the original name.
@@ -37,8 +39,6 @@ def blenderize_name(original_name: str) -> BlenderizedName:
     # Replace spaces with underscores
     name = name.replace(" ", "_")
 
-
-
     # Remove disallowed special characters, allow only alphanumerics, underscores, periods, and hyphens
     name = re.sub(r'[^a-zA-Z0-9_.-]', '', name)
 
@@ -68,8 +68,6 @@ def convert_right_left_naming_to_blender_style(name: str) -> str:
     return name
 
 
-
-
 def camel_to_snake(name: str) -> str:
     """
     Convert a camelCase or PascalCase string to snake_case.
@@ -96,6 +94,7 @@ def camel_to_snake(name: str) -> str:
     name = re.sub(r'(?<=[a-z0-9])(?=[A-Z])', '_', name)
     # Convert the entire string to lowercase
     return name.lower()
+
 
 if __name__ == "__main__":
     print(camel_to_snake("CamelCase"))  # Expected Output: camel_case

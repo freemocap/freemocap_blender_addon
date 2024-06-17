@@ -7,7 +7,6 @@ def create_lights(
         scene: bpy.types.Scene,
         cameras_positions: list
 ) -> None:
-
     # Lights vertical offset in Blender units
     lights_vertical_offset = 2
 
@@ -21,7 +20,7 @@ def create_lights(
 
     # Set the location of the light
     light.location = (
-    cameras_positions[0][0], cameras_positions[0][1], cameras_positions[0][2] + lights_vertical_offset)
+        cameras_positions[0][0], cameras_positions[0][1], cameras_positions[0][2] + lights_vertical_offset)
 
     # Set the rotation of the light so it points to the point (0, 0, cameras_positions[0][2])
     light.rotation_euler = (math.atan(abs(cameras_positions[0][1]) / lights_vertical_offset), 0, 0)

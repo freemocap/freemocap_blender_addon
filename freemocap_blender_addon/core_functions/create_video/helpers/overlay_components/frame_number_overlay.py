@@ -22,6 +22,6 @@ class VisualComponentFrameNumber:
             visual_components['frame_number']['color'],
             visual_components['frame_number']['thickness'],
             visual_components['frame_number']['lineType'],
-            )
+        )
 
         return annotated_image

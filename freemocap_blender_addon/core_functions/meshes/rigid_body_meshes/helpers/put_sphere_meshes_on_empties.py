@@ -1,5 +1,3 @@
-from typing import Dict
-
 import bpy
 
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import ParentedEmpties
@@ -13,8 +11,6 @@ def put_spheres_on_parented_empties(parented_empties: ParentedEmpties,
                                     emission_strength: float = 0.0,
                                     sphere_scale: float = 0.025
                                     ):
-
-
     meshes = []
     color = generate_color(color_type)
     for empty_name, empty in parented_empties.empties.items():

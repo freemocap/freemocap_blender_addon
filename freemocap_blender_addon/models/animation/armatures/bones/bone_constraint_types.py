@@ -1,8 +1,9 @@
+import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
-import math
+
 import bpy
 
 
@@ -54,7 +55,7 @@ class CopyLocationConstraint(ConstraintABC):
 
     def apply_constraint(self, bone: bpy.types.PoseBone) -> bpy.types.Constraint:
         self.validate_target(self.target)
-        constraint = bone.constraints.new(self.type.value)
+        constraint = bone.constraints.new(self.type)
         constraint.target = bpy.data.objects[self.target]
 
 
@@ -68,10 +69,10 @@ class LockedTrackConstraint(ConstraintABC):
 
     def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
         self.validate_target(self.target)
-        constraint = bone.constraints.new(self.type.value)
+        constraint = bone.constraints.new(self.type)
         constraint.target = bpy.data.objects[self.target]
-        constraint.track_axis = self.track_axis.value
-        constraint.lock_axis = self.lock_axis.value
+        constraint.track_axis = self.track_axis
+        constraint.lock_axis = self.lock_axis
         constraint.influence = self.influence
 
 
@@ -83,9 +84,9 @@ class DampedTrackConstraint(ConstraintABC):
 
     def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
         self.validate_target(self.target)
-        constraint = bone.constraints.new(self.type.value)
+        constraint = bone.constraints.new(self.type)
         constraint.target = bpy.data.objects[self.target]
-        constraint.track_axis = self.track_axis.value
+        constraint.track_axis = self.track_axis
 
 
 @dataclass
@@ -103,7 +104,7 @@ class LimitRotationConstraint(ConstraintABC):
     owner_space: OwnerSpace
 
     def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
-        constraint = bone.constraints.new(self.type.value)
+        constraint = bone.constraints.new(self.type)
         constraint.use_limit_x = self.use_limit_x
         constraint.min_x = math.radians(self.min_x)
         constraint.max_x = math.radians(self.max_x)
@@ -113,7 +114,8 @@ class LimitRotationConstraint(ConstraintABC):
         constraint.use_limit_z = self.use_limit_z
         constraint.min_z = math.radians(self.min_z)
         constraint.max_z = math.radians(self.max_z)
-        constraint.owner_space = self.owner_space.value
+        constraint.owner_space = self.owner_space
+
 
 @dataclass
 class IKConstraint(ConstraintABC):
@@ -126,11 +128,12 @@ class IKConstraint(ConstraintABC):
     def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
         self.validate_target(self.target)
         self.validate_target(self.pole_target)
-        constraint = bone.constraints.new(self.type.value)
+        constraint = bone.constraints.new(self.type)
         constraint.target = bpy.data.objects[self.target]
         constraint.pole_target = bpy.data.objects[self.pole_target]
         constraint.chain_count = self.chain_count
         constraint.pole_angle = self.pole_angle
+
 
 class BoneConstraintTypes(Enum):
     COPY_LOCATION: ConstraintABC = CopyLocationConstraint

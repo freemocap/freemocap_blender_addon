@@ -1,5 +1,6 @@
 import bpy
 
+
 def create_parent_empty(name: str,
                         type: str,
                         display_scale: float,
@@ -9,11 +10,9 @@ def create_parent_empty(name: str,
     parent_empty = bpy.context.active_object
     parent_empty.empty_display_size = display_scale
     parent_empty.name = name
- 
 
     if parent_object is not None:
         print(f"Setting parent of {parent_empty.name} to {parent_object.name}")
         parent_empty.parent = parent_object
-
 
     return parent_empty

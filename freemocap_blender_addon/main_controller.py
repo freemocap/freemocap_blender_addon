@@ -35,7 +35,7 @@ class MainController(metaclass=SingletonMetaClass):
                  pipeline_config: PipelineConfig):
         self.pipeline_config: PipelineConfig = pipeline_config
 
-        #blender stuff
+        # blender stuff
         self.rig = None
         self.empties = None
         self._data_parent_object = None
@@ -52,7 +52,6 @@ class MainController(metaclass=SingletonMetaClass):
         self.recording_name = Path(self.recording_path_str).stem
         self._output_video_path = str(Path(self.blend_file_path_str).parent / f"{self.recording_name}_video_output.mp4")
         self.freemocap_data_handler: Optional[FreemocapDataHandler] = None
-
 
     @property
     def data_parent_object(self):

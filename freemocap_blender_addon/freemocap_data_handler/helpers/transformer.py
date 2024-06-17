@@ -2,6 +2,7 @@ from typing import List, Optional, Union
 from typing import TYPE_CHECKING
 
 import numpy as np
+
 from freemocap_blender_addon.freemocap_data.freemocap_recording_data import (
     FREEMOCAP_DATA_COMPONENT_TYPES,
 )
@@ -16,7 +17,7 @@ class FreemocapDataTransformer:
         self.handler = handler
 
     def apply_rotations(
-        self, rotation_matricies: List[np.ndarray], component_name: Optional[str] = None
+            self, rotation_matricies: List[np.ndarray], component_name: Optional[str] = None
     ):
         if not len(rotation_matricies) == self.handler.number_of_frames:
             raise ValueError(
@@ -30,9 +31,9 @@ class FreemocapDataTransformer:
             )
 
     def apply_rotation(
-        self,
-        rotation_matrix: Union[np.ndarray, List[List[float]]],
-        component_name: Optional[str] = None,
+            self,
+            rotation_matrix: Union[np.ndarray, List[List[float]]],
+            component_name: Optional[str] = None,
     ):
         if isinstance(rotation_matrix, list) or isinstance(rotation_matrix, tuple):
             rotation_matrix = np.array(rotation_matrix)
@@ -70,9 +71,9 @@ class FreemocapDataTransformer:
                 )
 
     def _rotate_component(
-        self,
-        data_frame_name_xyz: Union[np.ndarray, List[float]],
-        rotation_matrix: Union[np.ndarray, List[List[float]]],
+            self,
+            data_frame_name_xyz: Union[np.ndarray, List[float]],
+            rotation_matrix: Union[np.ndarray, List[List[float]]],
     ) -> np.ndarray:
         if isinstance(data_frame_name_xyz, list):
             data_frame_name_xyz = np.array(data_frame_name_xyz)
@@ -100,20 +101,20 @@ class FreemocapDataTransformer:
         for frame_number in range(data_frame_name_xyz.shape[0]):
             if len(data_frame_name_xyz.shape) == 2:
                 rotated_data_frame_name_xyz[frame_number, :] = (
-                    rotation_matrix @ data_frame_name_xyz[frame_number, :]
+                        rotation_matrix @ data_frame_name_xyz[frame_number, :]
                 )
             elif len(data_frame_name_xyz.shape) == 3:
                 for trajectory_number in range(data_frame_name_xyz.shape[1]):
                     rotated_data_frame_name_xyz[frame_number, trajectory_number, :] = (
-                        rotation_matrix
-                        @ data_frame_name_xyz[frame_number, trajectory_number, :]
+                            rotation_matrix
+                            @ data_frame_name_xyz[frame_number, trajectory_number, :]
                     )
         return rotated_data_frame_name_xyz
 
     def apply_translations(
-        self,
-        vectors: Union[List[np.ndarray], List[List[float]]],
-        component_name: Optional[str] = None,
+            self,
+            vectors: Union[List[np.ndarray], List[List[float]]],
+            component_name: Optional[str] = None,
     ):
         if not len(vectors) == self.handler.number_of_frames:
             raise ValueError(
@@ -125,10 +126,10 @@ class FreemocapDataTransformer:
             )
 
     def apply_translation(
-        self,
-        vector: Union[np.ndarray, List[float]],
-        component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None,
-        frame_number: Optional[int] = None,
+            self,
+            vector: Union[np.ndarray, List[float]],
+            component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None,
+            frame_number: Optional[int] = None,
     ):
         if isinstance(vector, list):
             vector = np.array(vector)
@@ -170,7 +171,7 @@ class FreemocapDataTransformer:
                 )
 
     def _translate_component_data(
-        self, data: np.ndarray, translation: np.ndarray, frame_number: Optional[int] = None
+            self, data: np.ndarray, translation: np.ndarray, frame_number: Optional[int] = None
     ) -> np.ndarray:
         if not len(data.shape) in [2, 3]:
             raise ValueError(
@@ -205,7 +206,7 @@ class FreemocapDataTransformer:
         return data
 
     def apply_scale(
-        self, scale: float, component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None
+            self, scale: float, component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None
     ):
         print(f"Applying scale {scale}")
         if component_name == "body" or component_name is None:

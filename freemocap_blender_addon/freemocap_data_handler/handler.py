@@ -7,7 +7,6 @@ from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories impo
 
 from .operations.get_low_velocity_frame import get_low_velocity_frame
 from ..freemocap_data.freemocap_recording_data import FreemocapRecordingData
-
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransformer
 
@@ -46,7 +45,6 @@ class FreemocapDataHandler:
     @property
     def center_of_mass_trajectory(self) -> np.ndarray:
         return self.freemocap_data.other["center_of_mass"].data
-
 
     @property
     def body_trajectories(self) -> Dict[str, np.ndarray]:
@@ -205,17 +203,17 @@ class FreemocapDataHandler:
         if "body_dimensions" in self.metadata:
             return self.metadata["body_dimensions"]
         else:
-            raise ValueError("Body dimensions not found in metadata - please run `enforce_rigid_bones()`/`estimate_body_dimensions()` first.")
+            raise ValueError(
+                "Body dimensions not found in metadata - please run `enforce_rigid_bones()`/`estimate_body_dimensions()` first.")
 
     def estimate_good_clean_frame(self):
         return get_low_velocity_frame(trajectories_with_error=self.get_trajectories(with_error=True))
-
 
     def add_trajectory(self,
                        trajectory: np.ndarray,
                        trajectory_name: str,
                        component_type: FREEMOCAP_DATA_COMPONENT_TYPES,
-                       source: str = None, # TODO: remove this from the chain if it isn't used anywhere
+                       source: str = None,  # TODO: remove this from the chain if it isn't used anywhere
                        group_name: str = None):
         if trajectory.shape[0] != self.number_of_frames:
             raise ValueError(

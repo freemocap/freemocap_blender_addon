@@ -30,7 +30,7 @@ class RightWristLinkage(LinkageABC):
 class RightHipLinkage(LinkageABC):
     parent = RightBodySegments.RIGHT_PELVIS
     children = [RightBodySegments.RIGHT_PELVIS,
-               RightBodySegments.RIGHT_THIGH]
+                RightBodySegments.RIGHT_THIGH]
     linked_keypoint = BodyKeypoints.RIGHT_HIP
 
 

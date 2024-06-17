@@ -11,7 +11,9 @@ from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 REORIENT_EMPTIES_EXECUTED = True
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class FMC_ADAPTER_OT_add_body_mesh(Operator):
     bl_idname = 'fmc_adapter._add_body_mesh'

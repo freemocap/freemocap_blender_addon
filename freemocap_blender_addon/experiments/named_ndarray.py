@@ -23,7 +23,7 @@ class NamedNdarray(np.ndarray):
                 raise ValueError(f"Dimension names {dimension_names} do not match shape {obj.shape}")
             if len(set(dimension_names)) != len(dimension_names):
                 raise ValueError(f"Dimension names {dimension_names} contain duplicates")
-            if len(dimension_names)> obj.size:
+            if len(dimension_names) > obj.size:
                 raise ValueError(f"Dimension names {dimension_names} are more than the number of dimensions {obj.size}")
             obj.dimension_names = dimension_names
         else:
@@ -56,7 +56,7 @@ class NamedNdarray(np.ndarray):
                 return self.take(indices=index, axis=0)
             raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
         except Exception as e:
-            f=9
+            f = 9
 
     def __dir__(self):
         return list(super().__dir__()) + self.dimension_names

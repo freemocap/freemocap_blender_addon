@@ -72,13 +72,12 @@ def create_center_of_mass_trails(center_of_mass_trajectory: np.ndarray,
             #                                   squish_scale=(1, 1, 1),
             #                                   )
             bpy.ops.mesh.primitive_uv_sphere_add(segments=8,
-                                                    ring_count=8,
-                                                    scale=(scale, scale, scale),
-                                                    )                               
+                                                 ring_count=8,
+                                                 scale=(scale, scale, scale),
+                                                 )
             trail_point_mesh = bpy.context.active_object
             trail_point_mesh.name = f"{empty.name}_trail_sphere"
             trail_point_mesh.parent = empty
-
 
             if empty_number < len(empties) - 1:
                 damped_track_constraint = trail_point_mesh.constraints.new(type='DAMPED_TRACK')
@@ -86,11 +85,11 @@ def create_center_of_mass_trails(center_of_mass_trajectory: np.ndarray,
                 damped_track_constraint.track_axis = 'TRACK_Z'
                 # driver = trail_point_mesh.driver_add("scale", 2).driver
                 # driver.type = 'SCRIPTED'
-                
+
                 # dist_var = driver.variables.new()
                 # dist_var.name = 'dist'
                 # dist_var.type = 'LOC_DIFF'
-                
+
                 # # Targets
                 # dist_var.targets[0].id = empties[empty_number]
                 # dist_var.targets[1].id = empties[empty_number + 1]

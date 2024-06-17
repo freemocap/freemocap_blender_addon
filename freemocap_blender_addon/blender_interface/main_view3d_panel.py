@@ -56,7 +56,6 @@ class VIEW3D_PT_freemocap(Panel):
         box.operator('fmc_adapter._run_all', text='RUN ALL')
         box.prop(fmc_adapter_tool, "show_stages", text="Show intermediate stages")
 
-
     def _save_data_to_disk_panel(self, fmc_adapter_tool, layout):
         box = layout.box()
         box.prop(fmc_adapter_tool,

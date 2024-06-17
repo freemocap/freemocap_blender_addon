@@ -20,7 +20,6 @@ class NpyPaths(PathsDataclass):
             if np.load(field).size == 0:
                 raise ValueError(f"Empty npy file: {field}")
 
-
     def __str__(self):
         return super().__str__()
 

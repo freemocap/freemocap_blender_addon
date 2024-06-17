@@ -56,7 +56,10 @@ def test_descriptive_statistics(sample_statistics_fixture: DescriptiveStatistics
     assert stats.mean == np.nanmean(stats.sample_data.data)
     assert stats.median == np.nanmedian(stats.sample_data.data)
     assert stats.standard_deviation == np.nanstd(stats.sample_data.data)
-    assert stats.median_absolute_deviation == np.nanmedian(np.abs(stats.sample_data.data - np.nanmedian(stats.sample_data.data)))
-    assert stats.interquartile_range == np.nanpercentile(stats.sample_data.data, 75) - np.nanpercentile(stats.sample_data.data, 25)
-    assert stats.confidence_interval_95 == 1.96 * np.nanstd(stats.sample_data.data) / np.sqrt(len(stats.sample_data.data))
+    assert stats.median_absolute_deviation == np.nanmedian(
+        np.abs(stats.sample_data.data - np.nanmedian(stats.sample_data.data)))
+    assert stats.interquartile_range == np.nanpercentile(stats.sample_data.data, 75) - np.nanpercentile(
+        stats.sample_data.data, 25)
+    assert stats.confidence_interval_95 == 1.96 * np.nanstd(stats.sample_data.data) / np.sqrt(
+        len(stats.sample_data.data))
     assert stats.number_of_samples == len(stats.sample_data.data)

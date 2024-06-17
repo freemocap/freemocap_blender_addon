@@ -14,7 +14,8 @@ def calculate_extreme_points(scene: bpy.types.Scene) -> tuple:
         scene.frame_set(frame)
 
         for obj in scene.objects:
-            if obj.type == 'EMPTY' and obj.name not in ['freemocap_origin_axes', 'world_origin', 'center_of_mass_data_parent', 'head']:
+            if obj.type == 'EMPTY' and obj.name not in ['freemocap_origin_axes', 'world_origin',
+                                                        'center_of_mass_data_parent', 'head']:
                 translation = obj.matrix_world.translation
 
                 highest_point = max(highest_point, translation, key=lambda v: v[2])
@@ -23,6 +24,7 @@ def calculate_extreme_points(scene: bpy.types.Scene) -> tuple:
                 rightmost_point = max(rightmost_point, translation, key=lambda v: v[0])
 
     return highest_point, lowest_point, leftmost_point, rightmost_point
+
 
 def calculate_camera_distance(
         scene: bpy.types.Scene,
@@ -46,12 +48,13 @@ def calculate_camera_distance(
 
     return camera_y_axis_distance
 
+
 def create_cameras(
         scene: bpy.types.Scene,
         export_profile: str = 'debug'
 ) -> list:
     from freemocap_blender_addon.pipelines.pipelines import export_profiles, lens_FOVs
-    
+
     print(f"Creating cameras for export profile: {export_profile}")
     if export_profiles[export_profile]['resolution_x'] / export_profiles[export_profile]['resolution_y'] >= 1:
         camera_horizontal_fov = lens_FOVs['50mm']['horizontal_fov']
@@ -84,6 +87,7 @@ def create_cameras(
     cameras_positions.append(camera.location)
 
     return cameras_positions
+
 
 if __name__ == "__main__":
     create_cameras(bpy.context.scene, export_profile='debug')

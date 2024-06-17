@@ -10,10 +10,12 @@ from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classe
 
 class SegmentEnum(Enum):
     """An Enum that can hold different types of Segments."""
+
     def __new__(cls, value: Type[SegmentABC]):
         obj = object.__new__(cls)
         obj._value_ = value
         return obj
+
 
 BodySegments = Enum('BodySegments', combine_enums(
 

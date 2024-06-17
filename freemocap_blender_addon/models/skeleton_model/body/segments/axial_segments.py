@@ -25,10 +25,13 @@ class AxialSegments(Enum):
     THORACIC_SPINE: SimpleSegmentABC = ThoracicSpineSegment
     LUMBAR_SPINE: SimpleSegmentABC = LumbarSpineSegment
 
-BlenderizedAxialSegments = Enum("BlenderizedAxialSegments", {name: blenderize_name(name) for name in list(AxialSegments.__members__.keys())})
+
+BlenderizedAxialSegments = Enum("BlenderizedAxialSegments",
+                                {name: blenderize_name(name) for name in list(AxialSegments.__members__.keys())})
 
 if __name__ == "__main__":
-    print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}" for rb in list(AxialSegments)]))
+    print("\n".join(
+        [f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}" for rb in list(AxialSegments)]))
 
     print("Blenderized names:")
     print("\n".join([f"{rb.name}: {rb.value}" for rb in list(BlenderizedAxialSegments)]))

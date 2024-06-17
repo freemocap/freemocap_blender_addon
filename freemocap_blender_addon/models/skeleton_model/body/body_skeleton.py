@@ -10,7 +10,3 @@ class BodySkeletonDefinition(SkeletonABC):
                 RightLegChain,
                 LeftArmChain,
                 LeftLegChain]
-
-
-
-

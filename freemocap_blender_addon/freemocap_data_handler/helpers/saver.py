@@ -1,6 +1,6 @@
-from dataclasses import asdict, is_dataclass
 import json
 import pickle
+from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Union, TYPE_CHECKING
 

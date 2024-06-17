@@ -22,7 +22,7 @@ def get_keypoint_names(component_type: ComponentType,
 
 
 def get_mapping(component_type: ComponentType,
-                tracker_source: TrackerSourceType): #TODO- figure out how to give this a generic `mapping` return type
+                tracker_source: TrackerSourceType):  # TODO- figure out how to give this a generic `mapping` return type
     if tracker_source == TrackerSourceType.MEDIAPIPE:
         if component_type == ComponentType.BODY:
             return MediapipeBodyMapping
@@ -31,4 +31,3 @@ def get_mapping(component_type: ComponentType,
             raise ValueError("Component type not recognized")
     else:
         raise ValueError("Data source not recognized")
-

@@ -1,9 +1,11 @@
 from typing import List, Dict, Any
 
+
 def convert_to_string(value: Any) -> str:
     if isinstance(value, float):
         return f"{value:.3f}"
     return str(value)
+
 
 def print_table(data: List[Dict[str, Any]]) -> None:
     """
@@ -63,7 +65,7 @@ def print_table(data: List[Dict[str, Any]]) -> None:
 
 
 if __name__ == "__main__":
-   # Example usage
+    # Example usage
     data = [
         {"Name": "Alice", "Age": 24, "City": "New York"},
         {"Name": "Bob", "Age": 30.3, "City": "Los Angeles"},

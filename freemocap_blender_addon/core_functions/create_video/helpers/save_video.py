@@ -24,7 +24,7 @@ def write_video_file_to_disk(
         (export_profiles[export_profile]['resolution_x'],
          export_profiles[export_profile]['resolution_y']),
         export_profiles[export_profile]['bitrate'],
-        )
+    )
 
     # Create new frame_info object
     frame_info = FrameInformation(
@@ -44,7 +44,6 @@ def write_video_file_to_disk(
     #         visual_components_list.append(visual_component_class(frame_info))
     #     except Exception as e:
     #         print(f"Error instantiating {visual_component_class}: {e}, skipping...")
-
 
     index_frame = 0
     # Add the logo to the video

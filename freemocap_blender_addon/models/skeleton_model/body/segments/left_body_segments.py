@@ -76,7 +76,9 @@ class LeftBodySegments(Enum):
     LEFT_FORE_FOOT: SimpleSegmentABC = LeftForeFootSegment
     LEFT_HEEL: SimpleSegmentABC = LeftHeelSegment
 
-BlenderizedLeftBodySegments = Enum("BlenderizedLeftBodySegments", {name: blenderize_name(name) for name in list(LeftBodySegments.__members__.keys())})
+
+BlenderizedLeftBodySegments = Enum("BlenderizedLeftBodySegments",
+                                   {name: blenderize_name(name) for name in list(LeftBodySegments.__members__.keys())})
 
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}"

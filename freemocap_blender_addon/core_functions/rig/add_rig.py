@@ -9,6 +9,8 @@ from freemocap_blender_addon.core_functions.rig.generate_armature import generat
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BlenderizedKeypointNames
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
 
@@ -33,6 +35,8 @@ def generate_rig(
         bone_constraints=config.bone_constraints,
     )
     armature = generate_armature(armature_definition=armature_definition)
+    root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
+    root_constraint.target = bpy.data.objects[BlenderizedKeypointNames.PELVIS_CENTER.value]
     if config.add_ik_constraints:
         add_ik_constraints_to_armature(armature=armature)
 
@@ -41,8 +45,7 @@ def generate_rig(
 
     add_bone_constraints(
         armature=armature,
-        bone_constraints = config.bone_constraints,
-        parent_object=parent_object,
+        bone_constraints=config.bone_constraints,
         use_limit_rotation=config.use_limit_rotation,
     )
 
@@ -53,7 +56,7 @@ def generate_rig(
     # bpy.ops.nla.bake(frame_start=1, frame_end=ending_frame, bake_types={"POSE"})
 
     # Change back to Object Mode
-    # bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.mode_set(mode="OBJECT")
 
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")

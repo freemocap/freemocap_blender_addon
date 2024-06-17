@@ -4,12 +4,11 @@ from typing import Dict
 import bpy
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
+from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
-@dataclass  
+@dataclass
 class ParentedEmpties(TypeSafeDataclass):
     empties: Dict[str, bpy.types.Object]
     parent_object: bpy.types.Object
@@ -23,6 +22,12 @@ class ParentedEmpties(TypeSafeDataclass):
     @property
     def parent_name(self):
         return self.parent_object.name
+
+    def blenderize_names(self):
+        blenderized_empties = {}
+        for empty_name, empty in self.empties.items():
+            blenderized_empties[blenderize_name(empty_name)] = empty
+        self.empties = blenderized_empties
 
     def __str__(self):
         return f"ParentedEmpties: {self.empties.keys()} parented to {self.parent_name}"
@@ -45,6 +50,7 @@ def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
     parent_object.name = parent_name
 
     for trajectory_name, trajectory in trajectories.items():
+        trajectory_name = blenderize_name(trajectory_name)
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
             trajectory_fr_xyz=trajectory,
             trajectory_name=trajectory_name,

@@ -64,9 +64,9 @@ def create_checkerboard_material(name: str,
                                                      color2=color2,
                                                      square_scale=square_scale,
                                                      roughness=roughness,
-                                                    specular=specular,
-                                                    metallic=metallic,
-                                                    noise_scale=noise_scale
+                                                     specular=specular,
+                                                     metallic=metallic,
+                                                     noise_scale=noise_scale
                                                      )
         bsdf_node, output_node = create_bsdf_and_output_nodes(nodes)
         # Connect the Checker Texture node to the BSDF

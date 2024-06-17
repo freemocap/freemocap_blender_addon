@@ -11,9 +11,11 @@ class BoneDefinition:
     tail: str
     length: float = 0.0  # Assuming default length is 0.0 if not provided
 
+
 @dataclass
 class BodyBoneDefinitions:
     bones: Dict[BoneName, BoneDefinition]
+
 
 @classmethod
 class HandBoneDefinitions:
@@ -25,9 +27,6 @@ class HandBoneDefinitions:
 class SkeletonBoneDefinitions:
     body: BodyBoneDefinitions
     hands: HandBoneDefinitions
-
-
-
 
 
 AXIAL_BONE_DEFINITIONS = {
@@ -48,7 +47,6 @@ MIRRORED_BODY_BONE_DEFINITIONS = {
     'foot': {'head': 'ankle', 'tail': 'foot_index'},
     'heel.02': {'head': 'ankle', 'tail': 'heel'},
 }
-
 
 # Base hand bone definitions without suffixes
 BASE_HAND_BONE_DEFINITIONS = {
@@ -77,6 +75,3 @@ BASE_HAND_BONE_DEFINITIONS = {
     'f_pinky.02': {'head': 'hand_pinky_pip', 'tail': 'hand_pinky_dip'},
     'f_pinky.03': {'head': 'hand_pinky_dip', 'tail': 'hand_pinky_tip'}
 }
-
-
-

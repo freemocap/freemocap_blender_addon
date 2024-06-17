@@ -27,7 +27,7 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
         world_rotation_degrees=(-100, 0, 0),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    #right face
+    # right face
     BlenderizedSkullSegments.RIGHT_EYE_INNER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -20),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
@@ -45,10 +45,10 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
     BlenderizedSkullSegments.RIGHT_MOUTH.value: BoneRestPoseDefinition(
-        world_rotation_degrees=(-120, -20,0),
+        world_rotation_degrees=(-120, -20, 0),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    #left face
+    # left face
     BlenderizedSkullSegments.LEFT_EYE_INNER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 20),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
@@ -69,7 +69,6 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
         world_rotation_degrees=(-120, 20, 0),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-
 
     # Right upper limb
     BlenderizedRightBodySegments.RIGHT_CLAVICLE.value: BoneRestPoseDefinition(

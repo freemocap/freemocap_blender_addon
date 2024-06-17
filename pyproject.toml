@@ -12,7 +12,7 @@ Documentation = "https://freemocap.github.io/documentation/"
 Github = "https://github.com/freemocap/freemocap_blender_addon"
 
 [tool.poetry.dependencies]
-python ="==3.11.*"
+python = "==3.11.*"
 bpy = "^4.1.0"
 
 toml = "^0.10.2"

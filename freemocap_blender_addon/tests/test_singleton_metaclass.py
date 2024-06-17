@@ -36,6 +36,7 @@ class TestSingleton(metaclass=SingletonMetaClass):
         """
         return self.value
 
+
 def test_singleton_instance():
     """
     Tests that only one instance of the Singleton class is created.
@@ -71,6 +72,7 @@ def test_singleton_thread_safety():
     def set_singleton_value(value):
         instance = TestSingleton()
         instance.set_value(value)
+
     instance = TestSingleton()
 
     threads = []
@@ -83,4 +85,3 @@ def test_singleton_thread_safety():
         t.join()
 
     assert instance.get_value() in range(100), "Singleton value may not be thread-safe"
-

@@ -25,6 +25,7 @@ def generate_random_hex_color() -> str:
     """
     return f'#{np.random.randint(0, 0xFFFFFF):06X}'
 
+
 def adjust_brightness(channels: Tuple[int, int, int], shift: int) -> Tuple[int, int, int]:
     """
     Adjust the brightness of the given RGB channels.
@@ -42,6 +43,7 @@ def adjust_brightness(channels: Tuple[int, int, int], shift: int) -> Tuple[int, 
         The adjusted RGB channels.
     """
     return tuple(min(max(c + shift, 0), 255) for c in channels)
+
 
 def generate_color_channels(type: ColorType) -> Tuple[int, int, int]:
     """

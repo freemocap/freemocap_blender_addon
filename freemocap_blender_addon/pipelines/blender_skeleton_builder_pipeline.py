@@ -1,17 +1,15 @@
-import numpy as np 
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
+
+import numpy as np
 
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
     create_empties_from_trajectories
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_sphere_meshes_on_empties import \
-    put_spheres_on_parented_empties
 from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
-from freemocap_blender_addon.models.animation.armatures.rest_pose import PoseTypes
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
 from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
@@ -44,20 +42,28 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
 
             parented_empties = create_empties_from_trajectories(trajectories=trajectories,
                                                                 parent_name=stage)
-
-            put_spheres_on_parented_empties(parented_empties=parented_empties)
+            # put_spheres_on_parented_empties(parented_empties=parented_empties)
+            blenderized_segment_definitions = {}
+            for segment_name, segment_definition in freemocap_data.segment_definitions.items():
+                blenderized_name = blenderize_name(segment_name)
+                blenderized_segment = segment_definition
+                blenderized_segment.name = blenderize_name(blenderized_segment.name)
+                blenderized_segment.parent = blenderize_name(blenderized_segment.parent)
+                blenderized_segment.child = blenderize_name(blenderized_segment.child)
+                blenderized_segment_definitions[blenderized_name] = blenderized_segment
 
             put_rigid_body_meshes_on_empties(parented_empties=parented_empties,
-                                             segment_definitions=freemocap_data.segment_definitions,
+                                             segment_definitions=blenderized_segment_definitions,
                                              )
 
             generate_rig(
                 rig_name=f"{self.recording_name}_rig",
-                segment_definitions=freemocap_data.segment_definitions,
+                segment_definitions=blenderized_segment_definitions,
                 parent_object=parented_empties.parent_object,
                 config=self.pipeline_config.add_rig,
             )
         print(f"Finished building blender skeleton for recording: {self.recording_name}")
+
 
 def blenderize_trajectories(scale: float,
                             trajectories: dict) -> Dict[str, np.ndarray]:

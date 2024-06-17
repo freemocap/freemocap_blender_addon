@@ -10,7 +10,6 @@ def create_crystal_material(name: str = "crystal_gem",
                             roughness: float = 0.01,
                             ior: float = 1.45,
                             ):
-
     # Create a new material
     material = bpy.data.materials.new(name=name)
 
@@ -19,7 +18,6 @@ def create_crystal_material(name: str = "crystal_gem",
 
     # Remove default
     material.node_tree.nodes.remove(material.node_tree.nodes['Principled BSDF'])
-
 
     # Add Glass Shader
     glass_shader = material.node_tree.nodes.new('ShaderNodeBsdfGlass')
@@ -61,9 +59,9 @@ def color_to_rgba(color):
 
 
 def create_material(
-    name: str = "Generic",
-    color: Union[str, Tuple, List, np.ndarray] = "#00FFFF",
-    emission_strength: float = 1.0,
+        name: str = "Generic",
+        color: Union[str, Tuple, List, np.ndarray] = "#00FFFF",
+        emission_strength: float = 1.0,
 ):
     """
     Create a material with the given name and color, with a strong emission.
@@ -99,7 +97,7 @@ def create_material(
 
     # Convert color from hex to RGB
     if isinstance(color, str) and color.startswith("#"):
-        color_rgb = [int(color[i : i + 2], 16) / 255 for i in (1, 3, 5)]  # skips the "#" and separates R, G, and B
+        color_rgb = [int(color[i: i + 2], 16) / 255 for i in (1, 3, 5)]  # skips the "#" and separates R, G, and B
     elif isinstance(color, list) or isinstance(color, tuple):
         color_rgb = color
     else:
@@ -113,7 +111,6 @@ def create_material(
     emission.inputs[1].default_value = emission_strength  # The higher this value, the more the material will glow
 
     return material
-
 
 
 class MaterialMaker:
@@ -130,9 +127,9 @@ class MaterialMaker:
 
     def _color_to_rgba(self, color):
         if isinstance(color, str) and color.startswith("#"):
-            return [int(color[i:i+2], 16) / 255. for i in (1, 3, 5)] + [1]
+            return [int(color[i:i + 2], 16) / 255. for i in (1, 3, 5)] + [1]
         elif isinstance(color, (list, tuple)) and len(color) in (3, 4):
-            return list(color) + [1]*(4 - len(color))
+            return list(color) + [1] * (4 - len(color))
         else:
             raise ValueError(f"Color must be a list or tuple of length 3 or 4, or a hex string, not {color}")
 

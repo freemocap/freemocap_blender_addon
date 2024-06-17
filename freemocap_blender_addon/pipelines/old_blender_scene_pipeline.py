@@ -29,10 +29,16 @@ class OldBlenderController(metaclass=SingletonMetaClass):
 
     def _create_parent_empties(self):
         self._data_parent_object = create_parent_empty(name=self.origin_name, display_scale=1.0, type="ARROWS")
-        self._empty_parent_object = create_parent_empty(name="empties_parent", parent_object=self._data_parent_object, type="PLAIN_AXES", display_scale=0.3)
-        self._rigid_body_meshes_parent_object = create_parent_empty(name="rigid_body_meshes_parent", parent_object=self._data_parent_object, type="CUBE", display_scale=0.2)
-        self._video_parent_object = create_parent_empty(name="videos_parent", parent_object=self._data_parent_object, type="IMAGE", display_scale=0.1)
-        self._center_of_mass_parent_object = create_parent_empty(name="center_of_mass_data_parent", parent_object=self._data_parent_object, type="SPHERE", display_scale=0.1)
+        self._empty_parent_object = create_parent_empty(name="empties_parent", parent_object=self._data_parent_object,
+                                                        type="PLAIN_AXES", display_scale=0.3)
+        self._rigid_body_meshes_parent_object = create_parent_empty(name="rigid_body_meshes_parent",
+                                                                    parent_object=self._data_parent_object, type="CUBE",
+                                                                    display_scale=0.2)
+        self._video_parent_object = create_parent_empty(name="videos_parent", parent_object=self._data_parent_object,
+                                                        type="IMAGE", display_scale=0.1)
+        self._center_of_mass_parent_object = create_parent_empty(name="center_of_mass_data_parent",
+                                                                 parent_object=self._data_parent_object, type="SPHERE",
+                                                                 display_scale=0.1)
 
     def create_empties(self):
         try:
@@ -69,7 +75,8 @@ class OldBlenderController(metaclass=SingletonMetaClass):
             raise ValueError("Rig is None!")
         try:
             print("Saving joint angles...")
-            csv_file_path = str(Path(self.blend_file_path_str).parent / "saved_data" / f"{self.recording_name}_bone_and_joint_data.csv")
+            csv_file_path = str(
+                Path(self.blend_file_path_str).parent / "saved_data" / f"{self.recording_name}_bone_and_joint_data.csv")
             save_bone_and_joint_angles_from_rig(
                 rig=self.rig,
                 csv_save_path=csv_file_path,

@@ -32,7 +32,6 @@ class ChainABC(ABC):
         print(
             f"Chain: {self.name} instantiated with parent {self.parent} and children {[child.name for child in self.children]}")
 
-
     @classmethod
     def get_keypoints(cls) -> List[KeypointDefinition]:
         keypoints = cls.parent.get_keypoints()
