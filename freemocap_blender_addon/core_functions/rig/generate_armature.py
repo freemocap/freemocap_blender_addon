@@ -2,7 +2,6 @@ import bpy
 import mathutils
 
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 
@@ -67,7 +66,7 @@ def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:
     armature.name = name
     # Rename default bone to `Root`
     default_bone = armature.data.edit_bones[0]
-    default_bone.name = ROOT_BONE_NAME
+    default_bone.name = "ROOT"
     default_bone.tail = (0, 0, 0)
     default_bone.head = (-.1, 0, 0)
     return armature

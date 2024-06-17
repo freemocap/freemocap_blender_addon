@@ -4,10 +4,6 @@ from typing import Tuple, Optional
 import mathutils
 import math as m
 
-ROOT_BONE_NAME = "ROOT"
-
-
-
 @dataclass
 class BonePoseDefinition:
     parent_bone_name: Optional[str]
