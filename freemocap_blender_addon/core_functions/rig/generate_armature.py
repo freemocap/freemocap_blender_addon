@@ -2,6 +2,7 @@ import bpy
 import mathutils
 
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import PoseTypes
 from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 
@@ -9,42 +10,28 @@ from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 def generate_armature(
         armature_definition: ArmatureDefinition,
 ) -> bpy.types.Object:
-
     armature = create_new_armature_and_enter_edit_mode(name=armature_definition.armature_name)
+    bones_to_make = list(armature_definition.bone_definitions.items())
+    while len(bones_to_make) > 0:
+        for bone_info in bones_to_make:
+            bone_name, bone_definition = bone_info
+            if bone_definition.parent not in armature.data.edit_bones:
+                continue  # Skip this bone until its parent is created
+            bones_to_make.remove(bone_info)  # Remove this bone from the list of bones to make
 
-    # First loop: Create all bones without setting their positions
-    for bone_name in armature_definition.bone_definitions:
-        print(f"Creating armature bone: {bone_name}")
-        armature.data.edit_bones.new(name=bone_name)
+            print(f"Creating armature bone: {bone_name} with parent: {bone_definition.parent}")
+            armature.data.edit_bones.new(name=bone_name)
 
-    # Second loop: Set positions, rotations, and parent relationships
-    for bone_name, bone_definition in armature_definition.bone_definitions.items():
-        armature_bone = armature.data.edit_bones[bone_name]
+            armature_bone = armature.data.edit_bones[bone_name]
 
-        # Set the head position for root bones
-        if bone_definition.is_root:
-            armature_bone.head = (0, 0, 0)  # or whatever the root position should be
+            bone_vector = mathutils.Vector([0, 0, bone_definition.length])
 
-        bone_vector = mathutils.Vector([0, 0, bone_definition.length])
-
-        # Get the rotation matrix
-        rotation_matrix = mathutils.Euler(
-            mathutils.Vector(bone_definition.rest_pose.rotation),
-            "XYZ",
-        ).to_matrix()
-
-        # Set the tail position
-        armature_bone.tail = armature_bone.head + rotation_matrix @ bone_vector
-
-    # Third loop: Set head positions relative to parents and parent relationships
-    for bone_name, bone_definition in armature_definition.bone_definitions.items():
-        armature_bone = armature.data.edit_bones[bone_name]
-        if not bone_definition.is_root:
             parent_bone = armature.data.edit_bones[bone_definition.parent]
-            armature_bone.head = parent_bone.tail
-            armature_bone.parent = parent_bone
 
-        armature_bone.use_connect = bone_definition.rest_pose.is_connected
+            armature_bone.head = parent_bone.tail
+            armature_bone.tail = armature_bone.head + bone_definition.rest_pose.rotation_matrix @ bone_vector
+            armature_bone.parent = parent_bone
+            armature_bone.use_connect = bone_definition.rest_pose.is_connected
 
     # Change mode to object mode
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -66,7 +53,7 @@ def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:
     armature.name = name
     # Rename default bone to `Root`
     default_bone = armature.data.edit_bones[0]
-    default_bone.name = "ROOT"
+    default_bone.name = ROOT_BONE_NAME
     default_bone.tail = (0, 0, 0)
     default_bone.head = (-.1, 0, 0)
     return armature
@@ -82,9 +69,9 @@ if __name__ == "__main__":
         keypoint_trajectories=recording_data.body.map_to_keypoints(),
         skeleton_definition=SkeletonTypes.BODY_ONLY)
 
-    armature = generate_armature(
+    armature_outer = generate_armature(
         armature_definition=ArmatureDefinition.create(
-            rig_name="rig",
+            rig_name="test_armature",
             segment_definitions=segment_definitions_outer,
             pose_definition=PoseTypes.DEFAULT_TPOSE,
         )
