@@ -10,6 +10,10 @@ from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
 def generate_armature(
         armature_definition: ArmatureDefinition,
 ) -> bpy.types.Object:
+    """
+    Armature: The geometric representation of a skeleton (i.e. the stick figure definition)
+    """
+
     armature = create_new_armature_and_enter_edit_mode(name=armature_definition.armature_name)
     bones_to_make = list(armature_definition.bone_definitions.items())
     while len(bones_to_make) > 0:

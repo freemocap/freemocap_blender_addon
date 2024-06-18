@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 import numpy as np
@@ -19,6 +19,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
     trajectory_names: List[TrackedPointName]
     dimension_names: List[str]
     tracker_source: TrackerSourceType
+    component_type: ComponentType = field(default=ComponentType.BODY)
 
     @property
     def number_of_frames(self):
@@ -39,7 +40,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
 
     def map_to_keypoints(self) -> KeypointTrajectories:
         print("Mapping TrackedPoints to KeypointsTrajectories....")
-        mapping = get_mapping(component_type=ComponentType.BODY,
+        mapping = get_mapping(component_type=self.component_type,
                               tracker_source=self.tracker_source)
         keypoint_trajectories = {
             keypoint_name.lower(): KeypointTrajectory(name=keypoint_name.lower(),

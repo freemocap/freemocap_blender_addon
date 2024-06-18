@@ -20,22 +20,28 @@ class TypeHintError(TypeError):
         )
 
 
+
+
 def is_compatible_type(value: Any, expected_type: Any) -> bool:
     """
     Check if the value is compatible with the expected type.
     """
     numpy_float_types = (np.float16, np.float32, np.float64)
     numpy_int_types = (np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64)
+    try:
+        if isinstance(value, expected_type):
+            return True
+        if expected_type is float and isinstance(value, numpy_float_types):
+            return True
+        if expected_type is int and isinstance(value, numpy_int_types):
+            return True
+        if hasattr(expected_type, '__origin') and expected_type.__origin in (list, dict):
+            return isinstance(value, expected_type.__origin)
+    except Exception as e:
+        print(f"Error checking type: {e.__class__.__name__} - {e} - while checking {value} against {expected_type}")
 
-    if isinstance(value, expected_type):
-        return True
-    if expected_type is float and isinstance(value, numpy_float_types):
-        return True
-    if expected_type is int and isinstance(value, numpy_int_types):
-        return True
-    if hasattr(expected_type, '__origin') and expected_type.__origin in (list, dict):
-        return isinstance(value, expected_type.__origin)
     return False
+
 
 
 def enforce_type_hints(instance):

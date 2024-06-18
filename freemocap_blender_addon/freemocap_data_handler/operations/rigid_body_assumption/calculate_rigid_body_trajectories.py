@@ -98,6 +98,11 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: KeypointTrajectories,
             child_name = child_keypoint.name.lower()
             child_keypoint = keypoint_trajectories[child_name]
             child_keypoint.trajectory_data += translations
+
+        for name, trajectory in keypoint_trajectories.items():
+            if np.sum(np.isnan(trajectory.trajectory_data)) == trajectory.trajectory_data.size:
+                raise ValueError(f"Trajectory {name} is all NaN")
+
     return keypoint_trajectories
 
 

@@ -31,7 +31,7 @@ class LeftHipLinkage(LinkageABC):
     parent = LeftBodySegments.LEFT_PELVIS
     children = [LeftBodySegments.LEFT_PELVIS,
                 LeftBodySegments.LEFT_THIGH]
-    linked_keypoint = BodyKeypoints.LEFT_HIP
+    linked_keypoint = BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM
 
 
 class LeftKneeLinkage(LinkageABC):

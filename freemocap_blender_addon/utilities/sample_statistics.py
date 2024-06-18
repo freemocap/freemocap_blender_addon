@@ -20,8 +20,12 @@ def validate_samples(data: np.ndarray) -> None:
         raise ValueError("Sample list must be one-dimensional")
     if not np.issubdtype(data.dtype, np.number):
         raise ValueError("Sample list must contain only numerical values")
-    if np.isnan(data).all() or np.isinf(data).all():
-        raise ValueError("Sample list cannot contain only NaN or infinite values")
+    if np.isnan(data).all():
+        raise ValueError("Sample list is all NaN values")
+    if np.isinf(data).all():
+        raise ValueError("Sample list is all infinite values")
+    if np.isclose(np.sum(data), 0):
+        raise ValueError("Sample list sum is close to zero")
 
 
 @dataclass
@@ -35,7 +39,10 @@ class SampleData(TypeSafeDataclass):
             self.data = self.data.ravel()  # flatten the array to 1D (we'll handle multi-dimensional data later)
         else:
             raise ValueError("Samples must be a list or numpy array")
+
         validate_samples(self.data)
+
+
 
     @property
     def samples(self) -> SamplesType:

@@ -1,69 +1,65 @@
-from enum import Enum
-
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, RightArmKeypoints, \
-    RightMittenHandKeypoints, RightLegKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import BlenderizableEnum
 
 
-# arm
 class RightClavicleSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.CERVICAL_SPINE_ORIGIN_C7
-    child = RightArmKeypoints.RIGHT_SHOULDER
+    parent = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
+    child = BodyKeypoints.RIGHT_SHOULDER
 
 
 class RightUpperArmSegment(SimpleSegmentABC):
-    parent = RightArmKeypoints.RIGHT_SHOULDER
-    child = RightArmKeypoints.RIGHT_ELBOW
+    parent = BodyKeypoints.RIGHT_SHOULDER
+    child = BodyKeypoints.RIGHT_ELBOW
 
 
 class RightForearmSegment(SimpleSegmentABC):
-    parent = RightArmKeypoints.RIGHT_ELBOW
-    child = RightArmKeypoints.RIGHT_WRIST
+    parent = BodyKeypoints.RIGHT_ELBOW
+    child = BodyKeypoints.RIGHT_WRIST
 
 
 class RightWristIndexSegment(SimpleSegmentABC):
-    parent = RightArmKeypoints.RIGHT_WRIST
-    child = RightMittenHandKeypoints.RIGHT_INDEX_KNUCKLE
+    parent = BodyKeypoints.RIGHT_WRIST
+    child = BodyKeypoints.RIGHT_INDEX_KNUCKLE
 
 
 class RightWristPinkySegment(SimpleSegmentABC):
-    parent = RightArmKeypoints.RIGHT_WRIST
-    child = RightMittenHandKeypoints.RIGHT_PINKY_KNUCKLE
+    parent = BodyKeypoints.RIGHT_WRIST
+    child = BodyKeypoints.RIGHT_PINKY_KNUCKLE
 
 
 class RightWristThumbSegment(SimpleSegmentABC):
-    parent = RightArmKeypoints.RIGHT_WRIST
-    child = RightMittenHandKeypoints.RIGHT_THUMB_KNUCKLE
+    parent = BodyKeypoints.RIGHT_WRIST
+    child = BodyKeypoints.RIGHT_THUMB_KNUCKLE
 
 
 # leg
 class RightPelvisSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.PELVIS_CENTER
-    child = RightLegKeypoints.RIGHT_PELVIS_HIP_ACETABULUM
+    parent = BodyKeypoints.PELVIS_ORIGIN
+    child = BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM
 
 
 class RightThighSegment(SimpleSegmentABC):
-    parent = RightLegKeypoints.RIGHT_PELVIS_HIP_ACETABULUM
-    child = RightLegKeypoints.RIGHT_KNEE
+    parent = BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM
+    child = BodyKeypoints.RIGHT_KNEE
 
 
 class RightCalfSegment(SimpleSegmentABC):
-    parent = RightLegKeypoints.RIGHT_KNEE
-    child = RightLegKeypoints.RIGHT_ANKLE
+    parent = BodyKeypoints.RIGHT_KNEE
+    child = BodyKeypoints.RIGHT_ANKLE
 
 
 class RightFootSegment(SimpleSegmentABC):
-    parent = RightLegKeypoints.RIGHT_ANKLE
-    child = RightLegKeypoints.RIGHT_HALLUX_TIP
+    parent = BodyKeypoints.RIGHT_ANKLE
+    child = BodyKeypoints.RIGHT_HALLUX_TIP
 
 
 class RightHeelSegment(SimpleSegmentABC):
-    parent = RightLegKeypoints.RIGHT_ANKLE
-    child = RightLegKeypoints.RIGHT_HEEL
+    parent = BodyKeypoints.RIGHT_ANKLE
+    child = BodyKeypoints.RIGHT_HEEL
 
 
-class RightBodySegments(Enum):
+class RightBodySegments(BlenderizableEnum):
     RIGHT_CLAVICLE: SimpleSegmentABC = RightClavicleSegment
     RIGHT_UPPER_ARM: SimpleSegmentABC = RightUpperArmSegment
     RIGHT_FOREARM: SimpleSegmentABC = RightForearmSegment
@@ -77,11 +73,10 @@ class RightBodySegments(Enum):
     RIGHT_HEEL: SimpleSegmentABC = RightHeelSegment
 
 
-BlenderizedRightBodySegments = Enum("BlenderizedRightBodySegments", {name: blenderize_name(name) for name in
-                                                                     list(RightBodySegments.__members__.keys())})
 
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}"
                      for rb in list(RightBodySegments)]))
     print("Blenderized names:")
-    print("\n".join([f"{rb.name}: {rb.value}" for rb in list(BlenderizedRightBodySegments)]))
+    print("\n".join([f"{value.blenderize()}" for key, value in RightBodySegments.__members__.items()])
+          )

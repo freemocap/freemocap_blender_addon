@@ -12,9 +12,12 @@ def calculate_segment_length_stats(keypoint_trajectories: KeypointTrajectories,
     segment_stats = {}
     segments = skeleton_definition.value.get_segments()
     for segment in segments:
+        parent_name = segment.value.parent.name.lower()
+        child_name = segment.value.child.name.lower()
+        print(f"Calculating segment length for {segment.name} as distance between keypoints - `{parent_name}` and `{child_name}`")
         length_stats = calculate_distance_between_trajectories(
-            trajectory_1=keypoint_trajectories[segment.value.parent.name.lower()].trajectory_data,
-            trajectory_2=keypoint_trajectories[segment.value.child.name.lower()].trajectory_data
+            trajectory_1=keypoint_trajectories[parent_name].trajectory_data,
+            trajectory_2=keypoint_trajectories[child_name].trajectory_data
         )
 
         segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
@@ -48,14 +51,26 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
     --------
     >>> trajecotry_1 = np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]])
     >>> trajecotry_2 = np.array([[1, 0, 0], [0, 1, 1], [2, 3, 2]])
-    >>> compute_trajectory_distances(trajecotry_1, trajecotry_2)
-    array([1.        , 1.41421356, 1.        ])
+    >>> calculate_distance_between_trajectories(trajecotry_1, trajecotry_2) # Expected output: array([1, 1.41421356, 1])
     """
     if trajectory_1.shape != trajectory_2.shape:
         raise ValueError(
             f"Both trajectories must have the same shape, Trajectory 1 shape: {trajectory_1.shape}, Trajectory 2 shape: {trajectory_2.shape}")
+    if np.sum(np.isnan(trajectory_1)) == trajectory_1.size:
+        raise ValueError("Trajectory 1 is all NaN")
+    if np.sum(np.isnan(trajectory_2)) == trajectory_2.size:
+        raise ValueError("Trajectory 2 is all NaN")
 
-    return np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
+
+    distances =  np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
+    if distances.shape[0] != trajectory_1.shape[0]:
+        raise ValueError(
+            f"Distances array shape {distances.shape} does not match trajectory shape {trajectory_1.shape}")
+    if all(np.isnan(distances)):
+        raise ValueError("All distances are NaN")
+    if all(np.isinf(distances)):
+        raise ValueError("All distances are infinite")
+    return distances
 
 
 def print_length_stats_table(segment_lengths: SegmentStats, squash_less_than=1e-3):

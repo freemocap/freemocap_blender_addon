@@ -1,12 +1,12 @@
-from dataclasses import dataclass
-from enum import Enum
-from typing import Optional, List
+from dataclasses import dataclass, field
+from typing import List, Tuple, Optional
 
 import numpy as np
 
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
     TrackedPointName, \
     KeypointMappingType
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import BlenderizableEnum
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -20,28 +20,36 @@ class KeypointMapping(TypeSafeDataclass):
      a dictionary of keypoints with weights (maps to the weighted sum of the tracked points), or
      a dictionary of keypoints with offsets (maps to the tracked point with an offset defined in the local reference frame of the Segment).
 
+    params:
+    tracked_points: List[TrackedPointName] - The list of tracked points that will be combined to create the mapping to a keypoint.
+    weights: List[float] - The weights of the tracked points (must sum to 1 and have the same length as tracked_points).
+    offset: Tuple[float, float, float] - The offset of the keypoint in the local reference from of the Segment. #TODO - implement and double check logic
     """
-    mapping: KeypointMappingType
-    tracked_points: Optional[List[TrackedPointName]] = None
-    weights: Optional[List[float]] = None
+    tracked_points: List[TrackedPointName]
+    weights: List[float]
 
-    def __post_init__(self):
-        if isinstance(self.mapping, str):
-            self.tracked_points = [self.mapping]
-            self.weights = [1]
+    @classmethod
+    def create(cls, mapping: KeypointMappingType):
 
-        elif isinstance(self.mapping, list):  # TODO - fancy types
-            self.tracked_points = self.mapping
-            self.weights = [1 / len(self.mapping)] * len(self.mapping)
+        if isinstance(mapping, str):
+            tracked_points = [mapping]
+            weights = [1]
+        elif isinstance(mapping, list):  # TODO - fancy types
+            tracked_points = mapping
+            weights = [1 / len(mapping)] * len(mapping)
 
-        elif isinstance(self.mapping, dict):
-            self.tracked_points = list(self.mapping.keys())
-            self.weights = list(self.mapping.values())
+        elif isinstance(mapping, dict):
+            tracked_points = list(mapping.keys())
+            weights = list(mapping.values())
         else:
             raise ValueError("Mapping must be a TrackedPointName, TrackedPointList, or WeightedTrackedPoints")
 
-        if np.sum(self.weights) != 1:
+        if np.sum(weights) != 1:
             raise ValueError("The sum of the weights must be 1")
+        if len(tracked_points) != len(weights):
+            raise ValueError("The number of tracked points must match the number of weights")
+
+        return cls(tracked_points=tracked_points, weights=weights)
 
     def calculate_trajectory(self, data: np.ndarray, names: List[TrackedPointName]) -> np.ndarray:
         """
@@ -64,13 +72,16 @@ class KeypointMapping(TypeSafeDataclass):
             keypoint_xyz = data[:, keypoint_index, :]
             trajectories_frame_xyz += keypoint_xyz * weight
 
+        if np.sum(np.isnan(trajectories_frame_xyz)) == trajectories_frame_xyz.size:
+            raise ValueError("All trajectories are NaN")
+
         return trajectories_frame_xyz
 
 
-class KeypointMappingsEnum(Enum):
+class KeypointMappingsEnum(BlenderizableEnum):
     """An Enum that can hold different types of keypoint mappings."""
 
     def __new__(cls, value: KeypointMappingType):
         obj = object.__new__(cls)
-        obj._value_ = KeypointMapping(mapping=value)
+        obj._value_ = KeypointMapping.create(mapping=value)
         return obj

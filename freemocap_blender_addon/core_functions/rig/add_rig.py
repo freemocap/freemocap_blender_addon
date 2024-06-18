@@ -5,49 +5,39 @@ import bpy
 
 from freemocap_blender_addon.core_functions.rig.apply_bone_constraints import add_bone_constraints
 from freemocap_blender_addon.core_functions.rig.appy_ik_constraints import add_ik_constraints_to_armature
-from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
-from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
-    RigidSegmentDefinitions
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
 from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BlenderizedKeypointNames
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
 
 def generate_rig(
-        rig_name: str,
-        segment_definitions: RigidSegmentDefinitions,
+        armature: bpy.types.Object,
         config: AddRigConfig,
 ) -> Tuple[bpy.types.Object, ArmatureDefinition]:
     """
-    Armature - bone lengths and rest pose definitions which define the basic structure of the skeleton
-    Rig - Armature + constraints, IK, drivers, etc
+    Rig: An armature with constraints, drivers, IK, etc
     """
     # Deselect all objects
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.object.select_all(action="DESELECT")
 
-    print("Generating armature from segment legnths and rest pose defintions...")
-    armature_definition = ArmatureDefinition.create(
-        rig_name=rig_name,
-        segment_definitions=segment_definitions,
-        pose_definition=config.rest_pose_definition,
-        bone_constraints=config.bone_constraints,
-    )
-    armature = generate_armature(armature_definition=armature_definition)
     root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-    root_constraint.target = bpy.data.objects[BlenderizedKeypointNames.PELVIS_CENTER.value]
-    if config.add_ik_constraints:
-        add_ik_constraints_to_armature(armature=armature)
-
-    # Change mode to object mode
-    bpy.ops.object.mode_set(mode="OBJECT")
+    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_ORIGIN.blenderize()]
 
     add_bone_constraints(
         armature=armature,
         bone_constraints=config.bone_constraints,
         use_limit_rotation=config.use_limit_rotation,
     )
+
+    if config.add_ik_constraints:
+        add_ik_constraints_to_armature(armature=armature)
+
+    # Change mode to object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+
 
     # TODO - I don't really know what the effect of the following code is. Running it returns `Info: Nothing to bake`
     # ### Bake animation to the rig ###
@@ -62,7 +52,7 @@ def generate_rig(
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")
 
-    return armature, armature_definition
+    return armature
 
 
 def deselect_all_bpy_objects():

@@ -1,11 +1,12 @@
 from pathlib import Path
+from typing import Dict
 
 import bpy
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.load_skelly_fbx_files import load_skelly_fbx_files
+from freemocap_blender_addon import PACKAGE_ROOT_PATH
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
 from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
 
 
 def attach_skelly_bone_meshes(armature: bpy.types.Object,
@@ -20,27 +21,12 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='EDIT')
-    axial_bone_names, skelly_meshes, skull_bone_names = load_skelly_fbx_files()
+    skelly_meshes = load_skelly_fbx_files()
 
     # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
     for bone in armature.pose.bones:
-        if bone.name == ROOT_BONE_NAME:
-            continue
-        if bone.name in skull_bone_names:
-            if bone.name == BlenderizedSkullSegments.NOSE.value:
-                mesh_name = f"{SKELLY_MESH_PREFIX}skull"
-            else:
-                continue
-        if not bone.name in axial_bone_names:
-            continue
-        else:
-            mesh_name = f"{SKELLY_MESH_PREFIX}{bone.name}"
-        mesh_path = SKELLY_BONE_MESHES_PATH / f"{mesh_name}.fbx"
         print(f" Loading bone mesh for `{bone.name}` from: {mesh_path}")
 
-        # Import the skelly mesh
-        if not Path(mesh_path).is_file():
-            raise FileNotFoundError(f"Could not find skelly mesh at {mesh_path}")
         bpy.ops.import_scene.fbx(filepath=str(mesh_path))
 
         skelly_meshes.append(bpy.data.objects[mesh_name])
@@ -95,8 +81,22 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
     bpy.ops.object.join()
 
     # Select the rig
-    rig.select_set(True)
+    armature.select_set(True)
     # Set rig as active
-    bpy.context.view_layer.objects.active = rig
+    bpy.context.view_layer.objects.active = armature
     # Parent the mesh and the rig with automatic weights
     bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+
+
+SKELLY_MESH_PREFIX = 'skelly_'
+SKELLY_BONE_MESHES_PATH = Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones" / "body" / "axial"
+
+
+def load_skelly_fbx_files() -> Dict[str, bpy.types.Object]:
+    meshes = {}
+    for fbx_file_path in SKELLY_BONE_MESHES_PATH.glob("*.fbx"):
+        bpy.ops.import_scene.fbx(filepath=str(fbx_file_path))
+        mesh_name = fbx_file_path.stem
+        meshes[mesh_name] = bpy.data.objects[mesh_name]
+
+    return meshes

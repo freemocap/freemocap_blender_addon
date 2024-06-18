@@ -31,7 +31,7 @@ class NeckC7Linkage(LinkageABC):
 
 
 class ChestT12Linkage(LinkageABC):
-    parent = AxialSegments.LUMBAR_SPINE
-    children = [AxialSegments.LUMBAR_SPINE,
+    parent = AxialSegments.PELVIS_LUMBAR
+    children = [AxialSegments.PELVIS_LUMBAR,
                 AxialSegments.THORACIC_SPINE]
     linked_keypoint = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12

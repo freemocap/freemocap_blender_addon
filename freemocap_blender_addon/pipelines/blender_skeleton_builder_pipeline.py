@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
-import bpy
 import numpy as np
 
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
@@ -14,8 +13,6 @@ from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BlenderizedKeypointNames
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
 from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
@@ -70,18 +67,17 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                 bone_constraints=self.pipeline_config.add_rig.bone_constraints,
             )
             armature = generate_armature(armature_definition=armature_definition)
-            root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-            root_constraint.target = bpy.data.objects[BlenderizedKeypointNames.PELVIS_CENTER.value]
 
-            # rig, armature_definition = generate_rig(
-            #     rig_name=f"{self.recording_name}_rig",
-            #     segment_definitions=blenderized_segment_definitions,
-            #     config=self.pipeline_config.add_rig,
-            # )
             attach_skelly_bone_meshes(
                 armature=armature,
                 armature_definition=armature_definition,
             )
+
+            rig = generate_rig(
+                armature=armature,
+                config=self.pipeline_config.add_rig,
+            )
+
         print(f"Finished building blender skeleton for recording: {self.recording_name}")
 
 

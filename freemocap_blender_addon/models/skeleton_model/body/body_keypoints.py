@@ -1,9 +1,9 @@
 from enum import Enum
 
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name, BlenderizableEnum
 
 
-class BodyKeypoints(Enum):
+class BodyKeypoints(BlenderizableEnum):
     ## skull
     SKULL_ORIGIN_FORAMEN_MAGNUM = "Gemoetric center of the foramen magnum, the hole at the base of the skull where the spinal cord enters"
     SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures"
@@ -20,7 +20,7 @@ class BodyKeypoints(Enum):
     LEFT_SKULL_EYE_INNER ="Inner corner of the left eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
     LEFT_SKULL_EYE_CENTER ="Geometric center of the `inner` and `outer` keypoints of the left eye keypoints - NOTE - not the center of the orbit"
     LEFT_SKULL_EYE_OUTER ="Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone"
-    LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS ="Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    LEFT_SKULL_ACOUSTIC_MEATUS ="Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
     LEFT_SKULL_CANINE_TOOTH_TIP ="Tip of the left canine tooth, roughly behind the right corner of the mouth"
 
 
@@ -32,6 +32,9 @@ class BodyKeypoints(Enum):
     ## chest,
     THORACIC_SPINE_TOP_T1 = "Geometric center of the top surface of the first thoracic vertebra (T1)"
     THORACIC_SPINE_ORIGIN_T12 = "Geometric center of the bottom surface of the twelfth thoracic vertebra (T12)"
+    STERNUM_TOP_SUPRASTERNAL_NOTCH = "Geometric center of the suprasternal notch, the dip at the top of the sternum"
+    STERNUM_ORIGIN_XIPHOID_PROCESS = "Geometric center of the xiphoid process, the bottom tip of the sternum"
+
 
     ## pelvis,
     PELVIS_ORIGIN = "Geometric center of the left and right hip sockets, anterior to the Sacrum"
@@ -80,12 +83,11 @@ class BodyKeypoints(Enum):
     LEFT_HEEL = "Contact surface of the left heel with the ground, most distal point of the calcaneus"
     LEFT_HALLUX_TIP = "Tippy tip of the left hallux, aka the big toe"
 
-    def blenderize(self):
-        return blenderize_name(self.name)
+
 
 # Example usage
 if __name__ == "__main__":
     print("\n".join([f"{key}: {value.value}" for key, value in BodyKeypoints.__members__.items()]))
 
     print("Blenderized names:")
-    print("\n".join([f"{key}: {value.blenderize()}" for key, value in BodyKeypoints.__members__.items()]))
+    print("\n".join([value.blenderize() for value in BodyKeypoints.__members__.values()]))

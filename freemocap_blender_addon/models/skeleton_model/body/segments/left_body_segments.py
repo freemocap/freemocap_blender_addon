@@ -1,66 +1,65 @@
 from enum import Enum
 
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, LeftArmKeypoints, \
-    LeftMittenHandKeypoints, LeftLegKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
 from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 
 
 # arm
 class LeftClavicleSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.CERVICAL_SPINE_ORIGIN_C7
-    child = LeftArmKeypoints.LEFT_SHOULDER
+    parent = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
+    child = BodyKeypoints.LEFT_SHOULDER
 
 
 class LeftUpperArmSegment(SimpleSegmentABC):
-    parent = LeftArmKeypoints.LEFT_SHOULDER
-    child = LeftArmKeypoints.LEFT_ELBOW
+    parent = BodyKeypoints.LEFT_SHOULDER
+    child = BodyKeypoints.LEFT_ELBOW
 
 
 class LeftForearmSegment(SimpleSegmentABC):
-    parent = LeftArmKeypoints.LEFT_ELBOW
-    child = LeftArmKeypoints.LEFT_WRIST
+    parent = BodyKeypoints.LEFT_ELBOW
+    child = BodyKeypoints.LEFT_WRIST
 
 
 class LeftWristIndexSegment(SimpleSegmentABC):
-    parent = LeftArmKeypoints.LEFT_WRIST
-    child = LeftMittenHandKeypoints.LEFT_INDEX_KNUCKLE
+    parent = BodyKeypoints.LEFT_WRIST
+    child = BodyKeypoints.LEFT_INDEX_KNUCKLE
 
 
 class LeftWristPinkySegment(SimpleSegmentABC):
-    parent = LeftArmKeypoints.LEFT_WRIST
-    child = LeftMittenHandKeypoints.LEFT_PINKY_KNUCKLE
+    parent = BodyKeypoints.LEFT_WRIST
+    child = BodyKeypoints.LEFT_PINKY_KNUCKLE
 
 
 class LeftWristThumbSegment(SimpleSegmentABC):
-    parent = LeftArmKeypoints.LEFT_WRIST
-    child = LeftMittenHandKeypoints.LEFT_THUMB_KNUCKLE
+    parent = BodyKeypoints.LEFT_WRIST
+    child = BodyKeypoints.LEFT_THUMB_KNUCKLE
 
 
 # leg
 class LeftPelvisSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.PELVIS_CENTER
-    child = LeftLegKeypoints.LEFT_HIP
+    parent = BodyKeypoints.PELVIS_ORIGIN
+    child = BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM
 
 
 class LeftThighSegment(SimpleSegmentABC):
-    parent = LeftLegKeypoints.LEFT_HIP
-    child = LeftLegKeypoints.LEFT_KNEE
+    parent = BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM
+    child = BodyKeypoints.LEFT_KNEE
 
 
 class LeftCalfSegment(SimpleSegmentABC):
-    parent = LeftLegKeypoints.LEFT_KNEE
-    child = LeftLegKeypoints.LEFT_ANKLE
+    parent = BodyKeypoints.LEFT_KNEE
+    child = BodyKeypoints.LEFT_ANKLE
 
 
 class LeftForeFootSegment(SimpleSegmentABC):
-    parent = LeftLegKeypoints.LEFT_ANKLE
-    child = LeftLegKeypoints.LEFT_HALLUX_TIP
+    parent = BodyKeypoints.LEFT_ANKLE
+    child = BodyKeypoints.LEFT_HALLUX_TIP
 
 
 class LeftHeelSegment(SimpleSegmentABC):
-    parent = LeftLegKeypoints.LEFT_ANKLE
-    child = LeftLegKeypoints.LEFT_HEEL
+    parent = BodyKeypoints.LEFT_ANKLE
+    child = BodyKeypoints.LEFT_HEEL
 
 
 class LeftBodySegments(Enum):
@@ -76,13 +75,15 @@ class LeftBodySegments(Enum):
     LEFT_FORE_FOOT: SimpleSegmentABC = LeftForeFootSegment
     LEFT_HEEL: SimpleSegmentABC = LeftHeelSegment
 
+    def blenderize(self) -> str:
+        return blenderize_name(self.name)
 
-BlenderizedLeftBodySegments = Enum("BlenderizedLeftBodySegments",
-                                   {name: blenderize_name(name) for name in list(LeftBodySegments.__members__.keys())})
+
+
 
 if __name__ == "__main__":
     print("\n".join([f"{rb.name}: Parent - {rb.value.parent.name}, Child - {rb.value.child.name}"
                      for rb in list(LeftBodySegments)]))
 
     print("Blenderized names:")
-    print("\n".join([f"{rb.name}: {rb.value}" for rb in list(BlenderizedLeftBodySegments)]))
+    print("\n".join([f"{key}: {value.blenderize()}" for key, value in LeftBodySegments.__members__.items()]))

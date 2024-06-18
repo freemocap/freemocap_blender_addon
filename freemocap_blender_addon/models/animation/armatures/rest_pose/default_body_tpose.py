@@ -2,169 +2,169 @@ from enum import Enum
 
 from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
-from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import BlenderizedAxialSegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import BlenderizedLeftBodySegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import BlenderizedRightBodySegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
 
 _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Axial segments
-    BlenderizedAxialSegments.LUMBAR_SPINE.value: BoneRestPoseDefinition(
+    AxialSegments.PELVIS_LUMBAR.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
         parent_bone_name=ROOT_BONE_NAME
     ),
-    BlenderizedAxialSegments.THORACIC_SPINE.value: BoneRestPoseDefinition(
+    AxialSegments.THORACIC_SPINE.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
-        parent_bone_name=BlenderizedAxialSegments.LUMBAR_SPINE.value
+        parent_bone_name=AxialSegments.PELVIS_LUMBAR.blenderize()
     ),
-    BlenderizedAxialSegments.CERVICAL_SPINE.value: BoneRestPoseDefinition(
+    AxialSegments.CERVICAL_SPINE.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
-        parent_bone_name=BlenderizedAxialSegments.THORACIC_SPINE.value
+        parent_bone_name=AxialSegments.THORACIC_SPINE.blenderize()
     ),
 
     # Skull segments
-    BlenderizedSkullSegments.NOSE.value: BoneRestPoseDefinition(
+    SkullSegments.NOSE.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-100, 0, 0),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
     # right face
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_INNER.value: BoneRestPoseDefinition(
+    SkullSegments.RIGHT_EYE_INNER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -20),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_CENTER.value: BoneRestPoseDefinition(
+    SkullSegments.RIGHT_EYE_CENTER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -30),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_OUTER.value: BoneRestPoseDefinition(
+    SkullSegments.RIGHT_EYE_OUTER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -40),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.RIGHT_SKULL_ACOUSTIC_MEATUS.value: BoneRestPoseDefinition(
+    SkullSegments.RIGHT_EAR_TRAGUS.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-90, 0, -90),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.RIGHT_SKULL_CANINE_TOOTH_TIP.value: BoneRestPoseDefinition(
+    SkullSegments.RIGHT_MOUTH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-120, -20, 0),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
     # left face
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_INNER.value: BoneRestPoseDefinition(
+    SkullSegments.LEFT_EYE_INNER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 20),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_CENTER.value: BoneRestPoseDefinition(
+    SkullSegments.LEFT_EYE_CENTER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 30),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_OUTER.value: BoneRestPoseDefinition(
+    SkullSegments.LEFT_EYE_OUTER.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 40),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value: BoneRestPoseDefinition(
+    SkullSegments.LEFT_EAR_TRAGUS.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-90, 0, 90),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
-    BlenderizedSkullSegments.LEFT_SKULL_CANINE_TOOTH_TIP.value: BoneRestPoseDefinition(
+    SkullSegments.LEFT_MOUTH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-120, 20, 0),
-        parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
+        parent_bone_name=AxialSegments.CERVICAL_SPINE.blenderize()
     ),
 
     # Right upper limb
-    BlenderizedRightBodySegments.RIGHT_CLAVICLE.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_CLAVICLE.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
 
-        parent_bone_name=BlenderizedAxialSegments.THORACIC_SPINE.value
+        parent_bone_name=AxialSegments.THORACIC_SPINE.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_UPPER_ARM.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_UPPER_ARM.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_CLAVICLE.value
+        parent_bone_name=RightBodySegments.RIGHT_CLAVICLE.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_FOREARM.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_FOREARM.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 1),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_UPPER_ARM.value
+        parent_bone_name=RightBodySegments.RIGHT_UPPER_ARM.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_WRIST_INDEX.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_WRIST_INDEX.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_FOREARM.value
+        parent_bone_name=RightBodySegments.RIGHT_FOREARM.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_WRIST_PINKY.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_WRIST_PINKY.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 45),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_FOREARM.value
+        parent_bone_name=RightBodySegments.RIGHT_FOREARM.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_WRIST_THUMB.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_WRIST_THUMB.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, -45),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_FOREARM.value
+        parent_bone_name=RightBodySegments.RIGHT_FOREARM.blenderize()
     ),
 
     # Right lower limb
-    BlenderizedRightBodySegments.RIGHT_PELVIS.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_PELVIS.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
         parent_bone_name=ROOT_BONE_NAME
     ),
-    BlenderizedRightBodySegments.RIGHT_THIGH.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_PELVIS.value
+        parent_bone_name=RightBodySegments.RIGHT_PELVIS.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_CALF.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_CALF.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_THIGH.value
+        parent_bone_name=RightBodySegments.RIGHT_THIGH.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_FORE_FOOT.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_FORE_FOOT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-70, 170, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_CALF.value
+        parent_bone_name=RightBodySegments.RIGHT_CALF.blenderize()
     ),
-    BlenderizedRightBodySegments.RIGHT_HEEL.value: BoneRestPoseDefinition(
+    RightBodySegments.RIGHT_HEEL.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(70, 170, 0),
-        parent_bone_name=BlenderizedRightBodySegments.RIGHT_CALF.value
+        parent_bone_name=RightBodySegments.RIGHT_CALF.blenderize()
     ),
 
     # Left upper limb
-    BlenderizedLeftBodySegments.LEFT_CLAVICLE.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_CLAVICLE.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
-        parent_bone_name=BlenderizedAxialSegments.THORACIC_SPINE.value
+        parent_bone_name=AxialSegments.THORACIC_SPINE.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_UPPER_ARM.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_UPPER_ARM.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_CLAVICLE.value
+        parent_bone_name=LeftBodySegments.LEFT_CLAVICLE.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_FOREARM.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_FOREARM.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 1),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_UPPER_ARM.value
+        parent_bone_name=LeftBodySegments.LEFT_UPPER_ARM.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_WRIST_INDEX.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_WRIST_INDEX.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_FOREARM.value
+        parent_bone_name=LeftBodySegments.LEFT_FOREARM.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_WRIST_PINKY.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_WRIST_PINKY.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 45),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_FOREARM.value
+        parent_bone_name=LeftBodySegments.LEFT_FOREARM.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_WRIST_THUMB.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_WRIST_THUMB.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, -45),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_FOREARM.value
+        parent_bone_name=LeftBodySegments.LEFT_FOREARM.blenderize()
     ),
 
     # Left lower limb
-    BlenderizedLeftBodySegments.LEFT_PELVIS.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_PELVIS.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
         parent_bone_name=ROOT_BONE_NAME
     ),
-    BlenderizedLeftBodySegments.LEFT_THIGH.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_PELVIS.value
+        parent_bone_name=LeftBodySegments.LEFT_PELVIS.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_CALF.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_CALF.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_THIGH.value
+        parent_bone_name=LeftBodySegments.LEFT_THIGH.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_FORE_FOOT.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_FORE_FOOT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(-70, 170, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_CALF.value
+        parent_bone_name=LeftBodySegments.LEFT_CALF.blenderize()
     ),
-    BlenderizedLeftBodySegments.LEFT_HEEL.value: BoneRestPoseDefinition(
+    LeftBodySegments.LEFT_HEEL.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(70, 190, 0),
-        parent_bone_name=BlenderizedLeftBodySegments.LEFT_CALF.value
+        parent_bone_name=LeftBodySegments.LEFT_CALF.blenderize()
     ),
 }
 
@@ -172,7 +172,7 @@ BodyArmatureTPoseDefinition = Enum('BodyArmatureTPoseDefinition', _BODY_ARMATURE
 
 if __name__ == "__main__":
     for name, member in BodyArmatureTPoseDefinition.__members__.items():
-        print(f"{name}: {member.value}")
+        print(f"{name}: {member.blenderize()}")
 
 #
 # "thumb.carpal.R": PoseElement(

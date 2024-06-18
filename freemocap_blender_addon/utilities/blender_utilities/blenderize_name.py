@@ -1,9 +1,12 @@
 import re
 from copy import copy
+from enum import Enum
 
 BlenderizedName = str
 
-
+class BlenderizableEnum(Enum):
+    def blenderize(self) -> str:
+        return blenderize_name(self.name)
 def blenderize_name(original_name: str) -> BlenderizedName:
     """
     Create a Blender formatted name from the original name.

@@ -3,22 +3,20 @@ from typing import List, Dict
 
 from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintABC, \
     BoneConstraintTypes, TrackAxis, OwnerSpace, LockAxis
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BlenderizedKeypointNames as bkn
-from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import BlenderizedAxialSegments as bas
-from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import \
-    BlenderizedLeftBodySegments as blbs
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import \
-    BlenderizedRightBodySegments as brbs
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
 
 # Enums for specific keys to avoid spelling issues
 
 _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # AXIAL SEGMENTS
     # Spine
-    bas.LUMBAR_SPINE.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.PELVIS_CENTER.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.THORACIC_SPINE_TOP_T12.value,
+    AxialSegments.PELVIS_LUMBAR.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_ORIGIN.blenderize()),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.PELVIS_LUMBAR_TOP_L1.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -34,12 +32,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    bas.THORACIC_SPINE.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value,
+    AxialSegments.THORACIC_SPINE.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_SHOULDER.value,
+            target=BodyKeypoints.RIGHT_SHOULDER.blenderize(),
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -57,12 +55,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    bas.CERVICAL_SPINE.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.SKULL_ORIGIN_FORAMEN_MAGNUM.value,
+    AxialSegments.CERVICAL_SPINE.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.SKULL_FORWARD_NOSE_TIP.value,
+            target=BodyKeypoints.SKULL_FORWARD_NOSE_TIP.blenderize(),
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -82,60 +80,60 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     ],
 
     # SKULL
-    BlenderizedSkullSegments.NOSE.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.SKULL_FORWARD_NOSE_TIP.value,
+    SkullSegments.NOSE.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SKULL_FORWARD_NOSE_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT FACE
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_INNER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_INNER.value,
+    SkullSegments.RIGHT_EYE_INNER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_INNER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_CENTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_CENTER.value,
+    SkullSegments.RIGHT_EYE_CENTER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_CENTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_SKULL_EYE_OUTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_OUTER.value,
+    SkullSegments.RIGHT_EYE_OUTER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_OUTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_SKULL_ACOUSTIC_MEATUS.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_ACOUSTIC_MEATUS.value,
+    SkullSegments.RIGHT_EAR_TRAGUS.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_SKULL_CANINE_TOOTH_TIP.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_CANINE_TOOTH_TIP.value,
+    SkullSegments.RIGHT_MOUTH.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # LEFT FACE
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_INNER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_INNER.value,
+    SkullSegments.LEFT_EYE_INNER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_INNER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_CENTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_CENTER.value,
+    SkullSegments.LEFT_EYE_CENTER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_CENTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_SKULL_EYE_OUTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_OUTER.value,
+    SkullSegments.LEFT_EYE_OUTER.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_OUTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value,
+    SkullSegments.LEFT_EAR_TRAGUS.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_SKULL_CANINE_TOOTH_TIP.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_CANINE_TOOTH_TIP.value,
+    SkullSegments.LEFT_MOUTH.blenderize():
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT BODY SEGMENTS
     # RIGHT UPPER LIMB
-    brbs.RIGHT_CLAVICLE.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SHOULDER.value,
+    RightBodySegments.RIGHT_CLAVICLE.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SHOULDER.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value), ],
-    brbs.RIGHT_UPPER_ARM.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_ELBOW.value,
+    RightBodySegments.RIGHT_UPPER_ARM.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_ELBOW.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -151,8 +149,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    brbs.RIGHT_FOREARM.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_WRIST.value,
+    RightBodySegments.RIGHT_FOREARM.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_WRIST.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -168,12 +166,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    brbs.RIGHT_WRIST_INDEX.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_INDEX_KNUCKLE.value,
+    RightBodySegments.RIGHT_WRIST_INDEX.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_INDEX_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_THUMB_KNUCKLE.value,  # originally -> "right_hand_thumb_cmc",
+            target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.value,  # originally -> "right_hand_thumbblenderize(),
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -193,12 +191,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
 
     ],
 
-    brbs.RIGHT_WRIST_PINKY.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_PINKY_KNUCKLE.value,
+    RightBodySegments.RIGHT_WRIST_PINKY.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_PINKY_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_THUMB_KNUCKLE.value,  # originally - "right_hand_thumb_cmc",
+            target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.value,  # originally - "right_hand_thumbblenderize(),
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -217,13 +215,13 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
 
     ],
-    brbs.RIGHT_WRIST_THUMB.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_THUMB_KNUCKLE.value,
+    RightBodySegments.RIGHT_WRIST_THUMB.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         # TODO - revisit when we add the detailed hand
         # BoneConstraintTypes.LOCKED_TRACK.value(
-        #     target="right_hand_thumb_cmc",
+        #     target="right_hand_thumbblenderize(),
         #     track_axis=TrackAxis.TRACK_X.value,
         #     lock_axis=LockAxis.LOCK_Y.value,
         #     influence=1.0,
@@ -243,28 +241,28 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
 
     ],
     ## RIGHT LOWER LIMB
-    brbs.RIGHT_PELVIS.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.PELVIS_CENTER.value),
+    RightBodySegments.RIGHT_PELVIS.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_ORIGIN.blenderize()),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
+            target=BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM.blenderize(),
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Z.value,
             influence=1.0,
         ),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
+            target=BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM.blenderize(),
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
         ),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
-    brbs.RIGHT_THIGH.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_KNEE.value,
+    RightBodySegments.RIGHT_THIGH.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM.blenderize()),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_KNEE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -280,8 +278,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    brbs.RIGHT_CALF.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_ANKLE.value,
+    RightBodySegments.RIGHT_CALF.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_ANKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -298,8 +296,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
 
-    brbs.RIGHT_FORE_FOOT.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_HALLUX_TIP.value,
+    RightBodySegments.RIGHT_FORE_FOOT.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_HALLUX_TIP.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -316,20 +314,20 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
 
-    brbs.RIGHT_HEEL.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_HEEL.value,
+    RightBodySegments.RIGHT_HEEL.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_HEEL.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
     # LEFT BODY SEGMENTS
     # LEFT UPPER LIMB
-    blbs.LEFT_CLAVICLE.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SHOULDER.value,
+    LeftBodySegments.LEFT_CLAVICLE.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SHOULDER.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value), ],
-    blbs.LEFT_UPPER_ARM.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_ELBOW.value,
+    LeftBodySegments.LEFT_UPPER_ARM.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_ELBOW.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -345,8 +343,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    blbs.LEFT_FOREARM.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_WRIST.value,
+    LeftBodySegments.LEFT_FOREARM.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_WRIST.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -362,12 +360,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
             owner_space=OwnerSpace.LOCAL.value,
         ),
     ],
-    blbs.LEFT_WRIST_INDEX.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_INDEX_KNUCKLE.value,
+    LeftBodySegments.LEFT_WRIST_INDEX.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_INDEX_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.LEFT_THUMB_KNUCKLE.value,  # originally -> "right_hand_thumb_cmc",
+            target=BodyKeypoints.LEFT_THUMB_KNUCKLE.value,  # originally -> "right_hand_thumbblenderize(),
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -386,12 +384,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
 
     ],
-    blbs.LEFT_WRIST_PINKY.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_PINKY_KNUCKLE.value,
+    LeftBodySegments.LEFT_WRIST_PINKY.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_PINKY_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.LEFT_THUMB_KNUCKLE.value,  # originally - "right_hand_thumb_cmc",
+            target=BodyKeypoints.LEFT_THUMB_KNUCKLE.value,  # originally - "right_hand_thumbblenderize(),
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -410,13 +408,13 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
 
     ],
-    blbs.LEFT_WRIST_THUMB.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_THUMB_KNUCKLE.value,
+    LeftBodySegments.LEFT_WRIST_THUMB.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_THUMB_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         # TODO - revisit when we add the detailed hand
         # BoneConstraintTypes.LOCKED_TRACK.value(
-        #     target="right_hand_thumb_cmc",
+        #     target="right_hand_thumbblenderize(),
         #     track_axis=TrackAxis.TRACK_X.value,
         #     lock_axis=LockAxis.LOCK_Y.value,
         #     influence=1.0,
@@ -436,28 +434,28 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
 
     ],
     ## LEFT LOWER LIMB
-    blbs.LEFT_PELVIS.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.PELVIS_CENTER.value),
+    LeftBodySegments.LEFT_PELVIS.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_ORIGIN.blenderize()),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.LEFT_HIP.value,
+            target=BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM.blenderize(),
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Z.value,
             influence=1.0,
         ),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.LEFT_HIP.value,
+            target=BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM.blenderize(),
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
         ),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_HIP.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
-    blbs.LEFT_THIGH.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.LEFT_HIP.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_KNEE.value,
+    LeftBodySegments.LEFT_THIGH.blenderize(): [
+        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.LEFT_PELVIS_HIP_ACETABULUM.blenderize()),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_KNEE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -474,8 +472,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
 
-    blbs.LEFT_CALF.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_ANKLE.value,
+    LeftBodySegments.LEFT_CALF.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_ANKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -492,8 +490,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
 
-    blbs.LEFT_FORE_FOOT.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_HALLUX_TIP.value,
+    LeftBodySegments.LEFT_FORE_FOOT.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_HALLUX_TIP.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -510,8 +508,8 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
 
-    blbs.LEFT_HEEL.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_HEEL.value,
+    LeftBodySegments.LEFT_HEEL.blenderize(): [
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_HEEL.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
@@ -531,278 +529,278 @@ if __name__ == "__main__":
 #
 # "thumb.carpal.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_thumb_cmc",
+#         target="right_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_thumb_mcp",
+#         target="right_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_thumb_ip",
+#         target="right_hand_thumblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_thumb_tip",
+#         target="right_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_index_finger_mcp",
+#         target="right_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_index_finger_pip",
+#         target="right_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_index_finger_dip",
+#         target="right_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_index_finger_tip",
+#         target="right_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_middle_finger_mcp",
+#         target="right_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_middle_finger_pip",
+#         target="right_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_middle_finger_dip",
+#         target="right_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_middle_finger_tip",
+#         target="right_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_ring_finger_mcp",
+#         target="right_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_ring_finger_pip",
+#         target="right_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_ring_finger_dip",
+#         target="right_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_ring_finger_tip",
+#         target="right_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.04.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_pinky_mcp",
+#         target="right_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.01.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_pinky_pip",
+#         target="right_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.02.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_pinky_dip",
+#         target="right_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.03.R": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="right_hand_pinky_tip",
+#         target="right_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.carpal.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_thumb_cmc",
+#         target="left_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_thumb_mcp",
+#         target="left_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "thumb.02.L": [
-#     BoneConstraintTypes.DAMPED_TRACK.value(target="left_hand_thumb_ip",
+#     BoneConstraintTypes.DAMPED_TRACK.value(target="left_hand_thumblenderize(),
 #     track_axis=TrackAxis.TRACK_Y.value)
 
 # ],
 # "thumb.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_thumb_tip",
+#         target="left_hand_thumbblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_index_finger_mcp",
+#         target="left_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_index_finger_pip",
+#         target="left_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.02.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_index_finger_dip",
+#         target="left_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_index.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_index_finger_tip",
+#         target="left_hand_index_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.02.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_middle_finger_mcp",
+#         target="left_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_middle_finger_pip",
+#         target="left_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.02.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_middle_finger_dip",
+#         target="left_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_middle.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_middle_finger_tip",
+#         target="left_hand_middle_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_ring_finger_mcp",
+#         target="left_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_ring_finger_pip",
+#         target="left_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.02.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_ring_finger_dip",
+#         target="left_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_ring.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_ring_finger_tip",
+#         target="left_hand_ring_fingerblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "palm.04.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_pinky_mcp",
+#         target="left_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.01.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_pinky_pip",
+#         target="left_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.02.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_pinky_dip",
+#         target="left_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
 # ],
 # "f_pinky.03.L": [
 #     BoneConstraintTypes.DAMPED_TRACK.value(
-#         target="left_hand_pinky_tip",
+#         target="left_hand_pinkyblenderize(),
 #         track_axis=TrackAxis.TRACK_Y.value
 
 #     )
