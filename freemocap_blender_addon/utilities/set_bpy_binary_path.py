@@ -15,3 +15,7 @@ def set_bpy_binary_path():
 
 if __name__ == "__main__":
     set_bpy_binary_path()
+    bpy.ops.mesh.primitive_monkey_add(size=2, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    print("Objects in scene:")
+    for obj in bpy.data.objects:
+        print(obj)
