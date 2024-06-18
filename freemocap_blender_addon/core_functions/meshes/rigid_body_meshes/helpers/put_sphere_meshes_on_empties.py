@@ -3,7 +3,7 @@ import bpy
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import ParentedEmpties
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_sphere_at_location import \
     put_sphere_mesh_at_location
-from freemocap_blender_addon.utilities.color_generator import ColorType, generate_color
+from freemocap_blender_addon.utilities.blender_utilities.color_generator import ColorType, generate_color
 
 
 def put_spheres_on_parented_empties(parented_empties: ParentedEmpties,

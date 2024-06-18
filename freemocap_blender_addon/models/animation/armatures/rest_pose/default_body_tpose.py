@@ -28,44 +28,44 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
     # right face
-    BlenderizedSkullSegments.RIGHT_EYE_INNER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_INNER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -20),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.RIGHT_EYE_CENTER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_CENTER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -30),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.RIGHT_EYE_OUTER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_OUTER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, -40),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.RIGHT_EAR_TRAGUS.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.RIGHT_SKULL_ACOUSTIC_MEATUS.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-90, 0, -90),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.RIGHT_MOUTH.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.RIGHT_SKULL_CANINE_TOOTH_TIP.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-120, -20, 0),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
     # left face
-    BlenderizedSkullSegments.LEFT_EYE_INNER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_INNER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 20),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.LEFT_EYE_CENTER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_CENTER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 30),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.LEFT_EYE_OUTER.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_OUTER.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-80, 0, 40),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.LEFT_EAR_TRAGUS.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-90, 0, 90),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),
-    BlenderizedSkullSegments.LEFT_MOUTH.value: BoneRestPoseDefinition(
+    BlenderizedSkullSegments.LEFT_SKULL_CANINE_TOOTH_TIP.value: BoneRestPoseDefinition(
         world_rotation_degrees=(-120, 20, 0),
         parent_bone_name=BlenderizedAxialSegments.CERVICAL_SPINE.value
     ),

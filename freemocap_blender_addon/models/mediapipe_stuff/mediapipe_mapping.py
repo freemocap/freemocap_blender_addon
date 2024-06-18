@@ -15,8 +15,8 @@ class MediapipeBodyMapping(KeypointMappingsEnum):
     LEFT_EYE_OUTER = ["left_eye_outer"]
     LEFT_EAR_TRAGUS = ["left_ear"]
     LEFT_MOUTH = ["mouth_left"]
-    SKULL_CENTER_ATLAS_C1 = {"left_ear": .45, "right_ear": .45, "left_shoulder": .05, "right_shoulder": .05}
-    NECK_TOP_AXIS_C2 = {"left_ear": .4, "right_ear": .4, "left_shoulder": .1, "right_shoulder": .1}
+    SKULL_CENTER_FORAMEN_MAGNUM = {"left_ear": .45, "right_ear": .45, "left_shoulder": .05, "right_shoulder": .05}
+    NECK_TOP_ATLAS_C1 = {"left_ear": .4, "right_ear": .4, "left_shoulder": .1, "right_shoulder": .1}
     NECK_BASE_C7 = ["left_shoulder", "right_shoulder"]
     CHEST_CENTER_T12 = ["left_hip", "right_hip", "left_shoulder", "right_shoulder"]
     PELVIS_CENTER = ["left_hip", "right_hip"]

@@ -4,7 +4,7 @@ from typing import Dict
 import bpy
 import numpy as np
 
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
 

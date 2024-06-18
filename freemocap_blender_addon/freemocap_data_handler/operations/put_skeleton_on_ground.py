@@ -35,7 +35,7 @@ def put_skeleton_on_ground(keypoint_trajectories: KeypointTrajectories):
                                              original_reference_locations[BodyKeypoints.LEFT_HEEL.name.lower()]],
                                             axis=0)
 
-    z_upward_reference_point = keypoint_trajectories[BodyKeypoints.SKULL_CENTER_ATLAS_C1.name.lower()].trajectory_data[
+    z_upward_reference_point = keypoint_trajectories[BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name.lower()].trajectory_data[
                                good_frame, :]
 
     x_hat, y_hat, z_hat = estimate_orthonormal_basis(center_reference_point=center_reference_point,

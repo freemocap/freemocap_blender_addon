@@ -14,7 +14,7 @@ class LeftElbowLinkage(LinkageABC):
     parent = LeftBodySegments.LEFT_UPPER_ARM
     children = [LeftBodySegments.LEFT_UPPER_ARM,
                 LeftBodySegments.LEFT_FOREARM]
-    linked_keypoint = BodyKeypoints.LEFT_ELBOW.value
+    linked_keypoint = BodyKeypoints.LEFT_ELBOW
 
 
 class LeftWristLinkage(LinkageABC):
@@ -46,4 +46,4 @@ class LeftAnkleLinkage(LinkageABC):
     children = [LeftBodySegments.LEFT_CALF,
                 LeftBodySegments.LEFT_HEEL,
                 LeftBodySegments.LEFT_FORE_FOOT]
-    linked_keypoint = BodyKeypoints.LEFT_ANKLE.value
+    linked_keypoint = BodyKeypoints.LEFT_ANKLE

@@ -18,7 +18,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # Spine
     bas.LUMBAR_SPINE.value: [
         BoneConstraintTypes.COPY_LOCATION.value(target=bkn.PELVIS_CENTER.value),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.CHEST_CENTER_T12.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.THORACIC_SPINE_TOP_T12.value,
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -35,7 +35,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
     bas.THORACIC_SPINE.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.NECK_BASE_C7.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value,
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
@@ -58,11 +58,11 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         ),
     ],
     bas.CERVICAL_SPINE.value: [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.SKULL_CENTER_ATLAS_C1.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.SKULL_ORIGIN_FORAMEN_MAGNUM.value,
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.NOSE_TIP.value,
+            target=bkn.SKULL_FORWARD_NOSE_TIP.value,
             track_axis=TrackAxis.TRACK_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
@@ -83,55 +83,55 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
 
     # SKULL
     BlenderizedSkullSegments.NOSE.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.NOSE_TIP.value,
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.SKULL_FORWARD_NOSE_TIP.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT FACE
-    BlenderizedSkullSegments.RIGHT_EYE_INNER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_EYE_INNER.value,
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_INNER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_INNER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_EYE_CENTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_EYE_CENTER.value,
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_CENTER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_CENTER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_EYE_OUTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_EYE_OUTER.value,
+    BlenderizedSkullSegments.RIGHT_SKULL_EYE_OUTER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_EYE_OUTER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_EAR_TRAGUS.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_EAR_TRAGUS.value,
+    BlenderizedSkullSegments.RIGHT_SKULL_ACOUSTIC_MEATUS.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_ACOUSTIC_MEATUS.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.RIGHT_MOUTH.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_MOUTH.value,
+    BlenderizedSkullSegments.RIGHT_SKULL_CANINE_TOOTH_TIP.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SKULL_CANINE_TOOTH_TIP.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # LEFT FACE
-    BlenderizedSkullSegments.LEFT_EYE_INNER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_EYE_INNER.value,
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_INNER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_INNER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_EYE_CENTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_EYE_CENTER.value,
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_CENTER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_CENTER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_EYE_OUTER.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_EYE_OUTER.value,
+    BlenderizedSkullSegments.LEFT_SKULL_EYE_OUTER.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_EYE_OUTER.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_EAR_TRAGUS.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_EAR_TRAGUS.value,
+    BlenderizedSkullSegments.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
-    BlenderizedSkullSegments.LEFT_MOUTH.value:
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_MOUTH.value,
+    BlenderizedSkullSegments.LEFT_SKULL_CANINE_TOOTH_TIP.value:
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SKULL_CANINE_TOOTH_TIP.value,
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT BODY SEGMENTS
     # RIGHT UPPER LIMB
     brbs.RIGHT_CLAVICLE.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.NECK_BASE_C7.value),
+        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value),
         BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_SHOULDER.value,
                                                track_axis=TrackAxis.TRACK_Y.value), ],
     brbs.RIGHT_UPPER_ARM.value: [
@@ -246,24 +246,24 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     brbs.RIGHT_PELVIS.value: [
         BoneConstraintTypes.COPY_LOCATION.value(target=bkn.PELVIS_CENTER.value),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_HIP.value,
+            target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Z.value,
             influence=1.0,
         ),
         BoneConstraintTypes.LOCKED_TRACK.value(
-            target=bkn.RIGHT_HIP.value,
+            target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
             track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
             lock_axis=LockAxis.LOCK_Y.value,
             influence=1.0,
         ),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_HIP.value,
+        BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value,
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
     brbs.RIGHT_THIGH.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.RIGHT_HIP.value),
+        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.RIGHT_PELVIS_HIP_ACETABULUM.value),
         BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.RIGHT_KNEE.value,
                                                track_axis=TrackAxis.TRACK_Y.value),
 
@@ -325,7 +325,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # LEFT BODY SEGMENTS
     # LEFT UPPER LIMB
     blbs.LEFT_CLAVICLE.value: [
-        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.NECK_BASE_C7.value),
+        BoneConstraintTypes.COPY_LOCATION.value(target=bkn.CERVICAL_SPINE_ORIGIN_C7.value),
         BoneConstraintTypes.DAMPED_TRACK.value(target=bkn.LEFT_SHOULDER.value,
                                                track_axis=TrackAxis.TRACK_Y.value), ],
     blbs.LEFT_UPPER_ARM.value: [

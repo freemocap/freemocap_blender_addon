@@ -14,7 +14,7 @@ class RightElbowLinkage(LinkageABC):
     parent = RightBodySegments.RIGHT_UPPER_ARM
     children = [RightBodySegments.RIGHT_UPPER_ARM,
                 RightBodySegments.RIGHT_FOREARM]
-    linked_keypoint = BodyKeypoints.RIGHT_ELBOW.value
+    linked_keypoint = BodyKeypoints.RIGHT_ELBOW
 
 
 class RightWristLinkage(LinkageABC):
@@ -31,7 +31,7 @@ class RightHipLinkage(LinkageABC):
     parent = RightBodySegments.RIGHT_PELVIS
     children = [RightBodySegments.RIGHT_PELVIS,
                 RightBodySegments.RIGHT_THIGH]
-    linked_keypoint = BodyKeypoints.RIGHT_HIP
+    linked_keypoint = BodyKeypoints.RIGHT_PELVIS_HIP_ACETABULUM
 
 
 class RightKneeLinkage(LinkageABC):
@@ -46,4 +46,4 @@ class RightAnkleLinkage(LinkageABC):
     children = [RightBodySegments.RIGHT_CALF,
                 RightBodySegments.RIGHT_HEEL,
                 RightBodySegments.RIGHT_FORE_FOOT]
-    linked_keypoint = BodyKeypoints.RIGHT_ANKLE.value
+    linked_keypoint = BodyKeypoints.RIGHT_ANKLE

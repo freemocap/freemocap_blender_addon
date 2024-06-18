@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
+import bpy
 import numpy as np
 
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
@@ -10,10 +11,14 @@ from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.put_rigid_b
     put_rigid_body_meshes_on_empties
 from freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_bone_meshes
 from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
+from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
 from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BlenderizedKeypointNames
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
 from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
 
@@ -57,14 +62,25 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                                              segment_definitions=blenderized_segment_definitions,
                                              )
 
-            rig = generate_rig(
-                rig_name=f"{self.recording_name}_rig",
+            print("Generating armature from segment lengths and rest pose definitions...")
+            armature_definition = ArmatureDefinition.create(
+                armature_name=f"{self.recording_name}_armature",
                 segment_definitions=blenderized_segment_definitions,
-                parent_object=parented_empties.parent_object,
-                config=self.pipeline_config.add_rig,
+                pose_definition=self.pipeline_config.add_rig.rest_pose_definition,
+                bone_constraints=self.pipeline_config.add_rig.bone_constraints,
             )
+            armature = generate_armature(armature_definition=armature_definition)
+            root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
+            root_constraint.target = bpy.data.objects[BlenderizedKeypointNames.PELVIS_CENTER.value]
+
+            # rig, armature_definition = generate_rig(
+            #     rig_name=f"{self.recording_name}_rig",
+            #     segment_definitions=blenderized_segment_definitions,
+            #     config=self.pipeline_config.add_rig,
+            # )
             attach_skelly_bone_meshes(
-                rig=rig,
+                armature=armature,
+                armature_definition=armature_definition,
             )
         print(f"Finished building blender skeleton for recording: {self.recording_name}")
 

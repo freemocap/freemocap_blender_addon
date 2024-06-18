@@ -1,117 +1,90 @@
 from enum import Enum
 
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 
 
-class SkullKeypoints(Enum):
-    ## head
-    SKULL_CENTER_ATLAS_C1 = "Center of the skull volume (like, rotational center, not necessarily the center of mass)",
+class BodyKeypoints(Enum):
+    ## skull
+    SKULL_ORIGIN_FORAMEN_MAGNUM = "Gemoetric center of the foramen magnum, the hole at the base of the skull where the spinal cord enters"
+    SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures"
 
     ### face
-    # SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures",
-    NOSE_TIP = "Tip of the nose",
+    SKULL_FORWARD_NOSE_TIP = "Tip of the nose"
     #### right-face
-    RIGHT_EYE_INNER = "Inner corner of the right eye, the tear duct, intersection of the frontal bone and the maxilla",
-    RIGHT_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the right eye keypoints - NOTE - not the center of the orbit",
-    RIGHT_EYE_OUTER = "Outer corner of the right eye, intersection of the frontal bone and the zygomatic bone",
-    RIGHT_EAR_TRAGUS = "The little nubbin on the front of the ear,  intersection of the temporal bone and the mandible",
-    RIGHT_MOUTH = "Right outer corner of the mouth",
+    RIGHT_SKULL_EYE_INNER = "Inner corner of the right eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
+    RIGHT_SKULL_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the right eye keypoints - NOTE - not the center of the orbit"
+    RIGHT_SKULL_EYE_OUTER = "Outer corner of the right eye, intersection of the frontal bone and the zygomatic bone"
+    RIGHT_SKULL_ACOUSTIC_MEATUS = "Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    RIGHT_SKULL_CANINE_TOOTH_TIP = "Tip of the right canine tooth, roughly behind the right corner of the mouth"
     #### left-face,
-    LEFT_EYE_INNER = "Inner corner of the left eye, the tear duct, intersection of the frontal bone and the maxilla",
-    LEFT_EYE_CENTER = "Geometric center of the `inner` and `outer` of the left eye keypoints - NOTE - not the center of the orbit",
-    LEFT_EYE_OUTER = "Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone",
-    LEFT_EAR_TRAGUS = "The little nubbin on the front of the ear, intersection of the temporal bone and the mandible",
-    LEFT_MOUTH = "Left outer corner of the mouth",
+    LEFT_SKULL_EYE_INNER ="Inner corner of the left eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
+    LEFT_SKULL_EYE_CENTER ="Geometric center of the `inner` and `outer` keypoints of the left eye keypoints - NOTE - not the center of the orbit"
+    LEFT_SKULL_EYE_OUTER ="Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone"
+    LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS ="Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    LEFT_SKULL_CANINE_TOOTH_TIP ="Tip of the left canine tooth, roughly behind the right corner of the mouth"
 
 
-class AxialSkeletonKeypoints(Enum):
+    ## axial skeleton
     ## neck,
-    NECK_TOP_AXIS_C2 = "Top of the neck segment, the geometric center of the top surface of the second cervical vertebra (C2) aka the `Axis`",
-    NECK_BASE_C7 = "Base of the neck, geometric center of the bottom surface of the seventh cervical vertebra (C7)",
+    CERVICAL_SPINE_TOP_C1_AXIS = "Top of the neck segment, the geometric center of the top surface of the second cervical vertebra (C2) aka the `Axis`"
+    CERVICAL_SPINE_ORIGIN_C7 = "Base of the neck, geometric center of the bottom surface of the seventh cervical vertebra (C7)"
 
     ## chest,
-    CHEST_CENTER_T12 = "Geometric center of the top surface of the first thoracic vertebra (T1)",
+    THORACIC_SPINE_TOP_T1 = "Geometric center of the top surface of the first thoracic vertebra (T1)"
+    THORACIC_SPINE_ORIGIN_T12 = "Geometric center of the bottom surface of the twelfth thoracic vertebra (T12)"
 
-    ## root,
-    PELVIS_CENTER = "Geometric center of the left and right hip sockets, anterior to the Sacrum",
-
-
-class RightArmKeypoints(Enum):
+    ## pelvis,
+    PELVIS_ORIGIN = "Geometric center of the left and right hip sockets, anterior to the Sacrum"
+    PELVIS_LUMBAR_TOP_L1 = "Geometric center of the top surface of the first lumbar vertebra (L1)"
+    RIGHT_PELVIS_HIP_ACETABULUM = "Geometric center of proximal surface the right hip socket/acetabulum (where the femoral head fits in)"
+    LEFT_PELVIS_HIP_ACETABULUM = "Geometric center of proximal surface the left hip socket/acetabulum (where the femoral head fits in)"
     ### right arm
-    RIGHT_CLAVICLE = "Center of the right sternoclavicular joint",
-    RIGHT_SHOULDER = "Center of the right glenohumeral joint",
-    RIGHT_ELBOW = "Center of the right elbow joint, near trochlea of the humerus",
-    RIGHT_WRIST = "Center of the right radiocarpal joint, near the lunate fossa of the radius",
+    RIGHT_CLAVICLE = "Center of the right sternoclavicular joint"
+    RIGHT_SHOULDER = "Center of the right glenohumeral joint"
+    RIGHT_ELBOW = "Center of the right elbow joint, near trochlea of the humerus"
+    RIGHT_WRIST = "Center of the right radiocarpal joint, near the lunate fossa of the radius"
 
 
-class RightMittenHandKeypoints(Enum):
     ### right (mitten) hand
-    RIGHT_THUMB_KNUCKLE = "Center of the metacarpophalangeal joint of the right thumb",
-    RIGHT_INDEX_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger",
-    RIGHT_MIDDLE_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger",
-    RIGHT_RING_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger",
-    RIGHT_PINKY_KNUCKLE = "Center of the metacarpophalangeal joint of the right pinky finger",
+    RIGHT_THUMB_KNUCKLE = "Center of the metacarpophalangeal joint of the right thumb"
+    RIGHT_INDEX_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger"
+    RIGHT_MIDDLE_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger"
+    RIGHT_RING_KNUCKLE = "Center of the metacarpophalangeal joint of the right index finger"
+    RIGHT_PINKY_KNUCKLE = "Center of the metacarpophalangeal joint of the right pinky finger"
+
+    ### right leg
+    RIGHT_KNEE = "Center of the right knee joint, intersection of the medial condyle of the femur and the tibia"
+    RIGHT_ANKLE = "Center of the right ankle joint, geometric center of the medial and lateral malleoli"
+    RIGHT_HEEL = "Contact surface of the right heel with the ground, most distal point of the calcaneus"
+    RIGHT_HALLUX_TIP = "Tippy tip of right hallux, aka the big toe"
+
+    ### left arm
+    LEFT_CLAVICLE = "Center of the left sternoclavicular joint"
+    LEFT_SHOULDER = "Center of the left glenohumeral joint"
+    LEFT_ELBOW = "Center of the left elbow joint, near trochlea of the humerus"
+    LEFT_WRIST = "Center of the left radiocarpal joint, near the lunate fossa of the radius"
 
 
-class RightLegKeypoints(Enum):
-    RIGHT_HIP = "Geometric center of the right hip socket/acetabulum/femoral head",
-    RIGHT_KNEE = "Center of the right knee joint, intersection of the medial condyle of the femur and the tibia",
-    RIGHT_ANKLE = "Center of the right ankle joint, geometric center of the medial and lateral malleoli",
-    RIGHT_HEEL = "Contact surface of the right heel with the ground, most distal point of the calcaneus",
-    RIGHT_HALLUX_TIP = "Tippy tip of right hallux, aka the big toe",
+    ### left (mitten) hand
+    LEFT_THUMB_KNUCKLE = "Center of the left metacarpophalangeal joint of the thumb"
+    LEFT_INDEX_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger"
+    LEFT_MIDDLE_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger"
+    LEFT_RING_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger"
+    LEFT_PINKY_KNUCKLE = "Center of the left metacarpophalangeal joint of the pinky finger"
 
 
-class LeftArmKeypoints(Enum):
-    LEFT_CLAVICLE = "Center of the left sternoclavicular joint",
-    LEFT_SHOULDER = "Center of the left glenohumeral joint",
-    LEFT_ELBOW = "Center of the left elbow joint, near trochlea of the humerus",
-    LEFT_WRIST = "Center of the left radiocarpal joint, near the lunate fossa of the radius",
+    ### left leg
+    LEFT_KNEE = "Center of the left knee joint, intersection of the medial condyle of the femur and the tibia"
+    LEFT_ANKLE = "Center of the left ankle joint, geometric center of the medial and lateral malleoli"
+    LEFT_HEEL = "Contact surface of the left heel with the ground, most distal point of the calcaneus"
+    LEFT_HALLUX_TIP = "Tippy tip of the left hallux, aka the big toe"
 
+    def blenderize(self):
+        return blenderize_name(self.name)
 
-class LeftMittenHandKeypoints(Enum):
-    LEFT_THUMB_KNUCKLE = "Center of the left metacarpophalangeal joint of the thumb",
-    LEFT_INDEX_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger",
-    LEFT_MIDDLE_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger",
-    LEFT_RING_KNUCKLE = "Center of the left metacarpophalangeal joint of the index finger",
-    LEFT_PINKY_KNUCKLE = "Center of the left metacarpophalangeal joint of the pinky finger",
-
-
-class LeftLegKeypoints(Enum):
-    LEFT_HIP = "Geometric center of the left hip socket/acetabulum/femoral head",
-    LEFT_KNEE = "Center of the left knee joint, intersection of the medial condyle of the femur and the tibia",
-    LEFT_ANKLE = "Center of the left ankle joint, geometric center of the medial and lateral malleoli",
-    LEFT_HEEL = "Contact surface of the left heel with the ground, most distal point of the calcaneus",
-    LEFT_HALLUX_TIP = "Tippy tip of the left hallux, aka the big toe",
-
-
-def combine_enums(*enum_classes):
-    combined = {}
-    for enum_class in enum_classes:
-        for name, member in enum_class.__members__.items():
-            if name in combined:
-                raise ValueError(f"Duplicate enum member name found: {name}")
-            combined[name] = member.value
-    return combined
-
-
-combined_keypoints = combine_enums(
-    SkullKeypoints,
-    AxialSkeletonKeypoints,
-    RightArmKeypoints,
-    RightMittenHandKeypoints,
-    RightLegKeypoints,
-    LeftArmKeypoints,
-    LeftMittenHandKeypoints,
-    LeftLegKeypoints
-)
-
-BodyKeypoints = Enum('BodyKeypoints', combined_keypoints)
-
-BlenderizedKeypointNames = Enum('BlenderizedKeypointNames',
-                                {key: blenderize_name(key) for key in combined_keypoints.keys()})
 # Example usage
 if __name__ == "__main__":
-    print("\n".join([f"{kp.name}: {kp.value}" for kp in list(BodyKeypoints)]))
+    print("\n".join([f"{key}: {value.value}" for key, value in BodyKeypoints.__members__.items()]))
 
-    print("Blenderized Keypoint Names:")
-    print("\n".join([f"{bpn.name}: {bpn.value}" for bpn in list(BlenderizedKeypointNames)]))
+    print("Blenderized names:")
+    print("\n".join([f"{key}: {value.blenderize()}" for key, value in BodyKeypoints.__members__.items()]))

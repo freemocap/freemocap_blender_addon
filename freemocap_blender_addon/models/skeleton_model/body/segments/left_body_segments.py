@@ -3,12 +3,12 @@ from enum import Enum
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, LeftArmKeypoints, \
     LeftMittenHandKeypoints, LeftLegKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 
 
 # arm
 class LeftClavicleSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.NECK_BASE_C7
+    parent = AxialSkeletonKeypoints.CERVICAL_SPINE_ORIGIN_C7
     child = LeftArmKeypoints.LEFT_SHOULDER
 
 

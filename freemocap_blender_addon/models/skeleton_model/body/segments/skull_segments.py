@@ -3,32 +3,32 @@ from enum import Enum
 from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import SkullKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 
 
 class SkullSegment(CompoundSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    children = [SkullKeypoints.NOSE_TIP,
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    children = [SkullKeypoints.SKULL_FORWARD_NOSE_TIP,
                 # SkullKeypoints.SKULL_TOP_BREGMA,
-                SkullKeypoints.RIGHT_EYE_INNER,
-                SkullKeypoints.RIGHT_EYE_CENTER,
-                SkullKeypoints.RIGHT_EYE_OUTER,
-                SkullKeypoints.RIGHT_EAR_TRAGUS,
-                SkullKeypoints.RIGHT_MOUTH,
-                SkullKeypoints.LEFT_EYE_INNER,
-                SkullKeypoints.LEFT_EYE_CENTER,
-                SkullKeypoints.LEFT_EYE_OUTER,
-                SkullKeypoints.LEFT_EAR_TRAGUS,
-                SkullKeypoints.LEFT_MOUTH]
+                SkullKeypoints.RIGHT_SKULL_EYE_INNER,
+                SkullKeypoints.RIGHT_SKULL_EYE_CENTER,
+                SkullKeypoints.RIGHT_SKULL_EYE_OUTER,
+                SkullKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS,
+                SkullKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP,
+                SkullKeypoints.LEFT_SKULL_EYE_INNER,
+                SkullKeypoints.LEFT_SKULL_EYE_CENTER,
+                SkullKeypoints.LEFT_SKULL_EYE_OUTER,
+                SkullKeypoints.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS,
+                SkullKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP]
 
-    shared_keypoint = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    positive_x = SkullKeypoints.NOSE_TIP
-    approximate_positive_y = SkullKeypoints.LEFT_EAR_TRAGUS
+    shared_keypoint = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    positive_x = SkullKeypoints.SKULL_FORWARD_NOSE_TIP
+    approximate_positive_y = SkullKeypoints.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS
 
 
 class SkullNoseSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.NOSE_TIP
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.SKULL_FORWARD_NOSE_TIP
 
 
 # class SkullTopSegment(SimpleSegmentABC):
@@ -37,53 +37,53 @@ class SkullNoseSegment(SimpleSegmentABC):
 
 
 class SkullRightEyeInnerSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.RIGHT_EYE_INNER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.RIGHT_SKULL_EYE_INNER
 
 
 class SkullRightEyeCenterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.RIGHT_EYE_CENTER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.RIGHT_SKULL_EYE_CENTER
 
 
 class SkullRightEyeOuterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.RIGHT_EYE_OUTER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.RIGHT_SKULL_EYE_OUTER
 
 
 class SkullRightEarTragusSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.RIGHT_EAR_TRAGUS
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS
 
 
 class SkullRightMouthSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.RIGHT_MOUTH
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP
 
 
 class SkullLeftEyeInnerSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.LEFT_EYE_INNER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.LEFT_SKULL_EYE_INNER
 
 
 class SkullLeftEyeCenterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.LEFT_EYE_CENTER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.LEFT_SKULL_EYE_CENTER
 
 
 class SkullLeftEyeOuterSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.LEFT_EYE_OUTER
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.LEFT_SKULL_EYE_OUTER
 
 
 class SkullLeftEarTragusSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.LEFT_EAR_TRAGUS
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.LEFT_SKULL_LEFTWARD_ACOUSTIC_MEATUS
 
 
 class SkullLeftMouthSegment(SimpleSegmentABC):
-    parent = SkullKeypoints.SKULL_CENTER_ATLAS_C1
-    child = SkullKeypoints.LEFT_MOUTH
+    parent = SkullKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
+    child = SkullKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP
 
 
 class SkullSegments(Enum):

@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import bpy
 
@@ -17,15 +17,15 @@ from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters i
 def generate_rig(
         rig_name: str,
         segment_definitions: RigidSegmentDefinitions,
-        parent_object: bpy.types.Object,
         config: AddRigConfig,
-) -> bpy.types.Object:
+) -> Tuple[bpy.types.Object, ArmatureDefinition]:
     """
     Armature - bone lengths and rest pose definitions which define the basic structure of the skeleton
     Rig - Armature + constraints, IK, drivers, etc
     """
     # Deselect all objects
-    deselect_all_bpy_objects()
+    bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.select_all(action="DESELECT")
 
     print("Generating armature from segment legnths and rest pose defintions...")
     armature_definition = ArmatureDefinition.create(
@@ -62,12 +62,12 @@ def generate_rig(
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")
 
-    return armature
+    return armature, armature_definition
 
 
 def deselect_all_bpy_objects():
-    for object in bpy.data.objects:
-        object.select_set(False)
+    for scene_object in bpy.data.objects:
+        scene_object.select_set(False)
 
 
 def get_appended_number_from_blender_object(base_name: str) -> Optional[str]:

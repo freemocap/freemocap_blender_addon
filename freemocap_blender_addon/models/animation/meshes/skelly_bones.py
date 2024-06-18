@@ -3,6 +3,9 @@ from typing import List, Tuple, Union
 
 from mathutils import Vector
 
+from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import BlenderizedAxialSegments
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
+
 
 @dataclass
 class SkellyBoneMeshInfo:
@@ -15,17 +18,13 @@ class SkellyBoneMeshInfo:
     adjust_rotation: bool  # Adjust rotation of mesh after offset
 
 
-SKELLY_BONES = {
-    "head": SkellyBoneMeshInfo(
-        bones=["face"],
-        bones_origin=(0, 0, 0),
-        bones_end=(0, 0, 0),
-        bones_length=0,
-        mesh_length=0.244915,
+SKELLY_BONE_MESHES = {
+    "skull": SkellyBoneMeshInfo(
+        bones=list(BlenderizedSkullSegments.__members__.keys()),
         position_offset=(0, 0, 0.03),
         adjust_rotation=False,
     ),
-    "spine": SkellyBoneMeshInfo(
+    BlenderizedAxialSegments.CERVICAL_SPINE.value: SkellyBoneMeshInfo(
         bones=["spine", "spine.001", "neck"],
         bones_origin=(0, 0, 0),
         bones_end=(0, 0, 0),

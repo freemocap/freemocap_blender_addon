@@ -1,118 +1,79 @@
-import traceback
 from pathlib import Path
-from typing import Dict
 
 import bpy
-from mathutils import Vector, Matrix, Euler
 
-from freemocap_blender_addon import PACKAGE_ROOT_PATH
-from freemocap_blender_addon.models.animation.armatures import (
-    bone_name_map,
-)
-from freemocap_blender_addon.models.animation.meshes.skelly_bones import SKELLY_BONES
-
-SKELLY_BONE_MESHES_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones")
+from freemocap_blender_addon.core_functions.meshes.skelly_mesh.load_skelly_fbx_files import load_skelly_fbx_files
+from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
+from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
 
 
-def attach_skelly_bone_meshes(rig: bpy.types.Object) -> None:
-    # Deselect all objects
-    for object in bpy.data.objects:
-        object.select_set(False)
+def attach_skelly_bone_meshes(armature: bpy.types.Object,
+                              armature_definition: ArmatureDefinition) -> None:
+    bpy.ops.object.mode_set(mode='OBJECT')
+    for thing in bpy.data.objects:
+        thing.select_set(False)
 
     #  Set the rig as active object
-    rig.select_set(True)
-    bpy.context.view_layer.objects.active = rig
-
-    # Change to edit mode
-    bpy.ops.object.mode_set(mode='EDIT')
-
-    #  Iterate through the skelly bones dictionary and update the
-    #  default origin, length and normalized direction
-    for mesh in SKELLY_BONES:
-        SKELLY_BONES[mesh].bones_origin = Vector(
-            rig.data.edit_bones[bone_name_map[rig.name][SKELLY_BONES[mesh].bones[0]]].head)
-        SKELLY_BONES[mesh].bones_end = Vector(
-            rig.data.edit_bones[bone_name_map[rig.name][SKELLY_BONES[mesh].bones[-1]]].tail)
-        SKELLY_BONES[mesh].bones_length = (SKELLY_BONES[mesh].bones_end - SKELLY_BONES[mesh].bones_origin).length
+    armature.select_set(True)
+    bpy.context.view_layer.objects.active = armature
 
     # Change to object mode
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-    # Define the list that will contain the different Skelly meshes
-    skelly_meshes = []
+    bpy.ops.object.mode_set(mode='EDIT')
+    axial_bone_names, skelly_meshes, skull_bone_names = load_skelly_fbx_files()
 
     # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
-    for mesh in SKELLY_BONES:
-        print("Adding Skelly_" + mesh + " mesh...")
-        try:
-            # Import the skelly mesh
-            mesh_path = SKELLY_BONE_MESHES_PATH + '/Skelly_' + mesh + '.fbx'
-            if not Path(mesh_path).is_file():
-                raise FileNotFoundError(f"Could not find skelly mesh at {mesh_path}")
-            bpy.ops.import_scene.fbx(filepath=str(mesh_path))
-
-        except Exception as e:
-            print(f"Error while importing skelly mesh: {e}")
-            print(traceback.format_exc())
+    for bone in armature.pose.bones:
+        if bone.name == ROOT_BONE_NAME:
             continue
+        if bone.name in skull_bone_names:
+            if bone.name == BlenderizedSkullSegments.NOSE.value:
+                mesh_name = f"{SKELLY_MESH_PREFIX}skull"
+            else:
+                continue
+        if not bone.name in axial_bone_names:
+            continue
+        else:
+            mesh_name = f"{SKELLY_MESH_PREFIX}{bone.name}"
+        mesh_path = SKELLY_BONE_MESHES_PATH / f"{mesh_name}.fbx"
+        print(f" Loading bone mesh for `{bone.name}` from: {mesh_path}")
 
-        skelly_meshes.append(bpy.data.objects['Skelly_' + mesh])
+        # Import the skelly mesh
+        if not Path(mesh_path).is_file():
+            raise FileNotFoundError(f"Could not find skelly mesh at {mesh_path}")
+        bpy.ops.import_scene.fbx(filepath=str(mesh_path))
+
+        skelly_meshes.append(bpy.data.objects[mesh_name])
 
         # Get reference to the imported mesh
-        skelly_mesh = bpy.data.objects['Skelly_' + mesh]
+        skelly_mesh = bpy.data.objects[mesh_name]
 
         # Get the rotation matrix
-        if mesh == 'head':
-            rotation_matrix = Matrix.Identity(4)
-        else:
-            rotation_matrix = Euler(
-                Vector(pose[bone_name_map[rig.name][mesh]].rotation),
-                'XYZ',
-            ).to_matrix()
+        rotation_matrix = bone.rotation_matrix.to_3x3()
 
         # Move the Skelly part to the equivalent bone's head location
-        skelly_mesh.location = (SKELLY_BONES[mesh].bones_origin
-                                + rotation_matrix @ Vector(SKELLY_BONES[mesh].position_offset)
-                                )
+        # skelly_mesh.location = (bone.origin
+        #                         + rotation_matrix @ Vector(SKELLY_BONE_MESHES[mesh].position_offset)
+        #                         )
 
         # Rotate the part mesh with the rotation matrix
         skelly_mesh.rotation_euler = rotation_matrix.to_euler('XYZ')
+        #
+        # # Get the bone length
+        # if SKELLY_BONE_MESHES[mesh].adjust_rotation:
+        #     bone_length = (SKELLY_BONE_MESHES[mesh].bones_end - (SKELLY_BONE_MESHES[mesh].bones_origin + (
+        #             rotation_matrix @ Vector(SKELLY_BONE_MESHES[mesh].position_offset)))).length
+        # elif mesh == 'head':
+        #     # bone_length = rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh]['bones'][0]]].length
+        #     bone_length = SKELLY_BONE_MESHES['spine'].bones_length / 3.123  # Head length to spine length ratio
+        # else:
+        #     bone_length = SKELLY_BONE_MESHES[mesh].bones_length
+        #
+        # # Get the mesh length
+        # mesh_length = SKELLY_BONE_MESHES[mesh].mesh_length
 
-        # Get the bone length
-        if SKELLY_BONES[mesh].adjust_rotation:
-            bone_length = (SKELLY_BONES[mesh].bones_end - (SKELLY_BONES[mesh].bones_origin + (
-                    rotation_matrix @ Vector(SKELLY_BONES[mesh].position_offset)))).length
-        elif mesh == 'head':
-            # bone_length = rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh]['bones'][0]]].length
-            bone_length = SKELLY_BONES['spine'].bones_length / 3.123  # Head length to spine length ratio
-        else:
-            bone_length = SKELLY_BONES[mesh].bones_length
-
-        # Get the mesh length
-        mesh_length = SKELLY_BONES[mesh].mesh_length
-
-        # Resize the Skelly part to match the bone length
-        skelly_mesh.scale = (bone_length / mesh_length, bone_length / mesh_length, bone_length / mesh_length)
-
-        # Adjust rotation if necessary
-        if SKELLY_BONES[mesh].adjust_rotation:
-            # Save the Skelly part's original location
-            part_location = Vector(skelly_mesh.location)
-
-            # Get the direction vector
-            bone_vector = SKELLY_BONES[mesh].bones_end - SKELLY_BONES[mesh].bones_origin
-            # Get new bone vector after applying the position offset
-            new_bone_vector = SKELLY_BONES[mesh].bones_end - part_location
-
-            # Apply the rotations to the Skelly part
-            bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
-
-            # Get the angle between the two vectors
-            rotation_quaternion = bone_vector.rotation_difference(new_bone_vector)
-            # Change the rotation mode
-            skelly_mesh.rotation_mode = 'QUATERNION'
-            # Rotate the Skelly part
-            skelly_mesh.rotation_quaternion = rotation_quaternion
+        # # Resize the Skelly part to match the bone length
+        # skelly_mesh.scale = (bone_length / mesh_length, bone_length / mesh_length, bone_length / mesh_length)
 
         # Apply the transformations to the Skelly part
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
@@ -139,5 +100,3 @@ def attach_skelly_bone_meshes(rig: bpy.types.Object) -> None:
     bpy.context.view_layer.objects.active = rig
     # Parent the mesh and the rig with automatic weights
     bpy.ops.object.parent_set(type='ARMATURE_AUTO')
-
-

@@ -3,12 +3,10 @@ from typing import Tuple
 from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import ParentedEmpties
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.make_rigid_body_mesh import \
     make_rigid_body_mesh
-from freemocap_blender_addon.freemocap_data.data_paths.default_path_enums import RightLeft
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     RigidSegmentDefinitions
 from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
-from freemocap_blender_addon.utilities.color_generator import generate_color, ColorType
+from freemocap_blender_addon.utilities.blender_utilities.color_generator import generate_color, ColorType
 
 DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH = (.8, 1, 1)
 

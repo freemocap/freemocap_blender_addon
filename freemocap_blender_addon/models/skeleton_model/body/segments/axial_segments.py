@@ -1,23 +1,23 @@
 from enum import Enum
 
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, SkullKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
-from freemocap_blender_addon.utilities.blenderize_name import blenderize_name
+from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 
 
 class CervicalSpineSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.NECK_BASE_C7
-    child = SkullKeypoints.SKULL_CENTER_ATLAS_C1
+    parent = BodyKeypoints.CERVICAL_SPINE_TOP_C1_AXIS
+    child = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
 
 
 class ThoracicSpineSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.CHEST_CENTER_T12
-    child = AxialSkeletonKeypoints.NECK_BASE_C7
+    parent = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12
+    child = BodyKeypoints.THORACIC_SPINE_TOP_T1
 
 
 class LumbarSpineSegment(SimpleSegmentABC):
-    parent = AxialSkeletonKeypoints.PELVIS_CENTER
-    child = AxialSkeletonKeypoints.CHEST_CENTER_T12
+    parent = BodyKeypoints.PELVIS_ORIGIN
+    child = BodyKeypoints.LUMBAR_SPINE_TOP_L1
 
 
 class AxialSegments(Enum):

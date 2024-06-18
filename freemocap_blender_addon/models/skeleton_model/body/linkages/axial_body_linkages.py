@@ -1,4 +1,4 @@
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import AxialSkeletonKeypoints, SkullKeypoints
+from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
@@ -19,7 +19,7 @@ class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervi
                 SkullSegments.LEFT_EYE_OUTER,
                 SkullSegments.LEFT_EAR_TRAGUS,
                 SkullSegments.LEFT_MOUTH]
-    linked_keypoint = SkullKeypoints.SKULL_CENTER_ATLAS_C1
+    linked_keypoint = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
 
 
 class NeckC7Linkage(LinkageABC):
@@ -27,11 +27,11 @@ class NeckC7Linkage(LinkageABC):
     children = [AxialSegments.CERVICAL_SPINE,
                 RightBodySegments.RIGHT_CLAVICLE,
                 LeftBodySegments.LEFT_CLAVICLE]
-    linked_keypoint = AxialSkeletonKeypoints.NECK_BASE_C7
+    linked_keypoint = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
 
 
 class ChestT12Linkage(LinkageABC):
     parent = AxialSegments.LUMBAR_SPINE
     children = [AxialSegments.LUMBAR_SPINE,
                 AxialSegments.THORACIC_SPINE]
-    linked_keypoint = AxialSkeletonKeypoints.CHEST_CENTER_T12
+    linked_keypoint = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12
