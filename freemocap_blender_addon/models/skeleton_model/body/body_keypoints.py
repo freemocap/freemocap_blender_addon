@@ -38,6 +38,7 @@ class BodyKeypoints(Enum):
     PELVIS_LUMBAR_TOP_L1 = "Geometric center of the top surface of the first lumbar vertebra (L1)"
     RIGHT_PELVIS_HIP_ACETABULUM = "Geometric center of proximal surface the right hip socket/acetabulum (where the femoral head fits in)"
     LEFT_PELVIS_HIP_ACETABULUM = "Geometric center of proximal surface the left hip socket/acetabulum (where the femoral head fits in)"
+
     ### right arm
     RIGHT_CLAVICLE = "Center of the right sternoclavicular joint"
     RIGHT_SHOULDER = "Center of the right glenohumeral joint"
