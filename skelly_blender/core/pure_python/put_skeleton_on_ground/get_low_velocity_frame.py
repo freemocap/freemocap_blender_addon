@@ -1,9 +1,9 @@
 import numpy as np
 
-from skelly_blender.core.pure_python.generic_type_hints import KeypointTrajectories
+from skelly_blender.core.pure_python.generic_type_hints import Trajectories
 
 
-def get_low_velocity_frame(trajectories: KeypointTrajectories, ignore_first_n_frames: int = 30) -> int:
+def get_low_velocity_frame(trajectories: Trajectories, ignore_first_n_frames: int = 30) -> int:
     """
     Estimate the frame with the lowest combined velocity for the provided trajectories.
 

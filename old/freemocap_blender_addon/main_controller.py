@@ -3,8 +3,6 @@ from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
-
 from freemocap_blender_addon.core_functions.create_video.create_video import create_video
 from freemocap_blender_addon.core_functions.empties.creation.create_freemocap_empties import create_freemocap_empties
 from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
@@ -24,6 +22,7 @@ from freemocap_blender_addon.freemocap_data_handler.operations.fix_hand_data imp
 from freemocap_blender_addon.freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
+from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
 from freemocap_blender_addon.utilities.singleton_metaclass import SingletonMetaClass
 

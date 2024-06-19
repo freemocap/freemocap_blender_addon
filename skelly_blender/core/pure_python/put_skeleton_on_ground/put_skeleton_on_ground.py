@@ -3,12 +3,12 @@ from typing import Tuple
 
 import numpy as np
 
+from skelly_blender.core.pure_python.generic_type_hints import Trajectories
 from skelly_blender.core.pure_python.put_skeleton_on_ground.get_low_velocity_frame import get_low_velocity_frame
-from skelly_blender.core.pure_python.generic_type_hints import KeypointTrajectories
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 
 
-def put_skeleton_on_ground(keypoint_trajectories: KeypointTrajectories):
+def put_skeleton_on_ground(keypoint_trajectories: Trajectories):
     print(f"Putting freemocap data in inertial reference frame...")
 
     ground_reference_trajectories = {key: keypoint_trajectories[key] for key in

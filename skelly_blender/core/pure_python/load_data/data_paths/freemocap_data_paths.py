@@ -5,9 +5,11 @@ from typing import Union, Optional, Dict
 
 from skelly_blender.core.pure_python.load_data.data_paths.default_path_enums import PathPlaceholders, RightLeft, \
     SkeletonNpyFiles, CenterOfMassNpyFiles, VideoFolders
-from skelly_blender.core.pure_python.load_data.data_paths.numpy_paths import SkeletonNpyPaths, CenterOfMassNpyPaths, HandsNpyPaths
+from skelly_blender.core.pure_python.load_data.data_paths.numpy_paths import SkeletonNpyPaths, CenterOfMassNpyPaths, \
+    HandsNpyPaths
 from skelly_blender.core.pure_python.load_data.data_paths.video_paths import FreemocapVideoPaths, VideoFolder
-from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
+    TrackerSourceType
 
 
 @dataclass

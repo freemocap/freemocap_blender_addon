@@ -2,11 +2,8 @@ from pathlib import Path
 from typing import Dict
 
 import bpy
-
 from freemocap_blender_addon import PACKAGE_ROOT_PATH
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
 
 
 def attach_skelly_bone_meshes(armature: bpy.types.Object,

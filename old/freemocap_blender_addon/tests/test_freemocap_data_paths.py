@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 
 import numpy as np
 import pytest
-
 from freemocap_blender_addon.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 
 VALID_NPY_DATA: np.ndarray = np.array([1, 2, 3])

@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import numpy as np
 
-from skelly_blender.core.pure_python.generic_type_hints import TrackedPointName, KeypointTrajectories, DimensionNames
+from skelly_blender.core.pure_python.generic_type_hints import TrackedPointName, Trajectories, DimensionNames
 from skelly_blender.core.pure_python.getters.get_keypoints_by_component_and_tracker_type import get_tracked_point_names
 from skelly_blender.core.pure_python.getters.get_mapping_by_component_and_tracker_type import \
     get_tracker_keypoint_mapping
@@ -41,7 +41,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
             raise ValueError(
                 f"Data frame shape {self.trajectory_data.shape} does not match trajectory names length {len(self.trajectory_names)}")
 
-    def map_to_keypoints(self) -> KeypointTrajectories:
+    def map_to_keypoints(self) -> Trajectories:
         print("Mapping TrackedPoints to KeypointsTrajectories....")
         mapping = get_tracker_keypoint_mapping(component_type=self.component_type,
                                                tracker_source=self.tracker_source)

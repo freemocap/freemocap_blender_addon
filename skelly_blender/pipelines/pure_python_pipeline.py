@@ -1,39 +1,48 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Union, cast
 
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedTrajectories, BlenderizedTrajectory
+from skelly_blender.core.blender_stuff.blenderizable_enum import blenderize_name
+from skelly_blender.core.pure_python.generic_type_hints import Trajectories, RigidSegmentDefinitions
 from skelly_blender.core.pure_python.load_data.freemocap_recording_data import FreemocapRecordingData
 from skelly_blender.core.pure_python.put_skeleton_on_ground.put_skeleton_on_ground import put_skeleton_on_ground
+from skelly_blender.core.pure_python.rigid_bodies.calculate_rigid_body_trajectories import \
+    calculate_rigid_body_trajectories
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, \
     DEFAULT_TRACKER_TYPE
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
-from skelly_blender.core.pure_python.generic_type_hints import KeypointTrajectories, RigidSegmentDefinitions
-from skelly_blender.core.pure_python.rigid_bodies.calculate_rigid_body_trajectories import \
-    calculate_rigid_body_trajectories
-
 
 @dataclass
-class DataStages(TypeSafeDataclass):
-    raw_from_disk: KeypointTrajectories
-    rigidified: KeypointTrajectories
-    inertial_aligned: KeypointTrajectories
+class KeypointTrajectoriesStages(TypeSafeDataclass):
+    raw_from_disk: Trajectories
+    rigidified: Trajectories
+    inertial_aligned: Trajectories
     segment_definitions: RigidSegmentDefinitions
 
-    @property
-    def trajectories_by_stage(self) -> Dict[str, KeypointTrajectories]:
-        return {"raw_from_disk": self.raw_from_disk,
-                "rigidified": self.rigidified,
-                "inertial_aligned": self.inertial_aligned}
+    def get_trajectories_by_stage(self, blenderize_names:bool) -> Dict[str, Trajectories]:
+        if blenderize_names:
+            return {"raw_from_disk": self._blenderize_names(self.raw_from_disk),
+                    "rigidified": self._blenderize_names(self.rigidified),
+                    "inertial_aligned": self._blenderize_names(self.inertial_aligned)}
+        else:
+            return {"raw_from_disk": self.raw_from_disk,
+                    "rigidified": self.rigidified,
+                    "inertial_aligned": self.inertial_aligned}
 
-    @property
-    def keypoint_trajectories(self) -> Dict[str, KeypointTrajectories]:
+    def get_keypoint_trajectories(self, blenderize_names:bool) -> Union[Trajectories, BlenderizedTrajectories]:
         """
         Returns the keypoint trajectories at the most processed stage
         """
-        return {"inertial_aligned": self.inertial_aligned}
+        if blenderize_names:
+            return self._blenderize_names(self.inertial_aligned)
+        else:
+            return self.inertial_aligned
 
+    def _blenderize_names(self, keypoint_trajectories: Trajectories) -> BlenderizedTrajectories:
+        return {blenderize_name(key): cast(BlenderizedTrajectory, keypoint_trajectories[key] )for key in keypoint_trajectories.keys()}
 
 @dataclass
 class PurePythonPipeline(TypeSafeDataclass):
@@ -44,7 +53,7 @@ class PurePythonPipeline(TypeSafeDataclass):
     def recording_name(self) -> str:
         return Path(self.recording_path_str).stem
 
-    def run(self, scale: Optional[float] = None):
+    def run(self, scale: Optional[float] = None) -> KeypointTrajectoriesStages:
         # Pure python stuff
         print("Loading freemocap data....")
         recording_data = FreemocapRecordingData.load_from_recording_path(recording_path=self.recording_path_str,
@@ -64,10 +73,10 @@ class PurePythonPipeline(TypeSafeDataclass):
             keypoint_trajectories=rigidified_keypoint_trajectories)
 
         print(f"{self.__class__.__name__}.run() completed successfully for recording: {self.recording_name}")
-        return DataStages(raw_from_disk=og_keypoint_trajectories,
-                          rigidified=rigidified_keypoint_trajectories,
-                          inertial_aligned=inertial_aligned_keypoint_trajectories,
-                          segment_definitions=rigid_body_definitions)
+        return KeypointTrajectoriesStages(raw_from_disk=og_keypoint_trajectories,
+                                          rigidified=rigidified_keypoint_trajectories,
+                                          inertial_aligned=inertial_aligned_keypoint_trajectories,
+                                          segment_definitions=rigid_body_definitions)
 
         # self.fix_hand_data()
         # self.save_data_to_disk()

@@ -10,6 +10,7 @@ from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_defi
     ROOT_BONE_NAME
 from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
 from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name, BlenderizedName
+
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 

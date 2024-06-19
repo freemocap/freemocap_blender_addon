@@ -1,17 +1,15 @@
-from typing import Dict
-
 import bpy
 import numpy as np
 
-from skelly_blender.core.pure_python.blender_stuff.keyframed_empties.empties_dataclasses import ParentedEmpties
-from skelly_blender.core.pure_python.blender_stuff.blenderizable_enum import blenderize_name
-from skelly_blender.core.pure_python.generic_type_hints import BlenderizedName
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName, BlenderizedTrajectories
+from skelly_blender.core.blender_stuff.blenderizable_enum import blenderize_name
+from skelly_blender.core.blender_stuff.keyframed_empties.empties_dataclasses import ParentedEmpties
 
 
-def create_empties_from_trajectories(trajectories: Dict[str, np.ndarray],
-                                     parent_name: BlenderizedName,
-                                     empty_scale: float = 0.01,
-                                     empty_type: str = "SPHERE") -> ParentedEmpties:
+def create_keyframed_empties(trajectories: BlenderizedTrajectories,
+                             parent_name: str,
+                             empty_scale: float = 0.01,
+                             empty_type: str = "SPHERE") -> ParentedEmpties:
     """
     Create empties for each trajectory in the dictionary and parent them to a new parent empty object.
 

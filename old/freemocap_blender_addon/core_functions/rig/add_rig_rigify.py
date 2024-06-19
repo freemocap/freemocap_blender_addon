@@ -2,7 +2,6 @@ import math as m
 from typing import Dict
 
 import bpy
-
 from freemocap_blender_addon.core_functions.rig.ensure_rigify import ensure_rigify
 
 

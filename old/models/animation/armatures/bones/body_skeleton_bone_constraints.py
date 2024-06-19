@@ -3,11 +3,12 @@ from typing import List, Dict
 
 from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintABC, \
     BoneConstraintTypes, TrackAxis, OwnerSpace, LockAxis
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
+
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 
 # Enums for specific keys to avoid spelling issues
 

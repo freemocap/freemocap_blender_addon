@@ -1,12 +1,10 @@
 from typing import Tuple
 
-from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import ParentedEmpties
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.make_rigid_body_mesh import \
+from skelly_blender.core.blender_stuff.color_generator import ColorType, generate_color
+from skelly_blender.core.blender_stuff.keyframed_empties.empties_dataclasses import ParentedEmpties
+from skelly_blender.core.blender_stuff.rigid_body_meshes.make_rigid_body_mesh import \
     make_rigid_body_mesh
-from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
-    RigidSegmentDefinitions
-from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.utilities.blender_utilities.color_generator import generate_color, ColorType
+from skelly_blender.core.pure_python.generic_type_hints import RigidSegmentDefinitions
 
 DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH = (.8, 1, 1)
 

@@ -2,7 +2,6 @@ from pathlib import Path
 
 import bpy
 import numpy as np
-
 from freemocap_blender_addon.core_functions.create_video.create_video import create_video
 from freemocap_blender_addon.core_functions.empties.creation.create_freemocap_empties import create_freemocap_empties
 from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos

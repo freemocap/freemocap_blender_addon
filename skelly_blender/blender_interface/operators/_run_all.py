@@ -2,7 +2,6 @@ import traceback
 from pathlib import Path
 
 import bpy
-
 from freemocap_blender_addon.pipelines.blender_skeleton_builder_pipeline import BlenderSkeletonBuilderPipeline
 
 

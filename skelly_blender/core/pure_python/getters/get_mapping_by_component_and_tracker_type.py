@@ -1,5 +1,6 @@
-from skelly_blender.core.pure_python.tracked_points.tracker_sources.mediapipe_tracker.mediapipe_mapping import MediapipeBodyMapping
 from skelly_blender.core.pure_python.tracked_points.data_component_types import DataComponentTypes
+from skelly_blender.core.pure_python.tracked_points.tracker_sources.mediapipe_tracker.mediapipe_mapping import \
+    MediapipeBodyMapping
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType
 
 

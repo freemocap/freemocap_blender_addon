@@ -3,17 +3,17 @@ from typing import Tuple
 
 import numpy as np
 
-from skelly_blender.core.pure_python.generic_type_hints import KeypointTrajectories, RigidSegmentDefinitions, SegmentStats
+from skelly_blender.core.pure_python.generic_type_hints import Trajectories, RigidSegmentDefinitions, SegmentStats
 from skelly_blender.core.pure_python.rigid_bodies.calculate_segment_lengths import calculate_segment_length_stats, \
     print_length_stats_table
 from skelly_blender.core.pure_python.rigid_bodies.rigid_segment_definition import RigidSegmentDefinition
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 
 
-def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectories,
+def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
                                       skeleton_definition: SkeletonTypes,
                                       scale: float = 0.001) -> Tuple[
-    KeypointTrajectories, RigidSegmentDefinitions]:
+    Trajectories, RigidSegmentDefinitions]:
     print(
         'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
 
@@ -45,9 +45,9 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: KeypointTrajectorie
     return rigidified_keypoints, rigid_segment_definitions
 
 
-def rigidify_keypoint_trajectories(keypoint_trajectories: KeypointTrajectories,
+def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
                                    segment_length_stats: SegmentStats,
-                                   skeleton_definition: SkeletonTypes) -> KeypointTrajectories:
+                                   skeleton_definition: SkeletonTypes) -> Trajectories:
     # Iterate through the skeleton segments and enforce rigid body assumption by translating each child-keypoint
     # and its children so the new bone length is the same as the target length on each frame
     skeleton_segments = skeleton_definition.value.get_segments()

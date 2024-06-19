@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
-from mathutils import Vector
-
 from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import BlenderizedAxialSegments
 from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import BlenderizedSkullSegments
+from mathutils import Vector
 
 
 @dataclass

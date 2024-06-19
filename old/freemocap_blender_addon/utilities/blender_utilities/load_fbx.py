@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import bpy
 
 base_path = Path(r"/freemocap_blender_addon/assets/skelly_bones")

@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from typing import Union, List
 
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, CompoundSegmentABC
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
+    CompoundSegmentABC
 
 
 @dataclass

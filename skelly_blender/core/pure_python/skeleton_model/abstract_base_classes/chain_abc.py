@@ -3,7 +3,8 @@ from typing import List
 
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, SimpleSegmentABC
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, \
+    SimpleSegmentABC
 
 
 class ChainABC(ABC):

@@ -25,3 +25,4 @@ class Trajectory(TypeSafeDataclass, ABC):
     def __str__(self):
         out_str = f"Trajectory: {self.name} (shape: {self.trajectory_data.shape})"
         return out_str
+

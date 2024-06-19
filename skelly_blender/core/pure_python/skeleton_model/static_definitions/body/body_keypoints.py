@@ -1,5 +1,3 @@
-from enum import Enum
-
 from skelly_blender.core.blender_stuff.blenderizable_enum import BlenderizableEnum
 
 

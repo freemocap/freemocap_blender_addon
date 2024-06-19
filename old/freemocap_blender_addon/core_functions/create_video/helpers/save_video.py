@@ -1,9 +1,8 @@
 import os
 
-from freemocap_blender_addon.pipelines.pipelines import export_profiles, render_parameters
-
 from freemocap_blender_addon.core_functions.create_video.helpers.overlay_components.frame_information_dataclass import \
     FrameInformation
+from freemocap_blender_addon.pipelines.pipelines import export_profiles, render_parameters
 
 
 def write_video_file_to_disk(
