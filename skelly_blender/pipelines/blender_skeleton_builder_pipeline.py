@@ -4,20 +4,15 @@ from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.core_functions.empties.creation.create_empty_from_trajectory import \
+
+
+from skelly_blender.core.pure_python.blender_stuff.keyframed_empties.create_keyframed_empties import \
     create_empties_from_trajectories
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
-    put_rigid_body_meshes_on_empties
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_bone_meshes
-from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
-from freemocap_blender_addon.core_functions.rig.generate_armature import generate_armature
-from freemocap_blender_addon.freemocap_data.tracker_and_data_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
-from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import PipelineConfig
-from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
-from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
-from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
+    TrackerSourceType
+from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.pipelines.blender_pipeline_config import PipelineConfig
+from skelly_blender.pipelines.pure_python_pipeline import PurePythonPipeline
 
 
 @dataclass
@@ -33,7 +28,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
     def run(self, show_stages: bool = True, scale=.001):
         # Pure python stuff
         print("Loading freemocap data....")
-        freemocap_data = PurePythonPipeline(recording_path_str=self.recording_path_str).run()
+        freemocap_data = PurePythonPipeline(recording_path_str=self.recording_path_str, scale_data=scale).run()
 
         if show_stages:
             stages_to_show = freemocap_data.trajectories_by_stage
@@ -46,14 +41,14 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             parented_empties = create_empties_from_trajectories(trajectories=trajectories,
                                                                 parent_name=stage)
             # put_spheres_on_parented_empties(parented_empties=parented_empties)
-            blenderized_segment_definitions = {}
-            for segment_name, segment_definition in freemocap_data.segment_definitions.items():
-                blenderized_name = blenderize_name(segment_name)
-                blenderized_segment = segment_definition
-                blenderized_segment.name = blenderize_name(blenderized_segment.name)
-                blenderized_segment.parent = blenderize_name(blenderized_segment.parent)
-                blenderized_segment.child = blenderize_name(blenderized_segment.child)
-                blenderized_segment_definitions[blenderized_name] = blenderized_segment
+            # blenderized_segment_definitions = {}
+            # for segment_name, segment_definition in freemocap_data.segment_definitions.items():
+            #     blenderized_name = blenderize_name(segment_name)
+            #     blenderized_segment = segment_definition
+            #     blenderized_segment.name = blenderize_name(blenderized_segment.name)
+            #     blenderized_segment.parent = blenderize_name(blenderized_segment.parent)
+            #     blenderized_segment.child = blenderize_name(blenderized_segment.child)
+            #     blenderized_segment_definitions[blenderized_name] = blenderized_segment
 
             put_rigid_body_meshes_on_empties(parented_empties=parented_empties,
                                              segment_definitions=blenderized_segment_definitions,

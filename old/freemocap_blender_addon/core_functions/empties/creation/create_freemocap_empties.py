@@ -1,7 +1,7 @@
 import bpy
 
 from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
-from .create_empty_from_trajectory import create_empties
+from skelly_blender.core.pure_python.blender_stuff.keyframed_empties.create_keyframed_empties import create_empties
 
 BODY_EMPTY_SCALE = 0.03
 
