@@ -7,7 +7,7 @@ from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import 
 
 class CervicalSpineSegment(SimpleSegmentABC):
     parent = BodyKeypoints.CERVICAL_SPINE_TOP_C1_AXIS
-    child = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
+    child = BodyKeypoints.THORACIC_SPINE_TOP_T1
 
 
 class ThoracicSpineSegment(SimpleSegmentABC):

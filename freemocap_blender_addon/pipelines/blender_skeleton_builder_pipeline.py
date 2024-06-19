@@ -68,10 +68,10 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             )
             armature = generate_armature(armature_definition=armature_definition)
 
-            attach_skelly_bone_meshes(
-                armature=armature,
-                armature_definition=armature_definition,
-            )
+            # attach_skelly_bone_meshes(
+            #     armature=armature,
+            #     armature_definition=armature_definition,
+            # )
 
             rig = generate_rig(
                 armature=armature,

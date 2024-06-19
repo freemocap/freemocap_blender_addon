@@ -4,7 +4,7 @@ from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import 
 
 
 class RightClavicleSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
+    parent = BodyKeypoints.THORACIC_SPINE_TOP_T1
     child = BodyKeypoints.RIGHT_SHOULDER
 
 

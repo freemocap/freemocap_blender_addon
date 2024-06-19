@@ -98,8 +98,8 @@ def make_joint_sphere_mesh(name: str = "joint_sphere_mesh",
 
 
 def make_rigid_body_mesh(name: str = "bone_mesh",
-                         joint_color: Union[str, Tuple, List, np.ndarray] = "#aa0055",
-                         cone_color: Union[str, Tuple, List, np.ndarray] = "#00FFFF",
+                         joint_color: str = "#aa0055",
+                         cone_color: str = "#00FFFF",
                          axis_visible: bool = True,
                          squish_scale: tuple = (.6, 1, 1),
                          length: float = 1,
