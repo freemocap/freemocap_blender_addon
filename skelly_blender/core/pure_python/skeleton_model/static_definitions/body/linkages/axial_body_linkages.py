@@ -1,9 +1,9 @@
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.axial_segments import AxialSegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.left_body_segments import LeftBodySegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.right_body_segments import RightBodySegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.skull_segments import SkullSegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.axial_segments import AxialSegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.left_body_segments import LeftBodySegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.right_body_segments import RightBodySegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.skull_segments import SkullSegments
 
 
 class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervical vertebra (C1)

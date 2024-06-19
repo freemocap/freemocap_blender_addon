@@ -1,6 +1,6 @@
 import numpy as np
+from skelly_blender.core.custom_types import Trajectories, SegmentStats
 
-from skelly_blender.core.pure_python.generic_type_hints import Trajectories, SegmentStats
 from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics

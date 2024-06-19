@@ -1,32 +1,33 @@
 import bpy
 import mathutils
 
-from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import ROOT_BONE_NAME
-from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
-from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
+from skelly_blender.core.blender_stuff.armature_rig.armature.armature_bone_classes import ROOT_BONE_NAME
+from skelly_blender.core.blender_stuff.armature_rig.armature.armature_definition_classes import ArmatureDefinition
+from skelly_blender.core.blender_stuff.blender_type_hints import ArmatureObject
+from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeft
 
 
-def generate_armature(
-        armature_definition: ArmatureDefinition,
-) -> bpy.types.Object:
+def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject:
     """
     Armature: The geometric representation of a skeleton (i.e. the stick figure definition)
     """
 
     armature = create_new_armature_and_enter_edit_mode(name=armature_definition.armature_name)
+
+    # loop through the bones to make and skip the ones that don't have a parent yet
     bones_to_make = list(armature_definition.bone_definitions.items())
     while len(bones_to_make) > 0:
         for bone_info in bones_to_make:
             bone_name, bone_definition = bone_info
             if bone_definition.parent not in armature.data.edit_bones:
                 continue  # Skip this bone until its parent is created
+
             bones_to_make.remove(bone_info)  # Remove this bone from the list of bones to make
 
             print(f"Creating armature bone: {bone_name} with parent: {bone_definition.parent}")
             armature.data.edit_bones.new(name=bone_name)
             armature_bone = armature.data.edit_bones[bone_name]
-            assign_bone_color(bone=armature_bone)
+            assign_armature_bone_color(bone=armature_bone)
 
             bone_vector = mathutils.Vector([0, 0, bone_definition.length])
 
@@ -40,20 +41,21 @@ def generate_armature(
 
     # Change mode to object mode
     bpy.ops.object.mode_set(mode="OBJECT")
+    print(f"Armature created successfully: {armature_definition}")
     return armature
 
 
-def assign_bone_color(bone: bpy.types.EditBone):
+def assign_armature_bone_color(bone: bpy.types.EditBone):
     # Check for .L or .R, or axial in the bone name and assign colors accordingly
-    if bone.name.endswith('.L'):
+    if bone.name.endswith(RightLeft.LEFT.blenderize()):
         bone.color.palette = 'THEME04'  # Blue
-    elif bone.name.endswith('.R'):
+    elif bone.name.endswith(RightLeft.RIGHT.blenderize()):
         bone.color.palette = 'THEME01'  # Red
     else:
         bone.color.palette = 'THEME03'  # Green
 
 
-def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:
+def create_new_armature_and_enter_edit_mode(name: str) -> ArmatureObject:
     # Add the armature
     bpy.ops.object.armature_add(
         enter_editmode=True,
@@ -74,20 +76,3 @@ def create_new_armature_and_enter_edit_mode(name: str) -> bpy.types.Object:
     return armature
 
 
-if __name__ == "__main__":
-    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
-    from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
-        calculate_rigid_body_trajectories
-
-    recording_data = load_freemocap_test_recording()
-    keypoint_trajectories_outer, segment_definitions_outer = calculate_rigid_body_trajectories(
-        keypoint_trajectories=recording_data.body.map_to_keypoints(),
-        skeleton_definition=SkeletonTypes.BODY_ONLY)
-
-    armature_outer = generate_armature(
-        armature_definition=ArmatureDefinition.create(
-            rig_name="test_armature",
-            segment_definitions=segment_definitions_outer,
-            pose_definition=RestPoseTypes.DEFAULT_TPOSE,
-        )
-    )

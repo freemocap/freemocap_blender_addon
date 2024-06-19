@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 
-from skelly_blender.core.pure_python.rigid_bodies.rigid_segment_definition import RigidSegmentDefinition
+from skelly_blender.core.pure_python.rigid_bodies.rigid_segment import RigidSegmentDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
 from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
 
@@ -20,3 +20,4 @@ RigidSegmentDefinitions = Dict[SegmentName, RigidSegmentDefinition]
 
 
 DimensionNames = List[DimensionName]
+BlenderizedName = str

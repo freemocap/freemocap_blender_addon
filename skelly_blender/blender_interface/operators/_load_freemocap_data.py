@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import bpy
-
 from freemocap_blender_addon.core_functions.empties.creation.create_freemocap_empties import create_freemocap_empties
 from freemocap_blender_addon.core_functions.setup_scene.make_parent_empties import create_parent_empty
 from freemocap_blender_addon.core_functions.setup_scene.set_start_end_frame import set_start_end_frame

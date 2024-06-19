@@ -2,13 +2,13 @@ from dataclasses import dataclass
 
 import bpy
 
-from skelly_blender.core.pure_python.generic_type_hints import BlenderizedName
+from skelly_blender.core.blender_stuff.blender_type_hints import Empties, BlenderizedName
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass
 class ParentedEmpties(TypeSafeDataclass):
-    empties: EmptiesDictionary
+    empties: Empties
     parent_object: bpy.types.Object
 
     def __post_init__(self):

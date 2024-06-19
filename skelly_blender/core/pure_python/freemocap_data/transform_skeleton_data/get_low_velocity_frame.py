@@ -1,6 +1,6 @@
 import numpy as np
 
-from skelly_blender.core.pure_python.generic_type_hints import Trajectories
+from skelly_blender.core.custom_types import Trajectories
 
 
 def get_low_velocity_frame(trajectories: Trajectories, ignore_first_n_frames: int = 30) -> int:

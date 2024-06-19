@@ -67,12 +67,11 @@ class CompoundSegmentABC(SegmentABC):
     The parent keypoint is the origin of the rigid body
     The primary and secondary axes must be defined in the class, and will be used to calculate the orthonormal basis of the rigid body
     """
-    parent: KeypointDefinition
-    children: List[KeypointDefinition]
-    shared_keypoint: KeypointDefinition
-    positive_x_direction: KeypointDefinition
-    approximate_positive_y_direction: Optional[KeypointDefinition]
-    approximate_negative_y_direction: Optional[KeypointDefinition]
+    segments = List[SimpleSegmentABC]
+    origin: KeypointDefinition
+    primary_axis_upwards_z: KeypointDefinition  # defining primary axis as upwards Z
+    approximate_forwards_x: Optional[KeypointDefinition]
+    approximate_leftward_y: Optional[KeypointDefinition]
 
     @property
     def name(self) -> str:
@@ -83,21 +82,8 @@ class CompoundSegmentABC(SegmentABC):
         return self.parent
 
     def __post_init__(self):
-        if not any(child == self.shared_keypoint for child in self.children):
-            raise ValueError(f"Shared keypoint {self.shared_keypoint.name} not found in children {self.children}")
-        if not any(child == self.positive_x_direction for child in self.children):
-            raise ValueError(
-                f"Positive X direction {self.positive_x_direction.name} not found in children {self.children}")
-        if self.approximate_positive_y_direction and not any(
-                child == self.approximate_positive_y_direction for child in self.children):
-            raise ValueError(
-                f"Approximate Positive Y direction {self.approximate_positive_y_direction.name} not found in children {self.children}")
-        if self.approximate_negative_y_direction and not any(
-                child == self.approximate_negative_y_direction for child in self.children):
-            raise ValueError(
-                f"Approximate Negative Y direction {self.approximate_negative_y_direction.name} not found in children {self.children}")
 
-        if not self.approximate_positive_y_direction and not self.approximate_negative_y_direction:
+        if not self.approximate_forwards_x and not self.approximate_forwards_x:
             raise ValueError(
                 "At least one of approximate_positive_y_direction or approximate_negative_y_direction must be defined")
 
@@ -109,4 +95,7 @@ class CompoundSegmentABC(SegmentABC):
 
     @classmethod
     def get_children(cls) -> List[KeypointDefinition]:
-        return cls.children
+        children = []
+        for segment in cls.segments:
+            children.extend(segment.get_children())
+        return children

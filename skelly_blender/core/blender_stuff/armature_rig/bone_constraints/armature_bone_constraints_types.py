@@ -1,6 +1,6 @@
 from enum import Enum
 
-from freemocap_blender_addon.models.animation.armatures.bones.body_skeleton_bone_constraints import \
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.body_skeleton_bone_constraint_definitions import \
     DefaultBoneConstraints
 
 _ARMATURE_BONE_CONSTRAINTS_TYPES = {

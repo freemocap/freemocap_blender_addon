@@ -1,4 +1,4 @@
-from skelly_blender.core.blender_stuff.blenderizable_enum import BlenderizableEnum
+from skelly_blender.core.blender_stuff.blenderizers.blenderizable_enum import BlenderizableEnum
 
 
 class BodyKeypoints(BlenderizableEnum):

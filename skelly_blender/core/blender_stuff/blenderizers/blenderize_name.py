@@ -1,18 +1,10 @@
 import re
 from copy import copy
-from enum import Enum
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
+from skelly_blender.core.custom_types import BlenderizedName
 
 
-class BlenderizableEnum(Enum):
-    def blenderize(self) -> "BlenderizedName":
-        return blenderize_name(self.name)
-
-
-def blenderize_name(original_name: str) -> "BlenderizedName":
+def blenderize_name(original_name: str) -> BlenderizedName:
     """
     Create a Blender formatted name from the original name.
 
@@ -102,19 +94,3 @@ def camel_to_snake(name: str) -> str:
     name = re.sub(r'(?<=[a-z0-9])(?=[A-Z])', '_', name)
     # Convert the entire string to lowercase
     return name.lower()
-
-
-if __name__ == "__main__":
-    print(camel_to_snake("CamelCase"))  # Expected Output: camel_case
-    print(camel_to_snake("camelCase"))  # Expected Output: camel_case
-    print(camel_to_snake("PascalCaseExample"))  # Expected Output: pascal_case_example
-    print(camel_to_snake("exampleWithNumbers123"))  # Expected Output: example_with_numbers123
-    print(blenderize_name("Upper Arm Right"))  # Expected Output: upper_arm.R
-    print(blenderize_name("Lower-Leg (Left)"))  # Expected Output: lower-leg.L
-    print(blenderize_name("ELBOW_LEFT"))  # Expected Output: elbow.L
-    print(blenderize_name("left_elbow"))  # Expected Output: elbow.L
-    print(blenderize_name("RightArm"))  # Expected Output: arm.R
-    print(blenderize_name("LEFT_ARM"))  # Expected Output: arm.L
-    print(blenderize_name("arm-Right"))  # Expected Output: arm.R
-    print(blenderize_name("upper_right_arm"))  # Expected Output: upper_arm.R
-    print(blenderize_name("upper_.R_arm"))  # Expected Output: upper_arm.R

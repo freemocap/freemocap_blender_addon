@@ -1,17 +1,16 @@
-import re
-from typing import List, Optional, Tuple
+from typing import Tuple
 
 import bpy
-from freemocap_blender_addon.core_functions.rig.apply_bone_constraints import add_bone_constraints
-from freemocap_blender_addon.core_functions.rig.appy_ik_constraints import add_ik_constraints_to_armature
-from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
-from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
+from skelly_blender.core.blender_stuff.armature_rig.armature.armature_definition_classes import ArmatureDefinition
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import \
+    ArmatureBoneConstraintsTypes
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.pipelines.blender_pipeline_config import AddRigConfig
 
 
-def generate_rig(
+def apply_bone_constraints(
         armature: bpy.types.Object,
         config: AddRigConfig,
 ) -> Tuple[bpy.types.Object, ArmatureDefinition]:
@@ -32,14 +31,14 @@ def generate_rig(
     )
 
     if config.add_ik_constraints:
-        add_ik_constraints_to_armature(armature=armature)
+        raise NotImplementedError("IK constraints are not implemented yet")
+        # from old.freemocap_blender_addon.core_functions.rig.appy_ik_constraints import add_ik_constraints_to_armature
+        # add_ik_constraints_to_armature(armature=armature)
 
     # Change mode to object mode
     bpy.ops.object.mode_set(mode="OBJECT")
 
-
-
-    # TODO - I don't really know what the effect of the following code is. Running it returns `Info: Nothing to bake`
+    # TODO - I don't really know what 'baking animation to rig' does, so I don't know if the following code is necessary. Running it returns a warning `Info: Nothing to bake` which doesn't seem to affect the anything?
     # ### Bake animation to the rig ###
     # # Get the empties ending frame
     # ending_frame = int(bpy.data.actions[0].frame_range[1])
@@ -55,34 +54,27 @@ def generate_rig(
     return armature
 
 
-def deselect_all_bpy_objects():
-    for scene_object in bpy.data.objects:
-        scene_object.select_set(False)
+def add_bone_constraints(
+        armature: bpy.types.Object,
+        bone_constraints: ArmatureBoneConstraintsTypes,
+        use_limit_rotation: bool = False,
+) -> None:
+    print("Adding bone constraints...")
 
+    # Change to pose mode
+    bpy.context.view_layer.objects.active = armature
+    bpy.ops.object.mode_set(mode="POSE")
 
-def get_appended_number_from_blender_object(base_name: str) -> Optional[str]:
-    pattern = r"\.0[0-9]{2}$"
-    match = re.search(pattern, base_name)
-    return match.group() if match else None
+    # Create each constraint
+    for bone_name, constraint_definitions in bone_constraints.value.__members__.items():
+        # If pose bone does not exist, skip it
+        if bone_name not in armature.pose.bones:
+            continue
 
-
-def get_actual_empty_target_name(empty_names: List[str], base_target_name: str) -> str:
-    """
-    Get the actual empty target name based on the constraint target name,
-    this is mostly to give us the ability to load multiple recorings, because
-    blender will append `.001`, `.002`  the names of emtpies of the 2nd, 3rd, etc to avoid name collisions
-
-    So basically, if the base_target name is `hips_center` this will look for empties named `hips_center`,
-      `hips_center.001`, `hips_center.002`, etc in the provided `empty_names` list and return that
-    """
-
-    actual_target_name = None
-    for empty_name in empty_names:
-        if base_target_name in empty_name:
-            actual_target_name = empty_name
-            break
-
-    if actual_target_name is None:
-        raise ValueError(f"Could not find empty target for {base_target_name}")
-
-    return actual_target_name
+        for constraint in constraint_definitions.value:
+            # Add new constraint determined by type
+            if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION.value:
+                continue
+            else:
+                print(f"Adding constraint `{constraint}` to bone `{bone_name}`")
+                constraint.apply_constraint(bone=armature.pose.bones[bone_name])

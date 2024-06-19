@@ -4,6 +4,9 @@ from typing import Tuple, Optional
 
 import mathutils
 
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import \
+    ArmatureBoneConstraintsTypes
+
 ROOT_BONE_NAME = "ROOT"
 
 

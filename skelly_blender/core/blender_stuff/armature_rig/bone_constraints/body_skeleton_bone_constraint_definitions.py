@@ -1,16 +1,15 @@
 from enum import Enum
 from typing import List, Dict
 
-from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintABC, \
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.bone_constraint_types import ConstraintABC, \
     BoneConstraintTypes, TrackAxis, OwnerSpace, LockAxis
-from freemocap_blender_addon.models.skeleton_model.body.segments.axial_segments import AxialSegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.left_body_segments import LeftBodySegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
-from freemocap_blender_addon.models.skeleton_model.body.segments.skull_segments import SkullSegments
-
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
-
-# Enums for specific keys to avoid spelling issues
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.axial_segments import AxialSegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.left_body_segments import \
+    LeftBodySegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.right_body_segments import \
+    RightBodySegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.skull_segments import SkullSegments
 
 _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # AXIAL SEGMENTS

@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
+from skelly_blender.core.custom_types import TrackedPointName, KeypointMappingType
 
-from skelly_blender.core.blender_stuff.blenderizable_enum import BlenderizableEnum
-from skelly_blender.core.pure_python.generic_type_hints import TrackedPointName, KeypointMappingType
+from skelly_blender.core.blender_stuff.blenderizers.blenderizable_enum import BlenderizableEnum
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 

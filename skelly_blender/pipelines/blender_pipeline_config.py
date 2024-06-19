@@ -1,6 +1,10 @@
 from dataclasses import dataclass, field
 from enum import Enum
 
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import \
+    ArmatureBoneConstraintsTypes
+from skelly_blender.core.blender_stuff.armature_rig.rest_pose_definitions.pose_types import RestPoseTypes
+
 
 @dataclass
 class AdjustEmptiesConfig:

@@ -1,14 +1,9 @@
 from abc import ABC
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 import numpy as np
 
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
-
-if TYPE_CHECKING:
-    from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
-
 
 
 @dataclass
@@ -31,6 +26,3 @@ class Trajectory(TypeSafeDataclass, ABC):
         out_str = f"Trajectory: {self.name} (shape: {self.trajectory_data.shape})"
         return out_str
 
-@dataclass
-class BlenderizedTrajectory(Trajectory):
-    name: "BlenderizedName"

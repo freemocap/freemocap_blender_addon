@@ -1,13 +1,13 @@
 from enum import Enum
 
-from skelly_blender.core.blender_stuff.armature_rig.armatures.armature_bone_classes import BoneRestPoseDefinition, \
+from skelly_blender.core.blender_stuff.armature_rig.armature.armature_bone_classes import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.axial_segments import AxialSegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.left_body_segments import \
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.axial_segments import AxialSegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.left_body_segments import \
     LeftBodySegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.right_body_segments import \
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.right_body_segments import \
     RightBodySegments
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.skull_segments import SkullSegments
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.segments.body.skull_segments import SkullSegments
 
 _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Axial segments
