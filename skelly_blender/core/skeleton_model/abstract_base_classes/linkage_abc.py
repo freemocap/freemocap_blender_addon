@@ -2,9 +2,8 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Union, List
 
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointDefinition
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC, \
-    CompoundSegmentABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
+from skelly_blender.core.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, CompoundSegmentABC
 
 
 @dataclass

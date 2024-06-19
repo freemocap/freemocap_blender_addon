@@ -7,7 +7,7 @@ from skelly_blender.core.rigid_bodies.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
 from skelly_blender.core.load_data.freemocap_recording_data import FreemocapRecordingData
 from skelly_blender.core.skeleton_model.skeleton_types import SkeletonTypes
-from skelly_blender.core.tracked_points.tracker_source_types import TrackerSourceType, DEFAULT_TRACKER_TYPE
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, DEFAULT_TRACKER_TYPE
 from skelly_blender.core.custom_type_hints import KeypointTrajectories, RigidSegmentDefinitions
 from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 

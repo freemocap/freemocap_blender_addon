@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Literal
 
 from skelly_blender.core.rigid_bodies.rigid_segment_definition import \
     RigidSegmentDefinition
@@ -16,3 +16,5 @@ SegmentStats = Dict[str, DescriptiveStatistics]
 RigidSegmentDefinitions = Dict[str, RigidSegmentDefinition]
 
 BlenderizedName = str
+
+DimensionNames = List[str]

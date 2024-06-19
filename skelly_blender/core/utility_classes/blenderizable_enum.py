@@ -5,7 +5,7 @@ from enum import Enum
 from skelly_blender.core.custom_type_hints import BlenderizedName
 
 
-class BlenderizableEnumABC(Enum):
+class BlenderizableEnum(Enum):
     def blenderize(self) -> BlenderizedName:
         return blenderize_name(self.name)
 

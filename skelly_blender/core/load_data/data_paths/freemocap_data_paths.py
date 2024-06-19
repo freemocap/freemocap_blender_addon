@@ -7,7 +7,7 @@ from skelly_blender.core.load_data.data_paths.numpy_paths import SkeletonNpyPath
 from skelly_blender.core.load_data.data_paths.default_path_enums import PathPlaceholders, SkeletonNpyFiles, RightLeft, \
     CenterOfMassNpyFiles, VideoFolders
 from skelly_blender.core.load_data.data_paths.video_paths import FreemocapVideoPaths, VideoFolder
-from skelly_blender.core.tracked_points.tracker_source_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
 
 
 @dataclass

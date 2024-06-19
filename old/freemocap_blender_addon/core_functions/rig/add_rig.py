@@ -7,7 +7,7 @@ from freemocap_blender_addon.core_functions.rig.apply_bone_constraints import ad
 from freemocap_blender_addon.core_functions.rig.appy_ik_constraints import add_ik_constraints_to_armature
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
 from freemocap_blender_addon.models.animation.armatures.bones.bone_constraint_types import ConstraintType
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters import AddRigConfig
 
 

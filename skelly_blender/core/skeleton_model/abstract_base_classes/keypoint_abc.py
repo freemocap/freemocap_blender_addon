@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass

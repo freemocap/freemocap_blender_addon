@@ -6,6 +6,7 @@ import numpy as np
 from skelly_blender.core.put_skeleton_on_ground.get_low_velocity_frame import get_low_velocity_frame
 from skelly_blender.core.custom_type_hints import KeypointTrajectories
 from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 def put_skeleton_on_ground(keypoint_trajectories: KeypointTrajectories):

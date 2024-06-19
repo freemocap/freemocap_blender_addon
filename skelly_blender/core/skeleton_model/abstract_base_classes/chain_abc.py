@@ -1,10 +1,9 @@
 from abc import ABC
 from typing import List
 
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.keypoint_abc import KeypointDefinition
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SegmentABC, \
-    SimpleSegmentABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
+from skelly_blender.core.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.segments_abc import SegmentABC, SimpleSegmentABC
 
 
 class ChainABC(ABC):

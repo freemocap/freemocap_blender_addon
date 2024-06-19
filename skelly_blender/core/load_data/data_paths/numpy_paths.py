@@ -3,7 +3,7 @@ from pathlib import Path
 
 import numpy as np
 
-from freemocap_blender_addon.freemocap_data.data_paths.paths_dataclass import PathsDataclass
+from skelly_blender.core.load_data.data_paths.paths_dataclass import PathsDataclass
 
 
 @dataclass

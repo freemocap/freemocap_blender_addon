@@ -1,6 +1,6 @@
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.body.segments.right_body_segments import RightBodySegments
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.linkage_abc import LinkageABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
+from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.skeleton_model.static_definitions.body.segments.right_body_segments import RightBodySegments
 
 
 class RightShoulderLinkage(LinkageABC):

@@ -3,18 +3,22 @@ from typing import List
 
 import numpy as np
 
-from skelly_blender.core.custom_type_hints import TrackedPointName
+from skelly_blender.core.custom_type_hints import TrackedPointName, KeypointTrajectories, DimensionNames
+from skelly_blender.core.getters.get_keypoints_by_component_and_tracker_type import get_tracked_point_names
+from skelly_blender.core.getters.get_mapping_by_component_and_tracker_type import get_tracker_keypoint_mapping
+from skelly_blender.core.load_data.data_paths.numpy_paths import HandsNpyPaths
 from skelly_blender.core.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
 from skelly_blender.core.tracked_points.data_component_types import DataComponentTypes
-from skelly_blender.core.tracked_points.tracker_source_types import TrackerSourceType
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType
 from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
+FRAME_TRAJECTORY_XYZ = ["frame_number", "trajectory_index", "xyz"]
 
 @dataclass
 class GenericTrackedPoints(TypeSafeDataclass):
     trajectory_data: np.ndarray
     trajectory_names: List[TrackedPointName]
-    dimension_names: List[str]
+    dimension_names: DimensionNames
     tracker_source: TrackerSourceType
     component_type: DataComponentTypes = field(default=DataComponentTypes.BODY)
 
@@ -37,8 +41,8 @@ class GenericTrackedPoints(TypeSafeDataclass):
 
     def map_to_keypoints(self) -> KeypointTrajectories:
         print("Mapping TrackedPoints to KeypointsTrajectories....")
-        mapping = get_mapping(component_type=self.component_type,
-                              tracker_source=self.tracker_source)
+        mapping = get_tracker_keypoint_mapping(component_type=self.component_type,
+                                               tracker_source=self.tracker_source)
         keypoint_trajectories = {
             keypoint_name.lower(): Trajectory(name=keypoint_name.lower(),
                                               trajectory_data=mapping.value.calculate_trajectory(
@@ -55,8 +59,8 @@ class BodyTrackedPoints(GenericTrackedPoints):
                tracker_source: TrackerSourceType,
                ):
         return cls(trajectory_data=trajectory_data,
-                   trajectory_names=get_keypoint_names(component_type=DataComponentTypes.BODY,
-                                                       tracker_source=tracker_source),
+                   trajectory_names=get_tracked_point_names(component_type=DataComponentTypes.BODY,
+                                                            tracker_source=tracker_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ,
                    tracker_source=tracker_source
                    )
@@ -68,8 +72,8 @@ class FaceTrackedPoints(GenericTrackedPoints):
                data: np.ndarray,
                tracker_source: TrackerSourceType):
         return cls(trajectory_data=data,
-                   trajectory_names=get_keypoint_names(component_type=DataComponentTypes.FACE,
-                                                       tracker_source=tracker_source),
+                   trajectory_names=get_tracked_point_names(component_type=DataComponentTypes.FACE,
+                                                            tracker_source=tracker_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ,
                    tracker_source=tracker_source
                    )
@@ -82,8 +86,8 @@ class HandTrackedPoints(GenericTrackedPoints):
                tracker_source: TrackerSourceType,
                component_type: DataComponentTypes):
         return cls(trajectory_data=data,
-                   trajectory_names=get_keypoint_names(component_type=component_type,
-                                                       tracker_source=tracker_source),
+                   trajectory_names=get_tracked_point_names(component_type=component_type,
+                                                            tracker_source=tracker_source),
                    dimension_names=FRAME_TRAJECTORY_XYZ,
                    tracker_source=tracker_source
                    )

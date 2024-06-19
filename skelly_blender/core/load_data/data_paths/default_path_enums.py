@@ -1,6 +1,6 @@
 from enum import Enum
 
-from skelly_blender.core.utility_classes.blenderizable_enum import BlenderizableEnumABC
+from skelly_blender.core.utility_classes.blenderizable_enum import BlenderizableEnum
 
 
 class PathPlaceholders(Enum):
@@ -14,7 +14,7 @@ CENTER_OF_MASS_NPY_PARENT_DIRECTORY = f"{PathPlaceholders.RECORDING_PATH_PLACEHO
 VIDEO_PARENT_DIRECTORY = f"{PathPlaceholders.RECORDING_PATH_PLACEHOLDER.value}"
 
 
-class RightLeft(BlenderizableEnumABC):
+class RightLeft(BlenderizableEnum):
     RIGHT = "right"
     LEFT = "left"
 

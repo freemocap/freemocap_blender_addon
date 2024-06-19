@@ -1,6 +1,8 @@
 from copy import deepcopy
 from typing import Tuple
 
+import numpy as np
+
 from skelly_blender.core.custom_type_hints import KeypointTrajectories, RigidSegmentDefinitions, SegmentStats
 from skelly_blender.core.rigid_bodies.calculate_segment_lengths import calculate_segment_length_stats, \
     print_length_stats_table

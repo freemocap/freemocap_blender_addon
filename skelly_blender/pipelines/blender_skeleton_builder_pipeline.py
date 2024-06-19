@@ -17,7 +17,7 @@ from freemocap_blender_addon.pipelines.pipeline_parameters.pipeline_parameters i
 from freemocap_blender_addon.pipelines.pure_python_pipeline import PurePythonPipeline
 from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
 from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass

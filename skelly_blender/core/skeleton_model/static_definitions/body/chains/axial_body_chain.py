@@ -1,6 +1,6 @@
-from freemocap_blender_addon.models.skeleton_model.body.linkages.axial_body_linkages import SkullC1Linkage, \
-    NeckC7Linkage, ChestT12Linkage
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.chain_abc import ChainABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.chain_abc import ChainABC
+from skelly_blender.core.skeleton_model.static_definitions.body.linkages.axial_body_linkages import ChestT12Linkage, \
+    SkullC1Linkage, NeckC7Linkage
 
 
 class AxialBodyChain(ChainABC):

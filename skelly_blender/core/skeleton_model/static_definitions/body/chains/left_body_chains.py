@@ -1,6 +1,6 @@
-from freemocap_blender_addon.models.skeleton_model.body.linkages.left_body_linkages import LeftShoulderLinkage, \
-    LeftElbowLinkage, LeftAnkleLinkage, LeftKneeLinkage, LeftHipLinkage, LeftWristLinkage
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.chain_abc import ChainABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.chain_abc import ChainABC
+from skelly_blender.core.skeleton_model.static_definitions.body.linkages.left_body_linkages import LeftShoulderLinkage, \
+    LeftWristLinkage, LeftElbowLinkage, LeftAnkleLinkage, LeftKneeLinkage, LeftHipLinkage
 
 
 class LeftArmChain(ChainABC):

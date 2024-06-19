@@ -4,7 +4,7 @@ import numpy as np
 
 from skelly_blender.core.load_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from skelly_blender.core.tracked_points.tracked_points_classes import BodyTrackedPoints, FaceTrackedPoints, HandsData
-from skelly_blender.core.tracked_points.tracker_source_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, TrackerSourceType
 from skelly_blender.core.utility_classes.sample_statistics import DescriptiveStatistics
 from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 from skelly_blender.system.get_path_to_test_data import get_path_to_test_data

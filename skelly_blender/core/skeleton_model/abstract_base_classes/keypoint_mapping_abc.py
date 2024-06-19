@@ -3,11 +3,9 @@ from typing import List, Tuple, Optional
 
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
-    TrackedPointName, \
-    KeypointMappingType
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import BlenderizableEnum
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.custom_type_hints import TrackedPointName, KeypointMappingType
+from skelly_blender.core.utility_classes.blenderizable_enum import BlenderizableEnum
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass

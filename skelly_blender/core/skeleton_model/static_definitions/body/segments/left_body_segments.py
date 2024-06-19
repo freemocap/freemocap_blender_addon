@@ -1,8 +1,6 @@
-from enum import Enum
-
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name
+from skelly_blender.core.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
+from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.utility_classes.blenderizable_enum import BlenderizableEnum
 
 
 # arm
@@ -62,7 +60,7 @@ class LeftHeelSegment(SimpleSegmentABC):
     child = BodyKeypoints.LEFT_HEEL
 
 
-class LeftBodySegments(Enum):
+class LeftBodySegments(BlenderizableEnum):
     LEFT_CLAVICLE: SimpleSegmentABC = LeftClavicleSegment
     LEFT_UPPER_ARM: SimpleSegmentABC = LeftUpperArmSegment
     LEFT_FOREARM: SimpleSegmentABC = LeftForearmSegment
@@ -74,11 +72,6 @@ class LeftBodySegments(Enum):
     LEFT_CALF: SimpleSegmentABC = LeftCalfSegment
     LEFT_FORE_FOOT: SimpleSegmentABC = LeftForeFootSegment
     LEFT_HEEL: SimpleSegmentABC = LeftHeelSegment
-
-    def blenderize(self) -> str:
-        return blenderize_name(self.name)
-
-
 
 
 if __name__ == "__main__":

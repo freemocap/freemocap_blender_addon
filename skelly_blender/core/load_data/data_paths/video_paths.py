@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from freemocap_blender_addon.freemocap_data.data_paths.paths_dataclass import PathsDataclass
+from skelly_blender.core.load_data.data_paths.paths_dataclass import PathsDataclass
 
 
 class AvailableVideoFormats(str, Enum):

@@ -1,5 +1,5 @@
 from freemocap_blender_addon.models.skeleton_model.hands.right_hand_keypoints import RightHandKeypoints
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
+from skelly_blender.core.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
 
 
 # hand

@@ -1,11 +1,6 @@
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
-import numpy as np
-
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories
+from skelly_blender.core.custom_type_hints import KeypointTrajectories
 
 
 def get_low_velocity_frame(trajectories: KeypointTrajectories, ignore_first_n_frames: int = 30) -> int:

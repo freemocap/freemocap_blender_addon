@@ -1,10 +1,10 @@
 import numpy as np
 
-from freemocap_blender_addon.models.skeleton_model import SkeletonTypes
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.tracked_point_keypoint_types import \
-    KeypointTrajectories, SegmentStats
-from freemocap_blender_addon.utilities.print_table_from_dicts import print_table
-from freemocap_blender_addon.utilities.sample_statistics import DescriptiveStatistics
+from skelly_blender.system.print_table_from_dicts import print_table
+from skelly_blender.core.custom_type_hints import KeypointTrajectories, SegmentStats
+from skelly_blender.core.load_data.freemocap_recording_data import load_freemocap_test_recording
+from skelly_blender.core.skeleton_model.skeleton_types import SkeletonTypes
+from skelly_blender.core.utility_classes.sample_statistics import DescriptiveStatistics
 
 
 def calculate_segment_length_stats(keypoint_trajectories: KeypointTrajectories,
@@ -86,7 +86,6 @@ def print_length_stats_table(segment_lengths: SegmentStats, squash_less_than=1e-
 
 
 if __name__ == "__main__":
-    from freemocap_blender_addon.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
 
     recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()

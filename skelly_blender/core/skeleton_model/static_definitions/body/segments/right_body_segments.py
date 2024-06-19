@@ -1,6 +1,6 @@
-from freemocap_blender_addon.models.skeleton_model.body.body_keypoints import BodyKeypoints
-from freemocap_blender_addon.models.skeleton_model.skeleton_abstract_base_classes.segments_abc import SimpleSegmentABC
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import BlenderizableEnum
+from skelly_blender.core.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
+from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.utility_classes.blenderizable_enum import BlenderizableEnum
 
 
 class RightClavicleSegment(SimpleSegmentABC):

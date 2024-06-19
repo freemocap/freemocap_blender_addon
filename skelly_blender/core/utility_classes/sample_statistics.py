@@ -3,7 +3,7 @@ from typing import List, Union
 
 import numpy as np
 
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 Z_SCORE_95_CI = 1.96  # Z-score for 95% confidence interval
 

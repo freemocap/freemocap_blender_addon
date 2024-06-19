@@ -3,7 +3,7 @@ from typing import List, Dict
 
 import pytest
 
-from freemocap_blender_addon.utilities.type_safe_dataclass import TypeSafeDataclass, TypeHintError, enforce_type_hints
+from skelly_blender.core.utility_classes.type_safe_dataclass import TypeSafeDataclass, TypeHintError, enforce_type_hints
 
 
 @dataclass
