@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Dict
 
+from skelly_blender.core.blender_stuff.armature_rig.armatures.armature_definition_classes import ArmatureDefinition
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedTrajectories
 from skelly_blender.core.blender_stuff.keyframed_empties.create_keyframed_empties import create_keyframed_empties
 from skelly_blender.core.blender_stuff.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
@@ -9,6 +12,7 @@ from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_sour
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 from skelly_blender.pipelines.blender_pipeline_config import PipelineConfig
 from skelly_blender.pipelines.pure_python_pipeline import PurePythonPipeline
+from skelly_blender.core.pure_python.freemocap_data.freemocap_trajectory_data import FreemocapTrajectoryData
 from skelly_blender.tests.download_test_data import get_test_data_path
 
 
@@ -22,38 +26,22 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
     def recording_name(self) -> str:
         return Path(self.recording_path_str).stem
 
-    def run(self, show_stages: bool = True, scale=.001):
+    def run(self, show_stages: bool = False, scale=.001):
         # Pure python stuff
         print("Loading freemocap data....")
         freemocap_data = PurePythonPipeline(recording_path_str=self.recording_path_str).run(scale=scale)
 
-        if show_stages:
-            og_trajectories_to_show = freemocap_data.get_trajectories_by_stage(blenderize_names=True)
-            trajectories_to_show = {}
-            for key, trajectories in og_trajectories_to_show.items():
-                trajectories_to_show[f"{self.recording_name}_{key}"] = {self.recording_name: trajectories}
-
-
-        else:
-            trajectories_to_show = {
-                self.recording_name: freemocap_data.get_keypoint_trajectories(blenderize_names=True)}
+        trajectories_to_show = self._get_trajectories_to_show(freemocap_data=freemocap_data,
+                                                              show_stages=show_stages)
 
         for stage, trajectories in trajectories_to_show.items():
             parented_empties = create_keyframed_empties(trajectories=trajectories,
                                                         parent_name=stage)
             # put_spheres_on_parented_empties(parented_empties=parented_empties)
-            # blenderized_segment_definitions = {}
-            # for segment_name, segment_definition in freemocap_data.segment_definitions.items():
-            #     blenderized_name = blenderize_name(segment_name)
-            #     blenderized_segment = segment_definition
-            #     blenderized_segment.name = blenderize_name(blenderized_segment.name)
-            #     blenderized_segment.parent = blenderize_name(blenderized_segment.parent)
-            #     blenderized_segment.child = blenderize_name(blenderized_segment.child)
-            #     blenderized_segment_definitions[blenderized_name] = blenderized_segment
 
+            segment_definitions = freemocap_data.get_blenderized_segment_definitions()
             put_rigid_body_meshes_on_empties(parented_empties=parented_empties,
-                                             segment_definitions=freemocap_data.get_segment_definitions(
-                                                 blenderize_names=True)
+                                             segment_definitions=segment_definitions
                                              )
 
             print("Generating armature from segment lengths and rest pose definitions...")
@@ -76,6 +64,19 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             )
 
         print(f"Finished building blender skeleton for recording: {self.recording_name}")
+
+    def _get_trajectories_to_show(self,
+                                  freemocap_data: FreemocapTrajectoryData,
+                                  show_stages: bool) -> Dict[str, BlenderizedTrajectories]:
+        if show_stages:
+            og_trajectories_to_show = freemocap_data.get_trajectories_by_stage(blenderize_names=True)
+            trajectories_to_show = {}
+            for key, trajectories in og_trajectories_to_show.items():
+                trajectories_to_show[f"{self.recording_name}_{key}"] = {self.recording_name: trajectories}
+        else:
+            trajectories_to_show = {
+                self.recording_name: freemocap_data.get_keypoint_trajectories(blenderize_names=True)}
+        return trajectories_to_show
 
 
 if __name__ == "__main__":

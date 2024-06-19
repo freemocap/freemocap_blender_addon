@@ -10,8 +10,7 @@ ROOT_BONE_NAME = "ROOT"
 @dataclass
 class BoneRestPoseDefinition:
     parent_bone_name: Optional[str]
-    world_rotation_degrees: Tuple[float, float, float] = (
-    0, 0, 0)  # rotation defined relative to parent bone's reference frame
+    world_rotation_degrees: Tuple[float, float, float] = (0, 0, 0)  # rotation defined relative to parent bone
     offset: Tuple[float, float, float] = (0, 0, 0)
     roll: float = 0
     is_connected: bool = True
@@ -32,3 +31,21 @@ class BoneRestPoseDefinition:
             mathutils.Vector(self.rotation_as_radians),
             "XYZ",
         ).to_matrix()
+
+
+@dataclass
+class ArmatureBoneDefinition:
+    length: float
+    rest_pose: BoneRestPoseDefinition
+    constraints: ArmatureBoneConstraintsTypes
+
+    @property
+    def is_root(self):
+        return self.rest_pose.parent_bone_name == ROOT_BONE_NAME
+
+    @property
+    def parent(self):
+        return self.rest_pose.parent_bone_name
+
+    def __str__(self):
+        return f"ArmatureBoneDefinition: {self.rest_pose} with length {self.length}"

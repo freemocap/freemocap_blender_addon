@@ -1,17 +1,13 @@
-from dataclasses import dataclass
 from typing import Dict
 
 import bpy
 
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
+from skelly_blender.core.pure_python.rigid_bodies.rigid_segment_definition import BlenderizedSegmentDefinition
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import BlenderizedTrajectory
 
 BlenderizedName = str
 EmptiesDictionary = Dict[BlenderizedName, bpy.types.Object]
 
 
-@dataclass
-class BlenderizedTrajectory(Trajectory):
-    name: BlenderizedName
-
-
 BlenderizedTrajectories = Dict[BlenderizedName, BlenderizedTrajectory]
+BlenderizedSegmentDefinitions = Dict[BlenderizedName, BlenderizedSegmentDefinition]

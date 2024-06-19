@@ -1,16 +1,18 @@
 import re
 from copy import copy
 from enum import Enum
+from typing import TYPE_CHECKING
 
-from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
+if TYPE_CHECKING:
+    from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
 
 
 class BlenderizableEnum(Enum):
-    def blenderize(self) -> BlenderizedName:
+    def blenderize(self) -> "BlenderizedName":
         return blenderize_name(self.name)
 
 
-def blenderize_name(original_name: str) -> BlenderizedName:
+def blenderize_name(original_name: str) -> "BlenderizedName":
     """
     Create a Blender formatted name from the original name.
 

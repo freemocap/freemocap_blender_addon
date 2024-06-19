@@ -94,7 +94,7 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
 
 
 if __name__ == "__main__":
-    from skelly_blender.core.pure_python.load_data.freemocap_recording_data import load_freemocap_test_recording
+    from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
     recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     keypoint_trajectories, og_segment_lengths = calculate_rigid_body_trajectories(

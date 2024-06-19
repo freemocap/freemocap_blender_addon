@@ -2,34 +2,12 @@ import pprint
 from dataclasses import dataclass
 from typing import Dict
 
-from freemocap_blender_addon.freemocap_data_handler.operations.rigid_body_assumption.calculate_rigid_body_trajectories import \
-    RigidSegmentDefinitions
-from freemocap_blender_addon.models.animation.armatures.bones.armature_bone_constraints import \
-    ArmatureBoneConstraintsTypes
-from freemocap_blender_addon.models.animation.armatures.rest_pose.bone_pose_definition import BoneRestPoseDefinition, \
-    ROOT_BONE_NAME
-from freemocap_blender_addon.models.animation.armatures.rest_pose.pose_types import RestPoseTypes
-from freemocap_blender_addon.utilities.blender_utilities.blenderize_name import blenderize_name, BlenderizedName
-
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import ArmatureBoneConstraintsTypes
+from skelly_blender.core.blender_stuff.armature_rig.armatures.armature_bone_classes import ArmatureBoneDefinition
+from skelly_blender.core.blender_stuff.armature_rig.rest_pose_definitions.pose_types import RestPoseTypes
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
+from skelly_blender.core.pure_python.generic_type_hints import RigidSegmentDefinitions
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
-
-
-@dataclass
-class ArmatureBoneDefinition:
-    rest_pose: BoneRestPoseDefinition
-    constraints: ArmatureBoneConstraintsTypes
-    length: float
-
-    @property
-    def is_root(self):
-        return self.rest_pose.parent_bone_name == ROOT_BONE_NAME
-
-    @property
-    def parent(self):
-        return self.rest_pose.parent_bone_name
-
-    def __str__(self):
-        return f"ArmatureBoneDefinition: {self.rest_pose} with length {self.length}"
 
 
 @dataclass

@@ -1,10 +1,11 @@
 from typing import Tuple
 
+from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedSegmentDefinitions
 from skelly_blender.core.blender_stuff.color_generator import ColorType, generate_color
 from skelly_blender.core.blender_stuff.keyframed_empties.empties_dataclasses import ParentedEmpties
 from skelly_blender.core.blender_stuff.rigid_body_meshes.make_rigid_body_mesh import \
     make_rigid_body_mesh
-from skelly_blender.core.pure_python.generic_type_hints import RigidSegmentDefinitions
 
 DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH = (.8, 1, 1)
 
@@ -16,7 +17,7 @@ DEFAULT_RIGHT_SIDE_COLOR = "#BB0033"
 
 
 def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
-                                     segment_definitions: RigidSegmentDefinitions,
+                                     segment_definitions: BlenderizedSegmentDefinitions,
                                      ):
     axial_color = generate_color(ColorType.JEWEL)
     right_color = DEFAULT_RIGHT_SIDE_COLOR

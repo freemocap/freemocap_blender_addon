@@ -7,7 +7,7 @@ from skelly_blender.core.pure_python.generic_type_hints import TrackedPointName,
 from skelly_blender.core.pure_python.getters.get_keypoints_by_component_and_tracker_type import get_tracked_point_names
 from skelly_blender.core.pure_python.getters.get_mapping_by_component_and_tracker_type import \
     get_tracker_keypoint_mapping
-from skelly_blender.core.pure_python.load_data.data_paths.numpy_paths import HandsNpyPaths
+from skelly_blender.core.pure_python.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
 from skelly_blender.core.pure_python.tracked_points.data_component_types import DataComponentTypes
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType

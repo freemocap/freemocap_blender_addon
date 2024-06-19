@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from skelly_blender.core.pure_python.load_data.data_paths.freemocap_data_paths import FreemocapDataPaths
+from skelly_blender.core.pure_python.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from skelly_blender.core.pure_python.tracked_points.tracked_points_classes import BodyTrackedPoints, FaceTrackedPoints, \
     HandsData
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
