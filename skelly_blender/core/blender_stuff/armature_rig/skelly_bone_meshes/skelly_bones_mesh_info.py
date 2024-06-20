@@ -21,7 +21,7 @@ SKELLY_BONE_MESHES = {
         position_offset=(0, 0, 0.03),
         adjust_rotation=False,
     ),
-    BlenderizedAxialSegments.CERVICAL_SPINE.value: SkellyBoneMeshInfo(
+    BlenderizedAxialSegments.SPINE_CERVICAL.value: SkellyBoneMeshInfo(
         bones=["spine", "spine.001", "neck"],
         bones_origin=(0, 0, 0),
         bones_end=(0, 0, 0),

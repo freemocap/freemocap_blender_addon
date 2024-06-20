@@ -373,7 +373,7 @@ def add_rig_rigify(
     pose_upper_arm_L.rotation_mode = "XYZ"
     pose_upper_arm_L.rotation_euler = (0, m.radians(7), m.radians(29))
     pose_upper_arm_L.rotation_mode = "QUATERNION"
-    pose_forearm_R = rig.pose.bones["forearm.R"]
+    pose_DISTAL_R = rig.pose.bones["forearm.R"]
     pose_forearm_R.rotation_mode = "XYZ"
     pose_forearm_R.rotation_euler = (0, 0, m.radians(-4))
     pose_forearm_R.rotation_mode = "QUATERNION"

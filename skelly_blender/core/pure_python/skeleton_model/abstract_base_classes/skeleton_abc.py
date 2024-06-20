@@ -23,12 +23,12 @@ class SkeletonABC(ABC):
     @property
     def root(self) -> KeypointDefinition:
         # Skeleton -> Chain -> Linkage -> Segment -> Keypoint
-        return self.parent.root
+        return self.parent.value.root
 
     @classmethod
     def get_linkages(cls) -> List[LinkageABC]:
         linkages = []
-        linkages.extend(cls.parent.get_linkages())
+        linkages.extend(cls.parent.value.get_linkages())
         for chain in cls.children:
             linkages.extend(chain.get_linkages())
         return list(set(linkages))
@@ -69,7 +69,7 @@ class SkeletonABC(ABC):
                                     segments: List[SimpleSegmentABC],
                                     found_children: Set[KeypointDefinition]) -> None:
             for segment in segments:
-                if segment.value.parent.name.lower() == name:
+                if segment.value.parent.value.name.lower() == name:
                     children = segment.value.get_children()
                     for child in children:
                         if child not in found_children:  # Avoid infinite recursion

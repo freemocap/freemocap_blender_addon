@@ -2,14 +2,12 @@ import pprint
 from dataclasses import dataclass
 from typing import Dict
 
-
 from skelly_blender.core.blender_stuff.armature_rig.armature.armature_bone_classes import ArmatureBoneDefinition
 from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import \
     ArmatureBoneConstraintsTypes
 from skelly_blender.core.blender_stuff.armature_rig.rest_pose_definitions.pose_types import RestPoseTypes
-from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName
+from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName, BlenderizedSegmentDefinitions
 from skelly_blender.core.blender_stuff.blenderizers.blenderize_name import blenderize_name
-from skelly_blender.core.custom_types import RigidSegmentDefinitions
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -21,7 +19,7 @@ class ArmatureDefinition(TypeSafeDataclass):
     @classmethod
     def create(cls,
                armature_name: str,
-               segment_definitions: RigidSegmentDefinitions,
+               segment_definitions: BlenderizedSegmentDefinitions,
                pose_definition: RestPoseTypes,
                bone_constraints: ArmatureBoneConstraintsTypes) -> 'ArmatureDefinition':
         bone_definitions = {}

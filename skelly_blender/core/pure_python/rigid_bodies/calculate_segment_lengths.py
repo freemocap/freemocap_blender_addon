@@ -1,6 +1,6 @@
 import numpy as np
-from skelly_blender.core.custom_types import Trajectories, SegmentStats
 
+from skelly_blender.core.custom_types import Trajectories, SegmentStats
 from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
@@ -12,15 +12,16 @@ def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
     segment_stats = {}
     segments = skeleton_definition.value.get_segments()
     for segment in segments:
-        parent_name = segment.value.parent.name.lower()
-        child_name = segment.value.child.name.lower()
-        print(f"Calculating segment length for {segment.name} as distance between keypoints - `{parent_name}` and `{child_name}`")
+        parent_name = segment.parent.lower()
+        child_name = segment.child.lower()
+        print(
+            f"Calculating segment length for {segment.name} as distance between keypoints - `{parent_name}` and `{child_name}`")
         length_stats = calculate_distance_between_trajectories(
             trajectory_1=keypoint_trajectories[parent_name].trajectory_data,
             trajectory_2=keypoint_trajectories[child_name].trajectory_data
         )
 
-        segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
+        segment_stats[segment.value.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
 
     return segment_stats
 
@@ -32,9 +33,9 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
 
     Parameters
     ----------
-    trajecotry_1 : np.ndarray
+    trajectory_1 : np.ndarray
         The first trajectory, a 2D array of shape (n, 3) where n is the number of points.
-    trajecotry_2 : np.ndarray
+    trajectory_2 : np.ndarray
         The second trajectory, a 2D array of shape (n, 3) where n is the number of points.
 
     Returns
@@ -49,9 +50,9 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
 
     Examples
     --------
-    >>> trajecotry_1 = np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]])
-    >>> trajecotry_2 = np.array([[1, 0, 0], [0, 1, 1], [2, 3, 2]])
-    >>> calculate_distance_between_trajectories(trajecotry_1, trajecotry_2) # Expected output: array([1, 1.41421356, 1])
+    >>> trajectory_1 = np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]])
+    >>> trajectory_2 = np.array([[1, 0, 0], [0, 1, 1], [2, 3, 2]])
+    >>> calculate_distance_between_trajectories(trajectory_1, trajectory_2) # Expected output: array([1, 1.41421356, 1])
     """
     if trajectory_1.shape != trajectory_2.shape:
         raise ValueError(
@@ -61,8 +62,7 @@ def calculate_distance_between_trajectories(trajectory_1: np.ndarray,
     if np.sum(np.isnan(trajectory_2)) == trajectory_2.size:
         raise ValueError("Trajectory 2 is all NaN")
 
-
-    distances =  np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
+    distances = np.linalg.norm(trajectory_1 - trajectory_2, axis=1)
     if distances.shape[0] != trajectory_1.shape[0]:
         raise ValueError(
             f"Distances array shape {distances.shape} does not match trajectory shape {trajectory_1.shape}")
@@ -86,7 +86,6 @@ def print_length_stats_table(segment_lengths: SegmentStats, squash_less_than=1e-
 
 
 if __name__ == "__main__":
-
     recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     segment_lengths = calculate_segment_length_stats(keypoint_trajectories=keypoint_trajectories_outer,

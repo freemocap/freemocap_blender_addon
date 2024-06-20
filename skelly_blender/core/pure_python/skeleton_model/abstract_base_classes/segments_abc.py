@@ -2,7 +2,10 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List, Optional
 
+import numpy as np
+
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
+from skelly_blender.core.pure_python.utility_classes.orthonormal_basis_3d import OrthonormalBasis3D
 
 
 @dataclass
@@ -69,29 +72,28 @@ class CompoundSegmentABC(SegmentABC):
     """
     segments = List[SimpleSegmentABC]
     origin: KeypointDefinition
-    primary_axis_upwards_z: KeypointDefinition  # defining primary axis as upwards Z
-    approximate_forwards_x: Optional[KeypointDefinition]
-    approximate_leftward_y: Optional[KeypointDefinition]
-
+    z_up_reference: Optional[KeypointDefinition]
+    x_forward_reference: Optional[KeypointDefinition]
+    y_leftward_reference: Optional[KeypointDefinition]
     @property
     def name(self) -> str:
         return self.__class__.__name__
+    @property
+    def parent(self) -> KeypointDefinition:
+        return self.origin
 
     @property
     def root(self) -> KeypointDefinition:
         return self.parent
 
     def __post_init__(self):
-
-        if not self.approximate_forwards_x and not self.approximate_forwards_x:
+        if not np.sum([self.z_up_reference, self.x_forward_reference, self.y_leftward_reference]) >= 2:
             raise ValueError(
-                "At least one of approximate_positive_y_direction or approximate_negative_y_direction must be defined")
+                "At least two of the reference keypoints must be provided to define a compound rigid body")
 
-        print(f"CompoundSegment: {self.name} instantiated with parent {self.parent} and children {self.children}")
+        print(f"CompoundSegment: {self.name} instantiated with parent {self.parent} and children {self.segments}")
 
-    @property
-    def orthonormal_basis(self):
-        raise NotImplementedError("TODO - this lol")
+
 
     @classmethod
     def get_children(cls) -> List[KeypointDefinition]:

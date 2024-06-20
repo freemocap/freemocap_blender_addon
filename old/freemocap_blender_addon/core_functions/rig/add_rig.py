@@ -22,7 +22,7 @@ def apply_bone_constraints(
     bpy.ops.object.select_all(action="DESELECT")
 
     root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_ORIGIN.blenderize()]
+    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_LUMBAR_ORIGIN.blenderize()]
 
     add_bone_constraints(
         armature=armature,
