@@ -1,7 +1,7 @@
-from skelly_blender.core.blender_stuff.blenderizers.blenderizable_enum import BlenderizableEnum
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import KeypointEnum
 
 
-class BodyKeypoints(BlenderizableEnum):
+class BodyKeypoints(KeypointEnum):
     ## skull
     SKULL_ORIGIN_FORAMEN_MAGNUM = "Gemoetric center of the foramen magnum, the hole at the base of the skull where the spinal cord enters"
     SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures"

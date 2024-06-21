@@ -2,6 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Union, List
 
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import LinkageEnum, SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC
@@ -17,43 +18,42 @@ class LinkageABC(ABC):
 
      #for now these are all 'universal' (ball) joints. Later we can add different constraints
     """
-    parent: Union[SimpleSegmentABC, CompoundSegmentABC]
-    children: List[Union[SimpleSegmentABC, CompoundSegmentABC]]
+    parent: LinkageEnum
+    children: List[LinkageEnum]
     # TODO - calculate the linked_point on instantiation rather than defining it manually
     linked_keypoint: [KeypointDefinition]
 
-    @property
-    def name(self) -> str:
+    def get_name(self) -> str:
         return self.__class__.__name__
 
     @property
     def root(self) -> KeypointDefinition:
-        return self.parent.root
+        return self.parent.value.root
 
     def __post_init__(self):
         for body in [self.parent] + self.children:
-            if isinstance(body, SimpleSegmentABC):
-                if self.linked_keypoint.name not in [body.parent.name, body.child.name]:
+            if isinstance(body.value, SimpleSegmentABC):
+                if self.linked_keypoint.name not in [body.value.parent.name, body.value.child.name]:
                     raise ValueError(
-                        f"Error instantiation Linkage: {self.name} - Common keypoint {self.linked_keypoint.name} not found in body {body}")
-            elif isinstance(body, CompoundSegmentABC):
-                if self.linked_keypoint.name not in [body.parent.name] + [child.name for child in body.children]:
+                        f"Error instantiation Linkage: {self.get_name()} - Common keypoint {self.linked_keypoint.name} not found in body {body}")
+            elif isinstance(body.value, CompoundSegmentABC):
+                if self.linked_keypoint.name not in [body.value.parent.name] + [child.name for child in body.value.children]:
                     raise ValueError(
-                        f"Error instantiation Linkage: {self.name} - Common keypoint {self.linked_keypoint.name} not found in body {body}")
+                        f"Error instantiation Linkage: {self.get_name()} - Common keypoint {self.linked_keypoint.name} not found in body {body}")
             else:
                 raise ValueError(f"Body {body} is not a valid rigid body type")
-        print(f"Linkage: {self.name} instantiated with parent {self.parent} and children {self.children}")
+        print(f"Linkage: {self.get_name()} instantiated with parent {self.parent} and children {self.children}")
 
     @classmethod
-    def get_segments(cls) -> List[SimpleSegmentABC]:
+    def get_segments(cls) -> List[SegmentEnum]:
         segments = [cls.parent] + cls.children
         return segments
 
     @classmethod
     def get_keypoints(cls) -> [KeypointDefinition]:
-        keypoints = cls.parent.get_keypoints()
+        keypoints = cls.parent.value.get_keypoints()
         for linkage in cls.children:
-            keypoints.extend(linkage.get_keypoints())
+            keypoints.extend(linkage.value.get_keypoints())
         return keypoints
 
     def __str__(self) -> str:

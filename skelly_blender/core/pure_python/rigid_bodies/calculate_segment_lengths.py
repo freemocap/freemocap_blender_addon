@@ -12,8 +12,8 @@ def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
     segment_stats = {}
     segments = skeleton_definition.value.get_segments()
     for segment in segments:
-        parent_name = segment.parent.lower()
-        child_name = segment.child.lower()
+        parent_name = segment.value.parent.lower()
+        child_name = segment.value.child.lower()
         print(
             f"Calculating segment length for {segment.name} as distance between keypoints - `{parent_name}` and `{child_name}`")
         length_stats = calculate_distance_between_trajectories(
@@ -21,7 +21,7 @@ def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
             trajectory_2=keypoint_trajectories[child_name].trajectory_data
         )
 
-        segment_stats[segment.value.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
+        segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)
 
     return segment_stats
 

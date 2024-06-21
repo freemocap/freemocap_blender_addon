@@ -1,4 +1,5 @@
 from skelly_blender.core.blender_stuff.blenderizers.blenderizable_enum import BlenderizableEnum
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
@@ -224,7 +225,7 @@ class PelvisLumbarCompoundSegment(CompoundSegmentABC):
     x_forward_reference = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
 
 
-class BodySegments(BlenderizableEnum):
+class BodySegments(SegmentEnum):
     SKULL: CompoundSegmentABC = SkullCompoundSegment
     PELVIS_LUMBAR: CompoundSegmentABC = PelvisLumbarCompoundSegment
 

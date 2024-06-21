@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import List, Set
 
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.chain_abc import ChainABC
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import ChainEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
@@ -13,11 +14,10 @@ class SkeletonABC(ABC):
     """
     A Skeleton is composed of chains with connecting KeyPoints.
     """
-    parent: ChainABC
-    children: List[ChainABC]
+    parent: ChainEnum
+    children: List[ChainEnum]
 
-    @property
-    def name(self) -> str:
+    def get_name(self) -> str:
         return self.__class__.__name__
 
     @property
@@ -30,23 +30,23 @@ class SkeletonABC(ABC):
         linkages = []
         linkages.extend(cls.parent.value.get_linkages())
         for chain in cls.children:
-            linkages.extend(chain.get_linkages())
+            linkages.extend(chain.value.get_linkages())
         return list(set(linkages))
 
     @classmethod
     def get_segments(cls) -> List[SimpleSegmentABC]:
 
         segments = []
-        segments.extend(cls.parent.get_segments())
+        segments.extend(cls.parent.value.get_segments())
         for chain in cls.children:
-            segments.extend(chain.get_segments())
+            segments.extend(chain.value.get_segments())
         return list(set(segments))
 
     @classmethod
     def get_keypoints(cls) -> List[KeypointDefinition]:
         keypoints = []
         for chain in cls.children:
-            keypoints.extend(chain.get_keypoints())
+            keypoints.extend(chain.value.get_keypoints())
         return keypoints
 
     @classmethod
@@ -69,8 +69,8 @@ class SkeletonABC(ABC):
                                     segments: List[SimpleSegmentABC],
                                     found_children: Set[KeypointDefinition]) -> None:
             for segment in segments:
-                if segment.value.parent.value.name.lower() == name:
-                    children = segment.value.get_children()
+                if segment.parent.name.lower() == name:
+                    children = segment.get_children()
                     for child in children:
                         if child not in found_children:  # Avoid infinite recursion
                             found_children.add(child)

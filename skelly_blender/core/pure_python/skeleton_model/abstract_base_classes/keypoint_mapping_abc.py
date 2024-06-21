@@ -4,7 +4,6 @@ from typing import List
 import numpy as np
 from skelly_blender.core.custom_types import TrackedPointName, KeypointMappingType
 
-from skelly_blender.core.blender_stuff.blenderizers.blenderizable_enum import BlenderizableEnum
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -76,10 +75,3 @@ class KeypointMapping(TypeSafeDataclass):
         return trajectories_frame_xyz
 
 
-class KeypointMappingsEnum(BlenderizableEnum):
-    """An Enum that can hold different types of keypoint mappings."""
-
-    def __new__(cls, value: KeypointMappingType):
-        obj = object.__new__(cls)
-        obj._value_ = KeypointMapping.create(mapping=value)
-        return obj

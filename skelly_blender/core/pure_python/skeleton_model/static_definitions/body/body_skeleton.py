@@ -3,9 +3,9 @@ from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body
 
 
 class BodySkeletonDefinition(SkeletonABC):
-    parent = BodyChains.AXIAL.value
-    children = [BodyChains.RIGHT_ARM.value,
-                BodyChains.RIGHT_LEG.value,
-                BodyChains.LEFT_ARM.value,
-                BodyChains.LEFT_LEG.value,
+    parent = BodyChains.AXIAL
+    children = [BodyChains.RIGHT_ARM,
+                BodyChains.RIGHT_LEG,
+                BodyChains.LEFT_ARM,
+                BodyChains.LEFT_LEG,
                 ]

@@ -1,4 +1,4 @@
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_mapping_abc import KeypointMappingsEnum
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import KeypointMappingsEnum
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints as bk
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.mediapipe_tracker.mediapipe_point_names import \
     MediapipeBodyPoints as mbp
