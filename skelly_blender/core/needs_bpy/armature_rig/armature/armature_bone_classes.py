@@ -18,6 +18,7 @@ class BoneRestPoseDefinition:
     roll: float = 0
     is_connected: bool = True
 
+
     def __str__(self):
         rotation_str = ", ".join([f"{r:.3f}" for r in self.world_rotation_degrees])
         return f"PoseElement(local_rotation_degrees={rotation_str}) [degrees]: parent_bone_name: {self.parent_bone_name}, is_connected={self.is_connected}"

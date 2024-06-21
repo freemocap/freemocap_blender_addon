@@ -1,4 +1,4 @@
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import LinkageEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import LinkageEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
@@ -16,8 +16,7 @@ class SkullC1Linkage(LinkageABC):  # "Atlas" is another name for the first cervi
                 BodySegments.SKULL_LEFT_EYE_CENTER,
                 BodySegments.SKULL_LEFT_EYE_OUTER,
                 BodySegments.SKULL_LEFT_EAR,
-                BodySegments.SKULL_LEFT_MOUTH,
-                BodySegments.SKULL]
+                BodySegments.SKULL_LEFT_MOUTH]
     linked_keypoint = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM
 
 
@@ -30,7 +29,7 @@ class NeckC7Linkage(LinkageABC):
 
 
 class ChestT12Linkage(LinkageABC):
-    parent = BodySegments.PELVIS_LUMBAR
+    parent = BodySegments.SPINE_SACRUM_LUMBAR
     children = [BodySegments.SPINE_THORACIC]
     linked_keypoint = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12
 
@@ -57,7 +56,7 @@ class RightWristLinkage(LinkageABC):
 
 
 class RightHipLinkage(LinkageABC):
-    parent = BodySegments.PELVIS_LEFT
+    parent = BodySegments.PELVIS_RIGHT
     children = [BodySegments.RIGHT_LEG_THIGH]
     linked_keypoint = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM
 

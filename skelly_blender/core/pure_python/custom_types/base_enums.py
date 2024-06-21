@@ -1,6 +1,13 @@
-from skelly_blender.core.needs_bpy.blenderizers.blenderizable_enum import BlenderizableEnum
-from skelly_blender.core.pure_python.custom_types import KeypointMappingType
+from enum import Enum
+
+from skelly_blender.core.needs_bpy.blenderizers.blenderize_name import blenderize_name
+from skelly_blender.core.pure_python.custom_types.generic_types import BlenderizedName, KeypointMappingType
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_mapping_abc import KeypointMapping
+
+
+class BlenderizableEnum(Enum):
+    def blenderize(self) -> BlenderizedName:
+        return blenderize_name(self.name)
 
 
 class ChainEnum(BlenderizableEnum):

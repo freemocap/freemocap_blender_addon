@@ -2,13 +2,12 @@ import bpy
 import numpy as np
 
 from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedName, BlenderizedTrajectories
-from skelly_blender.core.needs_bpy.blenderizers.blenderize_name import blenderize_name
 from skelly_blender.core.needs_bpy.keyframed_empties.empties_dataclasses import ParentedEmpties
 
 
 def create_keyframed_empties(trajectories: BlenderizedTrajectories,
                              parent_name: str,
-                             empty_scale: float = 0.01,
+                             empty_scale: float = 0.025,
                              empty_type: str = "SPHERE") -> ParentedEmpties:
     """
     Create empties for each trajectory in the dictionary and parent them to a new parent empty object.
@@ -23,9 +22,10 @@ def create_keyframed_empties(trajectories: BlenderizedTrajectories,
     parent_object.name = parent_name
 
     for trajectory_name, trajectory in trajectories.items():
+
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
             trajectory_fr_xyz=trajectory.trajectory_data,
-            trajectory_name=blenderize_name(trajectory_name),
+            trajectory_name=trajectory_name,
             parent_object=parent_object,
             empty_scale=empty_scale,
             empty_type=empty_type,

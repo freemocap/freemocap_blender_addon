@@ -1,8 +1,7 @@
 from abc import ABC
 from typing import List
 
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import LinkageEnum, SegmentEnum, \
-    KeypointEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import LinkageEnum, KeypointEnum, SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SegmentABC
 
 

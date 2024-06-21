@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from skelly_blender.core.pure_python.custom_types import Trajectories
+from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories
 from skelly_blender.core.pure_python.freemocap_data.transform_skeleton_data.get_low_velocity_frame import \
     get_low_velocity_frame
 from skelly_blender.core.pure_python.freemocap_data.transform_skeleton_data.points_transformers import transform_points

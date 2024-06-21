@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
-from skelly_blender.core.pure_python.custom_types import TrackedPointName, KeypointMappingType
 
+from skelly_blender.core.pure_python.custom_types.generic_types import TrackedPointName, KeypointMappingType
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 

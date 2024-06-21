@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import numpy as np
 
+from skelly_blender.core.pure_python.custom_types.base_enums import SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 
 
@@ -69,7 +70,7 @@ class CompoundSegmentABC(SegmentABC):
     The parent keypoint is the origin of the rigid body
     The primary and secondary axes must be defined in the class, and will be used to calculate the orthonormal basis of the rigid body
     """
-    segments = List[SimpleSegmentABC]
+    segments: List[SegmentEnum]
     origin: KeypointDefinition
     z_up_reference: Optional[KeypointDefinition]
     x_forward_reference: Optional[KeypointDefinition]
@@ -98,5 +99,5 @@ class CompoundSegmentABC(SegmentABC):
     def get_children(cls) -> List[KeypointDefinition]:
         children = []
         for segment in cls.segments:
-            children.extend(segment.get_children())
+            children.extend(segment.value.get_children())
         return children

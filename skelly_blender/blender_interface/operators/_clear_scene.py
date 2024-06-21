@@ -14,8 +14,10 @@ class FMC_ADAPTER_clear_scene(bpy.types.Operator):
     def clear_scene(self):
         ###%% clear the scene - Scorch the earth \o/
         import bpy
-
-        bpy.ops.object.mode_set(mode="OBJECT")
+        try:
+            bpy.ops.object.mode_set(mode="OBJECT")
+        except:
+            pass
 
         print("Clearing scene...")
         bpy.ops.object.hide_view_clear()

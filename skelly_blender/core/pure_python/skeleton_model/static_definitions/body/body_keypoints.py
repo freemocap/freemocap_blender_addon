@@ -1,4 +1,4 @@
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import KeypointEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import KeypointEnum
 
 
 class BodyKeypoints(KeypointEnum):
@@ -32,9 +32,9 @@ class BodyKeypoints(KeypointEnum):
     STERNUM_TOP_SUPRASTERNAL_NOTCH = "Geometric center of the suprasternal notch, the dip at the top of the sternum"
     STERNUM_ORIGIN_XIPHOID_PROCESS = "Geometric center of the xiphoid process, the bottom tip of the sternum"
 
-    ## pelvis,
-    PELVIS_LUMBAR_ORIGIN = "Geometric center of the left and right hip sockets, anterior to the Sacrum"
-    PELVIS_LUMBAR_TOP_L1 = "Geometric center of the top surface of the first lumbar vertebra (L1)"
+
+    PELVIS_SPINE_SACRUM_ORIGIN = "Geometric center of the left and right hip sockets, anterior to the Sacrum"
+    SPINE_LUMBAR_TOP_L1 = "Geometric center of the top surface of the first lumbar vertebra (L1)"
     PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM = "Geometric center of proximal surface the right hip socket/acetabulum (where the femoral head fits in)"
     PELVIS_LUMBAR_LEFT_HIP_ACETABULUM = "Geometric center of proximal surface the left hip socket/acetabulum (where the femoral head fits in)"
 

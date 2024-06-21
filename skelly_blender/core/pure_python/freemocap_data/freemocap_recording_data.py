@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Dict
 
 import numpy as np
 
-from skelly_blender.core.pure_python.custom_types import RigidSegmentDefinitions
+from skelly_blender.core.pure_python.custom_types.derived_types import RigidBodyDefinitions, Trajectories
 from skelly_blender.core.pure_python.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
 from skelly_blender.core.pure_python.tracked_points.tracked_points_classes import BodyTrackedPoints, FaceTrackedPoints, \
     HandsData
@@ -62,14 +62,22 @@ def load_freemocap_test_recording():
                                                            tracker_type=DEFAULT_TRACKER_TYPE)
 
 
+@dataclass
 class FreemocapDataStages(TypeSafeDataclass):
-    raw_from_disk: FreemocapRecordingData
-    rigidified: FreemocapRecordingData
-    inertial_aligned: FreemocapRecordingData
-    segment_definitions: RigidSegmentDefinitions
+    recording_data: FreemocapRecordingData
+    og_keypoint_trajectories: Trajectories
+    rigidified_keypoint_trajectories: Trajectories
+    inertial_aligned_keypoint_trajectories: Trajectories
+    rigid_body_definitions: RigidBodyDefinitions
 
-    def get_most_processed(self) -> FreemocapRecordingData:
-        return self.inertial_aligned
+    @property
+    def most_processed_trajectories(self) -> Trajectories:
+        return self.inertial_aligned_keypoint_trajectories
+
+    def get_all_processing_stages(self) -> Dict[str, Trajectories]:
+        return {"og_from_disk": self.og_keypoint_trajectories,
+                "rigidified": self.rigidified_keypoint_trajectories,
+                "inertial_aligned": self.inertial_aligned_keypoint_trajectories}
 
 
 if __name__ == "__main__":

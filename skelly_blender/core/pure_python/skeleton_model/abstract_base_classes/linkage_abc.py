@@ -2,7 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import LinkageEnum, SegmentEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import SegmentEnum, LinkageEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC

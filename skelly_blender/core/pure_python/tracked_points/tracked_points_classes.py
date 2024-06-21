@@ -3,13 +3,15 @@ from typing import List, Optional
 
 import numpy as np
 
-from skelly_blender.core.pure_python.custom_types import TrackedPointName, DimensionNames, Trajectories
+from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories, KeypointTrajectories
+from skelly_blender.core.pure_python.custom_types.generic_types import TrackedPointName, DimensionNames
 from skelly_blender.core.pure_python.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import TrajectoryABC
 from skelly_blender.core.pure_python.tracked_points.data_component_types import DataComponentTypes
-from skelly_blender.core.pure_python.tracked_points.getters.get_keypoints_by_component_and_tracker_type import get_tracked_point_names
+from skelly_blender.core.pure_python.tracked_points.getters.get_keypoints_by_component_and_tracker_type import \
+    get_tracked_point_names
 from skelly_blender.core.pure_python.tracked_points.getters.get_mapping_by_component_and_tracker_type import \
     get_tracker_keypoint_mapping
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import TrajectoryABC
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
@@ -41,7 +43,7 @@ class GenericTrackedPoints(TypeSafeDataclass):
             raise ValueError(
                 f"Data frame shape {self.trajectory_data.shape} does not match trajectory names length {len(self.trajectory_names)}")
 
-    def map_to_keypoints(self) -> Trajectories:
+    def map_to_keypoints(self) -> KeypointTrajectories:
         print("Mapping TrackedPoints to KeypointsTrajectories....")
         mapping = get_tracker_keypoint_mapping(component_type=self.component_type,
                                                tracker_source=self.tracker_source)

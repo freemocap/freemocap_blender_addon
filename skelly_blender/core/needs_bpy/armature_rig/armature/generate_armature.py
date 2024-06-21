@@ -16,15 +16,20 @@ def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject
 
     # loop through the bones to make and skip the ones that don't have a parent yet
     bones_to_make = list(armature_definition.bone_definitions.items())
+    any_changed = True
     while len(bones_to_make) > 0:
+        if not any_changed:
+            raise ValueError(f"Infinite loop detected while armature with remaining bones to make: {[f'{bone[0]} (parent: {bone[1].parent})' for bone in bones_to_make]}")
+        any_changed = False
         for bone_info in bones_to_make:
             bone_name, bone_definition = bone_info
             if bone_definition.parent not in armature.data.edit_bones:
                 continue  # Skip this bone until its parent is created
 
             bones_to_make.remove(bone_info)  # Remove this bone from the list of bones to make
+            any_changed = True
 
-            print(f"Creating armature bone: {bone_name} with parent: {bone_definition.parent}")
+            print(f"Creating armature bone: `{bone_name}` with parent: `{bone_definition.parent}`")
             armature.data.edit_bones.new(name=bone_name)
             armature_bone = armature.data.edit_bones[bone_name]
             assign_armature_bone_color(bone=armature_bone)

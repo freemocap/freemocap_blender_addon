@@ -1,7 +1,7 @@
 import re
 from copy import copy
 
-from skelly_blender.core.pure_python.custom_types import BlenderizedName
+from skelly_blender.core.pure_python.custom_types.generic_types import BlenderizedName
 
 
 def blenderize_name(original_name: str) -> BlenderizedName:

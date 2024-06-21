@@ -1,6 +1,6 @@
 from enum import Enum
 
-from skelly_blender.core.needs_bpy.blenderizers.blenderizable_enum import BlenderizableEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import BlenderizableEnum
 
 
 class PathPlaceholders(Enum):

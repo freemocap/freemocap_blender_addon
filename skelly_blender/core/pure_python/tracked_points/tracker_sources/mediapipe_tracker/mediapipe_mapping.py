@@ -1,4 +1,4 @@
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import KeypointMappingsEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import KeypointMappingsEnum
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints as bk
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.mediapipe_tracker.mediapipe_point_names import \
     MediapipeBodyPoints as mbp
@@ -31,12 +31,12 @@ _MEDIAPIPE_BODY_MAPPING = {
                                         mbp.RIGHT_HIP.lower(),
                                         mbp.LEFT_SHOULDER.lower(),
                                         mbp.RIGHT_SHOULDER.lower()],
-    bk.PELVIS_LUMBAR_TOP_L1.name: {mbp.LEFT_HIP.lower(): .24,
-                                   mbp.RIGHT_HIP.lower(): .24,
-                                   mbp.LEFT_SHOULDER.lower(): .26,
-                                   mbp.RIGHT_SHOULDER.lower(): .26},
-    bk.PELVIS_LUMBAR_ORIGIN.name: [mbp.LEFT_HIP.lower(),
-                                   mbp.RIGHT_HIP.lower()],
+    bk.SPINE_LUMBAR_TOP_L1.name: {mbp.LEFT_HIP.lower(): .24,
+                                  mbp.RIGHT_HIP.lower(): .24,
+                                  mbp.LEFT_SHOULDER.lower(): .26,
+                                  mbp.RIGHT_SHOULDER.lower(): .26},
+    bk.PELVIS_SPINE_SACRUM_ORIGIN.name: [mbp.LEFT_HIP.lower(),
+                                         mbp.RIGHT_HIP.lower()],
     bk.RIGHT_CLAVICLE.name: {mbp.RIGHT_SHOULDER.lower(): .55,
                              mbp.LEFT_SHOULDER.lower(): .45},
     bk.RIGHT_SHOULDER.name: [mbp.RIGHT_SHOULDER.lower()],

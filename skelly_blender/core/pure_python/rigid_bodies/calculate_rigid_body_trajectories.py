@@ -1,21 +1,24 @@
 from copy import deepcopy
-from typing import Tuple
+from typing import Tuple, Optional
 
 import numpy as np
-from skelly_blender.core.pure_python.custom_types import Trajectories, RigidSegmentDefinitions, SegmentStats
 
+from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories, SegmentStats, \
+    RigidBodyDefinitions
 from skelly_blender.core.pure_python.rigid_bodies.calculate_segment_lengths import calculate_segment_length_stats, \
     print_length_stats_table
-from skelly_blender.core.pure_python.rigid_bodies.rigid_segment import RigidSegmentDefinition
+from skelly_blender.core.pure_python.rigid_bodies.rigid_body_definition_class import RigidBodyDefinition
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 
 
 def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
                                       skeleton_definition: SkeletonTypes,
-                                      scale: float = 0.001) -> Tuple[
-    Trajectories, RigidSegmentDefinitions]:
+                                      scale: Optional[float]=None) -> Tuple[
+    Trajectories, RigidBodyDefinitions]:
+    if scale is None:
+        scale = 1.0
     print(
-        'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...')
+        'Enforce "Rigid Bodies Assumption" by altering bone lengths to ensure they are the same length on each frame...\n')
 
     # Update the information of the virtual bones
     og_segment_length_stats = calculate_segment_length_stats(keypoint_trajectories=keypoint_trajectories,
@@ -27,22 +30,23 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
     rigidified_keypoints = rigidify_keypoint_trajectories(keypoint_trajectories=deepcopy(keypoint_trajectories),
                                                           segment_length_stats=og_segment_length_stats,
                                                           skeleton_definition=skeleton_definition)
-    rigidified_segment_length_stats = calculate_segment_length_stats(keypoint_trajectories=rigidified_keypoints,
-                                                                     skeleton_definition=skeleton_definition)
+    rigidified_body_length_stats = calculate_segment_length_stats(keypoint_trajectories=rigidified_keypoints,
+                                                                  skeleton_definition=skeleton_definition)
 
-    rigid_segment_definitions = {segment.name.lower(): RigidSegmentDefinition(name=segment.name.lower(),
-                                                                              length=rigidified_segment_length_stats[
+    rigidified_body_segment_definitions = {segment.name.lower(): RigidBodyDefinition(name=segment.name.lower(),
+                                                                                     length=
+                                                                                     rigidified_body_length_stats[
                                                                                          segment.name.lower()].median * scale,
-                                                                              parent=segment.value.parent.name.lower(),
-                                                                              child=segment.value.child.name.lower()
-                                                                              )
-                                 for segment in skeleton_definition.value.get_segments()}
+                                                                                     parent=segment.value.parent.lower(),
+                                                                                     child=segment.value.child.lower()
+                                                                                     )
+                                           for segment in skeleton_definition.value.get_segments()}
 
     print("Rigidified body segment lengths 👇")
-    print_length_stats_table(segment_lengths=rigidified_segment_length_stats)
+    print_length_stats_table(segment_lengths=rigidified_body_length_stats)
     print("Rigidified body segment lengths 👆")
 
-    return rigidified_keypoints, rigid_segment_definitions
+    return rigidified_keypoints, rigidified_body_segment_definitions
 
 
 def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
@@ -63,8 +67,8 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
         raw_lengths = segment_length_stats[segment_name].samples
 
         # TODO - support compound segments with multiple children
-        segment_parent_kp_name = segment.value.parent.name.lower()
-        segment_child_kp_name = segment.value.child.name.lower()
+        segment_parent_kp_name = segment.value.parent.lower()
+        segment_child_kp_name = segment.value.child.lower()
         parent_trajectory = keypoint_trajectories[segment_parent_kp_name].trajectory_data
         child_trajectory = keypoint_trajectories[segment_child_kp_name].trajectory_data
 
@@ -82,7 +86,7 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
         # translate all child keypoints of the segment
         children = skeleton_definition.value.get_keypoint_children(keypoint_name=segment_child_kp_name)
         for child_keypoint in children:
-            child_name = child_keypoint.name.lower()
+            child_name = child_keypoint.lower()
             child_keypoint = keypoint_trajectories[child_name]
             child_keypoint.trajectory_data += translations
 
@@ -94,7 +98,8 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
 
 
 if __name__ == "__main__":
-    from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data.freemocap_recording_data import load_freemocap_test_recording
+    from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import load_freemocap_test_recording
+
     recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
     keypoint_trajectories, og_segment_lengths = calculate_rigid_body_trajectories(

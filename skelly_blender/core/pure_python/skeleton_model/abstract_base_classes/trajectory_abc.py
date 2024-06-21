@@ -20,7 +20,7 @@ class TrajectoryABC(TypeSafeDataclass, ABC):
         if not self.trajectory_data.shape[1] == 3:
             raise ValueError("Trajectory data should be 3D (xyz)")
 
-        print(f"Initialized: {self}")
+        print(f"Created {self}")
 
     def __str__(self):
         out_str = f"Trajectory: {self.name} (shape: {self.trajectory_data.shape})"

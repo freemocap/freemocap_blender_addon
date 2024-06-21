@@ -4,7 +4,6 @@ from typing import Optional
 
 from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapRecordingData, \
     FreemocapDataStages
-from skelly_blender.core.pure_python.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
 from skelly_blender.core.pure_python.freemocap_data.put_skeleton_on_ground import put_skeleton_on_ground
 from skelly_blender.core.pure_python.rigid_bodies.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
@@ -43,10 +42,11 @@ class PurePythonPipeline(TypeSafeDataclass):
             keypoint_trajectories=rigidified_keypoint_trajectories)
 
         print(f"{self.__class__.__name__}.run() completed successfully for recording: {self.recording_name}")
-        return FreemocapDataStages(raw_from_disk=og_keypoint_trajectories,
-                                   rigidified=rigidified_keypoint_trajectories,
-                                   inertial_aligned=inertial_aligned_keypoint_trajectories,
-                                   segment_definitions=rigid_body_definitions)
+        return FreemocapDataStages(recording_data=recording_data,
+                                   og_keypoint_trajectories=og_keypoint_trajectories,
+                                   rigidified_keypoint_trajectories=rigidified_keypoint_trajectories,
+                                   inertial_aligned_keypoint_trajectories=inertial_aligned_keypoint_trajectories,
+                                   rigid_body_definitions=rigid_body_definitions)
 
         # self.fix_hand_data()
         # self.save_data_to_disk()

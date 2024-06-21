@@ -2,10 +2,9 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List, Set
 
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import ChainEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import ChainEnum, SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.keypoint_abc import KeypointDefinition
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.linkage_abc import LinkageABC
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC
 
 
 @dataclass
@@ -33,7 +32,7 @@ class SkeletonABC(ABC):
         return list(set(linkages))
 
     @classmethod
-    def get_segments(cls) -> List[SimpleSegmentABC]:
+    def get_segments(cls) -> List[SegmentEnum]:
 
         segments = []
         segments.extend(cls.parent.value.get_segments())
@@ -65,20 +64,20 @@ class SkeletonABC(ABC):
         """
 
         def recursive_find_children(name: str,
-                                    segments: List[SimpleSegmentABC],
-                                    found_children: Set[KeypointDefinition]) -> None:
+                                    segments: List[SegmentEnum],
+                                    found_keypoint_children: Set[KeypointDefinition]) -> None:
             for segment in segments:
-                if segment.parent.name.lower() == name:
-                    children = segment.get_children()
+                if segment.value.parent.lower() == name:
+                    children = segment.value.get_children()
                     for child in children:
-                        if child not in found_children:  # Avoid infinite recursion
-                            found_children.add(child)
-                            recursive_find_children(name=child.name.lower(),
+                        if child not in found_keypoint_children:  # Avoid infinite recursion
+                            found_keypoint_children.add(child)
+                            recursive_find_children(name=child.lower(),
                                                     segments=segments,
-                                                    found_children=found_children)
+                                                    found_keypoint_children=found_keypoint_children)
 
-        found_children = set()
-        recursive_find_children(keypoint_name,
-                                cls.get_segments(),
-                                found_children)
-        return list(found_children)
+        found_keypoint_children = set()
+        recursive_find_children(name=keypoint_name,
+                                segments=cls.get_segments(),
+                                found_keypoint_children=found_keypoint_children)
+        return list(found_keypoint_children)

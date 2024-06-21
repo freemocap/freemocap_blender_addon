@@ -2,18 +2,19 @@ from enum import Enum
 
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_bone_classes import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
-
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments, \
+    BodyCompoundSegments
 
 _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Axial segments
-    BodySegments.PELVIS_LUMBAR.blenderize(): BoneRestPoseDefinition(
+    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
         parent_bone_name=ROOT_BONE_NAME
     ),
+
     BodySegments.SPINE_THORACIC.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
-        parent_bone_name=BodySegments.PELVIS_LUMBAR.blenderize()
+        parent_bone_name=BodySegments.SPINE_SACRUM_LUMBAR.blenderize()#BodyCompoundSegments.SPINE_PELVIS_LUMBAR.blenderize() #todo, support compound segments
     ),
     BodySegments.SPINE_CERVICAL.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 0, 0),
@@ -98,7 +99,7 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Right lower limb
     BodySegments.PELVIS_RIGHT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
-        parent_bone_name=ROOT_BONE_NAME
+        parent_bone_name=BodySegments.SPINE_SACRUM_LUMBAR.blenderize()
     ),
     BodySegments.RIGHT_LEG_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
@@ -146,7 +147,7 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Left lower limb
     BodySegments.PELVIS_LEFT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
-        parent_bone_name=ROOT_BONE_NAME
+        parent_bone_name=BodySegments.SPINE_SACRUM_LUMBAR.blenderize()
     ),
     BodySegments.LEFT_LEG_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
@@ -170,7 +171,7 @@ BodyArmatureTPoseDefinition = Enum('BodyArmatureTPoseDefinition', _BODY_ARMATURE
 
 if __name__ == "__main__":
     for name, member in BodyArmatureTPoseDefinition.__members__.items():
-        print(f"{name}: {member.blenderize()}")
+        print(f"{name}: {member}")
 
 #
 # "thumb.carpal.R": PoseElement(

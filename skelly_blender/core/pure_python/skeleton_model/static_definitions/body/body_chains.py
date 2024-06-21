@@ -1,5 +1,5 @@
+from skelly_blender.core.pure_python.custom_types.base_enums import ChainEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.chain_abc import ChainABC
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import ChainEnum
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_linkages import BodyLinkages
 
 

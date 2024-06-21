@@ -1,11 +1,12 @@
+import logging
+
 import numpy as np
 
-from skelly_blender.core.pure_python.custom_types import Trajectories, SegmentStats
+from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories, SegmentStats
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
 from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
 from skelly_blender.system.print_table_from_dicts import print_table
 
-import logging
 logger = logging.getLogger(__name__)
 
 def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
@@ -13,11 +14,10 @@ def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
     segment_stats = {}
     segments = skeleton_definition.value.get_segments()
     for segment in segments:
-        print(f"Calculating segment length for {segment}")
+        print(f"Calculating segment length for {segment} (child: {segment.value.child}, parent: {segment.value.parent})")
+
         parent_name = segment.value.parent.lower()
         child_name = segment.value.child.lower()
-        print(
-            f"Calculating segment length for {segment.name} as distance between keypoints - `{parent_name}` and `{child_name}`")
         length_stats = calculate_distance_between_trajectories(
             trajectory_1=keypoint_trajectories[parent_name].trajectory_data,
             trajectory_2=keypoint_trajectories[child_name].trajectory_data

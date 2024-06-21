@@ -39,7 +39,7 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
 
     for segment_name, segment in segment_definitions.items():
         print(
-            f"Creating rigid body mesh for segment: {segment_name} with length: {segment.length:.3f}m")
+            f"Creating rigid body mesh for segment: {segment}")
         color, squish = get_color_and_squish(segment_name)
 
         bone_mesh = make_rigid_body_mesh(

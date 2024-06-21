@@ -22,7 +22,7 @@ def apply_bone_constraints(
     bpy.ops.object.select_all(action="DESELECT")
 
     root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_LUMBAR_ORIGIN.blenderize()]
+    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()]
 
     add_bone_constraints(
         armature=armature,
@@ -71,10 +71,11 @@ def add_bone_constraints(
         if bone_name not in armature.pose.bones:
             continue
 
+        print(f"\nAdding constraints to bone `{bone_name}`")
         for constraint in constraint_definitions.value:
             # Add new constraint determined by type
             if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION.value:
                 continue
             else:
-                print(f"Adding constraint `{constraint}` to bone `{bone_name}`")
+                print(f"\t-> {constraint}")
                 constraint.apply_constraint(bone=armature.pose.bones[bone_name])

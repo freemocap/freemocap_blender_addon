@@ -1,9 +1,7 @@
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.base_enums import SegmentEnum
+from skelly_blender.core.pure_python.custom_types.base_enums import SegmentEnum
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segments_abc import SimpleSegmentABC, \
     CompoundSegmentABC
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
-
-
 
 
 class SkullNoseSegment(SimpleSegmentABC):
@@ -71,15 +69,15 @@ class CervicalSpineSegment(SimpleSegmentABC):
     child = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
 
 
-
 class ThoracicSpineSegment(SimpleSegmentABC):
     parent = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12.name
     child = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
 
 
-class PelvisLumbarSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.PELVIS_LUMBAR_ORIGIN.name
-    child = BodyKeypoints.PELVIS_LUMBAR_TOP_L1.name
+class SpineSacrumLumbar(SimpleSegmentABC):
+    parent = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
+    child = BodyKeypoints.SPINE_LUMBAR_TOP_L1.name
+
 
 # Right Body
 class RightClavicleSegment(SimpleSegmentABC):
@@ -114,7 +112,7 @@ class RightWristThumbSegment(SimpleSegmentABC):
 
 # leg
 class RightPelvisSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.PELVIS_LUMBAR_ORIGIN.name
+    parent = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
     child = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
 
 
@@ -173,7 +171,7 @@ class LeftWristThumbSegment(SimpleSegmentABC):
 
 # leg
 class LeftPelvisSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.PELVIS_LUMBAR_ORIGIN.name
+    parent = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
     child = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.name
 
 
@@ -196,6 +194,7 @@ class LeftHeelSegment(SimpleSegmentABC):
     parent = BodyKeypoints.LEFT_ANKLE.name
     child = BodyKeypoints.LEFT_HEEL.name
 
+
 # Compound segments
 class SkullCompoundSegment(CompoundSegmentABC):
     segments = [BodyKeypoints.SKULL_FORWARD_NOSE_TIP.name,
@@ -215,19 +214,22 @@ class SkullCompoundSegment(CompoundSegmentABC):
     x_forward_reference = BodyKeypoints.SKULL_FORWARD_NOSE_TIP.name
     y_leftward_reference = BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.name
 
+
 class PelvisLumbarCompoundSegment(CompoundSegmentABC):
-    segments = [BodyKeypoints.PELVIS_LUMBAR_TOP_L1.name,
+    segments = [BodyKeypoints.SPINE_LUMBAR_TOP_L1.name,
                 BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name,
                 BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.name]
-    origin = BodyKeypoints.PELVIS_LUMBAR_ORIGIN.name
-    z_up_reference = BodyKeypoints.PELVIS_LUMBAR_TOP_L1.name
+    origin = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
+    z_up_reference = BodyKeypoints.SPINE_LUMBAR_TOP_L1.name
     x_forward_reference = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
 
 
-class BodySegments(SegmentEnum):
+class BodyCompoundSegments(SegmentEnum):
     SKULL: CompoundSegmentABC = SkullCompoundSegment
-    PELVIS_LUMBAR: CompoundSegmentABC = PelvisLumbarCompoundSegment
+    SPINE_PELVIS_LUMBAR: CompoundSegmentABC = PelvisLumbarCompoundSegment
 
+
+class BodySegments(SegmentEnum):
     SKULL_NOSE: SimpleSegmentABC = SkullNoseSegment
     SKULL_TOP: SimpleSegmentABC = SkullTopSegment
     SKULL_RIGHT_EYE_INNER: SimpleSegmentABC = SkullRightEyeInnerSegment
@@ -243,7 +245,7 @@ class BodySegments(SegmentEnum):
 
     SPINE_CERVICAL: SimpleSegmentABC = CervicalSpineSegment
     SPINE_THORACIC: SimpleSegmentABC = ThoracicSpineSegment
-    SPINE_SACRUM_LUMBAR: SimpleSegmentABC = PelvisLumbarSegment
+    SPINE_SACRUM_LUMBAR: SimpleSegmentABC = SpineSacrumLumbar
     PELVIS_LEFT: SimpleSegmentABC = LeftPelvisSegment
     PELVIS_RIGHT: SimpleSegmentABC = RightPelvisSegment
 
@@ -270,9 +272,3 @@ class BodySegments(SegmentEnum):
     LEFT_LEG_CALF: SimpleSegmentABC = LeftCalfSegment
     LEFT_FOOT_FRONT: SimpleSegmentABC = LeftFootFrontSegment
     LEFT_FOOT_HEEL: SimpleSegmentABC = LeftHeelSegment
-
-
-
-
-
-
