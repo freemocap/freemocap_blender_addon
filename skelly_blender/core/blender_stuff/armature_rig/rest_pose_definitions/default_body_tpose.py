@@ -2,7 +2,7 @@ from enum import Enum
 
 from skelly_blender.core.blender_stuff.armature_rig.armature.armature_bone_classes import BoneRestPoseDefinition, \
     ROOT_BONE_NAME
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
+from skelly_blender.core.skeleton_model.static_definitions.body.body_segments import BodySegments
 
 
 _BODY_ARMATURE_TPOSE_DEFINITIION = {

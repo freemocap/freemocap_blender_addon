@@ -4,7 +4,7 @@ from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedTraj
 from skelly_blender.core.blender_stuff.blenderizers.blenderize_name import blenderize_name
 from skelly_blender.core.blender_stuff.blenderizers.blenderized_segment import BlenderizedSegmentDefinition
 from skelly_blender.core.blender_stuff.blenderizers.blenderized_trajectory import BlenderizedTrajectory
-from skelly_blender.core.pure_python.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
+from skelly_blender.core.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
 
 
 @dataclass

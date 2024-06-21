@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import bpy
 
 from skelly_blender.core.blender_stuff.blender_type_hints import Empties, BlenderizedName
-from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes import TypeSafeDataclass
 
 
 @dataclass

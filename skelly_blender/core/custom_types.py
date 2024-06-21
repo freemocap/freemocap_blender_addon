@@ -1,8 +1,8 @@
 from typing import List, Dict, Union
 
-from skelly_blender.core.pure_python.rigid_bodies.rigid_segment import RigidSegmentDefinition
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
-from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
+from skelly_blender.core.rigid_bodies.rigid_segment import RigidSegmentDefinition
+from skelly_blender.core.skeleton_model.abstract_base_classes import Trajectory
+from skelly_blender.core.utility_classes import DescriptiveStatistics
 
 TrackedPointName = str
 SegmentName = str

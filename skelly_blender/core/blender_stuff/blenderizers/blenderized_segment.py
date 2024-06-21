@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from skelly_blender.core.blender_stuff.blenderizers.blenderize_name import blenderize_name
 from skelly_blender.core.custom_types import BlenderizedName
-from skelly_blender.core.pure_python.rigid_bodies.rigid_segment import RigidSegmentDefinition
+from skelly_blender.core.rigid_bodies.rigid_segment import RigidSegmentDefinition
 
 
 @dataclass

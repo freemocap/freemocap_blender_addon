@@ -4,7 +4,7 @@ import mathutils
 from skelly_blender.core.blender_stuff.armature_rig.armature.armature_bone_classes import ROOT_BONE_NAME
 from skelly_blender.core.blender_stuff.armature_rig.armature.armature_definition_classes import ArmatureDefinition
 from skelly_blender.core.blender_stuff.blender_type_hints import ArmatureObject
-from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeft
+from skelly_blender.core.freemocap_data.data_paths.default_path_enums import RightLeft
 
 
 def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject:

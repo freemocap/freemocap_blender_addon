@@ -2,15 +2,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapRecordingData
-from skelly_blender.core.pure_python.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
-from skelly_blender.core.pure_python.freemocap_data.put_skeleton_on_ground import put_skeleton_on_ground
-from skelly_blender.core.pure_python.rigid_bodies.calculate_rigid_body_trajectories import \
+from skelly_blender.core.freemocap_data.freemocap_recording_data import FreemocapRecordingData
+from skelly_blender.core.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
+from skelly_blender.core.freemocap_data.put_skeleton_on_ground import put_skeleton_on_ground
+from skelly_blender.core.rigid_bodies.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
-from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
-from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, \
+from skelly_blender.core.skeleton_model import SkeletonTypes
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, \
     DEFAULT_TRACKER_TYPE
-from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes import TypeSafeDataclass
 
 
 @dataclass

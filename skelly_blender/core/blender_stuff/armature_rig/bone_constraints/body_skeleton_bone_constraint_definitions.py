@@ -3,8 +3,8 @@ from typing import List, Dict
 
 from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.bone_constraint_types import ConstraintABC, \
     BoneConstraintTypes, TrackAxis, OwnerSpace, LockAxis
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import \
+from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.skeleton_model.static_definitions.body.body_segments import \
     BodySegments
 
 

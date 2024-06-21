@@ -8,9 +8,9 @@ from skelly_blender.core.blender_stuff.blenderizers.blenderized_skeleton_data im
 from skelly_blender.core.blender_stuff.keyframed_empties.create_keyframed_empties import create_keyframed_empties
 from skelly_blender.core.blender_stuff.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
-from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
+from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
     TrackerSourceType
-from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes import TypeSafeDataclass
 from skelly_blender.pipelines.blender_pipeline_config import PipelineConfig
 from skelly_blender.pipelines.pure_python_pipeline import PurePythonPipeline
 from skelly_blender.tests.download_test_data import get_test_data_path

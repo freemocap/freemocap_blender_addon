@@ -32,9 +32,10 @@ bl_info = {
     'author': 'Skelly FreeMoCap',
     'version': (1, 0, 0),
     'blender': (3, 0, 0),
-    'location': '3D Viewport > Sidebar > Freemocap Adapter',
+    'location': '3D Viewport > Sidebar > FreeMoCap💀',
     'description': 'Add-on for bringing `freemocap` data into a Blender scene',
-    'category': 'Motion Capture',
+    'tracker_url': 'https://github.com/freemocap/freemocap_blender_addon/issues',
+    'category': 'Animation',
 }
 
 

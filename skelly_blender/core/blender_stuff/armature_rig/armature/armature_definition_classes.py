@@ -8,7 +8,7 @@ from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bo
 from skelly_blender.core.blender_stuff.armature_rig.rest_pose_definitions.pose_types import RestPoseTypes
 from skelly_blender.core.blender_stuff.blender_type_hints import BlenderizedName, BlenderizedSegmentDefinitions
 from skelly_blender.core.blender_stuff.blenderizers.blenderize_name import blenderize_name
-from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
+from skelly_blender.core.utility_classes import TypeSafeDataclass
 
 
 @dataclass
