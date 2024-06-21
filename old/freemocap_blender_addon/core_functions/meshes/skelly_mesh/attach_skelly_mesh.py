@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Dict
 
 import bpy
-from freemocap_blender_addon import PACKAGE_ROOT_PATH
+from skelly_blender import PACKAGE_ROOT_PATH
 from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
 
 
