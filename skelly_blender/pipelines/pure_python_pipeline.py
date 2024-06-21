@@ -2,15 +2,16 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from skelly_blender.core.freemocap_data.freemocap_recording_data import FreemocapRecordingData
-from skelly_blender.core.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
-from skelly_blender.core.freemocap_data.put_skeleton_on_ground import put_skeleton_on_ground
-from skelly_blender.core.rigid_bodies.calculate_rigid_body_trajectories import \
+from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapRecordingData, \
+    FreemocapDataStages
+from skelly_blender.core.pure_python.freemocap_data.freemocap_skeleton_data import FreemocapSkeletonData
+from skelly_blender.core.pure_python.freemocap_data.put_skeleton_on_ground import put_skeleton_on_ground
+from skelly_blender.core.pure_python.rigid_bodies.calculate_rigid_body_trajectories import \
     calculate_rigid_body_trajectories
-from skelly_blender.core.skeleton_model import SkeletonTypes
-from skelly_blender.core.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, \
+from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
+from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType, \
     DEFAULT_TRACKER_TYPE
-from skelly_blender.core.utility_classes import TypeSafeDataclass
+from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
 @dataclass
@@ -22,7 +23,7 @@ class PurePythonPipeline(TypeSafeDataclass):
     def recording_name(self) -> str:
         return Path(self.recording_path_str).stem
 
-    def run(self, scale: Optional[float] = None) -> FreemocapSkeletonData:
+    def run(self, scale: Optional[float] = None) -> FreemocapDataStages:
         # Pure python stuff
         print("Loading freemocap data....")
         recording_data = FreemocapRecordingData.load_from_recording_path(recording_path=self.recording_path_str,
@@ -42,10 +43,10 @@ class PurePythonPipeline(TypeSafeDataclass):
             keypoint_trajectories=rigidified_keypoint_trajectories)
 
         print(f"{self.__class__.__name__}.run() completed successfully for recording: {self.recording_name}")
-        return FreemocapSkeletonData(raw_from_disk=og_keypoint_trajectories,
-                                     rigidified=rigidified_keypoint_trajectories,
-                                     inertial_aligned=inertial_aligned_keypoint_trajectories,
-                                     segment_definitions=rigid_body_definitions)
+        return FreemocapDataStages(raw_from_disk=og_keypoint_trajectories,
+                                   rigidified=rigidified_keypoint_trajectories,
+                                   inertial_aligned=inertial_aligned_keypoint_trajectories,
+                                   segment_definitions=rigid_body_definitions)
 
         # self.fix_hand_data()
         # self.save_data_to_disk()

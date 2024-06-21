@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from skelly_blender.core.utility_classes import OrthonormalBasis3D
+from skelly_blender.core.pure_python.utility_classes import OrthonormalBasis3D
 
 
 def test_orthonormal_basis_creation():

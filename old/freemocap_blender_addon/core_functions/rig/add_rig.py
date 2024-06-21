@@ -2,11 +2,11 @@ from typing import Tuple
 
 import bpy
 
-from skelly_blender.core.blender_stuff.armature_rig.armature.armature_definition_classes import ArmatureDefinition
-from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.armature_bone_constraints_types import \
+from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
+from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.armature_bone_constraints_types import \
     ArmatureBoneConstraintsTypes
-from skelly_blender.core.blender_stuff.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
-from skelly_blender.core.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
+from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 from skelly_blender.pipelines.blender_pipeline_config import AddRigConfig
 
 

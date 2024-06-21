@@ -1,7 +1,6 @@
 import bpy
-from bpy.props import StringProperty, BoolProperty
 
-from freemocap_blender_addon.utilities.download_test_data import get_test_data_path
+from skelly_blender.tests.download_test_data import get_test_data_path
 
 
 class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
@@ -19,7 +18,7 @@ class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
         poll=lambda self, object_in: object_in.type == 'EMPTY',
     )
 
-    recording_path: StringProperty(
+    recording_path: bpy.props.StringProperty(
         name="FreeMoCap recording path",
         description="Path to a freemocap recording",
         default=get_test_data_path(),
@@ -48,17 +47,17 @@ class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
     )
 
     # Show Options Booleans
-    show_reorient_empties_options: BoolProperty(
+    show_reorient_empties_options: bpy.props.BoolProperty(
         name="Show options",
         description="Show/hide the options for the Re-orient Empties operator",
         default=False,
     )
-    show_bone_length_options: BoolProperty(
+    show_bone_length_options: bpy.props.BoolProperty(
         name="Show options",
         description="Show/hide the options for the Reduce Bone Length Dispersion operator",
         default=False,
     )
-    show_add_rig_options: BoolProperty(
+    show_add_rig_options: bpy.props.BoolProperty(
         name="Show options",
         description="Show/hide the options for the Add Rig operator",
         default=False,

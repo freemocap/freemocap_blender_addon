@@ -64,7 +64,7 @@ def register():
 
     print("Registering property group FMC_ADAPTER_PROPERTIES")
 
-    from skelly_blender.blender_interface import FMC_ADAPTER_PROPERTIES
+    from skelly_blender.blender_interface.properties.properties import FMC_ADAPTER_PROPERTIES
     bpy.types.Scene.fmc_adapter_properties = bpy.props.PointerProperty(type=FMC_ADAPTER_PROPERTIES)
 
     print(f"Finished registering {__file__} as add-on!")

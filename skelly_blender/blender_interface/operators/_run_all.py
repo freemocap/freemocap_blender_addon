@@ -2,7 +2,8 @@ import traceback
 from pathlib import Path
 
 import bpy
-from freemocap_blender_addon.pipelines.blender_skeleton_builder_pipeline import BlenderSkeletonBuilderPipeline
+
+from skelly_blender.pipelines.blender_skeleton_pipeline import BlenderSkeletonBuilderPipeline
 
 
 class FMC_ADAPTER_run_all(bpy.types.Operator):
