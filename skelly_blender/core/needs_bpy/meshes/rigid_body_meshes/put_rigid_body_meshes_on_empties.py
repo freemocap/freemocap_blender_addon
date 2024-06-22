@@ -5,7 +5,7 @@ from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedSegmentD
 from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import parentify_name
 from skelly_blender.core.needs_bpy.color_generator import ColorType, generate_color
 from skelly_blender.core.needs_bpy.empties.empties_dataclasses import ParentedEmpties
-from skelly_blender.core.needs_bpy.rigid_body_meshes.make_rigid_body_mesh import \
+from skelly_blender.core.needs_bpy.meshes.rigid_body_meshes.make_rigid_body_mesh import \
     make_rigid_body_mesh
 
 DEFAULT_APPENDICULAR_RIGID_BODY_MESH_SQUISH = (.8, 1, 1)

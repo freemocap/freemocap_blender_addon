@@ -12,7 +12,7 @@ from skelly_blender.core.pure_python.tracked_points.tracked_points_classes impor
     HandsData
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
     TrackerSourceType
-from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
+from skelly_blender.core.pure_python.math_stuff.sample_statistics import DescriptiveStatistics
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 from skelly_blender.system.get_path_to_test_data import get_path_to_test_data
 

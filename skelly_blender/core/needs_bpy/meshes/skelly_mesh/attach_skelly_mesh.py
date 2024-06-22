@@ -1,9 +1,9 @@
-from pathlib import Path
-from typing import Dict
-
 import bpy
-from skelly_blender import PACKAGE_ROOT_PATH
-from freemocap_blender_addon.models.animation.armatures.armature_definition import ArmatureDefinition
+
+from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
+from skelly_blender.core.needs_bpy.armature_rig.skelly_bone_meshes.skelly_bones_mesh_info import load_skelly_fbx_meshes
+
+SKELLY_MESH_PREFIX = 'skelly_'
 
 
 def attach_skelly_bone_meshes(armature: bpy.types.Object,
@@ -18,21 +18,15 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='EDIT')
-    skelly_meshes = load_skelly_fbx_files()
+    skelly_meshes = load_skelly_fbx_meshes()
 
     # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
-    for bone in armature.pose.bones:
-        print(f" Loading bone mesh for `{bone.name}` from: {mesh_path}")
+    for host_armature_bone, bone_mesh_object in armature.pose.bones:
+        print(f"Attaching mesh: `{bone_mesh_object.name}` to host armature bone: `{host_armature_bone}`")
 
-        bpy.ops.import_scene.fbx(filepath=str(mesh_path))
-
-        skelly_meshes.append(bpy.data.objects[mesh_name])
-
-        # Get reference to the imported mesh
-        skelly_mesh = bpy.data.objects[mesh_name]
-
+        armature_bone = armature.data.edit_bones[host_armature_bone]
         # Get the rotation matrix
-        rotation_matrix = bone.rotation_matrix.to_3x3()
+        rotation_matrix = armature_bone.rotation_matrix.to_3x3()
 
         # Move the Skelly part to the equivalent bone's head location
         # skelly_mesh.location = (bone.origin
@@ -40,7 +34,7 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
         #                         )
 
         # Rotate the part mesh with the rotation matrix
-        skelly_mesh.rotation_euler = rotation_matrix.to_euler('XYZ')
+        # skelly_mesh.rotation_euler = rotation_matrix.to_euler('XYZ')
         #
         # # Get the bone length
         # if SKELLY_BONE_MESHES[mesh].adjust_rotation:
@@ -83,17 +77,3 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
     bpy.context.view_layer.objects.active = armature
     # Parent the mesh and the rig with automatic weights
     bpy.ops.object.parent_set(type='ARMATURE_AUTO')
-
-
-SKELLY_MESH_PREFIX = 'skelly_'
-SKELLY_BONE_MESHES_PATH = Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones" / "body" / "axial"
-
-
-def load_skelly_fbx_files() -> Dict[str, bpy.types.Object]:
-    meshes = {}
-    for fbx_file_path in SKELLY_BONE_MESHES_PATH.glob("*.fbx"):
-        bpy.ops.import_scene.fbx(filepath=str(fbx_file_path))
-        mesh_name = fbx_file_path.stem
-        meshes[mesh_name] = bpy.data.objects[mesh_name]
-
-    return meshes

@@ -4,7 +4,7 @@ import numpy as np
 
 from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories, SegmentStats
 from skelly_blender.core.pure_python.skeleton_model.skeleton_types import SkeletonTypes
-from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
+from skelly_blender.core.pure_python.math_stuff.sample_statistics import DescriptiveStatistics
 from skelly_blender.system.print_table_from_dicts import print_table
 
 logger = logging.getLogger(__name__)

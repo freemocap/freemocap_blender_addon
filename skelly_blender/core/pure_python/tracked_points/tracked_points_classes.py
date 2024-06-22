@@ -14,7 +14,7 @@ from skelly_blender.core.pure_python.tracked_points.getters.get_keypoints_by_com
 from skelly_blender.core.pure_python.tracked_points.getters.get_mapping_by_component_and_tracker_type import \
     get_tracker_keypoint_mapping
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import TrackerSourceType
-from skelly_blender.core.pure_python.utility_classes.sample_statistics import DescriptiveStatistics
+from skelly_blender.core.pure_python.math_stuff.sample_statistics import DescriptiveStatistics
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 FRAME_TRAJECTORY_XYZ = ["frame_number", "trajectory_index", "xyz"]

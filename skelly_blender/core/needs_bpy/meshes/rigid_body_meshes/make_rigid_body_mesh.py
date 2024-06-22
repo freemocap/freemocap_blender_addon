@@ -4,7 +4,7 @@ import bmesh
 import bpy
 import numpy as np
 
-from skelly_blender.core.needs_bpy.rigid_body_meshes.create_material import create_material
+from skelly_blender.core.needs_bpy.meshes.rigid_body_meshes.create_material import create_material
 
 
 def make_cone_mesh(name: str = "cone_mesh",

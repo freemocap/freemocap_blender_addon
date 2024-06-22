@@ -7,8 +7,9 @@ from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.apply_bone_cons
 from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import BlenderizedSkeletonData
 from skelly_blender.core.needs_bpy.empties.create_keyframed_empties import create_keyframed_empties
 from skelly_blender.core.needs_bpy.empties.create_parent_empty import create_parent_empty
-from skelly_blender.core.needs_bpy.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
+from skelly_blender.core.needs_bpy.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
+from skelly_blender.core.needs_bpy.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_bone_meshes
 from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapDataStages
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
     TrackerSourceType
@@ -89,12 +90,12 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                   f"Generating armature...\n")
             armature = generate_armature(armature_definition=armature_definition)
 
-            # print("\n--------------------------------------------\n"
-            #    f"Attaching skelly bone meshes to armature...\n")
-            # attach_skelly_bone_meshes(
-            #     armature=armature,
-            #     armature_definition=armature_definition,
-            # )
+            print("\n--------------------------------------------\n"
+               f"Attaching skelly bone meshes to armature...\n")
+            attach_skelly_bone_meshes(
+                armature=armature,
+                armature_definition=armature_definition,
+            )
 
             print("\n--------------------------------------------\n"
                   f"Applying bone constraints to armature...\n")

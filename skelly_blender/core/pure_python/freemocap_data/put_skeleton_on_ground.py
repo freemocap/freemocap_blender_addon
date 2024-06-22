@@ -7,7 +7,7 @@ from skelly_blender.core.pure_python.freemocap_data.transform_skeleton_data.get_
     get_low_velocity_frame
 from skelly_blender.core.pure_python.freemocap_data.transform_skeleton_data.points_transformers import transform_points
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
-from skelly_blender.core.pure_python.utility_classes.orthonormal_basis_3d import OrthonormalBasis3D
+from skelly_blender.core.pure_python.math_stuff.orthonormal_basis_3d import OrthonormalBasis3D
 
 
 def put_skeleton_on_ground(keypoint_trajectories: Trajectories, copy_trajectories: bool = False) -> Trajectories:
