@@ -39,12 +39,12 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
         return mesh_color, mesh_squish
 
     for segment_name, segment in segment_definitions.items():
-        print(
-            f"Creating rigid body mesh for segment: {segment}")
         color, squish = get_color_and_squish(segment_name)
+        parentified_segment_name = parentify_name(name=segment_name, parent_name=parented_empties.parent_name)
+        print(f"Creating rigid body mesh for segment: {parentified_segment_name}")
 
         bone_mesh = make_rigid_body_mesh(
-            name=f"{parentify_name(parent_name=parented_empties.parent_name, name=segment_name)}_rigid_body_mesh",
+            name=f"{parentified_segment_name}_rigid_body_mesh",
             length=segment.length,
             squish_scale=squish,
             joint_color=color,
@@ -52,9 +52,9 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
             axis_visible=False
         )
         location_constraint = bone_mesh.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-        location_constraint.target = parented_empties.empties[parentify_name(name=segment.parent, parent_name=parented_empties.parent_name)]
+        location_constraint.target = parented_empties.get_empty(segment.parent)
 
         track_to_constraint = bone_mesh.constraints.new(type=ConstraintType.DAMPED_TRACK.value)
-        track_to_constraint.target = parented_empties.empties[parentify_name(name=segment.child, parent_name=parented_empties.parent_name)]
+        track_to_constraint.target = parented_empties.get_empty(segment.child)
         track_to_constraint.track_axis = "TRACK_Z"
         bone_mesh.parent = parented_empties.parent_empty
