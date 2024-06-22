@@ -35,8 +35,8 @@ class BodyKeypoints(KeypointEnum):
 
     PELVIS_SPINE_SACRUM_ORIGIN = "Geometric center of the left and right hip sockets, anterior to the Sacrum"
     SPINE_LUMBAR_TOP_L1 = "Geometric center of the top surface of the first lumbar vertebra (L1)"
-    PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM = "Geometric center of proximal surface the right hip socket/acetabulum (where the femoral head fits in)"
-    PELVIS_LUMBAR_LEFT_HIP_ACETABULUM = "Geometric center of proximal surface the left hip socket/acetabulum (where the femoral head fits in)"
+    PELVIS_RIGHT_HIP_ACETABULUM = "Geometric center of proximal surface the right hip socket/acetabulum (where the femoral head fits in)"
+    PELVIS_LEFT_HIP_ACETABULUM = "Geometric center of proximal surface the left hip socket/acetabulum (where the femoral head fits in)"
 
     ### right arm
     RIGHT_CLAVICLE = "Center of the right sternoclavicular joint"

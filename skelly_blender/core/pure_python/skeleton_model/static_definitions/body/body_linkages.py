@@ -58,7 +58,7 @@ class RightWristLinkage(LinkageABC):
 class RightHipLinkage(LinkageABC):
     parent = BodySegments.PELVIS_RIGHT
     children = [BodySegments.RIGHT_LEG_THIGH]
-    linked_keypoint = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM
+    linked_keypoint = BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM
 
 
 class RightKneeLinkage(LinkageABC):
@@ -97,7 +97,7 @@ class LeftWristLinkage(LinkageABC):
 class LeftHipLinkage(LinkageABC):
     parent = BodySegments.PELVIS_LEFT
     children = [BodySegments.LEFT_LEG_THIGH]
-    linked_keypoint = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM
+    linked_keypoint = BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM
 
 
 class LeftKneeLinkage(LinkageABC):

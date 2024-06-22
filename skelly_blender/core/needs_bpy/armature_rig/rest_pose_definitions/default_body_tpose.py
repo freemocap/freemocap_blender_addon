@@ -99,7 +99,7 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Right lower limb
     BodySegments.PELVIS_RIGHT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 90, 0),
-        parent_bone_name=BodySegments.SPINE_SACRUM_LUMBAR.blenderize()
+        parent_bone_name=ROOT_BONE_NAME
     ),
     BodySegments.RIGHT_LEG_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),
@@ -147,7 +147,7 @@ _BODY_ARMATURE_TPOSE_DEFINITIION = {
     # Left lower limb
     BodySegments.PELVIS_LEFT.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, -90, 0),
-        parent_bone_name=BodySegments.SPINE_SACRUM_LUMBAR.blenderize()
+        parent_bone_name=ROOT_BONE_NAME
     ),
     BodySegments.LEFT_LEG_THIGH.blenderize(): BoneRestPoseDefinition(
         world_rotation_degrees=(0, 180, 0),

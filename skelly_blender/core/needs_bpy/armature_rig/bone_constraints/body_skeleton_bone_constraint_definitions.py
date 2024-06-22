@@ -29,15 +29,15 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         # ),
     ],
     BodySegments.SPINE_THORACIC.blenderize(): [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize(),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.THORACIC_SPINE_TOP_T1.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.RIGHT_SHOULDER.blenderize(),
-            track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.RIGHT_SHOULDER.blenderize(),
+        #     track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-45,
@@ -55,12 +55,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.SKULL_FORWARD_NOSE_TIP.blenderize(),
-            track_axis=TrackAxis.TRACK_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.SKULL_FORWARD_NOSE_TIP.blenderize(),
+        #     track_axis=TrackAxis.TRACK_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-37,
@@ -125,7 +125,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # RIGHT BODY SEGMENTS
     # RIGHT UPPER LIMB
     BodySegments.RIGHT_CLAVICLE.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SHOULDER.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value), ],
     BodySegments.RIGHT_ARM_PROXIMAL.blenderize(): [
@@ -154,12 +154,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_INDEX_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.blenderize(),
-            track_axis=TrackAxis.TRACK_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.blenderize(),
+        #     track_axis=TrackAxis.TRACK_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-45,
@@ -179,12 +179,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_PINKY_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.blenderize(),
-            track_axis=TrackAxis.TRACK_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.RIGHT_THUMB_KNUCKLE.blenderize(),
+        #     track_axis=TrackAxis.TRACK_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-45,
@@ -226,26 +226,26 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     ],
     ## RIGHT LOWER LIMB
     BodySegments.PELVIS_RIGHT.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()),
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.blenderize(),
-            track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
-            lock_axis=LockAxis.LOCK_Z.value,
-            influence=1.0,
-        ),
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.blenderize(),
-            track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.blenderize(),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.blenderize(),
+        #     track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
+        #     lock_axis=LockAxis.LOCK_Z.value,
+        #     influence=1.0,
+        # ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.blenderize(),
+        #     track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
     BodySegments.RIGHT_LEG_THIGH.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.blenderize()),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.blenderize()),
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_KNEE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
@@ -307,7 +307,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # LEFT BODY SEGMENTS
     # LEFT UPPER LIMB
     BodySegments.LEFT_CLAVICLE.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7.blenderize()),
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SHOULDER.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value), ],
     BodySegments.LEFT_ARM_PROXIMAL.blenderize(): [
@@ -348,12 +348,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_INDEX_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.LEFT_THUMB_KNUCKLE.blenderize(),
-            track_axis=TrackAxis.TRACK_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.LEFT_THUMB_KNUCKLE.blenderize(),
+        #     track_axis=TrackAxis.TRACK_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-45,
@@ -372,12 +372,12 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_PINKY_KNUCKLE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.LEFT_THUMB_KNUCKLE.blenderize(),
-            track_axis=TrackAxis.TRACK_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.LEFT_THUMB_KNUCKLE.blenderize(),
+        #     track_axis=TrackAxis.TRACK_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
         #         BoneConstraintTypes.LIMIT_ROTATION.value(
         #             use_limit_x=True,
         #             min_x=-45,
@@ -419,26 +419,26 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     ],
     ## LEFT LOWER LIMB
     BodySegments.PELVIS_LEFT.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()),
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.blenderize(),
-            track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
-            lock_axis=LockAxis.LOCK_Z.value,
-            influence=1.0,
-        ),
-        BoneConstraintTypes.LOCKED_TRACK.value(
-            target=BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.blenderize(),
-            track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
-            lock_axis=LockAxis.LOCK_Y.value,
-            influence=1.0,
-        ),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.blenderize(),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.blenderize(),
+        #     track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
+        #     lock_axis=LockAxis.LOCK_Z.value,
+        #     influence=1.0,
+        # ),
+        # BoneConstraintTypes.LOCKED_TRACK.value(
+        #     target=BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.blenderize(),
+        #     track_axis=TrackAxis.TRACK_NEGATIVE_X.value,
+        #     lock_axis=LockAxis.LOCK_Y.value,
+        #     influence=1.0,
+        # ),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value)
 
     ],
 
     BodySegments.LEFT_LEG_THIGH.blenderize(): [
-        BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.blenderize()),
+        # BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.blenderize()),
         BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_KNEE.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 

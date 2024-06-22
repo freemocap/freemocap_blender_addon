@@ -31,10 +31,7 @@ class BoneRestPoseDefinition:
 
     @property
     def rotation_matrix(self) -> mathutils.Matrix:
-        return mathutils.Euler(
-            mathutils.Vector(self.rotation_as_radians),
-            "XYZ",
-        ).to_matrix()
+        return mathutils.Euler(mathutils.Vector(self.rotation_as_radians)).to_matrix()
 
 
 @dataclass

@@ -3,13 +3,14 @@ from typing import Union
 import bpy
 import numpy as np
 
-from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedName, BlenderizedTrajectories
-from skelly_blender.core.needs_bpy.keyframed_empties.empties_dataclasses import ParentedEmpties
+from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedName, BlenderizedTrajectories, ParentEmpty, \
+    EmptyObject
+from skelly_blender.core.needs_bpy.empties.empties_dataclasses import ParentedEmpties
 from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories
 
 
 def create_keyframed_empties(trajectories: Union[BlenderizedTrajectories, Trajectories],
-                             parent_name: str,
+                             parent_empty:ParentEmpty,
                              empty_scale: float = 0.025,
                              empty_type: str = "SPHERE") -> ParentedEmpties:
     """
@@ -19,32 +20,29 @@ def create_keyframed_empties(trajectories: Union[BlenderizedTrajectories, Trajec
 
     empties = {}
 
-    # Create a parent empty object
-    bpy.ops.object.empty_add(type="ARROWS")
-    parent_object = bpy.context.editable_objects[-1]
-    parent_object.name = parent_name
+
 
     for trajectory_name, trajectory in trajectories.items():
 
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
             trajectory_fr_xyz=trajectory.trajectory_fr_xyz,
             trajectory_name=trajectory_name,
-            parent_object=parent_object,
+            parent_empty=parent_empty,
             empty_scale=empty_scale,
             empty_type=empty_type,
         )
 
     return ParentedEmpties(empties=empties,
-                           parent_object=parent_object)
+                           parent_empty=parent_empty)
 
 
 def create_keyframed_empty_from_3d_trajectory_data(
         trajectory_fr_xyz: np.ndarray,
         trajectory_name: BlenderizedName,
-        parent_object: bpy.types.Object,
+        parent_empty: ParentEmpty,
         empty_scale: float = 0.01,
         empty_type: str = "PLAIN_AXES",
-) -> bpy.types.Object:
+) -> EmptyObject:
     """
     Create a key framed empty from 3D trajectory data.
 
@@ -54,7 +52,7 @@ def create_keyframed_empty_from_3d_trajectory_data(
         3D trajectory data with shape (number_of_frames, 3).
     trajectory_name : str
         Name for the empty object.
-    parent_object : bpy.types.Object
+    parent_empty : bpy.types.Object
         The parent object to which the empty will be parented.
     empty_scale : float, optional
         Scale of the empty object, by default 0.1.
@@ -73,7 +71,7 @@ def create_keyframed_empty_from_3d_trajectory_data(
 
     empty_object.empty_display_size = empty_scale
 
-    empty_object.parent = parent_object
+    empty_object.parent = parent_empty
 
     for frame_number in range(trajectory_fr_xyz.shape[0]):
         empty_object.location = [

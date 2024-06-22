@@ -6,6 +6,8 @@ from typing import Optional
 
 import bpy
 
+from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import parentify_name
+
 
 class ConstraintType(Enum):
     COPY_LOCATION = "COPY_LOCATION"
@@ -44,7 +46,7 @@ class ConstraintABC(ABC):
             raise ValueError(f"Target {target} not found in bpy.data.objects")
 
     @abstractmethod
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> None:
         pass
 
 
@@ -53,10 +55,10 @@ class CopyLocationConstraint(ConstraintABC):
     type: ConstraintType = field(default=ConstraintType.COPY_LOCATION.value, init=False)
     target: str
 
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> bpy.types.Constraint:
-        self.validate_target(self.target)
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> bpy.types.Constraint:
+        self.validate_target(parentify_name(name=self.target, parent_name=parent_name))
         constraint = bone.constraints.new(self.type)
-        constraint.target = bpy.data.objects[self.target]
+        constraint.target = bpy.data.objects[parentify_name(name=self.target, parent_name=parent_name)]
 
 
 @dataclass
@@ -67,10 +69,10 @@ class LockedTrackConstraint(ConstraintABC):
     lock_axis: LockAxis
     influence: Optional[float] = 1.0
 
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
-        self.validate_target(self.target)
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> None:
+        self.validate_target(parentify_name(name=self.target, parent_name=parent_name))
         constraint = bone.constraints.new(self.type)
-        constraint.target = bpy.data.objects[self.target]
+        constraint.target = bpy.data.objects[parentify_name(name=self.target, parent_name=parent_name)]
         constraint.track_axis = self.track_axis
         constraint.lock_axis = self.lock_axis
         constraint.influence = self.influence
@@ -82,10 +84,10 @@ class DampedTrackConstraint(ConstraintABC):
     target: str
     track_axis: TrackAxis
 
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
-        self.validate_target(self.target)
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> None:
+        self.validate_target(parentify_name(name=self.target, parent_name=parent_name))
         constraint = bone.constraints.new(self.type)
-        constraint.target = bpy.data.objects[self.target]
+        constraint.target = bpy.data.objects[parentify_name(name=self.target, parent_name=parent_name)]
         constraint.track_axis = self.track_axis
 
 
@@ -103,7 +105,7 @@ class LimitRotationConstraint(ConstraintABC):
     max_z: float
     owner_space: OwnerSpace
 
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> None:
         constraint = bone.constraints.new(self.type)
         constraint.use_limit_x = self.use_limit_x
         constraint.min_x = math.radians(self.min_x)
@@ -125,11 +127,11 @@ class IKConstraint(ConstraintABC):
     chain_count: int
     pole_angle: float
 
-    def apply_constraint(self, bone: bpy.types.PoseBone) -> None:
-        self.validate_target(self.target)
+    def apply_constraint(self, bone: bpy.types.PoseBone, parent_name:str) -> None:
+        self.validate_target(parentify_name(name=self.target, parent_name=parent_name))
         self.validate_target(self.pole_target)
         constraint = bone.constraints.new(self.type)
-        constraint.target = bpy.data.objects[self.target]
+        constraint.target = bpy.data.objects[parentify_name(name=self.target, parent_name=parent_name)]
         constraint.pole_target = bpy.data.objects[self.pole_target]
         constraint.chain_count = self.chain_count
         constraint.pole_angle = self.pole_angle

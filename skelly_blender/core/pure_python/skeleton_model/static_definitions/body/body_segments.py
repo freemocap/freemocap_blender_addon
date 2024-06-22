@@ -113,11 +113,11 @@ class RightWristThumbSegment(SimpleSegmentABC):
 # leg
 class RightPelvisSegment(SimpleSegmentABC):
     parent = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
-    child = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
+    child = BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name
 
 
 class RightThighSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
+    parent = BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name
     child = BodyKeypoints.RIGHT_KNEE.name
 
 
@@ -172,11 +172,11 @@ class LeftWristThumbSegment(SimpleSegmentABC):
 # leg
 class LeftPelvisSegment(SimpleSegmentABC):
     parent = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
-    child = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.name
+    child = BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.name
 
 
 class LeftThighSegment(SimpleSegmentABC):
-    parent = BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.name
+    parent = BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.name
     child = BodyKeypoints.LEFT_KNEE.name
 
 
@@ -217,11 +217,11 @@ class SkullCompoundSegment(CompoundSegmentABC):
 
 class PelvisLumbarCompoundSegment(CompoundSegmentABC):
     segments = [BodyKeypoints.SPINE_LUMBAR_TOP_L1.name,
-                BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name,
-                BodyKeypoints.PELVIS_LUMBAR_LEFT_HIP_ACETABULUM.name]
+                BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name,
+                BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.name]
     origin = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
     z_up_reference = BodyKeypoints.SPINE_LUMBAR_TOP_L1.name
-    x_forward_reference = BodyKeypoints.PELVIS_LUMBAR_RIGHT_HIP_ACETABULUM.name
+    x_forward_reference = BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name
 
 
 class BodyCompoundSegments(SegmentEnum):

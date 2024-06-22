@@ -11,6 +11,34 @@ from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body
 from skelly_blender.pipelines.blender_pipeline_config import AddRigConfig
 
 
+def add_bone_constraints(
+        armature: bpy.types.Object,
+        bone_constraints: ArmatureBoneConstraintsTypes,
+        parent_name: str,
+        use_limit_rotation: bool = False,
+) -> None:
+    print("Adding bone constraints...")
+
+    # Change to pose mode
+    bpy.context.view_layer.objects.active = armature
+    bpy.ops.object.mode_set(mode="POSE")
+
+    # Create each constraint
+    for bone_name, constraint_definitions in bone_constraints.value.__members__.items():
+        # If pose bone does not exist, skip it
+        if bone_name not in armature.pose.bones:
+            continue
+
+        print(f"\nAdding constraints to bone `{bone_name}`")
+        for constraint in constraint_definitions.value:
+            # Add new constraint determined by type
+            if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION.value:
+                continue
+            else:
+                print(f"\t-> {constraint}")
+                constraint.apply_constraint(bone=armature.pose.bones[bone_name], parent_name=parent_name)
+
+
 def apply_bone_constraints(
         armature: bpy.types.Object,
         config: AddRigConfig,
@@ -31,6 +59,7 @@ def apply_bone_constraints(
         armature=armature,
         bone_constraints=config.bone_constraints,
         use_limit_rotation=config.use_limit_rotation,
+        parent_name=parent_name,
     )
 
     if config.add_ik_constraints:
@@ -55,30 +84,3 @@ def apply_bone_constraints(
     bpy.ops.object.select_all(action="DESELECT")
 
     return armature
-
-
-def add_bone_constraints(
-        armature: bpy.types.Object,
-        bone_constraints: ArmatureBoneConstraintsTypes,
-        use_limit_rotation: bool = False,
-) -> None:
-    print("Adding bone constraints...")
-
-    # Change to pose mode
-    bpy.context.view_layer.objects.active = armature
-    bpy.ops.object.mode_set(mode="POSE")
-
-    # Create each constraint
-    for bone_name, constraint_definitions in bone_constraints.value.__members__.items():
-        # If pose bone does not exist, skip it
-        if bone_name not in armature.pose.bones:
-            continue
-
-        print(f"\nAdding constraints to bone `{bone_name}`")
-        for constraint in constraint_definitions.value:
-            # Add new constraint determined by type
-            if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION.value:
-                continue
-            else:
-                print(f"\t-> {constraint}")
-                constraint.apply_constraint(bone=armature.pose.bones[bone_name])

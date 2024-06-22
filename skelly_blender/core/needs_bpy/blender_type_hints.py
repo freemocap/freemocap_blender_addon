@@ -8,6 +8,7 @@ from skelly_blender.core.needs_bpy.blenderizers.blenderized_trajectory import \
 from skelly_blender.core.pure_python.custom_types.generic_types import BlenderizedName
 
 EmptyObject = bpy.types.Object #an `Empty` object in Blender
+ParentEmpty = EmptyObject #an `Empty` object in Blender that will be the parent of other objects
 Empties = Dict[BlenderizedName, EmptyObject]
 
 ArmatureObject = bpy.types.Object #an `Armature` object in Blender
