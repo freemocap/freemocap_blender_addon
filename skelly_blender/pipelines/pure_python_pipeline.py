@@ -30,11 +30,11 @@ class PurePythonPipeline(TypeSafeDataclass):
                                                                          scale=scale)
 
         print("Mapping body to keypoints....")
-        og_keypoint_trajectories = recording_data.body.map_to_keypoints()
+        og_trackedpoint_trajectories = recording_data.body.as_trajectories
 
         print("Calculating rigid body trajectories....")
         rigidified_keypoint_trajectories, rigid_body_definitions = calculate_rigid_body_trajectories(
-            keypoint_trajectories=og_keypoint_trajectories,
+            keypoint_trajectories=recording_data.body.map_to_keypoints(),
             skeleton_definition=SkeletonTypes.BODY_ONLY)
 
         print("Putting skeleton on ground....")
@@ -43,7 +43,7 @@ class PurePythonPipeline(TypeSafeDataclass):
 
         print(f"{self.__class__.__name__}.run() completed successfully for recording: {self.recording_name}")
         return FreemocapDataStages(recording_data=recording_data,
-                                   og_keypoint_trajectories=og_keypoint_trajectories,
+                                   og_keypoint_trajectories=og_trackedpoint_trajectories,
                                    rigidified_keypoint_trajectories=rigidified_keypoint_trajectories,
                                    inertial_aligned_keypoint_trajectories=inertial_aligned_keypoint_trajectories,
                                    rigid_body_definitions=rigid_body_definitions)

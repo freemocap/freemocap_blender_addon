@@ -2,6 +2,7 @@ from typing import Tuple
 
 from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
 from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedSegmentDefinitions
+from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import parentify_name
 from skelly_blender.core.needs_bpy.color_generator import ColorType, generate_color
 from skelly_blender.core.needs_bpy.keyframed_empties.empties_dataclasses import ParentedEmpties
 from skelly_blender.core.needs_bpy.rigid_body_meshes.make_rigid_body_mesh import \
@@ -43,7 +44,7 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
         color, squish = get_color_and_squish(segment_name)
 
         bone_mesh = make_rigid_body_mesh(
-            name=f"{parented_empties.parent_name}_rigid_body_mesh_{segment_name}",
+            name=f"{parented_empties.parent_name}_{segment_name}_rigid_body_mesh",
             length=segment.length,
             squish_scale=squish,
             joint_color=color,
@@ -51,9 +52,9 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
             axis_visible=False
         )
         location_constraint = bone_mesh.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-        location_constraint.target = parented_empties.empties[segment.parent]
+        location_constraint.target = parented_empties.empties[parentify_name(name=segment.parent, parent_name=parented_empties.parent_name)]
 
         track_to_constraint = bone_mesh.constraints.new(type=ConstraintType.DAMPED_TRACK.value)
-        track_to_constraint.target = parented_empties.empties[segment.child]
+        track_to_constraint.target = parented_empties.empties[parentify_name(name=segment.child, parent_name=parented_empties.parent_name)]
         track_to_constraint.track_axis = "TRACK_Z"
         bone_mesh.parent = parented_empties.parent_object

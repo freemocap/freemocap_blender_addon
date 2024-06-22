@@ -15,7 +15,7 @@ class FMC_ADAPTER_clear_scene(bpy.types.Operator):
         ###%% clear the scene - Scorch the earth \o/
         import bpy
         try:
-            bpy.ops.object.mode_set(mode="OBJECT")
+            bpy.ops.object.mode_set(mode="OBJECT")  
         except:
             pass
 

@@ -48,17 +48,18 @@ class KeypointMapping(TypeSafeDataclass):
 
         return cls(tracked_points=tracked_points, weights=weights)
 
-    def calculate_trajectory(self, data: np.ndarray, names: List[TrackedPointName]) -> np.ndarray:
+    def calculate_trajectory(self, data_fr_name_xyz: np.ndarray, names: List[TrackedPointName]) -> np.ndarray:
         """
         Calculate a trajectory from a mapping of tracked points and their weights.
         """
-        if data.shape[1] != len(names):
+
+        if data_fr_name_xyz.shape[1] != len(names):
             raise ValueError("Data shape does not match trajectory names length")
         if not all(tracked_point_name in names for tracked_point_name in self.tracked_points):
             raise ValueError("Not all tracked points in mapping found in trajectory names")
 
-        number_of_frames = data.shape[0]
-        number_of_dimensions = data.shape[2]
+        number_of_frames = data_fr_name_xyz.shape[0]
+        number_of_dimensions = data_fr_name_xyz.shape[2]
         trajectories_frame_xyz = np.zeros((number_of_frames, number_of_dimensions), dtype=np.float32)
 
         for tracked_point_name, weight in zip(self.tracked_points, self.weights):
@@ -66,12 +67,10 @@ class KeypointMapping(TypeSafeDataclass):
                 raise ValueError(f"Key {tracked_point_name} not found in trajectory names")
 
             keypoint_index = names.index(tracked_point_name)
-            keypoint_xyz = data[:, keypoint_index, :]
-            trajectories_frame_xyz += keypoint_xyz * weight
+            keypoint_fr_xyz = data_fr_name_xyz[:, keypoint_index, :]  # slice out the relevant tracked point
+            trajectories_frame_xyz += keypoint_fr_xyz * weight  # scale the tracked point by the weight and add to the trajectory
 
         if np.sum(np.isnan(trajectories_frame_xyz)) == trajectories_frame_xyz.size:
-            raise ValueError("All trajectories are NaN")
+            raise ValueError(f"Trajectory calculation resulted in all NaNs")
 
         return trajectories_frame_xyz
-
-

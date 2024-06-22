@@ -4,7 +4,10 @@ from typing import Optional, Dict
 import numpy as np
 
 from skelly_blender.core.pure_python.custom_types.derived_types import RigidBodyDefinitions, Trajectories
+from skelly_blender.core.pure_python.custom_types.generic_types import TrackedPointName
 from skelly_blender.core.pure_python.freemocap_data.data_paths.freemocap_data_paths import FreemocapDataPaths
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
+from skelly_blender.core.pure_python.tracked_points.data_component_types import DataComponentTypes
 from skelly_blender.core.pure_python.tracked_points.tracked_points_classes import BodyTrackedPoints, FaceTrackedPoints, \
     HandsData
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
@@ -44,11 +47,19 @@ class FreemocapRecordingData(TypeSafeDataclass):
 
         return cls(body=body, hands=hands, face=face)
 
+    def get_trajectories(self, component_type:DataComponentTypes= DataComponentTypes.BODY) -> Dict[TrackedPointName, Trajectory]:
+        if component_type == DataComponentTypes.BODY:
+            return self.body.as_trajectories
+        elif component_type == DataComponentTypes.FACE:
+            return self.face.as_trajectories
+        elif component_type == DataComponentTypes.HANDS:
+            return self.hands.as_trajectories
+
     def __str__(self):
-        body_stats = DescriptiveStatistics.from_samples(samples=self.body.trajectory_data).__str__()
-        right_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.right.trajectory_data).__str__()
-        left_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.left.trajectory_data).__str__()
-        face_stats = DescriptiveStatistics.from_samples(samples=self.face.trajectory_data).__str__()
+        body_stats = DescriptiveStatistics.from_samples(samples=self.body.trajectory_fr_name_xyz).__str__()
+        right_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.right.trajectory_fr_name_xyz).__str__()
+        left_hand_stats = DescriptiveStatistics.from_samples(samples=self.hands.left.trajectory_fr_name_xyz).__str__()
+        face_stats = DescriptiveStatistics.from_samples(samples=self.face.trajectory_fr_name_xyz).__str__()
         return (f"SkeletonData:\n\t "
                 f"BODY:\n{body_stats}, \n"
                 f"RIGHT_HAND:\n{right_hand_stats}, \n"

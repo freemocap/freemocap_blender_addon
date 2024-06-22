@@ -7,6 +7,7 @@ from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.armature_bone_c
     ArmatureBoneConstraintsTypes
 from skelly_blender.core.needs_bpy.armature_rig.rest_pose_definitions.pose_types import RestPoseTypes
 from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedName, BlenderizedSegmentDefinitions
+from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import deparentify_name
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
 
 
@@ -23,10 +24,10 @@ class ArmatureDefinition(TypeSafeDataclass):
                bone_constraints: ArmatureBoneConstraintsTypes) -> 'ArmatureDefinition':
         bone_definitions = {}
         for segment_name, segment in segment_definitions.items():
-
-            bone_definitions[segment_name] = ArmatureBoneDefinition(
-                rest_pose=pose_definition.value[segment_name].value,
-                constraints=bone_constraints.value[segment_name].value,
+            deparentified_name = deparentify_name(segment_name)
+            bone_definitions[deparentified_name] = ArmatureBoneDefinition(
+                rest_pose=pose_definition.value[deparentified_name].value,
+                constraints=bone_constraints.value[deparentified_name].value,
                 length=segment.length,
             )
 

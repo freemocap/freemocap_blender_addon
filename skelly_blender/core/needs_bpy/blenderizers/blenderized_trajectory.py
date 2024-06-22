@@ -1,18 +1,18 @@
 from dataclasses import dataclass
 
 from skelly_blender.core.pure_python.custom_types.generic_types import BlenderizedName
-from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import TrajectoryABC
+from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
 
 
 @dataclass
-class BlenderizedTrajectory(TrajectoryABC):
+class BlenderizedTrajectory(Trajectory):
     name: BlenderizedName
 
     @classmethod
-    def from_trajectory(cls, trajectory: TrajectoryABC) -> 'BlenderizedTrajectory':
+    def from_trajectory(cls, trajectory: Trajectory) -> 'BlenderizedTrajectory':
         return cls(
             name=trajectory.name,
-            trajectory_data=trajectory.trajectory_data
+            trajectory_fr_xyz=trajectory.trajectory_fr_xyz
         )
 
     def __str__(self):

@@ -1,13 +1,14 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.apply_bone_constraints import apply_bone_constraints
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
 from skelly_blender.core.needs_bpy.armature_rig.armature.generate_armature import generate_armature
+from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.apply_bone_constraints import apply_bone_constraints
 from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import BlenderizedSkeletonData
 from skelly_blender.core.needs_bpy.keyframed_empties.create_keyframed_empties import create_keyframed_empties
 from skelly_blender.core.needs_bpy.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
+from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapDataStages
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
     TrackerSourceType
 from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass
@@ -31,8 +32,9 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
     def run(self, show_stages: bool = False, scale=FREEMOCAP_TO_METERS_SCALE_FACTOR):
         self._print_start_message()
 
-        freemocap_data_stages = PurePythonPipeline(recording_path_str=self.recording_path_str).run(scale=scale)
-        stages_to_show = {"only":freemocap_data_stages.most_processed_trajectories}
+        freemocap_data_stages: FreemocapDataStages = PurePythonPipeline(recording_path_str=self.recording_path_str).run(
+            scale=scale)
+        stages_to_show = {"only": freemocap_data_stages.most_processed_trajectories}
         if show_stages:
             stages_to_show = freemocap_data_stages.get_all_processing_stages()
 
@@ -44,19 +46,24 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             else:
                 stage_data_name = self.recording_name
 
-
+            if "og" in stage_name:
+                create_keyframed_empties(trajectories=trajectories,
+                                         empty_type="PLAIN_AXES",
+                                         parent_name=stage_data_name)
+                continue
             print("\n--------------------------------------------\n"
                   "Blenderizing data....\n")
             blenderized_data = BlenderizedSkeletonData.create(
                 trajectories=trajectories,
                 rigid_body_definitions=freemocap_data_stages.rigid_body_definitions,
+                parent_name=stage_data_name,
             )
 
             print("\n--------------------------------------------\n"
                   "Creating keyframed empties....\n")
 
             parented_empties = create_keyframed_empties(trajectories=blenderized_data.trajectories,
-                                                        parent_name=stage_data_name )
+                                                        parent_name=stage_data_name)
 
             print("\n--------------------------------------------\n"
                   "Creating rigid body meshes....\n")
@@ -89,6 +96,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             rig = apply_bone_constraints(
                 armature=armature,
                 config=self.pipeline_config.add_rig,
+                parent_name=stage_data_name,
             )
 
         print(f"Finished building blender skeleton for recording:\n\t {self.recording_name}")

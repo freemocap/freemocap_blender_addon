@@ -69,8 +69,8 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
         # TODO - support compound segments with multiple children
         segment_parent_kp_name = segment.value.parent.lower()
         segment_child_kp_name = segment.value.child.lower()
-        parent_trajectory = keypoint_trajectories[segment_parent_kp_name].trajectory_data
-        child_trajectory = keypoint_trajectories[segment_child_kp_name].trajectory_data
+        parent_trajectory = keypoint_trajectories[segment_parent_kp_name].trajectory_fr_xyz
+        child_trajectory = keypoint_trajectories[segment_child_kp_name].trajectory_fr_xyz
 
         # calculate the child trajectory relative to the parent trajectory
         # (i.e. set the parent trajectory as the origin and the child trajectory as the relative position)
@@ -81,17 +81,17 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
 
         # calculate necessary translations on each frame to make the child trajectory the same length as the target length
         translations = child_trajectory_zeroed * scaling_factors[:, np.newaxis]
-        keypoint_trajectories[segment_child_kp_name].trajectory_data += translations
+        keypoint_trajectories[segment_child_kp_name].trajectory_fr_xyz += translations
 
         # translate all child keypoints of the segment
         children = skeleton_definition.value.get_keypoint_children(keypoint_name=segment_child_kp_name)
         for child_keypoint in children:
             child_name = child_keypoint.lower()
             child_keypoint = keypoint_trajectories[child_name]
-            child_keypoint.trajectory_data += translations
+            child_keypoint.trajectory_fr_xyz += translations
 
         for name, trajectory in keypoint_trajectories.items():
-            if np.sum(np.isnan(trajectory.trajectory_data)) == trajectory.trajectory_data.size:
+            if np.sum(np.isnan(trajectory.trajectory_fr_xyz)) == trajectory.trajectory_fr_xyz.size:
                 raise ValueError(f"Trajectory {name} is all NaN")
 
     return keypoint_trajectories

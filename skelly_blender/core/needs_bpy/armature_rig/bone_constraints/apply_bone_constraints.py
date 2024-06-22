@@ -6,6 +6,7 @@ from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_cla
 from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.armature_bone_constraints_types import \
     ArmatureBoneConstraintsTypes
 from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.bone_constraint_types import ConstraintType
+from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import parentify_name
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
 from skelly_blender.pipelines.blender_pipeline_config import AddRigConfig
 
@@ -13,6 +14,7 @@ from skelly_blender.pipelines.blender_pipeline_config import AddRigConfig
 def apply_bone_constraints(
         armature: bpy.types.Object,
         config: AddRigConfig,
+        parent_name: str,
 ) -> Tuple[bpy.types.Object, ArmatureDefinition]:
     """
     Rig: An armature with constraints, drivers, IK, etc
@@ -22,7 +24,8 @@ def apply_bone_constraints(
     bpy.ops.object.select_all(action="DESELECT")
 
     root_constraint = armature.constraints.new(type=ConstraintType.COPY_LOCATION.value)
-    root_constraint.target = bpy.data.objects[BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()]
+    root_constraint.target = bpy.data.objects[parentify_name(name=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize(),
+                                                             parent_name=parent_name)]
 
     add_bone_constraints(
         armature=armature,

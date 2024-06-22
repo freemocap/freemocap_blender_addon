@@ -1,11 +1,14 @@
+from typing import Union
+
 import bpy
 import numpy as np
 
 from skelly_blender.core.needs_bpy.blender_type_hints import BlenderizedName, BlenderizedTrajectories
 from skelly_blender.core.needs_bpy.keyframed_empties.empties_dataclasses import ParentedEmpties
+from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories
 
 
-def create_keyframed_empties(trajectories: BlenderizedTrajectories,
+def create_keyframed_empties(trajectories: Union[BlenderizedTrajectories, Trajectories],
                              parent_name: str,
                              empty_scale: float = 0.025,
                              empty_type: str = "SPHERE") -> ParentedEmpties:
@@ -24,7 +27,7 @@ def create_keyframed_empties(trajectories: BlenderizedTrajectories,
     for trajectory_name, trajectory in trajectories.items():
 
         empties[trajectory_name] = create_keyframed_empty_from_3d_trajectory_data(
-            trajectory_fr_xyz=trajectory.trajectory_data,
+            trajectory_fr_xyz=trajectory.trajectory_fr_xyz,
             trajectory_name=trajectory_name,
             parent_object=parent_object,
             empty_scale=empty_scale,

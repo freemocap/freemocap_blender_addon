@@ -19,8 +19,8 @@ def calculate_segment_length_stats(keypoint_trajectories: Trajectories,
         parent_name = segment.value.parent.lower()
         child_name = segment.value.child.lower()
         length_stats = calculate_distance_between_trajectories(
-            trajectory_1=keypoint_trajectories[parent_name].trajectory_data,
-            trajectory_2=keypoint_trajectories[child_name].trajectory_data
+            trajectory_1=keypoint_trajectories[parent_name].trajectory_fr_xyz,
+            trajectory_2=keypoint_trajectories[child_name].trajectory_fr_xyz
         )
 
         segment_stats[segment.name.lower()] = DescriptiveStatistics.from_samples(length_stats)

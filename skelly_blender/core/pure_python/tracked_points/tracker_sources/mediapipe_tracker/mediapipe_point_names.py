@@ -35,8 +35,8 @@ class MediapipeBodyPoints(LowercaseableEnum):
     RIGHT_ANKLE = auto()
     LEFT_HEEL = auto()
     RIGHT_HEEL = auto()
-    RIGHT_FOOT_INDEX = auto()
     LEFT_FOOT_INDEX = auto()
+    RIGHT_FOOT_INDEX = auto()
 
 
 class MediapipeHandPoints(LowercaseableEnum):

@@ -23,7 +23,7 @@ def get_low_velocity_frame(trajectories: Trajectories, ignore_first_n_frames: in
     floating_point_error = np.finfo(float).eps * 10  # 10 times the floating point error
 
     for trajectory_name in list(trajectories.keys()):
-        trajectory_velocity_frame_xyz = np.diff(trajectories[trajectory_name].trajectory_data, axis=0)
+        trajectory_velocity_frame_xyz = np.diff(trajectories[trajectory_name].trajectory_fr_xyz, axis=0)
         trajectory_velocity_frame_xyz = np.insert(trajectory_velocity_frame_xyz, 0, np.nan, axis=0)
         trajectory_velocity_frame_magnitude = np.sqrt(np.sum(trajectory_velocity_frame_xyz ** 2, axis=1))
         trajectory_velocity_frame_magnitude[:ignore_first_n_frames] = np.nan
