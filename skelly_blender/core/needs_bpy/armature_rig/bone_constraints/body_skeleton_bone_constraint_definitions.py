@@ -77,49 +77,49 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
 
     # SKULL
     BodySegments.SKULL_NOSE.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SKULL_FORWARD_NOSE_TIP.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.NOSE_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT FACE
     BodySegments.SKULL_RIGHT_EYE_INNER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_INNER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_EYE_INNER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_RIGHT_EYE_CENTER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_CENTER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_EYE_CENTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_RIGHT_EYE_OUTER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_EYE_OUTER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_EYE_OUTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_RIGHT_EAR.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_ACOUSTIC_MEATUS.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_RIGHT_MOUTH.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.RIGHT_CANINE_TOOTH_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # LEFT FACE
     BodySegments.SKULL_LEFT_EYE_INNER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_INNER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_EYE_INNER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_LEFT_EYE_CENTER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_CENTER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_EYE_CENTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_LEFT_EYE_OUTER.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_EYE_OUTER.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_EYE_OUTER.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_LEFT_EAR.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_ACOUSTIC_MEATUS.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     BodySegments.SKULL_LEFT_MOUTH.blenderize():
-        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP.blenderize(),
+        [BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.LEFT_CANINE_TOOTH_TIP.blenderize(),
                                                 track_axis=TrackAxis.TRACK_Y.value)],
 
     # RIGHT BODY SEGMENTS

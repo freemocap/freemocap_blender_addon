@@ -7,19 +7,19 @@ class BodyKeypoints(KeypointEnum):
     SKULL_TOP_BREGMA = "tippy top of the head, intersection of coronal and sagittal sutures"
 
     ### face
-    SKULL_FORWARD_NOSE_TIP = "Tip of the nose"
+    NOSE_TIP = "Tip of the nose"
     #### right-face
-    RIGHT_SKULL_EYE_INNER = "Inner corner of the right eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
-    RIGHT_SKULL_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the right eye keypoints - NOTE - not the center of the orbit"
-    RIGHT_SKULL_EYE_OUTER = "Outer corner of the right eye, intersection of the frontal bone and the zygomatic bone"
-    RIGHT_SKULL_ACOUSTIC_MEATUS = "Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
-    RIGHT_SKULL_CANINE_TOOTH_TIP = "Tip of the right canine tooth, roughly behind the right corner of the mouth"
+    RIGHT_EYE_INNER = "Inner corner of the right eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
+    RIGHT_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the right eye keypoints - NOTE - not the center of the orbit"
+    RIGHT_EYE_OUTER = "Outer corner of the right eye, intersection of the frontal bone and the zygomatic bone"
+    RIGHT_ACOUSTIC_MEATUS = "Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    RIGHT_CANINE_TOOTH_TIP = "Tip of the right canine tooth, roughly behind the right corner of the mouth"
     #### left-face,
-    LEFT_SKULL_EYE_INNER = "Inner corner of the left eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
-    LEFT_SKULL_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the left eye keypoints - NOTE - not the center of the orbit"
-    LEFT_SKULL_EYE_OUTER = "Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone"
-    LEFT_SKULL_ACOUSTIC_MEATUS = "Entrance to the left ear canal, intersection of the temporal bone and the mandible (behind tragus)"
-    LEFT_SKULL_CANINE_TOOTH_TIP = "Tip of the left canine tooth, roughly behind the right corner of the mouth"
+    LEFT_EYE_INNER = "Inner corner of the left eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
+    LEFT_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the left eye keypoints - NOTE - not the center of the orbit"
+    LEFT_EYE_OUTER = "Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone"
+    LEFT_ACOUSTIC_MEATUS = "Entrance to the left ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    LEFT_CANINE_TOOTH_TIP = "Tip of the left canine tooth, roughly behind the right corner of the mouth"
 
     ## axial skeleton
     ## neck,

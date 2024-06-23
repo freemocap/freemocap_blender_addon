@@ -10,7 +10,7 @@ from skelly_blender.core.needs_bpy.empties.create_keyframed_empties import creat
 from skelly_blender.core.needs_bpy.empties.create_parent_empty import create_parent_empty
 from skelly_blender.core.needs_bpy.meshes.rigid_body_meshes.put_rigid_body_meshes_on_empties import \
     put_rigid_body_meshes_on_empties
-from skelly_blender.core.needs_bpy.meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_bone_meshes
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.attach_skelly_bone_meshes import attach_skelly_bone_meshes
 from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapDataStages
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.tracker_source_types import DEFAULT_TRACKER_TYPE, \
     TrackerSourceType
@@ -121,3 +121,5 @@ if __name__ == "__main__":
                                                   name=Path(recording_path_str_outer).stem))
     pipeline.run()
     print("All done!")
+
+

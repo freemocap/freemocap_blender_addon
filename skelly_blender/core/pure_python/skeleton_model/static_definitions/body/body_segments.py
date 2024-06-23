@@ -6,7 +6,7 @@ from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body
 
 class SkullNoseSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.SKULL_FORWARD_NOSE_TIP.name
+    z_axis_reference = BodyKeypoints.NOSE_TIP.name
 
 
 class SkullTopSegment(SimpleSegmentABC):
@@ -16,56 +16,56 @@ class SkullTopSegment(SimpleSegmentABC):
 
 class SkullRightEyeInnerSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.RIGHT_SKULL_EYE_INNER.name
+    z_axis_reference = BodyKeypoints.RIGHT_EYE_INNER.name
 
 
 class SkullRightEyeCenterSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.RIGHT_SKULL_EYE_CENTER.name
+    z_axis_reference = BodyKeypoints.RIGHT_EYE_CENTER.name
 
 
 class SkullRightEyeOuterSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.RIGHT_SKULL_EYE_OUTER.name
+    z_axis_reference = BodyKeypoints.RIGHT_EYE_OUTER.name
 
 
 class SkullRightEarTragusSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS.name
+    z_axis_reference = BodyKeypoints.RIGHT_ACOUSTIC_MEATUS.name
 
 
 class SkullRightMouthSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP.name
+    z_axis_reference = BodyKeypoints.RIGHT_CANINE_TOOTH_TIP.name
 
 
 class SkullLeftEyeInnerSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.LEFT_SKULL_EYE_INNER.name
+    z_axis_reference = BodyKeypoints.LEFT_EYE_INNER.name
 
 
 class SkullLeftEyeCenterSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.LEFT_SKULL_EYE_CENTER.name
+    z_axis_reference = BodyKeypoints.LEFT_EYE_CENTER.name
 
 
 class SkullLeftEyeOuterSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.LEFT_SKULL_EYE_OUTER.name
+    z_axis_reference = BodyKeypoints.LEFT_EYE_OUTER.name
 
 
 class SkullLeftEarTragusSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.name
+    z_axis_reference = BodyKeypoints.LEFT_ACOUSTIC_MEATUS.name
 
 
 class SkullLeftMouthSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    z_axis_reference = BodyKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP.name
+    z_axis_reference = BodyKeypoints.LEFT_CANINE_TOOTH_TIP.name
 
 
 class CervicalSpineSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.CERVICAL_SPINE_TOP_C1_AXIS.name
+    origin = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
     z_axis_reference = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
 
 
@@ -197,22 +197,22 @@ class LeftHeelSegment(SimpleSegmentABC):
 
 # Compound segments
 class SkullCompoundSegment(CompoundSegmentABC):
-    segments = [BodyKeypoints.SKULL_FORWARD_NOSE_TIP.name,
+    segments = [BodyKeypoints.NOSE_TIP.name,
                 BodyKeypoints.SKULL_TOP_BREGMA.name,
-                BodyKeypoints.RIGHT_SKULL_EYE_INNER.name,
-                BodyKeypoints.RIGHT_SKULL_EYE_CENTER.name,
-                BodyKeypoints.RIGHT_SKULL_EYE_OUTER.name,
-                BodyKeypoints.RIGHT_SKULL_ACOUSTIC_MEATUS.name,
-                BodyKeypoints.RIGHT_SKULL_CANINE_TOOTH_TIP.name,
-                BodyKeypoints.LEFT_SKULL_EYE_INNER.name,
-                BodyKeypoints.LEFT_SKULL_EYE_CENTER.name,
-                BodyKeypoints.LEFT_SKULL_EYE_OUTER.name,
-                BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.name,
-                BodyKeypoints.LEFT_SKULL_CANINE_TOOTH_TIP.name]
+                BodyKeypoints.RIGHT_EYE_INNER.name,
+                BodyKeypoints.RIGHT_EYE_CENTER.name,
+                BodyKeypoints.RIGHT_EYE_OUTER.name,
+                BodyKeypoints.RIGHT_ACOUSTIC_MEATUS.name,
+                BodyKeypoints.RIGHT_CANINE_TOOTH_TIP.name,
+                BodyKeypoints.LEFT_EYE_INNER.name,
+                BodyKeypoints.LEFT_EYE_CENTER.name,
+                BodyKeypoints.LEFT_EYE_OUTER.name,
+                BodyKeypoints.LEFT_ACOUSTIC_MEATUS.name,
+                BodyKeypoints.LEFT_CANINE_TOOTH_TIP.name]
 
     origin = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
-    x_axis_reference = BodyKeypoints.SKULL_FORWARD_NOSE_TIP.name
-    y_axis_reference = BodyKeypoints.LEFT_SKULL_ACOUSTIC_MEATUS.name
+    x_axis_reference = BodyKeypoints.NOSE_TIP.name
+    y_axis_reference = BodyKeypoints.LEFT_ACOUSTIC_MEATUS.name
 
 
 class PelvisLumbarCompoundSegment(CompoundSegmentABC):

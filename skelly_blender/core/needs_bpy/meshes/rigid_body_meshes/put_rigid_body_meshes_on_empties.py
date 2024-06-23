@@ -40,11 +40,11 @@ def put_rigid_body_meshes_on_empties(parented_empties: ParentedEmpties,
 
     for segment_name, segment in segment_definitions.items():
         color, squish = get_color_and_squish(segment_name)
-        parentified_segment_name = parentify_name(name=segment_name, parent_name=parented_empties.parent_name)
-        print(f"Creating rigid body mesh for segment: {parentified_segment_name}")
+
+        print(f"Creating rigid body mesh for segment: {segment_name}")
 
         bone_mesh = make_rigid_body_mesh(
-            name=f"{parentified_segment_name}_rigid_body_mesh",
+            name=f"{segment_name}_rigid_body_mesh",
             length=segment.length,
             squish_scale=squish,
             joint_color=color,
