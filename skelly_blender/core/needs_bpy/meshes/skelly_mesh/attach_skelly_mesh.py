@@ -1,4 +1,5 @@
 import bpy
+import numpy as np
 
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
 from skelly_blender.core.needs_bpy.armature_rig.skelly_bone_meshes.skelly_bones_mesh_info import load_skelly_fbx_meshes
@@ -21,11 +22,17 @@ def attach_skelly_bone_meshes(armature: bpy.types.Object,
     skelly_meshes = load_skelly_fbx_meshes()
 
     # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
-    for host_armature_bone, bone_mesh_object in armature.pose.bones:
+    for host_armature_bone, bone_mesh_object in skelly_meshes.items():
         print(f"Attaching mesh: `{bone_mesh_object.name}` to host armature bone: `{host_armature_bone}`")
 
-        armature_bone = armature.data.edit_bones[host_armature_bone]
+
+        # get mesh empty children
+        empties = {child.name: child for child in bone_mesh_object.children if child.type == "EMPTY"}
+        empty_locations = {key: np.array(empty.location) for key, empty in empties.items()}
+        mesh_points = np.array(empty_locations)
+        
         # Get the rotation matrix
+        armature_bone = armature.data.edit_bones[host_armature_bone]
         rotation_matrix = armature_bone.rotation_matrix.to_3x3()
 
         # Move the Skelly part to the equivalent bone's head location

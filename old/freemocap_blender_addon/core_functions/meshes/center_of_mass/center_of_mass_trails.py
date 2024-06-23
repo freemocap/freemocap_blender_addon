@@ -76,7 +76,7 @@ def create_center_of_mass_trails(center_of_mass_trajectory: np.ndarray,
                                                  )
             trail_point_mesh = bpy.context.active_object
             trail_point_mesh.name = f"{empty.name}_trail_sphere"
-            trail_point_mesh.parent = empty
+            trail_point_mesh.origin = empty
 
             if empty_number < len(empties) - 1:
                 damped_track_constraint = trail_point_mesh.constraints.new(type='DAMPED_TRACK')

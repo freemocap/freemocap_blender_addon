@@ -13,8 +13,7 @@ from skelly_blender.core.pure_python.skeleton_model.skeleton_types import Skelet
 
 def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
                                       skeleton_definition: SkeletonTypes,
-                                      scale: Optional[float]=None) -> Tuple[
-    Trajectories, RigidBodyDefinitions]:
+                                      scale: Optional[float] = None) -> Tuple[Trajectories, RigidBodyDefinitions]:
     if scale is None:
         scale = 1.0
     print(
@@ -26,7 +25,7 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
     print("Original body segment lengths 👇")
     print_length_stats_table(segment_lengths=og_segment_length_stats)
     print("Original body segment lengths 👆")
-
+    print("Rigidifying body segment lengths...\n")
     rigidified_keypoints = rigidify_keypoint_trajectories(keypoint_trajectories=deepcopy(keypoint_trajectories),
                                                           segment_length_stats=og_segment_length_stats,
                                                           skeleton_definition=skeleton_definition)
@@ -37,8 +36,8 @@ def calculate_rigid_body_trajectories(keypoint_trajectories: Trajectories,
                                                                                      length=
                                                                                      rigidified_body_length_stats[
                                                                                          segment.name.lower()].median * scale,
-                                                                                     parent=segment.value.parent.lower(),
-                                                                                     child=segment.value.child.lower()
+                                                                                     parent=segment.value.origin.lower(),
+                                                                                     child=segment.value.z_axis_reference.lower()
                                                                                      )
                                            for segment in skeleton_definition.value.get_segments()}
 
@@ -59,7 +58,6 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
     for segment in skeleton_segments:
         segment_name = segment.name.lower()
 
-        print(f"Enforcing rigid length for segment: {segment_name}...")
         if segment_name not in segment_length_stats:
             raise ValueError(f"Segment {segment_name} not found in segment lengths")
 
@@ -67,8 +65,8 @@ def rigidify_keypoint_trajectories(keypoint_trajectories: Trajectories,
         raw_lengths = segment_length_stats[segment_name].samples
 
         # TODO - support compound segments with multiple children
-        segment_parent_kp_name = segment.value.parent.lower()
-        segment_child_kp_name = segment.value.child.lower()
+        segment_parent_kp_name = segment.value.origin.lower()
+        segment_child_kp_name = segment.value.z_axis_reference.lower()
         parent_trajectory = keypoint_trajectories[segment_parent_kp_name].trajectory_fr_xyz
         child_trajectory = keypoint_trajectories[segment_child_kp_name].trajectory_fr_xyz
 
@@ -102,6 +100,6 @@ if __name__ == "__main__":
 
     recording_data = load_freemocap_test_recording()
     keypoint_trajectories_outer = recording_data.body.map_to_keypoints()
-    keypoint_trajectories, og_segment_lengths = calculate_rigid_body_trajectories(
+    keypoint_trajectories_outer, og_segment_lengths_outer = calculate_rigid_body_trajectories(
         keypoint_trajectories=keypoint_trajectories_outer,
         skeleton_definition=SkeletonTypes.BODY_ONLY)

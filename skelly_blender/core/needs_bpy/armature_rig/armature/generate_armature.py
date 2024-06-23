@@ -1,5 +1,6 @@
 import bpy
 import mathutils
+import numpy as np
 
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_bone_classes import ROOT_BONE_NAME
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
@@ -19,7 +20,8 @@ def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject
     any_changed = True
     while len(bones_to_make) > 0:
         if not any_changed:
-            raise ValueError(f"Infinite loop detected while armature with remaining bones to make: {[f'{bone[0]} (parent: {bone[1].parent})' for bone in bones_to_make]}")
+            raise ValueError(
+                f"Infinite loop detected while armature with remaining bones to make: {[f'{bone[0]} (parent: {bone[1].parent})' for bone in bones_to_make]}")
         any_changed = False
         for bone_info in bones_to_make:
             bone_name, bone_definition = bone_info
@@ -39,7 +41,8 @@ def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject
             parent_bone = armature.data.edit_bones[bone_definition.parent]
 
             armature_bone.head = parent_bone.tail
-            armature_bone.tail = armature_bone.head + bone_definition.rest_pose.rotation_matrix @ bone_vector
+            armature_bone.tail = armature_bone.head + mathutils.Vector(
+                        np.array(bone_definition.rest_pose.rotation_matrix) @ np.array(bone_vector))
             armature_bone.roll = bone_definition.rest_pose.roll
             armature_bone.parent = parent_bone
             armature_bone.use_connect = bone_definition.rest_pose.is_connected
@@ -79,5 +82,3 @@ def create_new_armature_and_enter_edit_mode(name: str) -> ArmatureObject:
     default_bone.tail = (0, 0, 0)
     default_bone.head = (0, -.1, 0)
     return armature
-
-

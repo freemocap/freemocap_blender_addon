@@ -10,8 +10,8 @@ def create_center_of_mass_mesh(parent_object: bpy.types.Object,
                                          align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
     mesh = bpy.context.active_object
     mesh.name = "center_of_mass_mesh"
-    mesh.parent = parent_object
-    mesh.parent = center_of_mass_empty
+    mesh.origin = parent_object
+    mesh.origin = center_of_mass_empty
     location_constraint = mesh.constraints.new(type="COPY_LOCATION")
     location_constraint.target = center_of_mass_empty
 

@@ -1,22 +1,22 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Tuple, Union, Dict
+from typing import Dict, List
 
 import bpy
-from mathutils import Vector
 
 from skelly_blender import PACKAGE_ROOT_PATH
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
 
-# @dataclass
-# class SkellyBoneMeshInfo:
-#     bones: List[str]  # Bones of the mesh
-#     bones_origin: Union[Tuple[float, float, float], Vector]  # Origin of the bones
-#     bones_end: Union[Tuple[float, float, float], Vector]  # End of the bones
-#     bones_length: float  # Total length of the bones
-#     mesh_length: float  # Length of the mesh
-#     position_offset: Tuple[float, float, float]  # Position offset of the mesh
-#     adjust_rotation: bool  # Adjust rotation of mesh after offset
+@dataclass
+class SkellyBoneMeshInfo:
+    mesh_path: str  # Path to the mesh
+    host_bones: List[str]  # Bones of the mesh
+    # bones_origin: Union[Tuple[float, float, float], Vector]  # Origin of the bones
+    # bones_end: Union[Tuple[float, float, float], Vector]  # End of the bones
+    # bones_length: float  # Total length of the bones
+    # mesh_length: float  # Length of the mesh
+    # position_offset: Tuple[float, float, float]  # Position offset of the mesh
+    # adjust_rotation: bool  # Adjust rotation of mesh after offset
 SKELLY_BONE_MESHES_PATH = Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones"
 
 
@@ -32,11 +32,13 @@ def load_skelly_fbx_meshes() -> Dict[str, bpy.types.Object]:
         meshes[bone_mesh_segment_host] = bpy.data.objects[mesh_name]
     return meshes
 
+
 SKELLY_BONE_MESHES = {
-    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): "body/axial/skelly_pelvis_lumbar.fbx",
-    BodySegments.SPINE_THORACIC.blenderize(): "body/axial/skelly_thoracic_spine.fbx",
-    BodySegments.SPINE_CERVICAL.blenderize(): "body/axial/skelly_cervical_spine.fbx",
-    BodySegments.SKULL_NOSE.blenderize(): "body/skelly_skull.fbx",
+    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): "",  # body/axial/skelly_pelvis_lumbar.fbx",
+    BodySegments.SPINE_THORACIC.blenderize(): "",  # body/axial/skelly_thoracic_spine.fbx",
+    BodySegments.SPINE_CERVICAL.blenderize(): "",  # body/axial/skelly_cervical_spine.fbx",
+    BodySegments.SKULL_NOSE.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_skull.fbx",
+                                                             host_bones=[BodySegments.SKULL_NOSE.blenderize()]),
     BodySegments.SKULL_RIGHT_EYE_INNER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_CENTER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_OUTER.blenderize(): "",

@@ -13,6 +13,6 @@ def create_parent_empty(name: str,
 
     if parent_object is not None:
         print(f"Setting parent of {parent_empty.name} to {parent_object.name}")
-        parent_empty.parent = parent_object
+        parent_empty.origin = parent_object
 
     return parent_empty

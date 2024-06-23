@@ -24,7 +24,7 @@ class ChainABC(ABC):
 
     def __post_init__(self):
         for body in self.shared_segments:
-            if not any(body == linkage.value.parent for linkage in self.children):
+            if not any(body == linkage.value.origin for linkage in self.children):
                 raise ValueError(f"Shared segment {body.name} not found in children {self.children}")
         print(
             f"Chain: {self.get_name()} instantiated with parent {self.parent} and children {[child.name for child in self.children]}")

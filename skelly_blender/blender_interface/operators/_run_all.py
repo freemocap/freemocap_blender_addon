@@ -3,6 +3,7 @@ from pathlib import Path
 
 import bpy
 
+from skelly_blender.core.needs_bpy.empties.create_parent_empty import create_parent_empty
 from skelly_blender.pipelines.blender_skeleton_pipeline import BlenderSkeletonBuilderPipeline
 
 
@@ -18,11 +19,10 @@ class FMC_ADAPTER_run_all(bpy.types.Operator):
             print("No recording path specified")
             return {'CANCELLED'}
         try:
-            bpy.ops.object.empty_add(type="ARROWS")
-            empty_object = bpy.context.editable_objects[-1]
-            empty_object.name = Path(recording_path).stem
-            fmc_adapter_tool.data_parent_empty = empty_object
-            pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path)
+            recording_name = Path(recording_path).name
+            parent_emtpy = create_parent_empty(name=recording_name)
+            pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path,
+                                                      parent_empty=parent_emtpy)
             pipeline.run(show_stages=fmc_adapter_tool.show_stages)
 
         except Exception as e:

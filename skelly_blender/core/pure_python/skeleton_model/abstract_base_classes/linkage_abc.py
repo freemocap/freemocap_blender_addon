@@ -33,7 +33,7 @@ class LinkageABC(ABC):
     def __post_init__(self):
         for body in [self.parent] + self.children:
             if isinstance(body.value, SimpleSegmentABC):
-                if self.linked_keypoint.name not in [body.value.parent.name, body.value.child.name]:
+                if self.linked_keypoint.name not in [body.value.origin.name, body.value.z_axis_reference.name]:
                     raise ValueError(
                         f"Error instantiation Linkage: {self.get_name()} - Common keypoint {self.linked_keypoint.name} not found in body {body}")
             elif isinstance(body.value, CompoundSegmentABC):

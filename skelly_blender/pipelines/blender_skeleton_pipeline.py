@@ -4,6 +4,7 @@ from pathlib import Path
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
 from skelly_blender.core.needs_bpy.armature_rig.armature.generate_armature import generate_armature
 from skelly_blender.core.needs_bpy.armature_rig.bone_constraints.apply_bone_constraints import apply_bone_constraints
+from skelly_blender.core.needs_bpy.blender_type_hints import ParentEmpty
 from skelly_blender.core.needs_bpy.blenderizers.blenderized_skeleton_data import BlenderizedSkeletonData
 from skelly_blender.core.needs_bpy.empties.create_keyframed_empties import create_keyframed_empties
 from skelly_blender.core.needs_bpy.empties.create_parent_empty import create_parent_empty
@@ -24,6 +25,7 @@ FREEMOCAP_TO_METERS_SCALE_FACTOR = .001
 @dataclass
 class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
     recording_path_str: str
+    parent_empty: ParentEmpty
     tracker_type: TrackerSourceType = DEFAULT_TRACKER_TYPE
     pipeline_config: PipelineConfig = field(default_factory=PipelineConfig)
 
@@ -48,28 +50,25 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             else:
                 stage_data_name = self.recording_name
 
-            parent_empty = create_parent_empty(name=stage_data_name)
-
             if "og" in stage_name:
                 create_keyframed_empties(trajectories=trajectories,
                                          empty_type="PLAIN_AXES",
-                                         parent_empty=parent_empty)
+                                         parent_empty=self.parent_empty)
                 continue
-
 
             print("\n--------------------------------------------\n"
                   "Blenderizing data....\n")
             blenderized_data = BlenderizedSkeletonData.create(
                 trajectories=trajectories,
                 rigid_body_definitions=freemocap_data_stages.rigid_body_definitions,
-                parent_name=parent_empty.name,
+                parent_name=self.parent_empty.name,
             )
 
             print("\n--------------------------------------------\n"
                   "Creating keyframed empties....\n")
 
             parented_empties = create_keyframed_empties(trajectories=blenderized_data.trajectories,
-                                                        parent_empty=parent_empty)
+                                                        parent_empty=self.parent_empty)
 
             print("\n--------------------------------------------\n"
                   "Creating rigid body meshes....\n")
@@ -80,7 +79,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             print("Generating armature from segment lengths and rest pose definitions...")
 
             armature_definition = ArmatureDefinition.create(
-                armature_name=f"{parent_empty.name}_armature",
+                armature_name=f"{self.parent_empty.name}_armature",
                 segment_definitions=blenderized_data.segment_definitions,
                 pose_definition=self.pipeline_config.add_rig.rest_pose_definition,
                 bone_constraints=self.pipeline_config.add_rig.bone_constraints,
@@ -91,7 +90,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             armature = generate_armature(armature_definition=armature_definition)
 
             print("\n--------------------------------------------\n"
-               f"Attaching skelly bone meshes to armature...\n")
+                  f"Attaching skelly bone meshes to armature...\n")
             attach_skelly_bone_meshes(
                 armature=armature,
                 armature_definition=armature_definition,
@@ -102,7 +101,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
             rig = apply_bone_constraints(
                 armature=armature,
                 config=self.pipeline_config.add_rig,
-                parent_name=parent_empty.name,
+                parent_name=self.parent_empty.name,
             )
 
         print(f"Finished building blender skeleton for recording:\n\t {self.recording_name}")
@@ -116,6 +115,9 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
 
 if __name__ == "__main__":
     recording_path_str_outer = get_test_data_path()
-    pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path_str_outer)
+
+    pipeline = BlenderSkeletonBuilderPipeline(recording_path_str=recording_path_str_outer,
+                                              parent_empty=create_parent_empty(
+                                                  name=Path(recording_path_str_outer).stem))
     pipeline.run()
     print("All done!")

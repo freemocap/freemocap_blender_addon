@@ -31,7 +31,7 @@ def reorient_empties(empties: Dict[str, bpy.types.Object],
     empties_list = []
     for child in parent_object.children:
         empties_list.append(child)
-        child.parent = None
+        child.origin = None
 
     ### Move freemocap_origin_axes to the hips_center empty and rotate it so the ###
     ### z axis intersects the trunk_center empty and the x axis intersects the left_hip empty ###
@@ -185,4 +185,4 @@ def clean_existing_freemocap_stuff():
     ### Unparent empties from freemocap_origin_axes ###
     for object in bpy.data.objects:
         if object.type == "EMPTY" and object.name != "freemocap_origin_axes" and object.name != "world_origin":
-            object.parent = None
+            object.origin = None

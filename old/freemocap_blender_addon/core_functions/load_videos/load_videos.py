@@ -34,7 +34,7 @@ def add_videos_to_scene(videos_path: Union[Path, str],
 
         bpy.ops.import_image.to_plane(
             files=[{"name": video_path.name}],
-            directory=str(video_path.parent),
+            directory=str(video_path.origin),
             shader="EMISSION",
         )
         print(f"Added video: {video_path.name} to scene")
@@ -52,7 +52,7 @@ def add_videos_to_scene(videos_path: Union[Path, str],
         ]
         video_as_plane.rotation_euler = [np.pi / 2, 0, 0]
         video_as_plane.scale = [video_size_scale] * 3
-        video_as_plane.parent = parent_object
+        video_as_plane.origin = parent_object
 
 
 def load_videos(recording_path: str,

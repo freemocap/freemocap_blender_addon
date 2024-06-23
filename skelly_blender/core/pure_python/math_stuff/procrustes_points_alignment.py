@@ -130,10 +130,10 @@ def procrustes_points_alignment(source_points: np.ndarray,
 if __name__ == "__main__":
     source_points = np.array([[1, 2, 1], [3, 4, 1], [5, 6, 1]])
     target_points = np.array([[2, 4, 2], [6, 8, 2], [10, 12.01, 2]])
-    rotation_matrix, translation_vector, scaling_factor, aligned_points, alignment_error = procrustes_points_alignment(
+    result= procrustes_points_alignment(
         source_points, target_points)
-    print("Rotation Matrix:\n", rotation_matrix)
-    print("Translation Vector:\n", translation_vector)
-    print("Scaling Factor:\n", scaling_factor)
-    print("Aligned Points:\n", aligned_points)
-    print("Alignment Error:\n", alignment_error)
+    print("Rotation Matrix:\n", result.rotation_matrix)
+    print("Translation Vector:\n", result.translation_vector)
+    print("Scaling Factor:\n", result.scaling_factor)
+    print("Aligned Points:\n", result.aligned_points)
+    print("Alignment Error:\n", result.alignment_error)

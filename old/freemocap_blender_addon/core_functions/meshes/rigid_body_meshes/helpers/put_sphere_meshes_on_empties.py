@@ -25,6 +25,6 @@ def put_spheres_on_parented_empties(parented_empties: ParentedEmpties,
         sphere_mesh = bpy.context.active_object
         constraint = sphere_mesh.constraints.new(type="COPY_LOCATION")
         constraint.target = empty
-        sphere_mesh.parent = parented_empties.parent_object
+        sphere_mesh.origin = parented_empties.parent_object
 
     return meshes

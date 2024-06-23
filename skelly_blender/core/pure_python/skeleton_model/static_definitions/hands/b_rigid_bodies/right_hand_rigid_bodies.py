@@ -9,124 +9,124 @@ from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.segmen
 
 # Thumb
 class RightThumbRadioCarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
-    child = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
 
 
 class RightThumbMetacarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
-    child = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_THUMB_BASAL_CARPO_METACARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
 
 
 class RightThumbProximalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_THUMB_META_CARPO_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
 
 
 class RightThumbDistalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_THUMB_TIP.value
+    origin = RightHandKeypoints.RIGHT_THUMB_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_THUMB_TIP.value
 
 
 # Index
 class RightIndexFingerRadioCarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
-    child = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
 
 
 class RightIndexFingerMetacarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
-    child = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_INDEX_FINGER_CARPO_META_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
 
 
 class RightIndexFingerProximalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_INDEX_FINGER_META_CARPO_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
 class RightIndexFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_INDEX_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
 class RightIndexFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_INDEX_FINGER_TIP.value
+    origin = RightHandKeypoints.RIGHT_INDEX_FINGER_DISTAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_INDEX_FINGER_TIP.value
 
 
 # Middle
 class RightMiddleFingerRadioCarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
-    child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
 
 
 class RightMiddleFingerMetacarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
-    child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_MIDDLE_FINGER_CARPO_META_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
 
 
 class RightMiddleFingerProximalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_MIDDLE_FINGER_META_CARPO_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
 class RightMiddleFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_MIDDLE_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
 class RightMiddleFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_MIDDLE_FINGER_TIP.value
+    origin = RightHandKeypoints.RIGHT_MIDDLE_FINGER_DISTAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_MIDDLE_FINGER_TIP.value
 
 
 # Ring
 class RightRingFingerRadioCarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
-    child = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
 
 
 class RightRingFingerMetacarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
-    child = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_RING_FINGER_CARPO_META_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
 
 
 class RightRingFingerProximalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_RING_FINGER_META_CARPO_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
 class RightRingFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_RING_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
 class RightRingFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_RING_FINGER_TIP.value
+    origin = RightHandKeypoints.RIGHT_RING_FINGER_DISTAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_RING_FINGER_TIP.value
 
 
 # Pinky
 class RightPinkyFingerRadioCarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
-    child = RightHandKeypoints.RIGHT_PINKY_FINGER_CARPO_META_CARPAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_PINKY_FINGER_CARPO_META_CARPAL.value
 
 
 class RightPinkyFingerMetacarpalSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_RADIO_CARPAL
-    child = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_RADIO_CARPAL
+    z_axis_reference = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
 
 
 class RightPinkyFingerProximalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_PINKY_FINGER_META_CARPO_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
 
 
 class RightPinkyFingerMiddlePhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
+    origin = RightHandKeypoints.RIGHT_PINKY_FINGER_PROXIMAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
 
 
 class RightPinkyFingerDistalPhalanxSegmentABC(SimpleSegmentABC):
-    parent = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
-    child = RightHandKeypoints.RIGHT_PINKY_FINGER_TIP.value
+    origin = RightHandKeypoints.RIGHT_PINKY_FINGER_DISTAL_INTER_PHALANGEAL.value
+    z_axis_reference = RightHandKeypoints.RIGHT_PINKY_FINGER_TIP.value

@@ -18,7 +18,7 @@ class BodyKeypoints(KeypointEnum):
     LEFT_SKULL_EYE_INNER = "Inner corner of the left eye socket, in the Lacrimal fossa (aka tear duct), intersection of the frontal bone and the maxilla"
     LEFT_SKULL_EYE_CENTER = "Geometric center of the `inner` and `outer` keypoints of the left eye keypoints - NOTE - not the center of the orbit"
     LEFT_SKULL_EYE_OUTER = "Outer corner of the left eye, intersection of the frontal bone and the zygomatic bone"
-    LEFT_SKULL_ACOUSTIC_MEATUS = "Entrance to the Right ear canal, intersection of the temporal bone and the mandible (behind tragus)"
+    LEFT_SKULL_ACOUSTIC_MEATUS = "Entrance to the left ear canal, intersection of the temporal bone and the mandible (behind tragus)"
     LEFT_SKULL_CANINE_TOOTH_TIP = "Tip of the left canine tooth, roughly behind the right corner of the mouth"
 
     ## axial skeleton

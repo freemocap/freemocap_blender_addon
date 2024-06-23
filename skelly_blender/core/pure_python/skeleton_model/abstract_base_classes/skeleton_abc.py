@@ -67,7 +67,7 @@ class SkeletonABC(ABC):
                                     segments: List[SegmentEnum],
                                     found_keypoint_children: Set[KeypointDefinition]) -> None:
             for segment in segments:
-                if segment.value.parent.lower() == name:
+                if segment.value.origin.lower() == name:
                     children = segment.value.get_children()
                     for child in children:
                         if child not in found_keypoint_children:  # Avoid infinite recursion

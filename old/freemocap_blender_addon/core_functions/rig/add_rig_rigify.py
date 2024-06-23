@@ -27,7 +27,7 @@ def add_rig_rigify(
     rig.data.display_type = "STICK"
     # Get reference to the renamed armature
     rig = bpy.data.objects[rig_name]
-    rig.parent = parent_object
+    rig.origin = parent_object
 
     # Deselect all objects
     bpy.ops.object.select_all(action="DESELECT")
@@ -200,9 +200,9 @@ def add_rig_rigify(
     heel_02_L.length = heel_02_L_length
 
     # Make the heel bones be connected with the shin bones
-    heel_02_R.parent = shin_R
+    heel_02_R.origin = shin_R
     heel_02_R.use_connect = True
-    heel_02_L.parent = shin_L
+    heel_02_L.origin = shin_L
     heel_02_L.use_connect = True
 
     # Add a pelvis bone to the root and then make it the parent of spine, pelvis.R and pelvis.L bones
@@ -211,19 +211,19 @@ def add_rig_rigify(
     pelvis.tail = spine.head + mathutils.Vector([0, 0.1, 0])
 
     # Change the pelvis.R, pelvis.L, thigh.R, thigh.L and spine parent to the new pelvis bone
-    pelvis_R.parent = pelvis
+    pelvis_R.origin = pelvis
     pelvis_R.use_connect = False
-    pelvis_L.parent = pelvis
+    pelvis_L.origin = pelvis
     pelvis_L.use_connect = False
-    thigh_R.parent = pelvis
+    thigh_R.origin = pelvis
     thigh_R.use_connect = False
-    thigh_L.parent = pelvis
+    thigh_L.origin = pelvis
     thigh_L.use_connect = False
-    spine.parent = pelvis
+    spine.origin = pelvis
     spine.use_connect = False
 
     # Change parent of spine.003 bone to spine to erase bones spine.001 and spine.002
-    spine_003.parent = spine
+    spine_003.origin = spine
     spine_003.use_connect = True
     # Remove spine.001 and spine.002 bones
     rig.data.edit_bones.remove(rig.data.edit_bones["spine.001"])
@@ -488,7 +488,7 @@ def add_rig_rigify(
             upper_arm_R_Rot.head[1],
             upper_arm_R_Rot.head[2] + 0.1,
         )
-        upper_arm_R_Rot.parent = upper_arm_R
+        upper_arm_R_Rot.origin = upper_arm_R
         upper_arm_R_Rot.use_connect = False
         upper_arm_L_Rot = rig.data.edit_bones.new("uppe_rarm.L.Rot")
         upper_arm_L_Rot.head = (
@@ -501,7 +501,7 @@ def add_rig_rigify(
             upper_arm_L_Rot.head[1],
             upper_arm_L_Rot.head[2] + 0.1,
         )
-        upper_arm_L_Rot.parent = upper_arm_L
+        upper_arm_L_Rot.origin = upper_arm_L
         upper_arm_L_Rot.use_connect = False
         forearm_R_Rot = rig.data.edit_bones.new("uppe_rarm.R.Rot")
         forearm_R_Rot.head = (
@@ -514,7 +514,7 @@ def add_rig_rigify(
             forearm_R_Rot.head[1],
             forearm_R_Rot.head[2] + 0.1,
         )
-        forearm_R_Rot.parent = forearm_R
+        forearm_R_Rot.origin = forearm_R
         forearm_R_Rot.use_connect = False
         forearm_L_Rot = rig.data.edit_bones.new("uppe_rarm.L.Rot")
         forearm_L_Rot.head = (
@@ -527,7 +527,7 @@ def add_rig_rigify(
             forearm_L_Rot.head[1],
             forearm_L_Rot.head[2] + 0.1,
         )
-        forearm_L_Rot.parent = forearm_L
+        forearm_L_Rot.origin = forearm_L
         forearm_L_Rot.use_connect = False
     #############################################################
 
@@ -562,7 +562,7 @@ def add_rig_rigify(
 
     # Change the parent of the face bone for the spine.004 bone
     face = rig.data.edit_bones["face"]
-    face.parent = spine_004
+    face.origin = spine_004
     face.use_connect = False
 
     # Remove spine.005 and spine.006 bones
@@ -682,14 +682,14 @@ def add_rig_rigify(
     )
 
     # Asign the parent to thumb carpals
-    thumb_carpal_R.parent = hand_R
+    thumb_carpal_R.origin = hand_R
     thumb_carpal_R.use_connect = False
-    thumb_carpal_L.parent = hand_L
+    thumb_carpal_L.origin = hand_L
     thumb_carpal_L.use_connect = False
 
     # Change the parent of thumb.01 to thumb.carpal
-    thumb_01_R.parent = thumb_carpal_R
-    thumb_01_L.parent = thumb_carpal_L
+    thumb_01_R.origin = thumb_carpal_R
+    thumb_01_L.origin = thumb_carpal_L
 
     # Create a palm bones list and phalanges dictionary to continue the finger adjustment
     palm_bones = [
@@ -722,7 +722,7 @@ def add_rig_rigify(
         # Change the first phalange connect setting to True
         phalanges[palm_bone.name][0].use_connect = True
         # Move the head of the metacarpal bones to match the hand bone head
-        palm_bone.head = palm_bone.parent.head
+        palm_bone.head = palm_bone.origin.head
         # Move the tail of the metacarpal bones so they are aligned horizontally
         palm_bone.tail[2] = palm_bone.head[2]
         # Change metacarpal bones lengths
@@ -731,7 +731,7 @@ def add_rig_rigify(
     # Align the phalanges to the x axis (set bones head and tail y position equal to yz position of metacarpals bone tail)
     for palm_bone in palm_bones:
         for phalange in phalanges[palm_bone.name]:
-            phalange.head = phalange.parent.tail
+            phalange.head = phalange.origin.tail
             # Calculate the sign to multiply the length of the phalange
             length_sign = -1 if ".R" in phalange.name else 1
             # Set the length by moving the bone tail along the x axis. Using this instead of just setting bone.length because that causes some bone inversions
