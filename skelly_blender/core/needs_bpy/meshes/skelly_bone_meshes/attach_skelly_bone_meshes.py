@@ -1,88 +1,117 @@
+from typing import Dict
+
 import bpy
-import numpy as np
 
-from skelly_blender.core.needs_bpy.armature_rig.armature.armature_bone_classes import ROOT_BONE_NAME
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
-from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bones_mesh_info import load_skelly_fbx_meshes
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bones_mesh_info import SKELLY_BONE_MESHES, \
+    SkellyBoneMesh
 
-SKELLY_MESH_PREFIX = 'skelly_'
 
+class SkellyMeshProcessor:
+    def __init__(self, armature: bpy.types.Object, armature_definition: ArmatureDefinition):
+        self.armature = armature
+        self.armature_definition = armature_definition
+        self.skelly_meshes = {}
 
-def attach_skelly_bone_meshes(armature: bpy.types.Object,
-                              armature_definition: ArmatureDefinition) -> None:
-    bpy.ops.object.mode_set(mode='OBJECT')
-    for thing in bpy.data.objects:
-        thing.select_set(False)
+    def attach_skelly_bone_meshes(self) -> None:
+        self._deselect_all_objects()
 
-    #  Set the rig as active object
-    armature.select_set(True)
-    bpy.context.view_layer.objects.active = armature
+        self.skelly_meshes = self._load_skelly_fbx_meshes()
 
-    # Change to object mode
-    skelly_meshes = load_skelly_fbx_meshes()
+        for host_armature_bone, skelly_bone_mesh in self.skelly_meshes.items():
+            self._transform_mesh(host_armature_bone, skelly_bone_mesh)
 
-    # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
-    for host_armature_bone, skelly_bone_mesh in skelly_meshes.items():
-        print(f"Attaching mesh: `{skelly_bone_mesh.name}` to host armature bone: `{host_armature_bone}`")
-        # Get the bone transform matrix in EDIT space
+        self._join_meshes()
+
+        # self._connect_mesh_to_armature_by_vertex_group()
+
+    def _deselect_all_objects(self):
+        bpy.ops.object.mode_set(mode='OBJECT')
+        for obj in bpy.data.objects:
+            obj.select_set(False)
+    
+
+    def _set_active_object(self, obj: bpy.types.Object):
+        obj.select_set(True) 
+        bpy.context.view_layer.objects.active = obj
+
+    def _load_skelly_fbx_meshes(self) -> Dict[str, bpy.types.Object]:
+        meshes = {}
+        for bone_mesh_segment_host, bone_mesh_info in SKELLY_BONE_MESHES.items():
+            if not bone_mesh_info:
+                continue
+
+            bpy.ops.import_scene.fbx(filepath=str(bone_mesh_info.mesh_path))
+            mesh = bpy.data.objects[bone_mesh_info.mesh_name]
+            mesh_scale_reference = bpy.data.objects[bone_mesh_info.scale_reference_keypoint.blenderize().upper()]
+            mesh_scale = mesh_scale_reference.location.length
+
+            meshes[bone_mesh_segment_host] = SkellyBoneMesh(name=bone_mesh_info.mesh_name,
+                                                            mesh=mesh,
+                                                            mesh_length=mesh_scale)
+
+            self._create_vertex_group(mesh, bone_mesh_info.mesh_name)
+
+            print(
+                f"Loaded Mesh: '{bone_mesh_info.mesh_name}'\n"
+                f"  Bone: '{bone_mesh_segment_host}'\n"
+                f"  Path: '{bone_mesh_info.mesh_path}'\n"
+                f"  Scale: {mesh_scale:.3f}\n"
+                f"  Scale Reference: '{bone_mesh_info.scale_reference_keypoint}'\n"
+                f"  Mesh Length: {mesh_scale:.3f}\n"
+                f"  Vertex Group: '{bone_mesh_info.mesh_name}'\n"
+            )
+
+        return meshes
+
+    def _create_vertex_group(self, mesh: bpy.types.Object, group_name: str):
+        bpy.context.view_layer.objects.active = mesh
         bpy.ops.object.mode_set(mode='EDIT')
-        host_bone =armature.data.edit_bones[host_armature_bone]
+        bpy.ops.mesh.select_all(action='SELECT')
+
+        vertex_group = mesh.vertex_groups.new(name=group_name)
+        bpy.ops.object.vertex_group_assign()
+
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+    def _transform_mesh(self, host_armature_bone: str, skelly_bone_mesh: SkellyBoneMesh):
+        self._set_active_object(self.armature)
+        bpy.ops.object.mode_set(mode='EDIT')
+        host_bone = self.armature.data.edit_bones[host_armature_bone]
         host_bone_length = host_bone.length
         mesh_scale_ratio = skelly_bone_mesh.mesh_length / host_bone_length
         host_bone_matrix = host_bone.matrix
 
-        # Copy armature bone matrix to the mesh object in OBJECT space
         bpy.ops.object.mode_set(mode='OBJECT')
         skelly_bone_mesh.scale = (mesh_scale_ratio, mesh_scale_ratio, mesh_scale_ratio)
         skelly_bone_mesh.mesh.matrix_world = host_bone_matrix
 
-
-        # Move the Skelly part to the equivalent bone's head location
-        # skelly_mesh.location = (bone.origin
-        #                         + rotation_matrix @ Vector(SKELLY_BONE_MESHES[mesh].position_offset)
-        #                         )
-
-        # Rotate the part mesh with the rotation matrix
-        # skelly_mesh.rotation_euler = rotation_matrix.to_euler('XYZ')
-        #
-        # # Get the bone length
-        # if SKELLY_BONE_MESHES[mesh].adjust_rotation:
-        #     bone_length = (SKELLY_BONE_MESHES[mesh].bones_end - (SKELLY_BONE_MESHES[mesh].bones_origin + (
-        #             rotation_matrix @ Vector(SKELLY_BONE_MESHES[mesh].position_offset)))).length
-        # elif mesh == 'head':
-        #     # bone_length = rig.data.edit_bones[bone_name_map[armature_name][SKELLY_BONES[mesh]['bones'][0]]].length
-        #     bone_length = SKELLY_BONE_MESHES['spine'].bones_length / 3.123  # Head length to spine length ratio
-        # else:
-        #     bone_length = SKELLY_BONE_MESHES[mesh].bones_length
-        #
-        # # Get the mesh length
-        # mesh_length = SKELLY_BONE_MESHES[mesh].mesh_length
-
-        # # Resize the Skelly part to match the bone length
-        # skelly_mesh.scale = (bone_length / mesh_length, bone_length / mesh_length, bone_length / mesh_length)
-
-        # Apply the transformations to the Skelly part
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
+    def _join_meshes(self):
+        skelly_mesh_list = [bone_mesh.mesh for bone_mesh in self.skelly_meshes.values()]
+        for skelly_mesh in skelly_mesh_list:
+            skelly_mesh.select_set(True)
+
+        self._set_active_object(skelly_mesh_list[0])
+        bpy.ops.object.join()
+
+    def _connect_mesh_to_armature_by_vertex_group(self):
+        skelly_mesh = bpy.context.view_layer.objects.active
+        for armature_host_bone_name, bone_mesh in self.skelly_meshes.items():
+            mesh_vertex_group = skelly_mesh.vertex_groups.get(bone_mesh.mesh_name)
+            if not mesh_vertex_group:
+                raise ValueError(f"Mesh '{bone_mesh.mesh_name}' does not have a vertex group '{bone_mesh.mesh_name}'")
+            mesh_vertex_group.lock_weight = False
+            for v in skelly_mesh.data.vertices:
+                mesh_vertex_group.add([v.index], 1.0, 'REPLACE')
+
+        modifier = skelly_mesh.modifiers.new(name="Armature", type='ARMATURE')
+        modifier.object = self.armature
 
 
-    # Deselect all
-    bpy.ops.object.select_all(action='DESELECT')
 
-    skelly_mesh_list = [bone_mesh.mesh for bone_mesh in skelly_meshes.values()]
-    # Select all body meshes
-    for skelly_mesh in skelly_mesh_list:
-        skelly_mesh.select_set(True)
-
-    # Set skelly_mesh as active
-    bpy.context.view_layer.objects.active = skelly_mesh_list[0]
-    return
-    # Join the body meshes
-    bpy.ops.object.join()
-
-    # Select the rig
-    armature.select_set(True)
-    # Set rig as active
-    bpy.context.view_layer.objects.active = armature
-    # Parent the mesh and the rig with automatic weights
-    bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+def attach_skelly_bone_meshes(armature: bpy.types.Object, armature_definition: ArmatureDefinition) -> None:
+    processor = SkellyMeshProcessor(armature, armature_definition)
+    processor.attach_skelly_bone_meshes()
+    

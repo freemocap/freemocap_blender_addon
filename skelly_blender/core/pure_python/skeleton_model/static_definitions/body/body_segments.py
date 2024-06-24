@@ -65,23 +65,23 @@ class SkullLeftMouthSegment(SimpleSegmentABC):
 
 
 class CervicalSpineSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
+    origin = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
     z_axis_reference = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
 
 
 class ThoracicSpineSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12.name
-    z_axis_reference = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
+    origin = BodyKeypoints.SPINE_THORACIC_ORIGIN_T12.name
+    z_axis_reference = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
 
 
 class SpineSacrumLumbar(SimpleSegmentABC):
     origin = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
-    z_axis_reference = BodyKeypoints.SPINE_LUMBAR_TOP_L1.name
+    z_axis_reference = BodyKeypoints.SPINE_LUMBAR_L1.name
 
 
 # Right Body
 class RightClavicleSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
+    origin = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
     z_axis_reference = BodyKeypoints.RIGHT_SHOULDER.name
 
 
@@ -140,7 +140,7 @@ class RightHeelSegment(SimpleSegmentABC):
 
 # arm
 class LeftClavicleSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.THORACIC_SPINE_TOP_T1.name
+    origin = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
     z_axis_reference = BodyKeypoints.LEFT_SHOULDER.name
 
 
@@ -216,11 +216,11 @@ class SkullCompoundSegment(CompoundSegmentABC):
 
 
 class PelvisLumbarCompoundSegment(CompoundSegmentABC):
-    segments = [BodyKeypoints.SPINE_LUMBAR_TOP_L1.name,
+    segments = [BodyKeypoints.SPINE_LUMBAR_L1.name,
                 BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name,
                 BodyKeypoints.PELVIS_LEFT_HIP_ACETABULUM.name]
     origin = BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.name
-    z_axis_reference = BodyKeypoints.SPINE_LUMBAR_TOP_L1.name
+    z_axis_reference = BodyKeypoints.SPINE_LUMBAR_L1.name
     x_axis_reference = BodyKeypoints.PELVIS_RIGHT_HIP_ACETABULUM.name
 
 

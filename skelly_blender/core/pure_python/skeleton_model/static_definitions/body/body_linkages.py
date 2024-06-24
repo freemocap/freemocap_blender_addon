@@ -25,13 +25,13 @@ class NeckC7Linkage(LinkageABC):
     children = [BodySegments.SPINE_CERVICAL,
                 BodySegments.RIGHT_CLAVICLE,
                 BodySegments.LEFT_CLAVICLE]
-    linked_keypoint = BodyKeypoints.CERVICAL_SPINE_ORIGIN_C7
+    linked_keypoint = BodyKeypoints.SPINE_CERVICAL_ORIGIN_C7
 
 
 class ChestT12Linkage(LinkageABC):
     parent = BodySegments.SPINE_SACRUM_LUMBAR
     children = [BodySegments.SPINE_THORACIC]
-    linked_keypoint = BodyKeypoints.THORACIC_SPINE_ORIGIN_T12
+    linked_keypoint = BodyKeypoints.SPINE_THORACIC_ORIGIN_T12
 
 
 class RightShoulderLinkage(LinkageABC):

@@ -28,5 +28,7 @@ class FMC_ADAPTER_clear_scene(bpy.types.Operator):
         print("Purging orphans...")
         bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         print("Scorch the earth \o/")
+        bpy.ops.view3d.snap_cursor_to_center()
+
 
 

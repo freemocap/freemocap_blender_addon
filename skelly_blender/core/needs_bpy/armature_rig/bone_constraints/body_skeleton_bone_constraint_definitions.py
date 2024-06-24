@@ -12,7 +12,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
     # Spine
     BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): [
         BoneConstraintTypes.COPY_LOCATION.value(target=BodyKeypoints.PELVIS_SPINE_SACRUM_ORIGIN.blenderize()),
-        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SPINE_LUMBAR_TOP_L1.blenderize(),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SPINE_LUMBAR_L1.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         # BoneConstraintTypes.LIMIT_ROTATION.value(
@@ -29,7 +29,7 @@ _BODY_BONE_CONSTRAINTS: Dict[str, List[ConstraintABC]] = {
         # ),
     ],
     BodySegments.SPINE_THORACIC.blenderize(): [
-        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.THORACIC_SPINE_TOP_T1.blenderize(),
+        BoneConstraintTypes.DAMPED_TRACK.value(target=BodyKeypoints.SPINE_THORACIC_TOP_T1.blenderize(),
                                                track_axis=TrackAxis.TRACK_Y.value),
 
         # BoneConstraintTypes.LOCKED_TRACK.value(

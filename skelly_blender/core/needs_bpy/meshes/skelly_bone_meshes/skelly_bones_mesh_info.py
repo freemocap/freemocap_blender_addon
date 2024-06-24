@@ -17,13 +17,6 @@ class SkellyBoneMeshInfo:
     host_bones: List[str]  # Bones of the mesh
     scale_reference_keypoint: BodyKeypoints
 
-    # bones_origin: Union[Tuple[float, float, float], Vector]  # Origin of the bones
-    # bones_end: Union[Tuple[float, float, float], Vector]  # End of the bones
-    # bones_length: float  # Total length of the bones
-    # mesh_length: float  # Length of the mesh
-    # position_offset: Tuple[float, float, float]  # Position offset of the mesh
-    # adjust_rotation: bool  # Adjust rotation of mesh after offset
-
     def __post_init__(self):
         self.mesh_path = str(Path(SKELLY_BONE_MESHES_PATH) / self.mesh_path)
 
@@ -39,49 +32,24 @@ class SkellyBoneMesh:
     mesh_length: float
 
 
-def load_skelly_fbx_meshes() -> Dict[str, bpy.types.Object]:
-    meshes = {}
-    for bone_mesh_segment_host, bone_mesh_info in SKELLY_BONE_MESHES.items():
-        if not bone_mesh_info:
-            continue
-
-        bpy.ops.import_scene.fbx(filepath=str(bone_mesh_info.mesh_path))
-        mesh = bpy.data.objects[bone_mesh_info.mesh_name]
-        mesh_scale_reference = bpy.data.objects[bone_mesh_info.scale_reference_keypoint.blenderize().upper()]
-        mesh_scale = mesh_scale_reference.location.length
-
-        # # Make sure the object is selected and active
-        # bpy.context.view_layer.objects.active = mesh
-        # mesh.select_set(True)
-        #
-        # # Apply the scale transformation
-        # bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-        #
-        # # Deselect the object
-        # mesh.select_set(False)
-
-        # Store the mesh in the dictionary
-        meshes[bone_mesh_segment_host] = SkellyBoneMesh(name=bone_mesh_info.mesh_name,
-                                                        mesh=mesh,
-                                                        mesh_length=mesh_scale)
-
-        print(
-            f"Loaded Mesh: '{bone_mesh_info.mesh_name}'\n"
-            f"  Bone: '{bone_mesh_segment_host}'\n"
-            f"  Path: '{bone_mesh_info.mesh_path}'\n"
-            f"  Scale: {mesh_scale:.3f}"
-        )
-
-    return meshes
-
 
 SKELLY_BONE_MESHES = {
-    # BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): "body/axial/skelly_pelvis.fbx",
-    # BodySegments.SPINE_THORACIC.blenderize(): "body/axial/skelly_thoracic_spine.fbx",
-    # BodySegments.SPINE_CERVICAL.blenderize(): "body/axial/skelly_cervical_spine.fbx",
     BodySegments.SKULL_NOSE.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_skull.fbx",
                                                              host_bones=[BodySegments.SKULL_NOSE.blenderize()],
                                                              scale_reference_keypoint=BodyKeypoints.NOSE_TIP),
+    BodySegments.SPINE_CERVICAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_cervical_spine.fbx",
+                                                                 host_bones=[BodySegments.SPINE_CERVICAL.blenderize()],
+                                                                 scale_reference_keypoint=BodyKeypoints.SPINE_CERVICAL_TOP_C1_AXIS),
+
+    BodySegments.SPINE_THORACIC.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_thoracic_spine.fbx",
+                                                                      host_bones=[BodySegments.SPINE_THORACIC.blenderize()],
+                                                                      scale_reference_keypoint=BodyKeypoints.SPINE_THORACIC_TOP_T1),
+
+    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_pelvis.fbx",
+                                                                      host_bones=[
+                                                                          BodySegments.SPINE_SACRUM_LUMBAR.blenderize()],
+                                                                      scale_reference_keypoint=BodyKeypoints.SPINE_LUMBAR_L1),
+
     BodySegments.SKULL_RIGHT_EYE_INNER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_CENTER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_OUTER.blenderize(): "",
