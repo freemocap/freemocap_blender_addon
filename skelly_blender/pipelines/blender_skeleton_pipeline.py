@@ -95,7 +95,7 @@ class BlenderSkeletonBuilderPipeline(TypeSafeDataclass):
                 armature=armature,
                 armature_definition=armature_definition,
             )
-
+            return
             print("\n--------------------------------------------\n"
                   f"Applying bone constraints to armature...\n")
             rig = apply_bone_constraints(

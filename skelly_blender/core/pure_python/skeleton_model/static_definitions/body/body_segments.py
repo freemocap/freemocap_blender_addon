@@ -66,11 +66,11 @@ class SkullLeftMouthSegment(SimpleSegmentABC):
 
 class CervicalSpineSegment(SimpleSegmentABC):
     origin = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
-    z_axis_reference = BodyKeypoints.SKULL_ORIGIN_FORAMEN_MAGNUM.name
+    z_axis_reference = BodyKeypoints.SPINE_CERVICAL_TOP_C1_AXIS.name
 
 
 class ThoracicSpineSegment(SimpleSegmentABC):
-    origin = BodyKeypoints.SPINE_THORACIC_ORIGIN_T12.name
+    origin = BodyKeypoints.SPINE_LUMBAR_L1.name
     z_axis_reference = BodyKeypoints.SPINE_THORACIC_TOP_T1.name
 
 

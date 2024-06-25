@@ -7,16 +7,16 @@ from freemocap_blender_addon.freemocap_data_handler.operations import \
     freemocap_empties_from_parent_object
 
 
-class FMC_ADAPTER_OT_reorient_empties(Operator):
-    bl_idname = 'fmc_adapter._reorient_empties'
+class SKELLY_BLENDER_OT_reorient_empties(Operator):
+    bl_idname = 'skelly_blender._reorient_empties'
     bl_label = 'Freemocap Adapter - Re-orient Empties'
     bl_description = "Change the position of the freemocap_origin_axes empty to so it is placed in an imaginary ground plane of the capture between the actor's feet"
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
 
     def execute(self, context):
         scene = context.scene
-        fmc_adapter_tool = scene.fmc_adapter_properties
-        parent_empty = fmc_adapter_tool.data_parent_empty
+        skelly_blender_tool = scene.skelly_blender_properties
+        parent_empty = skelly_blender_tool.data_parent_empty
         empties = freemocap_empties_from_parent_object(parent_empty)
 
         frame_number = scene.frame_current  # grab the current frame number so we can set it back after we're done
@@ -25,11 +25,11 @@ class FMC_ADAPTER_OT_reorient_empties(Operator):
         start = time.time()
         print('Executing Re-orient Empties...')
         try:
-            reorient_empties(z_align_ref_empty=fmc_adapter_tool.vertical_align_reference,
-                             z_align_angle_offset=fmc_adapter_tool.vertical_align_angle_offset,
-                             ground_ref_empty=fmc_adapter_tool.ground_align_reference,
-                             z_translation_offset=fmc_adapter_tool.vertical_align_position_offset,
-                             correct_fingers_empties=fmc_adapter_tool.correct_fingers_empties,
+            reorient_empties(z_align_ref_empty=skelly_blender_tool.vertical_align_reference,
+                             z_align_angle_offset=skelly_blender_tool.vertical_align_angle_offset,
+                             ground_ref_empty=skelly_blender_tool.ground_align_reference,
+                             z_translation_offset=skelly_blender_tool.vertical_align_position_offset,
+                             correct_fingers_empties=skelly_blender_tool.correct_fingers_empties,
                              empties=empties,
                              parent_object=parent_empty,
                              )

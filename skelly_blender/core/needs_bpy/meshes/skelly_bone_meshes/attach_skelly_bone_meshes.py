@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 import bpy
 
@@ -7,33 +7,35 @@ from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bones_mesh_i
     SkellyBoneMesh
 
 
+def deselect_all_objects():
+    bpy.ops.object.mode_set(mode='OBJECT')
+    for obj in bpy.data.objects:
+        obj.select_set(False)
+
+
+def set_active_object(bpy_object: bpy.types.Object):
+    bpy_object.select_set(True)
+    bpy.context.view_layer.objects.active = bpy_object
+
+
 class SkellyMeshProcessor:
     def __init__(self, armature: bpy.types.Object, armature_definition: ArmatureDefinition):
-        self.armature = armature
-        self.armature_definition = armature_definition
-        self.skelly_meshes = {}
+        self._armature = armature
+        self._armature_definition = armature_definition
+        self._skelly_meshes = {}
+        self._joined_mesh: Optional[bpy.types.Object] = None
 
     def attach_skelly_bone_meshes(self) -> None:
-        self._deselect_all_objects()
+        deselect_all_objects()
 
-        self.skelly_meshes = self._load_skelly_fbx_meshes()
+        self._skelly_meshes = self._load_skelly_fbx_meshes()
 
-        for host_armature_bone, skelly_bone_mesh in self.skelly_meshes.items():
+        for host_armature_bone, skelly_bone_mesh in self._skelly_meshes.items():
             self._transform_mesh(host_armature_bone, skelly_bone_mesh)
 
-        self._join_meshes()
+        # self._join_meshes()
 
-        # self._connect_mesh_to_armature_by_vertex_group()
-
-    def _deselect_all_objects(self):
-        bpy.ops.object.mode_set(mode='OBJECT')
-        for obj in bpy.data.objects:
-            obj.select_set(False)
-    
-
-    def _set_active_object(self, obj: bpy.types.Object):
-        obj.select_set(True) 
-        bpy.context.view_layer.objects.active = obj
+        self._create_armature_deform_constraints_by_vector_groups()
 
     def _load_skelly_fbx_meshes(self) -> Dict[str, bpy.types.Object]:
         meshes = {}
@@ -69,15 +71,15 @@ class SkellyMeshProcessor:
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_all(action='SELECT')
 
-        vertex_group = mesh.vertex_groups.new(name=group_name)
+        vertex_group = mesh.vertex_groups.new(name=mesh.name)
         bpy.ops.object.vertex_group_assign()
-
+        print(f"Created vertex group {vertex_group}")
         bpy.ops.object.mode_set(mode='OBJECT')
 
     def _transform_mesh(self, host_armature_bone: str, skelly_bone_mesh: SkellyBoneMesh):
-        self._set_active_object(self.armature)
+        set_active_object(self._armature)
         bpy.ops.object.mode_set(mode='EDIT')
-        host_bone = self.armature.data.edit_bones[host_armature_bone]
+        host_bone = self._armature.data.edit_bones[host_armature_bone]
         host_bone_length = host_bone.length
         mesh_scale_ratio = skelly_bone_mesh.mesh_length / host_bone_length
         host_bone_matrix = host_bone.matrix
@@ -89,29 +91,26 @@ class SkellyMeshProcessor:
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
     def _join_meshes(self):
-        skelly_mesh_list = [bone_mesh.mesh for bone_mesh in self.skelly_meshes.values()]
+        skelly_mesh_list = [bone_mesh.mesh for bone_mesh in self._skelly_meshes.values()]
         for skelly_mesh in skelly_mesh_list:
             skelly_mesh.select_set(True)
 
-        self._set_active_object(skelly_mesh_list[0])
+        set_active_object(skelly_mesh_list[0])
         bpy.ops.object.join()
+        self._joined_mesh = bpy.context.view_layer.objects.active
 
-    def _connect_mesh_to_armature_by_vertex_group(self):
-        skelly_mesh = bpy.context.view_layer.objects.active
-        for armature_host_bone_name, bone_mesh in self.skelly_meshes.items():
-            mesh_vertex_group = skelly_mesh.vertex_groups.get(bone_mesh.mesh_name)
-            if not mesh_vertex_group:
-                raise ValueError(f"Mesh '{bone_mesh.mesh_name}' does not have a vertex group '{bone_mesh.mesh_name}'")
-            mesh_vertex_group.lock_weight = False
-            for v in skelly_mesh.data.vertices:
-                mesh_vertex_group.add([v.index], 1.0, 'REPLACE')
+    def _create_armature_deform_constraints_by_vector_groups(self):
+        # Create an armature modifier
+        self._armature = [obj for obj in bpy.context.scene.objects if obj.type == 'ARMATURE'][0]
+        mod = self._joined_mesh.modifiers.new(name='Armature', type='ARMATURE')
+        mod.object = self._armature
 
-        modifier = skelly_mesh.modifiers.new(name="Armature", type='ARMATURE')
-        modifier.object = self.armature
-
+        # Assign each vertex group to its relevant armature bone
+        for bone in self._armature.data.bones:
+            if bone.name in self._joined_mesh.vertex_groups:
+                self._joined_mesh.vertex_groups[bone.name].name = bone.name
 
 
 def attach_skelly_bone_meshes(armature: bpy.types.Object, armature_definition: ArmatureDefinition) -> None:
     processor = SkellyMeshProcessor(armature, armature_definition)
     processor.attach_skelly_bone_meshes()
-    

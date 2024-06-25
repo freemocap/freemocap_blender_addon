@@ -5,8 +5,8 @@ from bpy.types import Operator
 from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
 
 
-class FMC_ADAPTER_OT_export_fbx(Operator):
-    bl_idname = 'fmc_adapter._export_fbx'
+class SKELLY_BLENDER_OT_export_fbx(Operator):
+    bl_idname = 'skelly_blender._export_fbx'
     bl_label = 'Freemocap Adapter - Export FBX'
     bl_description = 'Exports a FBX file containing the rig, the mesh and the baked animation'
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
@@ -14,9 +14,9 @@ class FMC_ADAPTER_OT_export_fbx(Operator):
     def execute(self, context):
         print('Executing Export FBX...')
         scene = context.scene
-        fmc_adapter_tool = scene.fmc_adapter_properties
+        skelly_blender_tool = scene.skelly_blender_properties
 
-        recording_path = fmc_adapter_tool.recording_path_str
+        recording_path = skelly_blender_tool.recording_path_str
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}

@@ -48,8 +48,8 @@ def unregister():
         print(f"Unregistering class {cls.__name__}")
         bpy.utils.unregister_class(cls)
 
-    print("Unregistering property group FMC_ADAPTER_PROPERTIES")
-    del bpy.types.Scene.fmc_adapter_properties
+    print("Unregistering property group SKELLY_BLENDER_PROPERTIES")
+    del bpy.types.Scene.skelly_blender_properties
 
 
 def register():
@@ -62,10 +62,10 @@ def register():
         print(f"Registering class {cls.__name__}")
         bpy.utils.register_class(cls)
 
-    print("Registering property group FMC_ADAPTER_PROPERTIES")
+    print("Registering property group SKELLY_BLENDER_PROPERTIES")
 
-    from skelly_blender.blender_interface.properties.properties import FMC_ADAPTER_PROPERTIES
-    bpy.types.Scene.fmc_adapter_properties = bpy.props.PointerProperty(type=FMC_ADAPTER_PROPERTIES)
+    from skelly_blender.blender_interface.properties.properties import SKELLY_BLENDER_PROPERTIES
+    bpy.types.Scene.skelly_blender_properties = bpy.props.PointerProperty(type=SKELLY_BLENDER_PROPERTIES)
 
     print(f"Finished registering {__file__} as add-on!")
 

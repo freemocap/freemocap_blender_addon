@@ -1,8 +1,8 @@
 import bpy
 
 
-class FMC_ADAPTER_clear_scene(bpy.types.Operator):
-    bl_idname = 'fmc_adapter._clear_scene'
+class SKELLY_BLENDER_clear_scene(bpy.types.Operator):
+    bl_idname = 'skelly_blender._clear_scene'
     bl_label = "Clear Scene"
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
 

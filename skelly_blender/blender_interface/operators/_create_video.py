@@ -3,7 +3,7 @@ from bpy.types import Operator
 from freemocap_video_export.create_video.create_video import create_export_video
 
 
-class FMC_ADAPTER_OT_export_video(Operator):
+class SKELLY_BLENDER_OT_export_video(Operator):
     bl_idname = 'fmc_export_video.export_video'
     bl_label = 'Freemocap Export Video'
     bl_description = "Export the Freemocap Blender output as a video file"

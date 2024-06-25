@@ -4,17 +4,17 @@ import time
 from bpy.types import Operator
 
 
-class FMC_ADAPTER_OT_reduce_bone_length_dispersion(Operator):
-    bl_idname = 'fmc_adapter._reduce_bone_length_dispersion'
+class SKELLY_BLENDER_OT_reduce_bone_length_dispersion(Operator):
+    bl_idname = 'skelly_blender._reduce_bone_length_dispersion'
     bl_label = 'Freemocap Adapter - Reduce Bone Length Dispersion'
     bl_description = 'Reduce the bone length dispersion by moving the tail empty and its children along the bone projection so the bone new length is within the interval'
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
 
     def execute(self, context):
         scene = context.scene
-        fmc_adapter_tool = scene.fmc_adapter_properties
+        skelly_blender_tool = scene.skelly_blender_properties
 
-        recording_path = fmc_adapter_tool.recording_path_str
+        recording_path = skelly_blender_tool.recording_path_str
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}
