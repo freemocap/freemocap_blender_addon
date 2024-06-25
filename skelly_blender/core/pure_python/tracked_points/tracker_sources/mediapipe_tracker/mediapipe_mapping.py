@@ -2,7 +2,6 @@ from skelly_blender.core.pure_python.custom_types.base_enums import KeypointMapp
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints as bk
 from skelly_blender.core.pure_python.tracked_points.tracker_sources.mediapipe_tracker.mediapipe_point_names import \
     MediapipeBodyPoints as mbp
-
 _MEDIAPIPE_BODY_MAPPING = {
     bk.NOSE_TIP.name: [mbp.NOSE.lower()],
     bk.RIGHT_EYE_INNER.name: [mbp.RIGHT_EYE_INNER.lower()],
@@ -27,6 +26,11 @@ _MEDIAPIPE_BODY_MAPPING = {
                                        mbp.RIGHT_SHOULDER.lower(): .1},
     bk.SPINE_THORACIC_TOP_T1.name: [mbp.LEFT_SHOULDER.lower(),
                                     mbp.RIGHT_SHOULDER.lower()],
+    bk.RIGHT_STERNOCLAVICLAR.name: {mbp.RIGHT_SHOULDER.lower(): .55,
+                                    mbp.LEFT_SHOULDER.lower(): .45},
+    bk.LEFT_STERNOCLAVICLAR.name: {mbp.RIGHT_SHOULDER.lower(): .45,
+                                   mbp.LEFT_SHOULDER.lower(): .55},
+
     bk.SPINE_THORACIC_ORIGIN_T12.name: [mbp.LEFT_HIP.lower(),
                                         mbp.RIGHT_HIP.lower(),
                                         mbp.LEFT_SHOULDER.lower(),
@@ -37,8 +41,7 @@ _MEDIAPIPE_BODY_MAPPING = {
                               mbp.RIGHT_SHOULDER.lower(): .26},
     bk.PELVIS_SPINE_SACRUM_ORIGIN.name: [mbp.LEFT_HIP.lower(),
                                          mbp.RIGHT_HIP.lower()],
-    bk.RIGHT_STERNOCLAVICLAR.name: {mbp.RIGHT_SHOULDER.lower(): .55,
-                                    mbp.LEFT_SHOULDER.lower(): .45},
+
     bk.RIGHT_SHOULDER.name: [mbp.RIGHT_SHOULDER.lower()],
     bk.RIGHT_ELBOW.name: [mbp.RIGHT_ELBOW.lower()],
     bk.RIGHT_WRIST.name: [mbp.RIGHT_WRIST.lower()],
@@ -50,8 +53,7 @@ _MEDIAPIPE_BODY_MAPPING = {
     bk.RIGHT_ANKLE.name: [mbp.RIGHT_ANKLE.lower()],
     bk.RIGHT_HEEL.name: [mbp.RIGHT_HEEL.lower()],
     bk.RIGHT_HALLUX_TIP.name: [mbp.RIGHT_FOOT_INDEX.lower()],
-    bk.LEFT_STERNOCLAVICLAR.name: {mbp.RIGHT_SHOULDER.lower(): .45,
-                                   mbp.LEFT_SHOULDER.lower(): .55},
+
     bk.LEFT_SHOULDER.name: [mbp.LEFT_SHOULDER.lower()],
     bk.LEFT_ELBOW.name: [mbp.LEFT_ELBOW.lower()],
     bk.LEFT_WRIST.name: [mbp.LEFT_WRIST.lower()],
@@ -64,6 +66,7 @@ _MEDIAPIPE_BODY_MAPPING = {
     bk.LEFT_HEEL.name: [mbp.LEFT_HEEL.lower()],
     bk.LEFT_HALLUX_TIP.name: [mbp.LEFT_FOOT_INDEX.lower()],
 }
+
 MediapipeBodyMapping = KeypointMappingsEnum('MediapipeBodyMapping', _MEDIAPIPE_BODY_MAPPING)
 
 if __name__ == "__main__":
