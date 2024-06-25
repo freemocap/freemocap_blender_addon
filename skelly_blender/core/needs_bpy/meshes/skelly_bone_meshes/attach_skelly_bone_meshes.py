@@ -1,10 +1,12 @@
 from typing import Dict, Optional
 
 import bpy
+import numpy as np
 
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
-from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bones_mesh_info import SKELLY_BONE_MESHES, \
-    SkellyBoneMesh
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.body_segment_bone_mesh_mapping import \
+    BODY_SEGMENT_BONE_MESH_MAPPING
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bone_mesh_info import SkellyBoneMesh
 
 
 def deselect_all_objects():
@@ -39,29 +41,24 @@ class SkellyMeshProcessor:
 
     def _load_skelly_fbx_meshes(self) -> Dict[str, bpy.types.Object]:
         meshes = {}
-        for bone_mesh_segment_host, bone_mesh_info in SKELLY_BONE_MESHES.items():
+        for bone_mesh_segment_host, bone_mesh_info in BODY_SEGMENT_BONE_MESH_MAPPING.items():
             if not bone_mesh_info:
                 continue
 
             bpy.ops.import_scene.fbx(filepath=str(bone_mesh_info.mesh_path))
             mesh = bpy.data.objects[bone_mesh_info.mesh_name]
-            mesh_scale_reference = bpy.data.objects[bone_mesh_info.scale_reference_keypoint.blenderize().upper()]
-            mesh_scale = mesh_scale_reference.location.length
 
-            meshes[bone_mesh_segment_host] = SkellyBoneMesh(name=bone_mesh_info.mesh_name,
+            meshes[bone_mesh_segment_host] = SkellyBoneMesh(name=mesh.name,
                                                             mesh=mesh,
-                                                            mesh_length=mesh_scale)
-
+                                                            bone_scale_segment=bone_mesh_info.bone_scale_segment)
             self._create_vertex_group(mesh, bone_mesh_info.mesh_name)
 
             print(
                 f"Loaded Mesh: '{bone_mesh_info.mesh_name}'\n"
-                f"  Bone: '{bone_mesh_segment_host}'\n"
-                f"  Path: '{bone_mesh_info.mesh_path}'\n"
-                f"  Scale: {mesh_scale:.3f}\n"
-                f"  Scale Reference: '{bone_mesh_info.scale_reference_keypoint}'\n"
-                f"  Mesh Length: {mesh_scale:.3f}\n"
-                f"  Vertex Group: '{bone_mesh_info.mesh_name}'\n"
+                f"\tHost Armature Bone: '{bone_mesh_segment_host}'\n"
+                f"\tPath: '{bone_mesh_info.mesh_path}'\n"
+                f"\tMeshScale Reference: '{bone_mesh_info.bone_scale_segment}'\n"
+                f"\tVertex Group: '{bone_mesh_info.mesh_name}'\n"
             )
 
         return meshes
@@ -80,15 +77,22 @@ class SkellyMeshProcessor:
         set_active_object(self._armature)
         bpy.ops.object.mode_set(mode='EDIT')
         host_bone = self._armature.data.edit_bones[host_armature_bone]
-        host_bone_length = host_bone.length
-        mesh_scale_ratio = skelly_bone_mesh.mesh_length / host_bone_length
+        scale_reference_bone = self._armature.data.edit_bones[skelly_bone_mesh.bone_scale_segment]
+        target_length = np.linalg.norm(host_bone.head - scale_reference_bone.tail)
+        mesh_og_length = skelly_bone_mesh.mesh.dimensions[2]  # Z dimension
+        mesh_scale_ratio = target_length / mesh_og_length
         host_bone_matrix = host_bone.matrix
 
         bpy.ops.object.mode_set(mode='OBJECT')
-        skelly_bone_mesh.scale = (mesh_scale_ratio, mesh_scale_ratio, mesh_scale_ratio)
-        skelly_bone_mesh.mesh.matrix_world = host_bone_matrix
+        set_active_object(skelly_bone_mesh.mesh)
+        skelly_bone_mesh.mesh.scale = (mesh_scale_ratio, mesh_scale_ratio, mesh_scale_ratio)
+        # skelly_bone_mesh.mesh.matrix_world = host_bone_matrix
 
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        print(f"Transformed mesh: {skelly_bone_mesh.mesh.name} to bone: {host_armature_bone}\n"
+              f"\tScale Ratio: {mesh_scale_ratio}\n"
+              f"\tBone Dimensions: {skelly_bone_mesh.mesh.dimensions}\n"
+              )
 
     def _join_meshes(self):
         skelly_mesh_list = [bone_mesh.mesh for bone_mesh in self._skelly_meshes.values()]

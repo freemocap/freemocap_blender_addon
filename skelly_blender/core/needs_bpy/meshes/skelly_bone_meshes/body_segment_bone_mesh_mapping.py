@@ -1,55 +1,11 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, List
-
-import bpy
-
-from skelly_blender import PACKAGE_ROOT_PATH
-from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_keypoints import BodyKeypoints
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bone_mesh_info import SkellyBoneMeshInfo
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
 
-SKELLY_BONE_MESHES_PATH = Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones"
-
-
-@dataclass
-class SkellyBoneMeshInfo:
-    mesh_path: str  # Path to the mesh
-    host_bones: List[str]  # Bones of the mesh
-    scale_reference_keypoint: BodyKeypoints
-
-    def __post_init__(self):
-        self.mesh_path = str(Path(SKELLY_BONE_MESHES_PATH) / self.mesh_path)
-
-    @property
-    def mesh_name(self) -> str:
-        return (Path(SKELLY_BONE_MESHES_PATH) / self.mesh_path).stem
-
-
-@dataclass
-class SkellyBoneMesh:
-    name: str
-    mesh: bpy.types.Object
-    mesh_length: float
-
-
-
-SKELLY_BONE_MESHES = {
-    BodySegments.SKULL_NOSE.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_skull.fbx",
-                                                             host_bones=[BodySegments.SKULL_NOSE.blenderize()],
-                                                             scale_reference_keypoint=BodyKeypoints.NOSE_TIP),
-    BodySegments.SPINE_CERVICAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_cervical_spine.fbx",
-                                                                 host_bones=[BodySegments.SPINE_CERVICAL.blenderize()],
-                                                                 scale_reference_keypoint=BodyKeypoints.SPINE_CERVICAL_TOP_C1_AXIS),
-
-    BodySegments.SPINE_THORACIC.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_thoracic_spine.fbx",
-                                                                      host_bones=[BodySegments.SPINE_THORACIC.blenderize()],
-                                                                      scale_reference_keypoint=BodyKeypoints.SPINE_THORACIC_TOP_T1),
-
-    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): SkellyBoneMeshInfo(mesh_path="body/axial/skelly_pelvis.fbx",
-                                                                      host_bones=[
-                                                                          BodySegments.SPINE_SACRUM_LUMBAR.blenderize()],
-                                                                      scale_reference_keypoint=BodyKeypoints.SPINE_LUMBAR_L1),
-
+BODY_SEGMENT_BONE_MESH_MAPPING = {
+    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_axial_skeleton.fbx",
+                                                                      bone_scale_segment=BodySegments.SPINE_CERVICAL.blenderize()),
+    BodySegments.SPINE_CERVICAL.blenderize(): "",
+    BodySegments.SPINE_THORACIC.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_INNER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_CENTER.blenderize(): "",
     BodySegments.SKULL_RIGHT_EYE_OUTER.blenderize(): "",
