@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Dict, Optional
 
 import bpy
@@ -19,6 +20,33 @@ def set_active_object(bpy_object: bpy.types.Object):
     bpy_object.select_set(True)
     bpy.context.view_layer.objects.active = bpy_object
 
+
+@dataclass
+class MaxMin:
+    min: float
+    max: float
+
+@dataclass
+class XYZMaxMin:
+    x: MaxMin
+    y: MaxMin
+    z: MaxMin
+
+def find_mesh_xyz_maxmin(mesh: bpy.types.Object) -> XYZMaxMin:
+    if mesh and mesh.type == 'MESH':
+        vertices = np.array([v.co.to_tuple() for v in mesh.data.vertices])
+        min_x, max_x = vertices[:, 0].min(), vertices[:, 0].max()
+        min_y, max_y = vertices[:, 1].min(), vertices[:, 1].max()
+        min_z, max_z = vertices[:, 2].min(), vertices[:, 2].max()
+        
+        return XYZMaxMin(
+            x=MaxMin(min=min_x, max=max_x),
+            y=MaxMin(min=min_y, max=max_y),
+            z=MaxMin(min=min_z, max=max_z)
+        )
+    else:
+        raise ValueError(f"Object {mesh} is not a mesh object!")
+    
 
 class SkellyMeshProcessor:
     def __init__(self, armature: bpy.types.Object, armature_definition: ArmatureDefinition):
@@ -79,14 +107,16 @@ class SkellyMeshProcessor:
         host_bone = self._armature.data.edit_bones[host_armature_bone]
         scale_reference_bone = self._armature.data.edit_bones[skelly_bone_mesh.bone_scale_segment]
         target_length = np.linalg.norm(host_bone.head - scale_reference_bone.tail)
-        mesh_og_length = skelly_bone_mesh.mesh.dimensions[2]  # Z dimension
+        mesh_og_length = find_mesh_xyz_maxmin(skelly_bone_mesh.mesh).y.max # use y axis max for now
         mesh_scale_ratio = target_length / mesh_og_length
-        host_bone_matrix = host_bone.matrix
+        host_bone_head_location = host_bone.head
+        host_bone_rotation_matrix = host_bone.matrix.to_3x3()
 
         bpy.ops.object.mode_set(mode='OBJECT')
         set_active_object(skelly_bone_mesh.mesh)
         skelly_bone_mesh.mesh.scale = (mesh_scale_ratio, mesh_scale_ratio, mesh_scale_ratio)
-        # skelly_bone_mesh.mesh.matrix_world = host_bone_matrix
+        skelly_bone_mesh.mesh.location = host_bone_head_location
+        skelly_bone_mesh.mesh.rotation_euler = host_bone_rotation_matrix.to_euler()
 
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         print(f"Transformed mesh: {skelly_bone_mesh.mesh.name} to bone: {host_armature_bone}\n"

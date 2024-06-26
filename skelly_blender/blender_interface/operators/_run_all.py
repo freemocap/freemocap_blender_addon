@@ -11,6 +11,7 @@ class SKELLY_BLENDER_run_all(bpy.types.Operator):
     bl_idname = 'skelly_blender._run_all'
     bl_label = "Run All"
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
+    bl_description = "Run the entire FreeMoCap pipeline"
 
     def execute(self, context):
         skelly_blender_tool = context.scene.skelly_blender_properties

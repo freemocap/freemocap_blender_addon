@@ -47,14 +47,14 @@ class VIEW3D_PT_freemocap(bpy.types.Panel):
     def _clear_scene_button(self, layout):
         # Clear scene button
         clear_scene_box = layout.box()
-        clear_scene_box.operator('skelly_blender._clear_scene', text='Clear Scene')
+        clear_scene_box.operator('skelly_blender._clear_scene', text='Clear Scene (alt+shift+X)')
 
     def _run_all_panel(self, skelly_blender_tool, layout):
         box = layout.box()
         row = box.row()
         row.label(text="FreeMoCap Recording:")
         row.prop(skelly_blender_tool, "recording_path", text="")
-        box.operator('skelly_blender._run_all', text='RUN ALL')
+        box.operator('skelly_blender._run_all', text='RUN ALL (alt+shift+R)')
         box.prop(skelly_blender_tool, "show_stages", text="Show intermediate stages")
 
     def _save_data_to_disk_panel(self, skelly_blender_tool, layout):

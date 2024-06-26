@@ -61,14 +61,29 @@ def register():
     for cls in BLENDER_USER_INTERFACE_CLASSES:
         print(f"Registering class {cls.__name__}")
         bpy.utils.register_class(cls)
+        if cls.__name__ == "SKELLY_BLENDER_run_all":
+                # Add the keymap configuration
+            wm = bpy.context.window_manager
+            km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+            kmi = km.keymap_items.new(cls.bl_idname, 'R', 'PRESS', shift=True, alt=True)
+            addon_keymaps.append((km, kmi))
+        if cls.__name__ == "SKELLY_BLENDER_clear_scene":
+            wm = bpy.context.window_manager
+            km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+            kmi = km.keymap_items.new(cls.bl_idname, 'X', 'PRESS', shift=True, alt=True)
+            addon_keymaps.append((km, kmi))
+
 
     print("Registering property group SKELLY_BLENDER_PROPERTIES")
 
     from skelly_blender.blender_interface.properties.properties import SKELLY_BLENDER_PROPERTIES
     bpy.types.Scene.skelly_blender_properties = bpy.props.PointerProperty(type=SKELLY_BLENDER_PROPERTIES)
+    
+
 
     print(f"Finished registering {__file__} as add-on!")
 
+addon_keymaps = []
 
 if __name__ == "__main__":
     print(f"Running {__file__} as main file ")
