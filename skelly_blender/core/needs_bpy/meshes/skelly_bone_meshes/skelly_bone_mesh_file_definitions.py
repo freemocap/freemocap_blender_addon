@@ -1,35 +1,50 @@
-from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bone_mesh_info import SkellyBoneMeshInfo
+from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bone_mesh_classes import SkellyBoneFileInfo
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
 
-BODY_SEGMENT_BONE_MESH_MAPPING = {
-    BodySegments.SPINE_SACRUM_LUMBAR.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_axial_skeleton.fbx",
-                                                                      bone_scale_segment=BodySegments.SPINE_CERVICAL.blenderize()),
-    BodySegments.SKULL_NOSE.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_skull.fbx",
-                                                             bone_scale_segment=BodySegments.SKULL_NOSE.blenderize()),
-    BodySegments.RIGHT_ARM_PROXIMAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_proximal.R.fbx",
-                                                                     bone_scale_segment=BodySegments.RIGHT_ARM_PROXIMAL.blenderize()),
-    BodySegments.RIGHT_ARM_DISTAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_distal.R.fbx",
-                                                                   bone_scale_segment=BodySegments.RIGHT_ARM_DISTAL.blenderize()),
-    BodySegments.LEFT_ARM_PROXIMAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_proximal.L.fbx",
-                                                                    bone_scale_segment=BodySegments.LEFT_ARM_PROXIMAL.blenderize()),
-    BodySegments.LEFT_ARM_DISTAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_distal.L.fbx",
-                                                                  bone_scale_segment=BodySegments.LEFT_ARM_DISTAL.blenderize()),
-    BodySegments.LEFT_LEG_THIGH.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_thigh.L.fbx",
-                                                                 bone_scale_segment=BodySegments.LEFT_LEG_THIGH.blenderize()),
-    BodySegments.RIGHT_LEG_THIGH.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_thigh.R.fbx",
-                                                                 bone_scale_segment=BodySegments.RIGHT_LEG_THIGH.blenderize()),
-    BodySegments.LEFT_LEG_CALF.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_calf.L.fbx",
-                                                                 bone_scale_segment=BodySegments.LEFT_LEG_CALF.blenderize()),
-    BodySegments.RIGHT_LEG_CALF.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_calf.R.fbx",
-                                                                 bone_scale_segment=BodySegments.RIGHT_LEG_CALF.blenderize()),
-    BodySegments.LEFT_FOOT_FRONT.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_front.L.fbx",
-                                                                 bone_scale_segment=BodySegments.LEFT_FOOT_FRONT.blenderize()),
-    BodySegments.LEFT_FOOT_HEEL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_heel.L.fbx",
-                                                                 bone_scale_segment=BodySegments.LEFT_FOOT_HEEL.blenderize()),
-    BodySegments.RIGHT_FOOT_FRONT.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_front.R.fbx",
-                                                                 bone_scale_segment=BodySegments.RIGHT_FOOT_FRONT.blenderize()),
-    BodySegments.RIGHT_FOOT_HEEL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_heel.R.fbx",
-                                                                 bone_scale_segment=BodySegments.RIGHT_FOOT_HEEL.blenderize()),
+SKELLY_BONE_MESH_INFO = [
+    # axial
+    SkellyBoneFileInfo(mesh_path="body/axial/skelly_axial_skeleton.fbx",
+                       armature_origin_bone=BodySegments.SPINE_SACRUM_LUMBAR.blenderize(),
+                       bone_scale_segment=BodySegments.SPINE_CERVICAL.blenderize()
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/axial/skelly_skull.fbx",
+                       armature_origin_bone=BodySegments.SKULL_NOSE.blenderize(),
+                       ),
+
+    # right
+    SkellyBoneFileInfo(mesh_path="body/appendicular/arm/skelly_arm_proximal.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_ARM_PROXIMAL.blenderize(),
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/appendicular/arm/skelly_arm_distal.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_ARM_DISTAL.blenderize(),
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/appendicular/leg/skelly_thigh.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_LEG_THIGH.blenderize(),
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/appendicular/leg/skelly_calf.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_LEG_CALF.blenderize(),
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/appendicular/foot/skelly_foot_front.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_FOOT_FRONT.blenderize(),
+                       ),
+    SkellyBoneFileInfo(mesh_path="body/appendicular/foot/skelly_foot_heel.R.fbx",
+                       armature_origin_bone=BodySegments.RIGHT_FOOT_HEEL.blenderize(),
+                       ),
+
+    # # left
+    # BodySegments.LEFT_LEG_CALF.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_calf.L.fbx",
+    #                                                              bone_scale_segment=BodySegments.LEFT_LEG_CALF.blenderize()),
+    # BodySegments.LEFT_FOOT_FRONT.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_front.L.fbx",
+    #                                                              bone_scale_segment=BodySegments.LEFT_FOOT_FRONT.blenderize()),
+    # BodySegments.LEFT_FOOT_HEEL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_foot_heel.L.fbx",
+    #                                                              bone_scale_segment=BodySegments.LEFT_FOOT_HEEL.blenderize()),
+    # BodySegments.LEFT_ARM_PROXIMAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_proximal.L.fbx",
+    #                                                                 bone_scale_segment=BodySegments.LEFT_ARM_PROXIMAL.blenderize()),
+    # BodySegments.LEFT_ARM_DISTAL.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_arm_distal.L.fbx",
+    #                                                               bone_scale_segment=BodySegments.LEFT_ARM_DISTAL.blenderize()),
+    # BodySegments.LEFT_LEG_THIGH.blenderize(): SkellyBoneMeshInfo(mesh_path="body/skelly_thigh.L.fbx",
+    #                                                              bone_scale_segment=BodySegments.LEFT_LEG_THIGH.blenderize()),
+
     # BodySegments.RIGHT_PALM_INDEX.blenderize(): "",
     # BodySegments.RIGHT_PALM_PINKY.blenderize(): "",
     # BodySegments.RIGHT_PALM_THUMB.blenderize(): "",
@@ -44,8 +59,7 @@ BODY_SEGMENT_BONE_MESH_MAPPING = {
     # BodySegments.LEFT_PALM_THUMB.blenderize(): "",
     # BodySegments.PELVIS_LEFT.blenderize(): "",
 
-
-}
+]
 
 #
 #
