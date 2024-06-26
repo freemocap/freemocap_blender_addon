@@ -5,7 +5,7 @@ import numpy as np
 
 from skelly_blender.core.pure_python.custom_types.derived_types import Trajectories, KeypointTrajectories
 from skelly_blender.core.pure_python.custom_types.generic_types import TrackedPointName, DimensionNames
-from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeft
+from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeftAxial
 from skelly_blender.core.pure_python.freemocap_data.data_paths.numpy_paths import HandsNpyPaths
 from skelly_blender.core.pure_python.skeleton_model.abstract_base_classes.trajectory_abc import Trajectory
 from skelly_blender.core.pure_python.tracked_points.data_component_types import DataComponentTypes
@@ -135,11 +135,11 @@ class HandsData(TypeSafeDataclass):
                    )
 
     @property
-    def as_trajectories(self) -> Dict[RightLeft, Trajectories]:
-        return {RightLeft.RIGHT.value: self.right.as_trajectories,
-                RightLeft.LEFT.value:self.left.as_trajectories}
+    def as_trajectories(self) -> Dict[RightLeftAxial, Trajectories]:
+        return {RightLeftAxial.RIGHT.value: self.right.as_trajectories,
+                RightLeftAxial.LEFT.value:self.left.as_trajectories}
 
-    def map_to_keypoints(self) -> Dict[RightLeft, KeypointTrajectories]:
-        return {RightLeft.RIGHT.value: self.right.map_to_keypoints(),
-                RightLeft.LEFT.value: self.left.map_to_keypoints()}
+    def map_to_keypoints(self) -> Dict[RightLeftAxial, KeypointTrajectories]:
+        return {RightLeftAxial.RIGHT.value: self.right.map_to_keypoints(),
+                RightLeftAxial.LEFT.value: self.left.map_to_keypoints()}
 

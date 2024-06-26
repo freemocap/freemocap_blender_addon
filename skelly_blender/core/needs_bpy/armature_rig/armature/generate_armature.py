@@ -5,7 +5,7 @@ import numpy as np
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_bone_classes import ROOT_BONE_NAME
 from skelly_blender.core.needs_bpy.armature_rig.armature.armature_definition_classes import ArmatureDefinition
 from skelly_blender.core.needs_bpy.blender_type_hints import ArmatureObject
-from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeft
+from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import RightLeftAxial
 
 
 def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject:
@@ -55,9 +55,9 @@ def generate_armature(armature_definition: ArmatureDefinition) -> ArmatureObject
 
 def assign_armature_bone_color(bone: bpy.types.EditBone):
     # Check for .L or .R, or axial in the bone name and assign colors accordingly
-    if bone.name.endswith(RightLeft.LEFT.blenderize()):
+    if bone.name.endswith(RightLeftAxial.LEFT.blenderize()):
         bone.color.palette = 'THEME04'  # Blue
-    elif bone.name.endswith(RightLeft.RIGHT.blenderize()):
+    elif bone.name.endswith(RightLeftAxial.RIGHT.blenderize()):
         bone.color.palette = 'THEME01'  # Red
     else:
         bone.color.palette = 'THEME03'  # Green

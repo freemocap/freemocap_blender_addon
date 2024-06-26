@@ -1,7 +1,7 @@
 from skelly_blender.core.needs_bpy.meshes.skelly_bone_meshes.skelly_bone_mesh_classes import SkellyBoneFileInfo
 from skelly_blender.core.pure_python.skeleton_model.static_definitions.body.body_segments import BodySegments
 
-SKELLY_BONE_MESH_INFO = [
+SKELLY_BONE_MESH_FILE_DEFINITIONS = [
     # axial
     SkellyBoneFileInfo(mesh_path="body/axial/skelly_axial_skeleton.fbx",
                        armature_origin_bone=BodySegments.SPINE_SACRUM_LUMBAR.blenderize(),

@@ -4,7 +4,7 @@ from pprint import pprint
 from typing import Union, Optional, Dict
 
 from skelly_blender.core.pure_python.freemocap_data.data_paths.default_path_enums import PathPlaceholders, \
-    SkeletonNpyFiles, RightLeft, CenterOfMassNpyFiles, VideoFolders
+    SkeletonNpyFiles, RightLeftAxial, CenterOfMassNpyFiles, VideoFolders
 from skelly_blender.core.pure_python.freemocap_data.data_paths.numpy_paths import CenterOfMassNpyPaths, \
     SkeletonNpyPaths, HandsNpyPaths
 from skelly_blender.core.pure_python.freemocap_data.data_paths.video_paths import FreemocapVideoPaths, VideoFolder
@@ -32,7 +32,7 @@ class FreemocapDataPaths:
         }
 
         def replace_placeholders(file_template: str,
-                                 right_left: Optional[RightLeft] = None) -> str:
+                                 right_left: Optional[RightLeftAxial] = None) -> str:
             for key, value in replacements.items():
                 file_template = file_template.replace(key, value)
             if right_left:
@@ -40,8 +40,8 @@ class FreemocapDataPaths:
             return file_template
 
         hands = HandsNpyPaths(
-            right=replace_placeholders(SkeletonNpyFiles.HAND_NPY_FILE.value, RightLeft.RIGHT),
-            left=replace_placeholders(SkeletonNpyFiles.HAND_NPY_FILE.value, RightLeft.LEFT)
+            right=replace_placeholders(SkeletonNpyFiles.HAND_NPY_FILE.value, RightLeftAxial.RIGHT),
+            left=replace_placeholders(SkeletonNpyFiles.HAND_NPY_FILE.value, RightLeftAxial.LEFT)
         )
 
         skeleton_npy_paths = SkeletonNpyPaths(
