@@ -8,7 +8,7 @@ from freemocap_blender_addon.core_functions.rig.add_rig import generate_rig
 
 from old.freemocap_blender_addon.freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
     freemocap_empties_from_parent_object
-from ...blender_interface.operators._add_body_mesh import REORIENT_EMPTIES_EXECUTED
+from ...ui.operators._add_body_mesh import REORIENT_EMPTIES_EXECUTED
 
 logger = logging.getLogger(__name__)
 

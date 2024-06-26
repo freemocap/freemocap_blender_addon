@@ -43,7 +43,7 @@ def unregister():
     import bpy
 
     print(f"Unregistering {__file__} as add-on")
-    from skelly_blender.blender_interface import BLENDER_USER_INTERFACE_CLASSES
+    from skelly_blender.ui import BLENDER_USER_INTERFACE_CLASSES
     for cls in BLENDER_USER_INTERFACE_CLASSES:
         print(f"Unregistering class {cls.__name__}")
         bpy.utils.unregister_class(cls)
@@ -56,7 +56,7 @@ def register():
     import bpy
 
     print(f"Registering {__file__} as add-on")
-    from skelly_blender.blender_interface import BLENDER_USER_INTERFACE_CLASSES
+    from skelly_blender.ui import BLENDER_USER_INTERFACE_CLASSES
     print(f"Registering classes {BLENDER_USER_INTERFACE_CLASSES}")
     for cls in BLENDER_USER_INTERFACE_CLASSES:
         print(f"Registering class {cls.__name__}")
@@ -76,7 +76,7 @@ def register():
 
     print("Registering property group SKELLY_BLENDER_PROPERTIES")
 
-    from skelly_blender.blender_interface.properties.properties import SKELLY_BLENDER_PROPERTIES
+    from skelly_blender.ui.properties.properties import SKELLY_BLENDER_PROPERTIES
     bpy.types.Scene.skelly_blender_properties = bpy.props.PointerProperty(type=SKELLY_BLENDER_PROPERTIES)
     
 

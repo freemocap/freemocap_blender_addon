@@ -1,6 +1,6 @@
-from skelly_blender.blender_interface.operators._clear_scene import SKELLY_BLENDER_clear_scene
-from skelly_blender.blender_interface.operators._run_all import SKELLY_BLENDER_run_all
-from skelly_blender.blender_interface.operators._show_names import SKELLY_BLENDER_show_names
+from skelly_blender.ui.operators._clear_scene import SKELLY_BLENDER_clear_scene
+from skelly_blender.ui.operators._run_all import SKELLY_BLENDER_run_all
+from skelly_blender.ui.operators._show_names import SKELLY_BLENDER_show_names
 
 BLENDER_OPERATORS = [  # SKELLY_BLENDER_download_sample_data,
     SKELLY_BLENDER_clear_scene,
