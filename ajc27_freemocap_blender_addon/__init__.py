@@ -50,7 +50,6 @@ def unregister():
     print(f"Unregistering property group FMC_ADAPTER_PROPERTIES")
     del bpy.types.Scene.fmc_adapter_properties
 
-
 def register():
     import bpy
 
@@ -61,20 +60,28 @@ def register():
         print(f"Registering class {cls.__name__}")
         bpy.utils.register_class(cls)
 
+        # this is a sloppy way to add keymaps (shortcuts) to some operators, we can improve this later
+        if cls.__name__ == "FMC_ADAPTER_run_all":
+            # Add the keymap configuration
+            wm = bpy.context.window_manager
+            km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+            kmi = km.keymap_items.new(cls.bl_idname, 'R', 'PRESS', shift=True, alt=True)
+            addon_keymaps.append((km, kmi))
+        if cls.__name__ == "FMC_ADAPTER_clear_scene":
+            wm = bpy.context.window_manager
+            km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+            kmi = km.keymap_items.new(cls.bl_idname, 'X', 'PRESS', shift=True, alt=True)
+            addon_keymaps.append((km, kmi))
+
     print("Registering property group FMC_ADAPTER_PROPERTIES")
 
     from .blender_interface import FMC_ADAPTER_PROPERTIES
     bpy.types.Scene.fmc_adapter_properties = bpy.props.PointerProperty(type=FMC_ADAPTER_PROPERTIES)
 
-    # try:
-    #     from ajc27_freemocap_blender_addon.core_functions.fbx_export import get_io_scene_fbx_addon
-    #     get_io_scene_fbx_addon()
-    # except Exception as e:
-    #     print(f"Error loading io_scene_fbx addon: {str(e)}")
-    #     raise
 
     print(f"Finished registering {__file__} as add-on!")
 
+addon_keymaps = []
 
 if __name__ == "__main__":
     print(f"Running {__file__} as main file ")
