@@ -1,15 +1,14 @@
 import logging
 
-from bpy.types import Panel
 
 logger = logging.getLogger(__name__)
 
 
-class VIEW3D_PT_freemocap(Panel):
+class VIEW3D_PT_freemocap(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "FreeMoCap"
-    bl_label = "FreeMoCap"
+    bl_category = "💀FreeMoCap"
+    bl_label = "💀FreeMoCap"
 
     def draw(self, context):
         layout = self.layout
