@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Dict
 
@@ -11,7 +12,7 @@ class BoneDefinition:
     stdev: float = 0.0
 
 
-BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
+_BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'pelvis.R': BoneDefinition(
         head='hips_center',
         tail='right_hip',
@@ -261,3 +262,9 @@ BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
         tail='left_heel',
     ),
 }
+
+def get_bone_definitions():
+    """
+    Returns a deep copy of the bone definitions, to ensure the base definitions isn't modified.
+    """
+    return deepcopy(_BONE_DEFINITIONS)
