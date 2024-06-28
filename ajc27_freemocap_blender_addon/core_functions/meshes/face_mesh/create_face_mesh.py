@@ -1,9 +1,8 @@
-from typing import Tuple, List
-
 import bpy
 import numpy as np
 
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.face_mesh_connections import  get_mediapipe_face_mesh_connections, create_mediapipe_face_mesh_faces
+from ajc27_freemocap_blender_addon.data_models.mediapipe_names.face_mesh_connections import \
+    get_mediapipe_face_mesh_connections, create_mediapipe_face_mesh_faces
 
 
 def create_face_mesh(file_path: str):
@@ -25,21 +24,29 @@ def create_face_mesh(file_path: str):
     # Set the object as the active object
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
+    reference_frame = 100
+    mean_vertex_position = np.nanmean(face_frame_id_xyz[100, :, :], axis=0)
+    vertices = [tuple(face_frame_id_xyz[100, vertex_id, :] + mean_vertex_position) for vertex_id in
+                range(face_frame_id_xyz.shape[1])]
 
-    verticies = []
-    frame_number = 100  # just use a random frame from the middle for now
-    for vertex_id in range(face_frame_id_xyz.shape[1]):
-        # blender defines vertices as tuples of 3 floats - (x, y, z)
-        verticies.append(tuple(face_frame_id_xyz[frame_number, vertex_id, :]))
     edges = get_mediapipe_face_mesh_connections()
     faces = create_mediapipe_face_mesh_faces()
-    # Create the mesh with the vertices
-    mesh.from_pydata(verticies, edges, faces)
-
-    # Update the mesh with new data
+    # Create the initial mesh with the vertices
+    mesh.from_pydata(vertices, edges, faces)
     mesh.update()
 
-    print("Vertices loaded successfully!")
+    # # Create shape keys for each frame
+    # obj.shape_key_add(name="Basis")  # Add the basis/key 0 shape key
+    # for frame_number in range(face_frame_id_xyz.shape[0]):
+    #     shape_key = obj.shape_key_add(name=f"Frame_{frame_number}")
+    #     for vertex_id in range(face_frame_id_xyz.shape[1]):
+    #         shape_key.data[vertex_id].co = face_frame_id_xyz[frame_number, vertex_id, :]
+    #
+    #     # Insert keyframe for this shape key
+    #     shape_key.value = 1.0
+    #     shape_key.keyframe_insert(data_path="value", frame=frame_number)
+
+    print("Face mesh animation created successfully!")
 
 
 if __name__ == "__main__":
