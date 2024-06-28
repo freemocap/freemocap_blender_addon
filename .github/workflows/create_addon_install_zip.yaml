@@ -31,8 +31,8 @@ jobs:
       with:
         tag_name: ${{ github.sha }}
         release_name: Release ${{ github.sha }}
-        draft: true
-        prerelease: true
+        draft: false
+        prerelease: false
 
     - name: Upload to Release
       uses: actions/upload-release-asset@v1
