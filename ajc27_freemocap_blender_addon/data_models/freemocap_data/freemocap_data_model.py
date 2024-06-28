@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict, Optional, Union, Literal
 
 import numpy as np
@@ -18,8 +18,8 @@ class FreemocapData:
     body: FreemocapComponentData
     hands: Dict[str, FreemocapComponentData]
     face: FreemocapComponentData
-    other: Optional[Dict[str, FreemocapComponentData]]
     metadata: Optional[Dict[Any, Any]]
+    other: Dict[str, FreemocapComponentData] = field(default_factory=dict)
 
     @classmethod
     def from_data(cls,
@@ -31,7 +31,7 @@ class FreemocapData:
                   data_source: str = "mediapipe",
                   error_type: str = "mean_reprojection_error",
                   other: Optional[Dict[str, Union[FreemocapComponentData, Dict[str, Any]]]] = None,
-                  metadata: Dict[Any, Any] = None) -> "FreemocapData":
+                  metadata: Optional[Dict[Any, Any]] = None) -> "FreemocapData":
 
         if not data_source == "mediapipe":
             raise NotImplementedError(

@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from .parameter_models import \
     Config, AdjustEmpties, ReduceShakiness, ReduceBoneLengthDispersion, AddRig, AddBodyMesh
@@ -7,7 +8,7 @@ from .parameter_models import \
 # Define the data classes to represent the JSON structure
 
 
-def load_default_parameters_config(filename: str = None) -> Config:
+def load_default_parameters_config(filename: Optional[str] = None) -> Config:
     if filename is not None:
         with open(filename, "r") as f:
             data = json.load(f)

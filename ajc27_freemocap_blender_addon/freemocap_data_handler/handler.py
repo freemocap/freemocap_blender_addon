@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import List, Union, Dict, Any
+from typing import List, Optional, Union, Dict, Any
 
 import numpy as np
 from ajc27_freemocap_blender_addon.core_functions.empties.creation.create_virtual_trajectories import \
@@ -32,7 +32,7 @@ class FreemocapDataHandler:
         return cls(freemocap_data=freemocap_data)
 
     @property
-    def metadata(self) -> Dict[Any, Any]:
+    def metadata(self) -> Optional[Dict[Any, Any]]:
         return self.freemocap_data.metadata
 
     @property
@@ -202,6 +202,8 @@ class FreemocapDataHandler:
                 self.number_of_other_trajectories)
 
     def get_body_dimensions(self):
+        if self.metadata is None:
+            self.freemocap_data.metadata = {}
         if "body_dimensions" in self.metadata:
             return self.metadata["body_dimensions"]
         else:
@@ -215,7 +217,7 @@ class FreemocapDataHandler:
                        trajectory: np.ndarray,
                        trajectory_name: str,
                        component_type: FREEMOCAP_DATA_COMPONENT_TYPES,
-                       source: str = None,
+                       source: str = None, # TODO: remove this from the chain if it isn't used anywhere
                        group_name: str = None):
         if trajectory.shape[0] != self.number_of_frames:
             raise ValueError(
@@ -355,7 +357,7 @@ class FreemocapDataHandler:
     def set_trajectory(self,
                        name: str,
                        data: np.ndarray,
-                       component_type: FREEMOCAP_DATA_COMPONENT_TYPES = None):
+                       component_type: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None):
         data = np.squeeze(
             data)  # get rid of any dimensions of size 1 (aka `singleton dimensions`, aka 'you called a square a flat cube')
         if not len(data.shape) == 2:
@@ -367,7 +369,7 @@ class FreemocapDataHandler:
                 f"Number of frames ({data.shape[0]}) does not match number of frames in existing data ({self.number_of_frames}).")
         if data.shape[1] != 3:
             raise ValueError(
-                f"Trajectory data should have 3 dimensions. Got {data.shape[2]} instead.")
+                f"Trajectory data should have 3 dimensions. Got {data.shape[1]} instead.")
 
         try:
             if component_type is None:
@@ -423,7 +425,7 @@ class FreemocapDataHandler:
 
     def mark_processing_stage(self,
                               name: str,
-                              metadata: dict = None,
+                              metadata: Optional[dict] = None,
                               overwrite: bool = True):
         """
         Mark the current state of the data as a processing stage (e.g. "raw", "reoriented", etc.)
@@ -448,6 +450,9 @@ class FreemocapDataHandler:
         return FreemocapData.from_data(**self._intermediate_stages[name])
 
     def add_metadata(self, metadata: dict):
+        if self.freemocap_data.metadata is None:
+            self.freemocap_data.metadata = {}
+
         print(f"Adding metadata {metadata.keys()}")
         self.freemocap_data.metadata.update(metadata)
 
@@ -563,7 +568,7 @@ class FreemocapDataHandler:
 
     def translate(self,
                   translation: Union[np.ndarray, List[np.ndarray]],
-                  component_name: FREEMOCAP_DATA_COMPONENT_TYPES = None,
+                  component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None,
                   ):
         if isinstance(translation, np.ndarray):
             self._transformer.apply_translation(vector=translation,
@@ -574,7 +579,7 @@ class FreemocapDataHandler:
 
     def scale(self,
               scale: float,
-              component_name: FREEMOCAP_DATA_COMPONENT_TYPES = None,
+              component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None,
               ):
         self._transformer.apply_scale(scale=scale,
                                       component_name=component_name)

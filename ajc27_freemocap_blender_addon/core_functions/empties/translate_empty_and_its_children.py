@@ -2,12 +2,13 @@ from typing import Tuple, List, Union
 
 import bpy
 import numpy as np
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
+from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
 
 def translate_empty_and_its_children(empty_name: str,
                                      frame_index: int,
                                      delta: Union[List[float], Tuple[float, float, float], np.ndarray]):
+    mediapipe_hierarchy = get_mediapipe_hierarchy()
     if isinstance(delta, np.ndarray) or isinstance(delta, tuple):
         delta = list(delta)
 
@@ -28,10 +29,10 @@ def translate_empty_and_its_children(empty_name: str,
         pass
 
     # If empty has children then call this function for every child
-    if empty_name in MEDIAPIPE_HIERARCHY.keys():
+    if empty_name in mediapipe_hierarchy.keys():
         print(
-            f"Translating children of empty {empty_name}: {MEDIAPIPE_HIERARCHY[empty_name]['children']}")
-        for child in MEDIAPIPE_HIERARCHY[empty_name]['children']:
+            f"Translating children of empty {empty_name}: {mediapipe_hierarchy[empty_name]['children']}")
+        for child in mediapipe_hierarchy[empty_name]['children']:
             translate_empty_and_its_children(empty_name=child,
                                              frame_index=frame_index,
                                              delta=delta)

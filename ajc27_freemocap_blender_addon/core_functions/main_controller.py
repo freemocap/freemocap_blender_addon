@@ -4,8 +4,8 @@ from typing import List
 
 import numpy as np
 from ajc27_freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
-from ajc27_freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
-from ajc27_freemocap_blender_addon.core_functions.rig.add_rig import add_rig
+from ajc27_freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
+from ajc27_freemocap_blender_addon.core_functions.rig.add_rig import add_rig, AddRigMethods
 from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
@@ -18,11 +18,11 @@ from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_t
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
-from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.set_start_end_frame import set_start_end_frame
+from ..data_models.bones.bone_definitions import get_bone_definitions
 from ..data_models.parameter_models.parameter_models import Config
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
-from ..freemocap_data_handler.operations.enforce_rigid_bones.enforce_rigid_bones import enforce_rigid_bones
+from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
@@ -151,7 +151,7 @@ class MainController:
     def enforce_rigid_bones(self):
         print("Enforcing rigid bones...")
         try:
-            self.freemocap_data_handler = enforce_rigid_bones(
+            self.freemocap_data_handler = enforce_rigid_bodies(
                 handler=self.freemocap_data_handler
             )
 
@@ -199,10 +199,10 @@ class MainController:
         try:
             print("Adding rig...")
             self.rig = add_rig(
-                empty_names=self.empty_names,
                 bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig_name=self.rig_name,
                 parent_object=self._data_parent_object,
+                add_rig_method=AddRigMethods.BY_BONE,
                 keep_symmetry=self.config.add_rig.keep_symmetry,
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
                 use_limit_rotation=self.config.add_rig.use_limit_rotation,
@@ -233,11 +233,14 @@ class MainController:
     def attach_rigid_body_mesh_to_rig(self):
         if self.rig is None:
             raise ValueError("Rig is None!")
+        
+        if self.empties is None:
+            raise ValueError("Empties have not been created yet!")
 
         try:
             print("Adding rigid_body_bone_meshes...")
-            attach_mesh_to_rig(
-                body_mesh_mode=self.config.add_body_mesh.body_mesh_mode,
+            create_rigid_body_meshes(
+                bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig=self.rig,
                 empties=self.empties,
                 parent_object=self._rigid_body_meshes_parent_object,
@@ -256,7 +259,6 @@ class MainController:
             attach_skelly_mesh_to_rig(
                 rig=self.rig,
                 body_dimensions=body_dimensions,
-                empties=self.empties
             )
         except Exception as e:
             print(f"Failed to attach mesh to rig: {e}")

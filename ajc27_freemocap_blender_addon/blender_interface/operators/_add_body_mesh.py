@@ -3,7 +3,7 @@ import time
 
 import bpy
 from ajc27_freemocap_blender_addon.core_functions.empties.reorient_empties import reorient_empties
-from ajc27_freemocap_blender_addon.core_functions.meshes.attach_mesh_to_rig import attach_mesh_to_rig
+from ajc27_freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
 from ajc27_freemocap_blender_addon.core_functions.rig.add_rig import add_rig
 from bpy.types import Operator
 
@@ -49,7 +49,7 @@ class FMC_ADAPTER_OT_add_body_mesh(Operator):
 
         try:
             print('Executing Add Body Mesh...')
-            attach_mesh_to_rig(body_mesh_mode=fmc_adapter_tool.body_mesh_mode)
+            create_rigid_body_meshes(body_mesh_mode=fmc_adapter_tool.body_mesh_mode)
         except Exception as e:
             print(f"Error while adding body mesh: {e}")
             return {'CANCELLED'}

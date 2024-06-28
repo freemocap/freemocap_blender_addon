@@ -1,3 +1,4 @@
+from dataclasses import asdict, is_dataclass
 import json
 import pickle
 from pathlib import Path
@@ -14,7 +15,7 @@ class FreemocapDataSaver:
     def __init__(self, handler: "FreemocapDataHandler"):
         self.handler = handler
 
-    def save(self, recording_path: str):
+    def save(self, recording_path: Union[str, Path]):
         recording_path = Path(recording_path)
         try:
             save_path = Path(recording_path) / "saved_data"
@@ -69,10 +70,10 @@ class FreemocapDataSaver:
             print(
                 f"Saved {component_name}_frame_name_xyz to {csv_path / f'{component_name}_frame_name_xyz.csv'}")
 
-        np.savetxt(str(save_path / "all_trajectories.csv"),
+        np.savetxt(str(Path(save_path) / "all_trajectories.csv"),
                    self.handler.all_frame_name_xyz.reshape(self.handler.all_frame_name_xyz.shape[0], -1), delimiter=",",
                    fmt='%s', header=all_csv_header)
-        print(f"Saved all_frame_name_xyz to {save_path / 'all_trajectories.csv'}")
+        print(f"Saved all_frame_name_xyz to {Path(save_path) / 'all_trajectories.csv'}")
 
     def _save_npy(self, save_path: Union[str, Path]):
         npy_path = Path(save_path) / "npy"
@@ -121,6 +122,9 @@ class FreemocapDataSaver:
         metadata_path = Path(path) / "metadata.json"
         metadata = self.handler.metadata
 
+        if metadata is None:
+            metadata = {}
+
         # convert numpy arrays to lists, Paths to strings, etc
         for key, value in metadata.items():
             if isinstance(value, np.ndarray):
@@ -133,8 +137,14 @@ class FreemocapDataSaver:
                         metadata[key][sub_key] = sub_value.tolist()
                     elif isinstance(sub_value, Path):
                         metadata[key][sub_key] = str(sub_value)
+                    elif is_dataclass(sub_value):
+                        metadata[key][sub_key] = asdict(sub_value)
                     else:
                         pass
+            elif is_dataclass(value):
+                print(key)
+                print(asdict(value))
+                metadata[key] = asdict(value)
             else:
                 pass
 

@@ -1,4 +1,6 @@
-MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS = {
+from copy import deepcopy
+
+_MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS = {
     "head_center": {
         "marker_names": ["left_ear", "right_ear"],
         "marker_weights": [0.5, 0.5],
@@ -24,3 +26,10 @@ MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS = {
         "marker_weights": [0.5, 0.5],
     },
 }
+
+
+def get_media_pipe_virtual_trajectory_definition():
+    """
+    Returns a deep copy of the MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS dictionary to prevent accidental modification.
+    """
+    return deepcopy(_MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS)

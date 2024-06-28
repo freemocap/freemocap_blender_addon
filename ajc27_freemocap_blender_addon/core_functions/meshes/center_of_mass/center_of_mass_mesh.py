@@ -16,7 +16,7 @@ def create_center_of_mass_mesh(parent_object: bpy.types.Object,
     location_constraint.target = center_of_mass_empty
 
     center_of_mass_material = create_checkerboard_material(name="center_of_mass_material",
-                                                           square_scale=10,
+                                                           square_scale=2,
                                                            color1=(0, .5, 1, 1),
                                                            color2=(1, 0, 1, 1),
                                                            roughness=0.5,

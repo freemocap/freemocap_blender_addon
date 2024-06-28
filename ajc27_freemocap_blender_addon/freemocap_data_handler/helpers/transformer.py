@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -16,7 +16,7 @@ class FreemocapDataTransformer:
         self.handler = handler
 
     def apply_rotations(
-        self, rotation_matricies: List[np.ndarray], component_name: str = None
+        self, rotation_matricies: List[np.ndarray], component_name: Optional[str] = None
     ):
         if not len(rotation_matricies) == self.handler.number_of_frames:
             raise ValueError(
@@ -32,7 +32,7 @@ class FreemocapDataTransformer:
     def apply_rotation(
         self,
         rotation_matrix: Union[np.ndarray, List[List[float]]],
-        component_name: str = None,
+        component_name: Optional[str] = None,
     ):
         if isinstance(rotation_matrix, list) or isinstance(rotation_matrix, tuple):
             rotation_matrix = np.array(rotation_matrix)
@@ -113,7 +113,7 @@ class FreemocapDataTransformer:
     def apply_translations(
         self,
         vectors: Union[List[np.ndarray], List[List[float]]],
-        component_name: str = None,
+        component_name: Optional[str] = None,
     ):
         if not len(vectors) == self.handler.number_of_frames:
             raise ValueError(
@@ -127,8 +127,8 @@ class FreemocapDataTransformer:
     def apply_translation(
         self,
         vector: Union[np.ndarray, List[float]],
-        component_name: FREEMOCAP_DATA_COMPONENT_TYPES = None,
-        frame_number: int = None,
+        component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None,
+        frame_number: Optional[int] = None,
     ):
         if isinstance(vector, list):
             vector = np.array(vector)
@@ -170,7 +170,7 @@ class FreemocapDataTransformer:
                 )
 
     def _translate_component_data(
-        self, data: np.ndarray, translation: np.ndarray, frame_number: int = None
+        self, data: np.ndarray, translation: np.ndarray, frame_number: Optional[int] = None
     ) -> np.ndarray:
         if not len(data.shape) in [2, 3]:
             raise ValueError(
@@ -205,7 +205,7 @@ class FreemocapDataTransformer:
         return data
 
     def apply_scale(
-        self, scale: float, component_name: FREEMOCAP_DATA_COMPONENT_TYPES = None
+        self, scale: float, component_name: Optional[FREEMOCAP_DATA_COMPONENT_TYPES] = None
     ):
         print(f"Applying scale {scale}")
         if component_name == "body" or component_name is None:
@@ -218,4 +218,4 @@ class FreemocapDataTransformer:
             self.handler.face_frame_name_xyz *= scale
         if component_name == "other" or component_name is None:
             for other_component in self.handler.freemocap_data.other:
-                other_component.data_frame_name_xyz *= scale
+                other_component.data_frame_name_xyz *= scale  # TODO: I think we're applying the scale to the key instead of the value here, need to double check
