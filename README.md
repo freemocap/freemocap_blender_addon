@@ -52,7 +52,7 @@ The core functionality is run automatically at the end of a standard freemocap r
 ![image](https://github.com/freemocap/freemocap_blender_addon/assets/15314521/94d482c1-9fa7-4c66-8354-34cf5707af9f)
 
 # Installation
-- Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases))
+- Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases/latest))
 - Open Blender
 - `Edit` > `Preferences` > `Add-ons` > `Install...` 
 - Select the `freemocap_blender_addon.zip` (likely from your `Downloads/` folder) 
