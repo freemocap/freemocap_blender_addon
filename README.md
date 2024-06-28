@@ -40,11 +40,6 @@
 
 </p>
 
-
-
-
-
-
 This is a Blender add-on for loading and visualizing the output of the [freemocap](https://freemocap.org) software. 
 
 The core functionality is run automatically at the end of a standard freemocap recording session, but this add-on allows for manual loading and visualization of the pre-processed `freemocap` recording data in Blender.
