@@ -25,7 +25,7 @@ def create_face_mesh(file_path: str):
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     reference_frame = 100
-    mean_vertex_position = np.nanmean(face_frame_id_xyz[100, :, :], axis=0)
+    mean_vertex_position = np.nanmean(face_frame_id_xyz[reference_frame, :, :], axis=0)
     vertices = [tuple(face_frame_id_xyz[100, vertex_id, :] + mean_vertex_position) for vertex_id in
                 range(face_frame_id_xyz.shape[1])]
 
@@ -35,16 +35,16 @@ def create_face_mesh(file_path: str):
     mesh.from_pydata(vertices, edges, faces)
     mesh.update()
 
-    # # Create shape keys for each frame
-    # obj.shape_key_add(name="Basis")  # Add the basis/key 0 shape key
-    # for frame_number in range(face_frame_id_xyz.shape[0]):
-    #     shape_key = obj.shape_key_add(name=f"Frame_{frame_number}")
-    #     for vertex_id in range(face_frame_id_xyz.shape[1]):
-    #         shape_key.data[vertex_id].co = face_frame_id_xyz[frame_number, vertex_id, :]
-    #
-    #     # Insert keyframe for this shape key
-    #     shape_key.value = 1.0
-    #     shape_key.keyframe_insert(data_path="value", frame=frame_number)
+    # Create shape keys for each frame
+    obj.shape_key_add(name="Basis")  # Add the basis/key 0 shape key
+    for frame_number in range(face_frame_id_xyz.shape[0]):
+        shape_key = obj.shape_key_add(name=f"Frame_{frame_number}")
+        for vertex_id in range(face_frame_id_xyz.shape[1]):
+            shape_key.data[vertex_id].co = face_frame_id_xyz[frame_number, vertex_id, :]
+
+        # Insert keyframe for this shape key
+        shape_key.value = 1.0
+        shape_key.keyframe_insert(data_path="value", frame=frame_number)
 
     print("Face mesh animation created successfully!")
 
