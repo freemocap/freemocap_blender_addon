@@ -14,7 +14,7 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 
 from ajc27_freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 
-class frame_number:
+class FrameNumber:
     def __init__(self, frame_info=None):
         self.position_x_pct = VISUAL_COMPONENTS['frame_number']['position_x_pct']
         self.position_y_pct = VISUAL_COMPONENTS['frame_number']['position_y_pct']
@@ -40,7 +40,7 @@ class frame_number:
         
         return frame
 
-class image:
+class Image:
     def __init__(self, frame_info=None, image_type=None):
         # Get the raw image
         try:
@@ -118,11 +118,11 @@ class image:
         
         return frame
     
-class logo(image):
+class Logo(Image):
     def __init__(self, frame_info):
         super().__init__(frame_info, 'logo')
         
-class static_json_table():
+class StaticJsonTable():
     def __init__(self, frame_info, data_type):
         self.data_type = data_type
         self.position_x_pct = VISUAL_COMPONENTS[self.data_type]['position_x_pct']
@@ -195,15 +195,15 @@ class static_json_table():
 
         return frame
 
-class recording_parameters(static_json_table):
+class RecordingParameters(StaticJsonTable):
     def __init__(self, frame_info):
         super().__init__(frame_info, 'recording_parameters')
 
-class mediapipe_skeleton_segment_lengths(static_json_table):
+class MediapipeSkeletonSegmentLengths(StaticJsonTable):
     def __init__(self, frame_info):
         super().__init__(frame_info, 'mediapipe_skeleton_segment_lengths')
 
-class plot_com_bos():
+class PlotComBos():
     def __init__(self, frame_info):
         self.marker_index = { # Order is important to generate the convex BOS polygon
             'left_heel': frame_info.handler.body_names.index('left_heel'),
@@ -409,7 +409,7 @@ class plot_com_bos():
 
         return frame
 
-class plot_foot_deviation():
+class PlotFootDeviation():
     def __init__(self, frame_info):
         self.marker_index = {
             'hips_center': frame_info.handler.body_names.index('hips_center'),

@@ -16,12 +16,12 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 )
 
 from ajc27_freemocap_blender_addon.data_models.create_video.visual_components import (
-    frame_number,
-    logo,
-    recording_parameters,
-    mediapipe_skeleton_segment_lengths,
-    plot_com_bos,
-    plot_foot_deviation,
+    FrameNumber,
+    Logo,
+    RecordingParameters,
+    MediapipeSkeletonSegmentLengths,
+    PlotComBos,
+    PlotFootDeviation,
 )
 
 from ajc27_freemocap_blender_addon.data_models.create_video.frame_information import (
@@ -468,17 +468,17 @@ def add_visual_components(
     visual_components_list = []
     for visual_component in EXPORT_PROFILES[export_profile]['visual_components']:
         if visual_component == "frame_number":
-            visual_component_class = frame_number
+            visual_component_class = FrameNumber
         elif visual_component == "logo":
-            visual_component_class = logo
+            visual_component_class = Logo
         elif visual_component == "recording_parameters":
-            visual_component_class = recording_parameters
+            visual_component_class = RecordingParameters
         elif visual_component == "mediapipe_skeleton_segment_lengths":
-            visual_component_class = mediapipe_skeleton_segment_lengths
+            visual_component_class = MediapipeSkeletonSegmentLengths
         elif visual_component == "plot_com_bos":
-            visual_component_class = plot_com_bos
+            visual_component_class = PlotComBos
         elif visual_component == "plot_foot_deviation":
-            visual_component_class = plot_foot_deviation
+            visual_component_class = PlotFootDeviation
         else:
             raise ValueError("Invalid visual component: " + visual_component)
 
