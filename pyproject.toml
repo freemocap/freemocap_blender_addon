@@ -1,0 +1,35 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+
+[project]
+name = "ajc27_freemocap_blender_addon"
+description="A Blender Add-on for working with Freemocap Data (based on @ajc27's addon)"
+readme = "README.md"
+authors = [
+    { name = "Skelly FreeMoCap", email = "info@freemocap.org" },
+]
+license = { file = "LICENSE" }
+dynamic = ["version"]
+
+requires-python = ">=3.9,<3.13"
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://freemocap.org"
+Documentation = "https://freemocap.github.io/documentation/"
+Github = "https://github.com/freemocap/ajc27_freemocap_blender_addon"
+
+
+[tool.bumpver]
+current_version = "v2024.07.1021"
+
+version_pattern = "vYYYY.0M.BUILD[-TAG]"
+commit_message  = "Bump version {old_version} -> {new_version}"
+commit          = true
+tag             = true
+push            = true
+[tool.bumpver.file_patterns]
+"ajc27_freemocap_blender_addon/__init__.py" = ["{version}"]

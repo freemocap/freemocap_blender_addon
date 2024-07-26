@@ -1,0 +1,45 @@
+name: Create and Upload Zip
+
+on:
+  push:
+    branches:
+      - main  # You can change this to any branch you want to trigger the action on
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Create zip file
+      run: zip -r freemocap_blender_addon.zip ajc27_freemocap_blender_addon/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: freemocap_blender_addon
+        path: freemocap_blender_addon.zip
+
+#    - name: Create GitHub Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        tag_name: ${{ github.sha }}
+#        release_name: Release ${{ github.sha }}
+#        draft: false
+#        prerelease: false
+#
+#    - name: Upload to Release
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}
+#        asset_path: ./freemocap_blender_addon.zip
+#        asset_name: freemocap_blender_addon.zip
+#        asset_content_type: application/zip
