@@ -464,10 +464,24 @@ def add_visual_components(
         handler=handler,
     )
 
-    # Creat the visual component objects list
+    # Create the visual component objects list
     visual_components_list = []
     for visual_component in EXPORT_PROFILES[export_profile]['visual_components']:
-        visual_component_class = globals()[visual_component]
+        if visual_component == "frame_number":
+            visual_component_class = frame_number
+        elif visual_component == "logo":
+            visual_component_class = logo
+        elif visual_component == "recording_parameters":
+            visual_component_class = recording_parameters
+        elif visual_component == "mediapipe_skeleton_segment_lengths":
+            visual_component_class = mediapipe_skeleton_segment_lengths
+        elif visual_component == "plot_com_bos":
+            visual_component_class = plot_com_bos
+        elif visual_component == "plot_foot_deviation":
+            visual_component_class = plot_foot_deviation
+        else:
+            raise ValueError("Invalid visual component: " + visual_component)
+
         visual_components_list.append(visual_component_class(frame_info))
 
     index_frame = 0
