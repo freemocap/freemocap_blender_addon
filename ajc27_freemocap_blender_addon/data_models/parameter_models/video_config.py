@@ -133,7 +133,7 @@ VISUAL_COMPONENTS = {
     'recording_parameters': {
         'relative_path': '/output_data/recording_parameters.json',
         'position_x_pct': 0.79,
-        'position_y_pct': 0.55,
+        'position_y_pct': 0.50,
         'text_parameters': {
             'level_1': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
