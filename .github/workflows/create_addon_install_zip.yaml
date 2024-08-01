@@ -1,10 +1,9 @@
 name: Create and Upload Zip
 
 on:
-  push:
-    branches:
-      - main  # You can change this to any branch you want to trigger the action on
   workflow_dispatch:
+  push:
+    tags: [ v* ]
 
 jobs:
   build:
@@ -12,10 +11,17 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Create zip file
       run: zip -r freemocap_blender_addon.zip ajc27_freemocap_blender_addon/
+
+    - name: Get tag
+      id: get_tag
+      run: |
+        tag=${GITHUB_REF#refs/tags/}
+        echo "::set-output name=tag::$tag"
+
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
