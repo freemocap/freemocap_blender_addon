@@ -1,36 +1,54 @@
 import bpy
 from math import atan, sqrt
+from mathutils import Vector
 
 def place_lights(
     scene: bpy.types.Scene=None,
-    cameras_positions: list=None
 ) -> None:
 
-    # Lights vertical offset in Blender units
-    lights_vertical_offset = 2
+    #  Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
 
-    # Create the light
-    light_data = bpy.data.lights.new(name="Front_Light", type='SPOT')
-    light = bpy.data.objects.new(name="Front_Light", object_data=light_data)
-    scene.collection.objects.link(light)
+    # Create a nested collection to store the lights
+    scene_collection = bpy.data.collections.new('Lights')
+    scene.collection.children.link(scene_collection)
 
-    # Set the strength of the light
-    light.data.energy = (
-        200
-        * sqrt(lights_vertical_offset**2 + cameras_positions[0][1]**2)
-    )
+    # Delete the current lights
+    for obj in scene.objects:
+        if obj.type == 'LIGHT':
+            obj.select_set(True)
+            bpy.ops.object.delete()
 
-    # Set the location of the light
-    light.location = (cameras_positions[0][0],
-                      cameras_positions[0][1],
-                      cameras_positions[0][2] + lights_vertical_offset
-    )
+    # Delete the current lights
+    for obj in scene.objects:
+        if obj.type == 'LIGHT':
+            obj.select_set(True)
+            bpy.ops.object.delete()
 
-    # Set the rotation of the light so it points to the point lights_vertical_offset
-    light.rotation_euler = (
-        atan(abs(cameras_positions[0][1]) / lights_vertical_offset),
-        0,
-        0
-    )
+    # For each camera in the scene create a light
+    for camera in bpy.data.cameras:
+
+        camera_name = camera.name.split("Camera_")[-1]
+        camera_position = bpy.data.objects[camera.name].matrix_world.translation
+
+        # Create the light
+        light_data = bpy.data.lights.new(name=camera_name + "_Light", type='SPOT')
+        light = bpy.data.objects.new(name=camera_name + "_Light", object_data=light_data)
+        # Add the light to the nested collection
+        scene_collection.objects.link(light)
+
+        # Set the strength of the light based on the distance to (0, 0, 0)
+        light.data.energy = (
+            200
+            * sqrt(sum([(coord) ** 2 for coord in camera_position]))
+        )
+
+        # Set the location and rotation of the light
+        light.location = (camera_position.x, camera_position.y, camera_position.z)
+        light.rotation_euler = bpy.data.objects[camera.name].rotation_euler
+
+        # Add a copy transform constraint to the light
+        constraint = light.constraints.new(type='COPY_TRANSFORMS')
+        constraint.target = bpy.data.objects[camera.name]
 
     return

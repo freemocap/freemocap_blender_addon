@@ -339,7 +339,6 @@ class MainController:
         print("Creating export video...")
         import bpy
         create_video(
-            handler=self.freemocap_data_handler,
             scene=bpy.context.scene,
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
