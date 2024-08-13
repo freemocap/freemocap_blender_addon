@@ -59,7 +59,7 @@ NOTE - *We strongly recommend activating your System Console before running this
 ## Pre-requisites - Data!
 You must have should have a [freemocap](https://freemocap.org) recording folder on your computer somewhere
 
-If you are processing something from the `freemocap` software, it will probably in in `[path_to_your_user_folder]/freemocap_data/recording_sessions/[recording_name]`
+If you are processing something from the `freemocap` software, it will probably in in `[path_to_your_home_directory]/freemocap_data/recording_sessions/[recording_name]`
 
 If you have downloaded the `test` or `sample` data in the freemocap software (in the `Data` menu bar dropdown), the addon should detect that automatically and set that path as the default.
 
