@@ -47,11 +47,11 @@ The core functionality is run automatically at the end of a standard freemocap r
 ![image](https://github.com/freemocap/freemocap_blender_addon/assets/15314521/94d482c1-9fa7-4c66-8354-34cf5707af9f)
 
 # Installation
-- Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases/latest))
-- Open Blender
-- `Edit` > `Preferences` > `Add-ons` > `Install...` 
-- Select the `freemocap_blender_addon.zip` (likely from your `Downloads/` folder) 
-- Verify installation by searching `freemocap` in the addon tab and ensuring the box next to `freemocap_blender_addon` is checked
+1. Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases/latest))
+1. Open Blender
+1. `Edit` > `Preferences` > `Add-ons` > `Install...` 
+1. Select the `freemocap_blender_addon.zip` (likely from your `Downloads/` folder) 
+1. Verify installation by searching `freemocap` in the addon tab and ensuring the box next to `freemocap_blender_addon` is checked
 
 # Usage
 NOTE - *We strongly recommend activating your System Console before running this addon, as it will show oodles of valuable information about the underlying process. On Windows, you can toggle this console on from the `Window` menu in a running instance of Blender. On Mac/Linux, you must **launch** blender from a Terminal by typing `blender` into a terminal after install.*
