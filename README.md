@@ -48,24 +48,24 @@ The core functionality is run automatically at the end of a standard freemocap r
 
 # Installation
 1. Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases/latest))
-1. Open Blender
+1. Open [Blender]()
 1. `Edit` > `Preferences` > `Add-ons` > `Install...` 
 1. Select the `freemocap_blender_addon.zip` (likely from your `Downloads/` folder) 
 1. Verify installation by searching `freemocap` in the addon tab and ensuring the box next to `freemocap_blender_addon` is checked
 
-# Usage
-NOTE - *We strongly recommend activating your System Console before running this addon, as it will show oodles of valuable information about the underlying process. On Windows, you can toggle this console on from the `Window` menu in a running instance of Blender. On Mac/Linux, you must **launch** blender from a Terminal by typing `blender` into a terminal after install.*
+## Usage
+> NOTE - *We strongly recommend activating your System Console before running this addon, as it will show oodles of valuable information about the underlying process. On Windows, you can toggle this console on from the `Window` menu in a running instance of Blender. On Mac/Linux, you must **launch** blender from a Terminal by typing `blender` into a terminal after install.*
 
-## Pre-requisites - Data!
-You must have should have a [freemocap](https://freemocap.org) recording folder on your computer somewhere
+### Pre-requisites - Data!
+You must have should have a fully processed [freemocap](https://freemocap.org) recording folder on your computer somewhere. 
 
-If you are processing something from the `freemocap` software, it will probably in in `[path_to_your_home_directory]/freemocap_data/recording_sessions/[recording_name]`
+If you are processing a recording from the `freemocap` software, it will probably in in `[path_to_your_home_directory]/freemocap_data/recording_sessions/[recording_name]`
 
-If you have downloaded the `test` or `sample` data in the freemocap software (in the `Data` menu bar dropdown), the addon should detect that automatically and set that path as the default.
+If you have downloaded and processed the `test` data from the `Data` dropdown in the menu bar of the `freemoap` software, the addon should detect that automatically and set that path as the default.
 
-You can manually download the sample/test data here: 
-  - [Sample data (~1000 frames @ 30fps)](https://figshare.com/ndownloader/files/45797067)
-  - [Test data (same as sample, but decimated to 222 frames @~6fps)](https://figshare.com/ndownloader/files/45797073)
+You may download a pre-processed `freemocap_test_data` recording on the [`freemocap==1.3.0` release notes](https://github.com/freemocap/freemocap/releases/download/v1.3.0/):
+> https://github.com/freemocap/freemocap/releases/download/v1.3.0/freemocap_test_data_processed_with_freemocap_v1.3.0.zip
+    
 
 ## Running the skeleton building pipeline
 1. In the `3D viewport` window, press `n` to show the sidebar
