@@ -11,6 +11,7 @@ from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_creat
 )
 from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 
+from .add_background_planes.add_background_planes import add_background_planes
 from .create_video.create_video import create_video
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
@@ -309,6 +310,18 @@ class MainController:
             print(e)
             print(e)
             raise e
+        
+    def add_background_planes(self):
+        try:
+            print("Adding background planes...")
+            import bpy
+            add_background_planes(
+                scene=bpy.context.scene,
+            )
+        except Exception as e:
+            print(f"Failed to add background planes: {e}")
+            print(e)
+            raise e
 
     def setup_scene(self):
         import bpy
@@ -373,8 +386,9 @@ class MainController:
         self.create_center_of_mass_mesh()
         # self.create_center_of_mass_trails()
         self.add_videos()
+        self.add_background_planes()
         self.setup_scene()
-        self.create_video()
+        # self.create_video()
         self.save_blender_file()
         # export_fbx(recording_path=recording_path)
 
