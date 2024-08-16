@@ -1,8 +1,10 @@
 # Dictionary containing the empty children for each of the capture empties.
 # This will be used to correct the position of the empties (and its children) that are outside the bone length interval defined by x*stdev
+from copy import deepcopy
 
 
-MEDIAPIPE_HIERARCHY = {
+# leading underscore to denote that this is private and should not be used/accessed directly. Use the `getter` function below
+_MEDIAPIPE_HIERARCHY = {
     # BODY
     # TORSO
     'hips_center': {
@@ -206,3 +208,9 @@ MEDIAPIPE_HIERARCHY = {
         'children': ['left_hand_pinky_tip']
     },
 }
+
+def get_mediapipe_hierarchy():
+    """
+    Return a copy of the mediapipe hierarchy, to ensure the base definitions isn't modified.
+    """
+    return deepcopy(_MEDIAPIPE_HIERARCHY)

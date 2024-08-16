@@ -3,35 +3,29 @@ from typing import Dict
 
 import bpy
 
-from .rigid_body_meshes.helpers.put_meshes_on_empties import put_bone_meshes_on_empties
+from ajc27_freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.helpers.put_meshes_on_empties import put_rigid_body_meshes_on_empties
+from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
 
 
-def attach_mesh_to_rig(rig: bpy.types.Object,
-                       parent_object: bpy.types.Object,
-                       body_mesh_mode: str = "custom",
-                       mesh_path: str = None,
-                       empties: Dict[str, bpy.types.Object] = None,
-                       ):
+def create_rigid_body_meshes(rig: bpy.types.Object,
+                             parent_object: bpy.types.Object,
+                             bone_data: Dict[str, BoneDefinition],
+                             empties: Dict[str, bpy.types.Object] = None,
+                             ):
     try:
-        if body_mesh_mode == "file":
 
-            mesh_from_file(mesh_path, rig)
+        if empties is None:
+            print(f"Must provide empties for custom body mesh")
+            raise ValueError(f"Must provide empties for custom body mesh")
 
-        elif body_mesh_mode == "custom":
-            if empties is None:
-                print(f"Must provide empties for custom body mesh")
-                raise ValueError(f"Must provide empties for custom body mesh")
+        put_rigid_body_meshes_on_empties(empties=empties,
+                                         bone_data=bone_data,
+                                         parent_empty=parent_object)
 
-            put_bone_meshes_on_empties(empties=empties, parent_empty=parent_object)
-
-            # Deselect all
-            bpy.ops.object.select_all(action='DESELECT')
-            print("Body mesh added successfully.")
-            return rig
-
-        else:
-            print(f"Invalid body_mesh_mode: {body_mesh_mode}")
-            raise ValueError(f"Invalid body_mesh_mode: {body_mesh_mode}")
+        # Deselect all
+        bpy.ops.object.select_all(action='DESELECT')
+        print("Body mesh added successfully.")
+        return rig
     except Exception as e:
         print(f"Failed to attach mesh to rig: {type(e).__name__}: {e}")
         print(e)

@@ -1,8 +1,9 @@
 from typing import List, Dict
 
 import numpy as np
+
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.virtual_trajectories import \
-    MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS
+    get_media_pipe_virtual_trajectory_definition
 
 
 def validate_marker_definitions(virtual_marker_definitions: dict):
@@ -50,11 +51,12 @@ def calculate_virtual_trajectories(body_frame_name_xyz: np.ndarray,
     """
     Create virtual markers from the body data using the marker definitions.
     """
+    mediapipe_virtual_trajectory_definitions = get_media_pipe_virtual_trajectory_definition()
     print("Creating virtual markers...")
-    validate_marker_definitions(MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS)
+    validate_marker_definitions(mediapipe_virtual_trajectory_definitions)
 
     virtual_trajectories = {}
-    for virtual_trajectory_name, virtual_trajectory_definition in MEDIAPIPE_VIRTUAL_TRAJECTORY_DEFINITIONS.items():
+    for virtual_trajectory_name, virtual_trajectory_definition in mediapipe_virtual_trajectory_definitions.items():
         print(f"Calculating virtual marker trajectory: {virtual_trajectory_name} \n"
                     f"Component trajectories: {virtual_trajectory_definition['marker_names']} \n"
                     f" weights: {virtual_trajectory_definition['marker_weights']}\n")

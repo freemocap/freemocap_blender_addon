@@ -1,21 +1,18 @@
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import bpy
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import MEDIAPIPE_HIERARCHY
 
+from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 from .make_bone_mesh import make_bone_mesh
 from .put_sphere_at_location import put_sphere_mesh_at_location
 
 
-def create_skeleton_segment_object(child_name: str,
-                                   child_empty: bpy.types.Object,
-                                   parent_empty: bpy.types.Object,
-                                   parent_name: str):
-    pass
 
-
-def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
-                               parent_empty: bpy.types.Object):
+def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
+                                     bone_data: Dict[str, Dict[str, Any]],
+                                     parent_empty: bpy.types.Object):
+    mediapipe_hierarchy = get_mediapipe_hierarchy()
     all_empties = {}
     for component in empties.values():
         all_empties.update(component)
@@ -26,31 +23,39 @@ def put_bone_meshes_on_empties(empties: Dict[str, bpy.types.Object],
             for other_component in component.values():
                 all_empties.update(other_component)
 
-    for parent_empty_name in MEDIAPIPE_HIERARCHY.keys():
+    for parent_empty_name in mediapipe_hierarchy.keys():
         print(f"Creating bone mesh for {parent_empty_name}...")
         color, squish_scale = get_bone_mesh_color_and_squish(parent_empty_name)
 
-        for child_name in MEDIAPIPE_HIERARCHY[parent_empty_name]["children"]:
+        for child_name in mediapipe_hierarchy[parent_empty_name]["children"]:
             # segment length is the distance between the parent and child empty
-            segment_length = (all_empties[child_name].location - all_empties[parent_empty_name].location).length
+            def find_bone(parent_name: str, child_name: str):
+                for bone_name, bone in bone_data.items():
+                    if bone["head"] == parent_name and bone["tail"] == child_name:
+                        return bone
+                return None
 
-            bone_mesh = make_bone_mesh(name=f"{parent_empty_name}_bone_mesh",
-                                       length=segment_length,
-                                       squish_scale=squish_scale,
-                                       joint_color=color,
-                                       cone_color=color,
-                                       axis_visible=False
-                                       )
-            location_constraint = bone_mesh.constraints.new(type="COPY_LOCATION")
-            location_constraint.target = all_empties[parent_empty_name]
+            bone = find_bone(parent_name=parent_empty_name, child_name=child_name)
+            if bone: 
+                # print(f"Segment length for {parent_empty_name} to {child_name} is {bone_data[parent_empty_name].median:.3f}m")
+                print(f"Segment length for {parent_empty_name} to {child_name} is {bone['median']:.3f}m")
+                bone_mesh = make_bone_mesh(name=f"{parent_empty_name}_bone_mesh",
+                                        length=bone['median'],
+                                        squish_scale=squish_scale,
+                                        joint_color=color,
+                                        cone_color=color,
+                                        axis_visible=False
+                                        )
+                location_constraint = bone_mesh.constraints.new(type="COPY_LOCATION")
+                location_constraint.target = all_empties[parent_empty_name]
 
-            track_to_constraint = bone_mesh.constraints.new(type="DAMPED_TRACK")
-            track_to_constraint.target = all_empties[child_name]
-            track_to_constraint.track_axis = "TRACK_Z"
-            bone_mesh.parent = parent_empty
+                track_to_constraint = bone_mesh.constraints.new(type="DAMPED_TRACK")
+                track_to_constraint.target = all_empties[child_name]
+                track_to_constraint.track_axis = "TRACK_Z"
+                bone_mesh.parent = parent_empty
 
 
-def put_spheres_on_empties(empties: Dict[str, bpy.types.Object], 
+def put_spheres_on_empties(empties: Dict[str, bpy.types.Object],
                            parent_empty: bpy.types.Object):
     meshes = []
 

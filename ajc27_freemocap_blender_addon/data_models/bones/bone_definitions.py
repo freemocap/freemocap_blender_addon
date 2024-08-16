@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Dict
 
@@ -11,7 +12,7 @@ class BoneDefinition:
     stdev: float = 0.0
 
 
-BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
+_BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'pelvis.R': BoneDefinition(
         head='hips_center',
         tail='right_hip',
@@ -35,7 +36,7 @@ BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'head_nose': BoneDefinition(
         head='head_center',
         tail='nose',
-    ), # Auxiliary bone from head center to nose tip to align the face bones
+    ),  # Auxiliary bone from head center to nose tip to align the face bones
     'shoulder.R': BoneDefinition(
         head='neck_center',
         tail='right_shoulder',
@@ -71,11 +72,11 @@ BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.carpal.R': BoneDefinition(
         head='right_hand_wrist',
         tail='right_hand_thumb_cmc',
-    ), # Auxiliary bone to align the right_hand_thumb_cmc empty
+    ),  # Auxiliary bone to align the right_hand_thumb_cmc empty
     'thumb.carpal.L': BoneDefinition(
         head='left_hand_wrist',
         tail='left_hand_thumb_cmc',
-    ), # Auxiliary bone to align the left_hand_thumb_cmc empty
+    ),  # Auxiliary bone to align the left_hand_thumb_cmc empty
     'thumb.01.R': BoneDefinition(
         head='right_hand_thumb_cmc',
         tail='right_hand_thumb_mcp',
@@ -261,3 +262,9 @@ BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
         tail='left_heel',
     ),
 }
+
+def get_bone_definitions():
+    """
+    Returns a deep copy of the bone definitions, to ensure the base definitions isn't modified.
+    """
+    return deepcopy(_BONE_DEFINITIONS)
