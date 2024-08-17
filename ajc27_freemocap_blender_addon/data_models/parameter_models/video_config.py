@@ -1,8 +1,8 @@
-try:
-    import cv2
-except Exception as e:
-    pass
-export_profiles = {
+import cv2
+from pathlib import Path
+from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
+
+EXPORT_PROFILES = {
     'debug': {
         'resolution_x': 1920,
         'resolution_y': 1080,
@@ -13,6 +13,12 @@ export_profiles = {
             "recording_parameters",
             "mediapipe_skeleton_segment_lengths",
         ],
+        'render_elements': [
+            "center_of_mass_data",
+            "rigid_body_meshes",
+            "videos",
+            "skelly_mesh",            
+        ],
     },
     'showcase': {
         'resolution_x': 1080,
@@ -21,23 +27,31 @@ export_profiles = {
         'visual_components': [
             "logo",
         ],
-        'background_path': '/assets/charuco_board.png',
+        'render_elements': [
+            "videos",
+            "skelly_mesh",            
+        ],
     },
     'scientific': {
         'resolution_x': 1920,
         'resolution_y': 1080,
-        'bitrate': 3000000,
+        'bitrate': 2000000,
         'visual_components': [
             "frame_number",
             "logo",
-            "recording_parameters",
             "mediapipe_skeleton_segment_lengths",
             "plot_com_bos",
+            "plot_foot_deviation",
+        ],
+        'render_elements': [
+            "center_of_mass_data",
+            "rigid_body_meshes",
+            "videos",
         ],
     },
 }
 
-render_parameters = {
+RENDER_PARAMETERS = {
     'scene.render.engine': 'BLENDER_EEVEE',
     'scene.eevee.taa_render_samples': 1,
     'scene.render.image_settings.file_format': 'FFMPEG',
@@ -56,19 +70,19 @@ render_parameters = {
     'scene.eevee.use_soft_shadows': True,
 }
 
-render_background = {
+RENDER_BACKGROUND = {
     'height': 10,
     'y_axis_offset': 0.1,
 }
 
-lens_FOVs = {
+LENS_FOVS = {
     '50mm': {
         'horizontal_fov': 39.6,
         'vertical_fov': 22.8965642148994,
     }
 }
 
-color_palette = {
+COLOR_PALETTE = {
     'crystal': {
         'rgb': (164, 214, 217),
         'bgr': (217, 214, 164),
@@ -97,18 +111,18 @@ color_palette = {
 
 }
 
-visual_components = {
+VISUAL_COMPONENTS = {
     'frame_number': {
         'position_x_pct': 0.02,
         'position_y_pct': 0.05,
         'font': cv2.FONT_HERSHEY_SIMPLEX,
         'fontScale': 1,
-        'color': color_palette['crystal']['bgr'],
+        'color': COLOR_PALETTE['crystal']['bgr'],
         'thickness': 2,
-        'lineType': cv2.LINE_AA,
+        'lineType': 16,
     },
     'logo': {
-        'relative_path': '/assets/freemocap_logo.png',
+        'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo.png"),
         'resize_largest_side_pct': 0.1,
         'position_x_pct': 0.9,
         'position_y_pct': 0.02,
@@ -119,28 +133,28 @@ visual_components = {
     'recording_parameters': {
         'relative_path': '/output_data/recording_parameters.json',
         'position_x_pct': 0.79,
-        'position_y_pct': 0.6,
+        'position_y_pct': 0.55,
         'text_parameters': {
             'level_1': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.6,
-                'color': color_palette['dark_terra_cotta']['bgr'],
+                'color': COLOR_PALETTE['dark_terra_cotta']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
             'level_2': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.55,
-                'color': color_palette['crystal']['bgr'],
+                'color': COLOR_PALETTE['crystal']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
             'level_3': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.5,
-                'color': color_palette['glossy_gold']['bgr'],
+                'color': COLOR_PALETTE['glossy_gold']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
         },
     },
@@ -152,23 +166,23 @@ visual_components = {
             'level_1': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.4,
-                'color': color_palette['dark_terra_cotta']['bgr'],
+                'color': COLOR_PALETTE['dark_terra_cotta']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
             'level_2': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.35,
-                'color': color_palette['crystal']['bgr'],
+                'color': COLOR_PALETTE['crystal']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
             'level_3': {
                 'font': cv2.FONT_HERSHEY_SIMPLEX,
                 'fontScale': 0.3,
-                'color': color_palette['glossy_gold']['bgr'],
+                'color': COLOR_PALETTE['glossy_gold']['bgr'],
                 'thickness': 1,
-                'lineType': cv2.LINE_AA,
+                'lineType': 16,
             },
         },
     },

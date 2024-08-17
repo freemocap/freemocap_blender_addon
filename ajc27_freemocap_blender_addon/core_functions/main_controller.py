@@ -12,6 +12,7 @@ from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_creat
 from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 
 from .create_video.create_video import create_video
+from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
@@ -334,17 +335,29 @@ class MainController:
 
         # create_scene_objects(scene=bpy.context.scene)
 
-
     def create_video(self):
         print("Creating export video...")
         import bpy
         create_video(
+            handler=self.freemocap_data_handler,
             scene=bpy.context.scene,
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
             end_frame=bpy.context.scene.frame_end,
         )
 
+    def export_3d_model(self):
+        print("Exporting 3D model...")
+        try:
+            export_3d_model(
+                extension='fbx',
+                export_folder=self.recording_path,
+                target_platform='default',
+            )
+        except Exception as e:
+            print(f"Failed to export 3D model: {e}")
+            print(e)
+            raise e
 
     def save_blender_file(self):
         print("Saving blender file...")
@@ -375,6 +388,7 @@ class MainController:
         self.add_videos()
         self.setup_scene()
         # self.create_video()
+        self.export_3d_model()
         self.save_blender_file()
-        # export_fbx(recording_path=recording_path)
+        
 
