@@ -22,7 +22,6 @@ jobs:
         tag=${GITHUB_REF#refs/tags/}
         echo "::set-output name=tag::$tag"
 
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -37,6 +36,7 @@ jobs:
       with:
         tag_name: ${{ github.sha }}
         release_name: Release ${{ steps.get_tag.outputs.tag }}
+        body: ''
         draft: false
         prerelease: false
 
