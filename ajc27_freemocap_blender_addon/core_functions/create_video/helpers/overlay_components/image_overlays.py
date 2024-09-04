@@ -1,29 +1,29 @@
 import os
-
 import cv2
 import numpy as np
-from freemocap_video_export.create_video.visual_overlays.frame_information_dataclass import FrameInformation
-from freemocap_video_export.video_config import visual_components
+
+from ajc27_freemocap_blender_addon.core_functions.create_video.helpers.overlay_components.frame_information_dataclass import FrameInformation
+from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import VISUAL_COMPONENTS
 
 
-class VisualComponentImage:
+class OverlayImage:
     def __init__(self,
                  frame_info: FrameInformation,
                  image_type: str):
         # Get the raw image
         try:
             self.image_raw = cv2.imread(
-                os.path.dirname(os.path.realpath(__file__)) + visual_components[image_type]['relative_path'],
+                VISUAL_COMPONENTS[image_type]['path'],
                 cv2.IMREAD_UNCHANGED)
         except:
-            print('Image not found: ' + os.path.dirname(os.path.realpath(__file__)) + visual_components[image_type][
-                'relative_path'])
+            print('Image not found: ' + VISUAL_COMPONENTS[image_type][
+                'path'])
 
         # Get the larger side of the image to use it as reference
         larger_side = frame_info.width if frame_info.width > frame_info.height else frame_info.height
 
         # Set the image properties
-        self.image_width = int(larger_side * visual_components[image_type]['resize_largest_side_pct'])
+        self.image_width = int(larger_side * VISUAL_COMPONENTS[image_type]['resize_largest_side_pct'])
         self.image_height = int(self.image_raw.shape[0] * self.image_width / self.image_raw.shape[1])
         # Resize the image
         self.image = cv2.resize(self.image_raw, (int(self.image_width), int(self.image_height)))
@@ -33,8 +33,8 @@ class VisualComponentImage:
         self.image_alpha_mask = (self.image[:, :, 3] / 255)[:, :, np.newaxis]
 
         # Get the x and y positions of the image
-        image_position_x = int(frame_info.width * visual_components[image_type]['position_x_pct'])
-        image_position_y = int(frame_info.height * visual_components[image_type]['position_y_pct'])
+        image_position_x = int(frame_info.width * VISUAL_COMPONENTS[image_type]['position_x_pct'])
+        image_position_y = int(frame_info.height * VISUAL_COMPONENTS[image_type]['position_y_pct'])
 
         # Adjust the position in case they get out of frame
         if image_position_x + self.image_width > frame_info.width:
@@ -62,6 +62,6 @@ class VisualComponentImage:
         return image
 
 
-class VisualComponentLogo(VisualComponentImage):
+class OverlayLogo(OverlayImage):
     def __init__(self, frame_info: FrameInformation):
         super().__init__(frame_info, 'logo')

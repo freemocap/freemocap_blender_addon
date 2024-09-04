@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from ajc27_freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
 import bpy
 
 
@@ -10,10 +10,9 @@ class FrameInformation:
     height: int
     total_frames: int
     total_frames_digits: int
-    frame_number: int = 0
+    handler: FreemocapDataHandler
+    scene: bpy.types.Scene
     frame_start: int = 0
     frame_end: int = 0
-    scene: bpy.types.Scene = None
+    frame_number: int = 0
 
-
-pass
