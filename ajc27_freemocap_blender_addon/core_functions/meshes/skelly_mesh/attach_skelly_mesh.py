@@ -85,6 +85,7 @@ def attach_skelly_by_bone_mesh(
             skelly_bones[mesh].bones_length = (Vector(mesh_info.bones_end) - Vector(mesh_info.bones_origin)).length
         except Exception as e:
             print(f"Unable to attach mesh {mesh}: {traceback.format_exc()}")
+            skelly_bones.pop(mesh)
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
