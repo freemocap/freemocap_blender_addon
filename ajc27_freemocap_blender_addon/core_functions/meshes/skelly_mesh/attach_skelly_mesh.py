@@ -78,14 +78,13 @@ def attach_skelly_by_bone_mesh(
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
-    for mesh in skelly_bones:
+    for mesh, mesh_info in SKELLY_BONES.items():
         try:
-            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
-            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
-            skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
+            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][mesh_info.bones[0]]].head)
+            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][mesh_info.bones[-1]]].tail)
+            skelly_bones[mesh].bones_length = (Vector(mesh_info.bones_end) - Vector(mesh_info.bones_origin)).length
         except Exception as e:
-            print(f"Unable to attach mesh {mesh}: {e}")
-            skelly_bones.pop(mesh)
+            print(f"Unable to attach mesh {mesh}: {traceback.format_exc()}")
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -123,8 +122,8 @@ def attach_skelly_by_bone_mesh(
             ).to_matrix()
 
         # Move the Skelly part to the equivalent bone's head location
-        skelly_mesh.location = (SKELLY_BONES[mesh].bones_origin
-            + rotation_matrix @ Vector(SKELLY_BONES[mesh].position_offset)
+        skelly_mesh.location = (Vector(skelly_bones[mesh].bones_origin)
+            + rotation_matrix @ Vector(skelly_bones[mesh].position_offset)
         )
 
         # Rotate the part mesh with the rotation matrix
@@ -132,7 +131,7 @@ def attach_skelly_by_bone_mesh(
 
         # Get the bone length
         if skelly_bones[mesh].adjust_rotation:
-            bone_length = (skelly_bones[mesh].bones_end - (skelly_bones[mesh].bones_origin + (rotation_matrix @ Vector(skelly_bones[mesh].position_offset)))).length
+            bone_length = (Vector(skelly_bones[mesh].bones_end) - (Vector(skelly_bones[mesh].bones_origin) + (rotation_matrix @ Vector(skelly_bones[mesh].position_offset)))).length
         elif mesh == 'head':
             # bone_length = rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh]['bones'][0]]].length
             bone_length = skelly_bones['spine'].bones_length / 3.123 # Head length to spine length ratio
@@ -151,7 +150,7 @@ def attach_skelly_by_bone_mesh(
             part_location = Vector(skelly_mesh.location)
 
             # Get the direction vector
-            bone_vector = skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin
+            bone_vector = Vector(skelly_bones[mesh].bones_end) - (skelly_bones[mesh].bones_origin)
             # Get new bone vector after applying the position offset
             new_bone_vector = skelly_bones[mesh].bones_end - part_location
             
@@ -167,6 +166,10 @@ def attach_skelly_by_bone_mesh(
 
         # Apply the transformations to the Skelly part
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+    # if len(skelly_meshes) == 0:
+    #     print("Unable to attach any compontents of skelly mesh")
+    #     return
 
     # Rename the first mesh to skelly_mesh
     skelly_meshes[0].name = "skelly_mesh"
@@ -273,6 +276,4 @@ def attach_skelly_complete_mesh(
 
     # Rename the skelly mesh to fmc_mesh
     skelly_mesh.name = 'skelly_mesh'
-
-
-
+    
