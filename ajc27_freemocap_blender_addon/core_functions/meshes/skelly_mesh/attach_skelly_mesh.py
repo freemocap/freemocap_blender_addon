@@ -150,9 +150,9 @@ def attach_skelly_by_bone_mesh(
             part_location = Vector(skelly_mesh.location)
 
             # Get the direction vector
-            bone_vector = Vector(skelly_bones[mesh].bones_end) - (skelly_bones[mesh].bones_origin)
+            bone_vector = Vector(skelly_bones[mesh].bones_end) - Vector(skelly_bones[mesh].bones_origin)
             # Get new bone vector after applying the position offset
-            new_bone_vector = skelly_bones[mesh].bones_end - part_location
+            new_bone_vector = Vector(skelly_bones[mesh].bones_end) - part_location
             
             # Apply the rotations to the Skelly part
             bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
