@@ -78,11 +78,11 @@ def attach_skelly_by_bone_mesh(
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
-    for mesh, mesh_info in SKELLY_BONES.items():
+    for mesh in SKELLY_BONES:
         try:
-            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][mesh_info.bones[0]]].head)
-            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][mesh_info.bones[-1]]].tail)
-            skelly_bones[mesh].bones_length = (Vector(mesh_info.bones_end) - Vector(mesh_info.bones_origin)).length
+            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
+            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
+            skelly_bones[mesh].bones_length = (Vector(skelly_bones[mesh].bones_end) - Vector(skelly_bones[mesh].bones_origin)).length
         except Exception as e:
             print(f"Unable to attach mesh {mesh}: {traceback.format_exc()}")
             skelly_bones.pop(mesh)
@@ -167,10 +167,6 @@ def attach_skelly_by_bone_mesh(
 
         # Apply the transformations to the Skelly part
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
-    # if len(skelly_meshes) == 0:
-    #     print("Unable to attach any compontents of skelly mesh")
-    #     return
 
     # Rename the first mesh to skelly_mesh
     skelly_meshes[0].name = "skelly_mesh"
