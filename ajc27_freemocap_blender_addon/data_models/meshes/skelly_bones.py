@@ -15,13 +15,13 @@ class SkellyBoneMeshInfo:
     adjust_rotation: bool  # Adjust rotation of mesh after offset
 
 def get_skelly_bones() -> dict[str, SkellyBoneMeshInfo]:
-    return deepcopy(SKELLY_BONES)
+    return deepcopy(_SKELLY_BONES)
 
 def skelly_bone_names() -> list[str]:
-    return list(SKELLY_BONES.keys())
+    return list(_SKELLY_BONES.keys())
 
 
-SKELLY_BONES = {
+_SKELLY_BONES = {
     "head": SkellyBoneMeshInfo(
         bones=["face"],
         bones_origin=(0, 0, 0),
