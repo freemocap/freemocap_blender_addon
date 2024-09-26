@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 from mathutils import Vector
@@ -12,6 +13,12 @@ class SkellyBoneMeshInfo:
     mesh_length: float  # Length of the mesh
     position_offset: Tuple[float, float, float]  # Position offset of the mesh
     adjust_rotation: bool  # Adjust rotation of mesh after offset
+
+def get_skelly_bones() -> dict[str, SkellyBoneMeshInfo]:
+    return deepcopy(SKELLY_BONES)
+
+def skelly_bone_names() -> list[str]:
+    return list(SKELLY_BONES.keys())
 
 
 SKELLY_BONES = {

@@ -19,7 +19,8 @@ from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import (
     bone_name_map,
 )
 from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import (
-    SKELLY_BONES
+    skelly_bone_names,
+    get_skelly_bones,
 )
 
 SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")
@@ -74,11 +75,11 @@ def attach_skelly_by_bone_mesh(
     # Change to edit mode
     bpy.ops.object.mode_set(mode='EDIT')
 
-    skelly_bones = deepcopy(SKELLY_BONES)
+    skelly_bones = get_skelly_bones()
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
-    for mesh in SKELLY_BONES:
+    for mesh in skelly_bone_names():
         try:
             skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
             skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
