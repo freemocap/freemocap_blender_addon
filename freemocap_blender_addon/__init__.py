@@ -9,9 +9,6 @@ __version__ = "v2024.09.1024"
 ### The rig has a TPose as rest pose for easier retargeting.
 ### For best results, when the script is ran the empties should be
 ### forming a standing still pose with arms open similar to A or T Pose
-
-### The body_mesh.ply file should be in the same folder as the
-### Blender file before manually opening it.
 #######################################################################
 import logging
 import sys
@@ -33,22 +30,26 @@ bl_info = {
     'version': (1, 1, 7),
     'blender': (3, 0, 0),
     'location': '3D Viewport > Sidebar > Freemocap Adapter',
-    'description': 'Add-on for bringing `freemocap` data into a Blender scene',
-    'category': 'Development',
+    'description': 'A Blender add-on for loading and visualizing motion capture data recorded with the FreeMoCap software (https://freemocap.org)',
+    'category': 'Animation',
 }
 
 
 def unregister():
     import bpy
 
-    print(f"Unregistering {__file__} as add-on")
-    from .blender_interface import BLENDER_USER_INTERFACE_CLASSES
-    for cls in BLENDER_USER_INTERFACE_CLASSES:
-        print(f"Unregistering class {cls.__name__}")
-        bpy.utils.unregister_class(cls)
+    try:
+        print(f"Unregistering {__file__} as add-on")
+        from .blender_interface import BLENDER_USER_INTERFACE_CLASSES
+        for cls in BLENDER_USER_INTERFACE_CLASSES:
+            print(f"Unregistering class {cls.__name__}")
+            bpy.utils.unregister_class(cls)
 
-    print(f"Unregistering property group FMC_ADAPTER_PROPERTIES")
-    del bpy.types.Scene.fmc_adapter_properties
+        print(f"Unregistering property group FMC_ADAPTER_PROPERTIES")
+        del bpy.types.Scene.fmc_adapter_properties
+    except Exception as e:
+        print(f"Error unregistering {__file__} as add-on: {e}")
+
 
 def register():
     import bpy
