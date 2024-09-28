@@ -1,5 +1,5 @@
-from freemocap_blender_addon.blender_interface.operators._clear_scene import FMC_ADAPTER_clear_scene
-from freemocap_blender_addon.blender_interface.operators._run_all import FMC_ADAPTER_run_all
+from freemocap_blender_addon.blender_ui.operators._clear_scene import FMC_ADAPTER_clear_scene
+from freemocap_blender_addon.blender_ui.operators._run_all import FMC_ADAPTER_run_all
 
 #
 # from ajc27_freemocap_blender_addon.blender_interface.operators._add_body_mesh import FMC_ADAPTER_OT_add_body_mesh

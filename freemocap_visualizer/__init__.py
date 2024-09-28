@@ -5,15 +5,16 @@ bl_info = {
     'blender'       : (3, 0, 0),
     'location'      : '3D Viewport > Sidebar > Freemocap Visualizer',
     'description'   : 'Add-on to help visualize the Freemocap Blender output',
-    'category'      : 'Development',
+    'category'      : 'Animation',
 }
 
 import bpy
 from .addon_interface import (FMC_VISUALIZER_PROPERTIES,
                               VIEW3D_PT_freemocap_visualizer,
-                              FMC_VISUALIZER_ADD_COM_VERTICAL_PROJECTION,
-                              FMC_VISUALIZER_ADD_JOINT_ANGLES,
                               FMC_VISUALIZER_ADD_BASE_OF_SUPPORT)
+from freemocap_visualizer._add_joint_angles import FMC_VISUALIZER_ADD_JOINT_ANGLES
+from freemocap_visualizer._add_com_vertical_projection import FMC_VISUALIZER_ADD_COM_VERTICAL_PROJECTION
+
 
 def register():
 
