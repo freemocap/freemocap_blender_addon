@@ -4,6 +4,8 @@ import mathutils
 import math as m
 import numpy as np
 
+from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_biomechanics import points_of_contact
+
 try:
     from scipy.spatial import ConvexHull
 except ImportError:
