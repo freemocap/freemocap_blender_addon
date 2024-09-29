@@ -1,9 +1,9 @@
 import bpy
 
-from freemocap_blender_addon.blender_ui.ui_utilities import toggle_element_visibility
+from freemocap_blender_addon.blender_ui.ui_utilities import toggle_element_visibility, update_motion_path
 
 
-class FMC_VISUALIZER_PROPERTIES(bpy.types.PropertyGroup):
+class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     show_base_elements_options: bpy.props.BoolProperty(
         name='',
         default=False,

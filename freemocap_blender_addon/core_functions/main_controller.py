@@ -353,7 +353,7 @@ class MainController:
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
 
-    def run_all(self):
+    def load_data(self):
         print("Running all stages...")
 
         #Pure python stuff

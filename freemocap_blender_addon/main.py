@@ -18,13 +18,13 @@ def ajc27_run_as_main_function(recording_path: str,
 
     clear_scene()
 
-    controller.run_all()
+    controller.load_data()
 
     print("Done!!!")
 
 
 if __name__ == "__main__" or __name__ == "<run_path>":
-    print("RUNNING AJC27 FREEMOCAP ADDON...")
+    print("Load DataNING FREEMOCAP BLENDER ADDON...")
     try:
         argv = sys.argv
         print(f"Received command line arguments: {argv}")

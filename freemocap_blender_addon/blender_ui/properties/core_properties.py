@@ -3,13 +3,8 @@ import bpy
 from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import get_test_recording_path
 
 
-class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
-    print("Initializing FMC_ADAPTER_PROPERTIES class...")
-    custom_checkbox: bpy.props.BoolProperty(
-        name="Custom Checkbox",
-        description="This is a custom checkbox",
-        default = False
-    )
+class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
+    print("Initializing FREEMOCAP_PROPERTIES class...")
 
     data_parent_empty: bpy.props.PointerProperty(
         name="FreeMoCap data parent empty",
@@ -23,4 +18,14 @@ class FMC_ADAPTER_PROPERTIES(bpy.types.PropertyGroup):
         description="Path to a freemocap recording",
         default=get_test_recording_path(),
         subtype='FILE_PATH',
+    )
+
+    video_export_profile: bpy.props.EnumProperty(
+        name='',
+        description='Profile of the export video',
+        items=[('default', 'Default', ''),
+               ('debug', 'Debug', ''),
+               ('showcase', 'Showcase', ''),
+               ('scientific', 'Scientific', ''),
+               ],
     )

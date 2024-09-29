@@ -14,6 +14,8 @@ import logging
 import sys
 from pathlib import Path
 
+from freemocap_blender_addon.utilities.install_dependencies import check_and_install_dependencies
+
 PACKAGE_ROOT_PATH = str(Path(__file__).parent)
 
 root = logging.getLogger()
@@ -39,52 +41,54 @@ def unregister():
     import bpy
 
     try:
-        print(f"Unregistering {__file__} as add-on")
+        print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering {__file__} as add-on")
         from .blender_ui import BLENDER_USER_INTERFACE_CLASSES
         for cls in BLENDER_USER_INTERFACE_CLASSES:
-            print(f"Unregistering class {cls.__name__}")
+            print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering class {cls.__name__}")
             bpy.utils.unregister_class(cls)
 
-        print(f"Unregistering property group FMC_ADAPTER_PROPERTIES")
-        del bpy.types.Scene.fmc_adapter_properties
+        print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering property group FREEMOCAP_PROPERTIES")
+        del bpy.types.Scene.freemocap_properties
     except Exception as e:
-        print(f"Error unregistering {__file__} as add-on: {e}")
+        print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Error unregistering {__file__} as add-on: {e}")
 
 
 def register():
     import bpy
-
-    print(f"Registering {__file__} as add-on")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Checking and/or installing optional dependencies...")
+    check_and_install_dependencies()
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering {__file__} as add-on")
     from .blender_ui import BLENDER_USER_INTERFACE_CLASSES
-    print(f"Registering classes {BLENDER_USER_INTERFACE_CLASSES}")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering classes {BLENDER_USER_INTERFACE_CLASSES}")
     for cls in BLENDER_USER_INTERFACE_CLASSES:
-        print(f"Registering class {cls.__name__}")
+        print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering class {cls.__name__}")
         bpy.utils.register_class(cls)
 
-        # this is a sloppy way to add keymaps (shortcuts) to some operators, we can improve this later
-        if cls.__name__ == "FMC_ADAPTER_run_all":
+        # this is a clunky way to add keymaps (shortcuts) to some operators, we can improve this later
+        if cls.__name__ == "FREEMOCAP_load_data":
             # Add the keymap configuration
             wm = bpy.context.window_manager
             km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
             kmi = km.keymap_items.new(cls.bl_idname, 'R', 'PRESS', shift=True, alt=True)
             addon_keymaps.append((km, kmi))
-        if cls.__name__ == "FMC_ADAPTER_clear_scene":
+        if cls.__name__ == "FREEMOCAP_clear_scene":
             wm = bpy.context.window_manager
             km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
             kmi = km.keymap_items.new(cls.bl_idname, 'X', 'PRESS', shift=True, alt=True)
             addon_keymaps.append((km, kmi))
 
-    print("Registering property group FMC_ADAPTER_PROPERTIES")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering property group FREEMOCAP_PROPERTIES")
 
-    from freemocap_blender_addon.blender_ui import FMC_ADAPTER_PROPERTIES
-    bpy.types.Scene.fmc_adapter_properties = bpy.props.PointerProperty(type=FMC_ADAPTER_PROPERTIES)
+    from freemocap_blender_addon.blender_ui import FREEMOCAP_CORE_PROPERTIES, FREEMOCAP_UI_PROPERTIES
+    bpy.types.Scene.freemocap_properties = bpy.props.PointerProperty(type=FREEMOCAP_CORE_PROPERTIES)
+    bpy.types.Scene.freemocap_ui_properties = bpy.props.PointerProperty(type=FREEMOCAP_UI_PROPERTIES)
 
 
-    print(f"Finished registering {__file__} as add-on!")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Finished registering {__file__} as add-on!")
 
 addon_keymaps = []
 
 if __name__ == "__main__":
-    print(f"Running {__file__} as main file ")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Running {__file__} as main file ")
     register()
-    print(f"Finished running {__file__} as main file!")
+    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Finished running {__file__} as main file!")

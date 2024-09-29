@@ -2,11 +2,11 @@ import math as m
 import time
 
 from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
-from bpy.types import Operator
+import  bpy
 
 
-class FMC_ADAPTER_OT_export_fbx(Operator):
-    bl_idname = 'fmc_adapter._export_fbx'
+class FREEMOCAP_OT_export_fbx(bpy.types.Operator):
+    bl_idname = 'freemocap._export_fbx'
     bl_label = 'Freemocap Adapter - Export FBX'
     bl_description = 'Exports a FBX file containing the rig, the mesh and the baked animation'
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
@@ -14,9 +14,9 @@ class FMC_ADAPTER_OT_export_fbx(Operator):
     def execute(self, context):
         print('Executing Export FBX...')
         scene = context.scene
-        fmc_adapter_tool = scene.fmc_adapter_properties
+        freemocap_tool = scene.freemocap_properties
 
-        recording_path = fmc_adapter_tool.recording_path
+        recording_path = freemocap_tool.recording_path
         if recording_path == "":
             print("No recording path specified")
             return {'CANCELLED'}
