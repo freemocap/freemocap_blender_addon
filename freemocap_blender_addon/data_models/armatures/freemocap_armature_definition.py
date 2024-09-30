@@ -1,3 +1,4 @@
+from freemocap_blender_addon.core_functions.data_models.armatures.root_bone_name import ROOT_BONE_NAME
 from freemocap_blender_addon.data_models.armatures.armature_bone_info import (
     ArmatureBoneInfo,
 )
@@ -5,7 +6,7 @@ from freemocap_blender_addon.data_models.armatures.armature_bone_info import (
 
 armature_freemocap = {
     "pelvis": ArmatureBoneInfo(
-        parent_bone="root",
+        parent_bone=ROOT_BONE_NAME,
         connected=False,
         parent_position="head",
         default_length=0.05,

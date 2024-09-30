@@ -77,7 +77,7 @@ def register():
             kmi = km.keymap_items.new(cls.bl_idname, 'X', 'PRESS', shift=True, alt=True)
             addon_keymaps.append((km, kmi))
 
-    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering property group FREEMOCAP_PROPERTIES")
+    print("[FREEMOCAP-BLENDER-ADDON-INIT] - Registering property group FREEMOCAP_PROPERTIES")
 
     from freemocap_blender_addon.blender_ui import FREEMOCAP_CORE_PROPERTIES, FREEMOCAP_UI_PROPERTIES
     bpy.types.Scene.freemocap_properties = bpy.props.PointerProperty(type=FREEMOCAP_CORE_PROPERTIES)

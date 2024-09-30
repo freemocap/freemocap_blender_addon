@@ -5,18 +5,19 @@ from typing import List
 import numpy as np
 from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
 from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
-from freemocap_blender_addon.core_functions.rig.add_rig import add_rig, AddRigMethods
 from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
 from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from .create_rig.add_rig_method_enum import AddRigMethods
+from .create_rig.create_rig import create_rig
 
 from .create_video.create_video import create_video
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
-from .rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
+from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -198,7 +199,7 @@ class MainController:
     def add_rig(self):
         try:
             print("Adding rig...")
-            self.rig = add_rig(
+            self.rig = create_rig(
                 bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig_name=self.rig_name,
                 parent_object=self._data_parent_object,
@@ -367,7 +368,7 @@ class MainController:
         #Blender stuff
         self.create_empties()
         self.add_rig()
-        self.save_bone_and_joint_data_from_rig()
+        # self.save_bone_and_joint_data_from_rig()
         self.attach_rigid_body_mesh_to_rig()
         self.attach_skelly_mesh_to_rig()
         self.create_center_of_mass_mesh()

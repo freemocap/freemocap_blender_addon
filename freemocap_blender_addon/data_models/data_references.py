@@ -1,4 +1,4 @@
-from freemocap_blender_addon.data_models.armatures.freemocap import armature_freemocap
+from freemocap_blender_addon.data_models.armatures.freemocap_armature_definition import armature_freemocap
 from freemocap_blender_addon.data_models.armatures.ue_metahuman_simple import armature_ue_metahuman_simple
 from freemocap_blender_addon.data_models.poses.freemocap_apose import freemocap_apose
 from freemocap_blender_addon.data_models.poses.freemocap_tpose import freemocap_tpose

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import List, Union, Dict, Optional
 from enum import Enum
@@ -82,7 +83,7 @@ class IKConstraint(Constraint):
     pole_angle: float
 
 
-ALL_BONES_CONSTRAINT_DEFINITIONS: Dict[
+_BONE_CONSTRAINT_DEFINITIONS: Dict[
     str,
     List[
         Union[
@@ -653,3 +654,6 @@ ALL_BONES_CONSTRAINT_DEFINITIONS: Dict[
         )
     ],
 }
+
+def get_bone_constraint_definitions():
+    return deepcopy(_BONE_CONSTRAINT_DEFINITIONS)
