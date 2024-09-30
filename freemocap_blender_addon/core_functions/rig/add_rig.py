@@ -63,6 +63,7 @@ def add_rig(
     elif add_rig_method == AddRigMethods.BY_BONE:
         rig = add_rig_by_bone(
             bone_data=bone_data,
+            rig_name=rig_name,
             armature=ArmatureType.FREEMOCAP,
             pose=PoseType.FREEMOCAP_TPOSE,
             add_ik_constraints=False,
@@ -901,6 +902,7 @@ def add_rig_rigify(
 
 def add_rig_by_bone(
     bone_data: Dict[str, Dict[str, float]],
+    rig_name: str,
     armature: Dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
     pose: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
     add_ik_constraints: bool = False,
