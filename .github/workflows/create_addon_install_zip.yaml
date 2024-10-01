@@ -2,44 +2,49 @@ name: Create and Upload Zip
 
 on:
   push:
-    branches:
-      - main 
+    tags:
+      - 'v*'
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Create zip file
-      run: zip -r freemocap_blender_addon.zip freemocap_blender_addon/
+      - name: Extract version from __init__.py
+        id: get_version
+        run: |
+          version=$(grep -Po '(?<=^__version__ = ")[^"]*' freemocap_blender_addon/__init__.py)
+          echo ::set-output name=version::$version
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: freemocap_blender_addon
-        path: freemocap_blender_addon.zip
+      - name: Create zip file
+        run: zip -r freemocap_blender_addon.zip freemocap_blender_addon/
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ steps.get_tag.outputs.tag }}
-        draft: false
-        prerelease: false
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: freemocap_blender_addon
+          path: freemocap_blender_addon.zip
 
-    - name: Upload to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./freemocap_blender_addon.zip
-        asset_name: freemocap_blender_addon.zip
-        asset_content_type: application/zip
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./freemocap_blender_addon.zip
+          asset_name: freemocap_blender_addon.zip
+          asset_content_type: application/zip
