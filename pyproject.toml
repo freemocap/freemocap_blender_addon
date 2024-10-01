@@ -24,7 +24,7 @@ Github = "https://github.com/freemocap/freemocap_blender_addon"
 
 
 [tool.bumpver]
-current_version = "v2024.09.1024"
+current_version = "v2024.10.1025"
 
 version_pattern = "vYYYY.0M.BUILD[-TAG]"
 commit_message  = "Bump version {old_version} -> {new_version}"
