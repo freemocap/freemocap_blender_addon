@@ -1,8 +1,7 @@
 import re
 
 import bpy
-
-
+from freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
 
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     show_base_elements_options: bpy.props.BoolProperty(
@@ -16,37 +15,37 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_armature',
+                                                      panel_property=ViewPanelPropNames.SHOW_ARMATURE.value,
                                                       parent_pattern=r'_rig\Z|root\Z',
                                                       toggle_children_not_parent=False),
     )  # type: ignore
 
-    show_body_mesh: bpy.props.BoolProperty(
-        name='Body Mesh',
+    show_skelly_mesh: bpy.props.BoolProperty(
+        name='Skelly Mesh',
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_body_mesh',
+                                                      panel_property=ViewPanelPropNames.SHOW_SKELLY_MESH.value,
                                                       parent_pattern=r'skelly_mesh',
                                                       toggle_children_not_parent=False),
     )  # type: ignore
 
-    show_markers: bpy.props.BoolProperty(
-        name='Markers',
+    show_tracked_points: bpy.props.BoolProperty(
+        name='Tracked Points',
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_markers',
+                                                      panel_property=ViewPanelPropNames.SHOW_TRACKED_POINTS.value,
                                                       parent_pattern=r'empties_parent',
                                                       toggle_children_not_parent=True),
     )  # type: ignore
 
-    show_rigid_body: bpy.props.BoolProperty(
-        name='Rigid Body',
+    show_rigid_bodies: bpy.props.BoolProperty(
+        name='Rigid Bodies',
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_rigid_body',
+                                                      panel_property=ViewPanelPropNames.SHOW_RIGID_BODIES.value,
                                                       parent_pattern=r'rigid_body_meshes_parent',
                                                       toggle_children_not_parent=True),
     )  # type: ignore
@@ -56,7 +55,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_center_of_mass',
+                                                      panel_property=ViewPanelPropNames.SHOW_CENTER_OF_MASS.value,
                                                       parent_pattern=r'center_of_mass_data_parent',
                                                       toggle_children_not_parent=True),
     )  # type: ignore
@@ -66,7 +65,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=True,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_videos',
+                                                      panel_property=ViewPanelPropNames.SHOW_VIDEOS.value,
                                                       parent_pattern=r'videos_parent',
                                                       toggle_children_not_parent=True),
     )  # type: ignore
@@ -76,7 +75,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_com_vertical_projection',
+                                                      panel_property=ViewPanelPropNames.SHOW_COM_VERTICAL_PROJECTION.value,
                                                       parent_pattern=r'COM_Vertical_Projection',
                                                       toggle_children_not_parent=False),
     )  # type: ignore
@@ -86,7 +85,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_joint_angles',
+                                                      panel_property=ViewPanelPropNames.SHOW_JOINT_ANGLES.value,
                                                       parent_pattern=r'joint_angles_parent',
                                                       toggle_children_not_parent=True),
     )  # type: ignore
@@ -96,7 +95,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: toggle_element_visibility(a,
                                                       b,
-                                                      panel_property='show_base_of_support',
+                                                      panel_property=ViewPanelPropNames.SHOW_BASE_OF_SUPPORT.value,
                                                       parent_pattern=r'base_of_support',
                                                       toggle_children_not_parent=False),
     )  # type: ignore
@@ -169,7 +168,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='center_of_mass'),
+                                               data_object_basename='center_of_mass'),
     )  # type: ignore
 
     motion_path_head_center: bpy.props.BoolProperty(
@@ -177,7 +176,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='head_center'),
+                                               data_object_basename='head_center'),
     )  # type: ignore
 
     motion_path_neck_center: bpy.props.BoolProperty(
@@ -185,7 +184,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='neck_center'),
+                                               data_object_basename='neck_center'),
     )  # type: ignore
 
     motion_path_hips_center: bpy.props.BoolProperty(
@@ -193,7 +192,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='hips_center'),
+                                               data_object_basename='hips_center'),
     )  # type: ignore
 
     motion_path_right_shoulder: bpy.props.BoolProperty(
@@ -201,7 +200,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_shoulder'),
+                                               data_object_basename='right_shoulder'),
     )  # type: ignore
 
     motion_path_left_shoulder: bpy.props.BoolProperty(
@@ -209,7 +208,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_shoulder'),
+                                               data_object_basename='left_shoulder'),
     )  # type: ignore
 
     motion_path_right_elbow: bpy.props.BoolProperty(
@@ -217,7 +216,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_elbow'),
+                                               data_object_basename='right_elbow'),
     )  # type: ignore
 
     motion_path_left_elbow: bpy.props.BoolProperty(
@@ -225,7 +224,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_elbow'),
+                                               data_object_basename='left_elbow'),
     )  # type: ignore
 
     motion_path_right_wrist: bpy.props.BoolProperty(
@@ -233,7 +232,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_wrist'),
+                                               data_object_basename='right_wrist'),
     )  # type: ignore
 
     motion_path_left_wrist: bpy.props.BoolProperty(
@@ -241,7 +240,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_wrist'),
+                                               data_object_basename='left_wrist'),
     )  # type: ignore
 
     motion_path_right_hip: bpy.props.BoolProperty(
@@ -249,7 +248,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_hip'),
+                                               data_object_basename='right_hip'),
     )  # type: ignore
 
     motion_path_left_hip: bpy.props.BoolProperty(
@@ -257,7 +256,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_hip'),
+                                               data_object_basename='left_hip'),
     )  # type: ignore
 
     motion_path_right_knee: bpy.props.BoolProperty(
@@ -265,7 +264,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_knee'),
+                                               data_object_basename='right_knee'),
     )  # type: ignore
 
     motion_path_left_knee: bpy.props.BoolProperty(
@@ -273,7 +272,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_knee'),
+                                               data_object_basename='left_knee'),
     )  # type: ignore
 
     motion_path_right_ankle: bpy.props.BoolProperty(
@@ -281,7 +280,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='right_ankle'),
+                                               data_object_basename='right_ankle'),
     )  # type: ignore
 
     motion_path_left_ankle: bpy.props.BoolProperty(
@@ -289,7 +288,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=False,
         update=lambda a, b: update_motion_path(a,
                                                b,
-                                               data_object='left_ankle'),
+                                               data_object_basename='left_ankle'),
     )  # type: ignore
 
     show_com_vertical_projection_options: bpy.props.BoolProperty(
@@ -372,12 +371,12 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=(0.007, 0.267, 1.0, 1.0)
     )  # type: ignore
 
-def update_motion_path(self, context, data_object: str):
+def update_motion_path(self, context, data_object_basename: str):
     toggle_motion_path(
         self,
         context,
-        panel_property='motion_path_' + data_object,
-        data_object=data_object,
+        panel_property='motion_path_' + data_object_basename,
+        data_object_basename=data_object_basename,
         show_line=self.motion_path_show_line,
         line_thickness=self.motion_path_line_thickness,
         use_custom_color=self.motion_path_use_custom_color,
@@ -396,7 +395,7 @@ def toggle_element_visibility(self,
                               parent_pattern: str,
                               toggle_children_not_parent: bool,)->None:
 
-    for data_object in bpy.data.objects:
+    for data_object in context.scene.freemocap_properties.data_parent_empty.children_recursive:
         if re.search(parent_pattern, data_object.name):
             hide_objects(data_object,
                          not bool(self[panel_property]),
@@ -406,7 +405,7 @@ def toggle_element_visibility(self,
 def toggle_motion_path(self,
                        context,
                        panel_property: str,
-                       data_object: str,
+                       data_object_basename: str,
                        show_line: bool = True,
                        line_thickness: int = 6,
                        use_custom_color: bool = False,
@@ -422,7 +421,15 @@ def toggle_motion_path(self,
     bpy.ops.object.select_all(action='DESELECT')
 
     # Get reference to the object
-    obj = bpy.data.objects[data_object]
+    data_object_name = None
+    for child in context.scene.freemocap_properties.data_parent_empty.children_recursive:
+        if re.search(data_object_basename, child.name):
+            data_object_name = child.name
+            break
+    if not data_object_name:
+        raise ValueError(f'Object with name {data_object_basename} not found in children of `data_parent_empty`: {context.scene.freemocap_properties.data_parent_empty}')
+
+    obj = bpy.data.objects[data_object_basename]
 
     # Select the object
     obj.select_set(True)
