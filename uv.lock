@@ -1,0 +1,7 @@
+version = 1
+requires-python = ">=3.10, <3.13"
+
+[[package]]
+name = "freemocap-blender-addon"
+version = "2024.9.1024"
+source = { editable = "." }
