@@ -1,8 +1,7 @@
-from lib2to3.pgen2.tokenize import Operator
-
 import bpy
 
-from freemocap_blender_addon.blender_ui.ui_utilities import add_com_vertical_projection, add_base_of_support
+from freemocap_blender_addon.blender_ui.ui_utilities import add_base_of_support
+from freemocap_blender_addon.core_functions.com_bos.add_com_vertical_projection import add_com_vertical_projection
 
 
 class FREEMOCAP_OT_add_base_of_support(bpy.types.Operator):
@@ -12,13 +11,13 @@ class FREEMOCAP_OT_add_base_of_support(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO_GROUPED'}
 
     def execute(self, context):
-
-
         print("Adding Base of Support.......")
         ui_props = context.scene.freemocap_ui_properties
         # Check if the COM_Vertical_Projection object exists, if not create it
         if bpy.data.objects.get("COM_Vertical_Projection") is None:
-            add_com_vertical_projection(neutral_color=ui_props.com_vertical_projection_neutral_color,
+            data_parent_object = context.scene.freemocap_properties.data_parent_empty
+            add_com_vertical_projection(data_parent_object=data_parent_object,
+                                        neutral_color=ui_props.com_vertical_projection_neutral_color,
                                         in_bos_color=ui_props.com_vertical_projection_in_bos_color,
                                         out_bos_color=ui_props.com_vertical_projection_out_bos_color)
 

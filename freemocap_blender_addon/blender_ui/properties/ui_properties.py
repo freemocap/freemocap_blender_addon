@@ -1,6 +1,7 @@
+import re
+
 import bpy
 
-from freemocap_blender_addon.blender_ui.ui_utilities import toggle_element_visibility, update_motion_path
 
 
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
@@ -114,7 +115,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         name='',
         min=1,
         max=6,
-        default=6,
+        default=2,
     )  # type: ignore
 
     motion_path_use_custom_color: bpy.props.BoolProperty(
@@ -302,7 +303,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         size=4,
         min=0.0,
         max=1.0,
-        default=(1.0, 1.0, 1.0, 1.0)
+        default=(1.0, 1.0, 0.0, 1.0)
     )  # type: ignore
 
     com_vertical_projection_in_bos_color: bpy.props.FloatVectorProperty(
@@ -311,7 +312,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         size=4,
         min=0.0,
         max=1.0,
-        default=(0.0, 1.0, 0.0, 1.0)
+        default=(0.0, .125, 1.0, 1.0)
     )  # type: ignore
 
     com_vertical_projection_out_bos_color: bpy.props.FloatVectorProperty(
@@ -371,3 +372,91 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=(0.007, 0.267, 1.0, 1.0)
     )  # type: ignore
 
+def update_motion_path(self, context, data_object: str):
+    toggle_motion_path(
+        self,
+        context,
+        panel_property='motion_path_' + data_object,
+        data_object=data_object,
+        show_line=self.motion_path_show_line,
+        line_thickness=self.motion_path_line_thickness,
+        use_custom_color=self.motion_path_use_custom_color,
+        line_color=self.motion_path_line_color,
+        frames_before=self.motion_path_frames_before,
+        frames_after=self.motion_path_frames_after,
+        frame_step=self.motion_path_frame_step,
+        show_frame_numbers=self.motion_path_show_frame_numbers,
+        show_keyframes=self.motion_path_show_keyframes,
+        show_keyframe_number=self.motion_path_show_keyframe_number
+    )
+
+def toggle_element_visibility(self,
+                              context,
+                              panel_property: str,
+                              parent_pattern: str,
+                              toggle_children_not_parent: bool,)->None:
+
+    for data_object in bpy.data.objects:
+        if re.search(parent_pattern, data_object.name):
+            hide_objects(data_object,
+                         not bool(self[panel_property]),
+                         toggle_children_not_parent)
+
+# Function to toggle the visibility of the motion paths
+def toggle_motion_path(self,
+                       context,
+                       panel_property: str,
+                       data_object: str,
+                       show_line: bool = True,
+                       line_thickness: int = 6,
+                       use_custom_color: bool = False,
+                       line_color: tuple = (0.5, 1.0, 0.8),
+                       frames_before: int = 10,
+                       frames_after: int = 10,
+                       frame_step: int = 1,
+                       show_frame_numbers: bool = False,
+                       show_keyframes: bool = False,
+                       show_keyframe_number: bool = False)->None:
+
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Get reference to the object
+    obj = bpy.data.objects[data_object]
+
+    # Select the object
+    obj.select_set(True)
+
+    # Set the object as active object
+    bpy.context.view_layer.objects.active = obj
+
+    if bool(self[panel_property]):
+        # Calculate paths
+        bpy.ops.object.paths_calculate(display_type='CURRENT_FRAME', range='SCENE')
+        # Set motion path properties for the specific object
+        if obj.motion_path:
+            obj.motion_path.lines = show_line
+            obj.motion_path.line_thickness = line_thickness
+            obj.motion_path.use_custom_color = use_custom_color
+            obj.motion_path.color = line_color
+            obj.animation_visualization.motion_path.frame_before = frames_before
+            obj.animation_visualization.motion_path.frame_after = frames_after
+            obj.animation_visualization.motion_path.frame_step = frame_step
+            obj.animation_visualization.motion_path.show_frame_numbers = show_frame_numbers
+            obj.animation_visualization.motion_path.show_keyframe_highlight = show_keyframes
+            obj.animation_visualization.motion_path.show_keyframe_numbers = show_keyframe_number
+    else:
+        bpy.ops.object.paths_clear(only_selected=True)
+
+# Function to hide (or unhide) Blender objects
+def hide_objects(data_object: bpy.types.Object,
+                 hide: bool = True,
+                 hide_children_not_parent: bool = False, ) -> None:
+    if hide_children_not_parent:
+        for child_object in data_object.children:
+            # Hide child object
+            child_object.hide_set(hide)
+            # Execute the function recursively
+            hide_objects(child_object, hide, hide_children_not_parent)
+    else:
+        data_object.hide_set(hide)

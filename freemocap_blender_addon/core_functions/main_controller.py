@@ -106,12 +106,12 @@ class MainController:
             type="IMAGE",
             display_scale=0.1,
         )
-        self._center_of_mass_parent_object = create_parent_empty(
-            name="center_of_mass_data_parent",
-            parent_object=self._data_parent_object,
-            type="SPHERE",
-            display_scale=0.1,
-        )
+        # self._data_parent_object = create_parent_empty(
+        #     name="center_of_mass_data_parent",
+        #     parent_object=self._data_parent_object,
+        #     type="SPHERE",
+        #     display_scale=0.1,
+        # )
 
 
     def load_freemocap_data(self):
@@ -192,7 +192,7 @@ class MainController:
             self.empties = create_freemocap_empties(
                 handler=self.freemocap_data_handler,
                 parent_object=self._empty_parent_object,
-                center_of_mass_data_parent=self._center_of_mass_parent_object,                
+                center_of_mass_data_parent=self._data_parent_object,
             )
             print(f"Finished creating keyframed empties: {self.empties.keys()}")
         except Exception as e:
@@ -275,7 +275,7 @@ class MainController:
         try:
             print("Adding Center of Mass Mesh")
             create_center_of_mass_mesh(
-                parent_object=self._center_of_mass_parent_object,
+                parent_object=self._data_parent_object,
                 center_of_mass_empty=self.center_of_mass_empty,
             )
         except Exception as e:
@@ -289,7 +289,7 @@ class MainController:
 
             create_center_of_mass_trails(
                 center_of_mass_trajectory=np.squeeze(self.freemocap_data_handler.center_of_mass_trajectory),
-                parent_empty=self._center_of_mass_parent_object,
+                parent_empty=self._data_parent_object,
                 tail_past_frames=30,
                 trail_future_frames=30   ,
                 trail_starting_width=0.045,
@@ -331,7 +331,7 @@ class MainController:
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self._video_parent_object.hide_set(True)
-        self._center_of_mass_parent_object.hide_set(True)
+        self._data_parent_object.hide_set(True)
 
         # remove default cube
         if "Cube" in bpy.data.objects:
