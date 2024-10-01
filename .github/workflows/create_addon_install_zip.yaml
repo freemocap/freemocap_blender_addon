@@ -44,7 +44,7 @@ jobs:
           echo "- Go to Edit > Preferences > Add-ons" >> release_notes.md
           echo "- Click Install... and select the .zip file" >> release_notes.md
           echo "- Enable the add-on by checking the box next to it" >> release_notes.md
-          echo "- The add-on should now be available in Blender" >> release_notes.md
+          echo "- The add-on should now be available in Blender under the `💀FreeMoCap` tab in the 3d Viewport (press `n` if its not visible)" >> release_notes.md
           echo "(See README.md for more detailed instructions and usage information)" >> release_notes.md
 
       - name: Create GitHub Release
