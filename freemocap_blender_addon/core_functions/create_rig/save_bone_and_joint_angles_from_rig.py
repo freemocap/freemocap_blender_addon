@@ -1,6 +1,6 @@
 import csv
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import bpy
 
@@ -8,6 +8,7 @@ from freemocap_blender_addon.data_models.bones.bone_constraints import get_bone_
 
 
 def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,
+                                        bone_names: List[str],
                                         csv_save_path: str,
                                         start_frame: int,
                                         end_frame: int):
@@ -22,7 +23,7 @@ def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,
         frame_data = {}
         all_bone_data[frame_number] = frame_data
         for bone in rig.pose.bones:
-            if bone.name not in get_bone_constraint_definitions().keys():
+            if bone.name not in bone_names:
                 continue
             frame_data[bone.name] = get_bone_data(bone)
 

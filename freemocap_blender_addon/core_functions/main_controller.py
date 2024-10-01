@@ -20,6 +20,7 @@ from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.set_start_end_frame import set_start_end_frame
+from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
 from ..data_models.parameter_models.parameter_models import Config
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
@@ -49,6 +50,7 @@ class MainController:
         self._output_video_path = str(Path(self.blend_file_path).parent / f"{self.recording_name}_video_output.mp4")
         self.origin_name = f"{self.recording_name}_origin"
         self.rig_name = f"{self.recording_name}_rig"
+        self.bone_constraint_definitions = get_bone_constraint_definitions()
         self._create_parent_empties()
         self.freemocap_data_handler = get_or_create_freemocap_data_handler(
             recording_path=self.recording_path
@@ -206,6 +208,7 @@ class MainController:
                 add_rig_method=AddRigMethods.BY_BONE,
                 keep_symmetry=self.config.add_rig.keep_symmetry,
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
+                bone_constraint_definitions=self.bone_constraint_definitions,
                 use_limit_rotation=self.config.add_rig.use_limit_rotation,
             )
         except Exception as e:
@@ -222,6 +225,7 @@ class MainController:
                 Path(self.blend_file_path).parent / "saved_data" / f"{self.recording_name}_bone_and_joint_data.csv")
             save_bone_and_joint_angles_from_rig(
                 rig=self.rig,
+                bone_names=self.freemocap_data_handler.metadata["bone_data"].keys(),
                 csv_save_path=csv_file_path,
                 start_frame=0,
                 end_frame=self.freemocap_data_handler.number_of_frames,
@@ -368,7 +372,7 @@ class MainController:
         #Blender stuff
         self.create_empties()
         self.add_rig()
-        # self.save_bone_and_joint_data_from_rig()
+        self.save_bone_and_joint_data_from_rig()
         self.attach_rigid_body_mesh_to_rig()
         self.attach_skelly_mesh_to_rig()
         self.create_center_of_mass_mesh()

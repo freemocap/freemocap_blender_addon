@@ -8,7 +8,7 @@ from freemocap_blender_addon.data_models.armatures.armature_bone_info import Arm
 from freemocap_blender_addon.data_models.armatures.bone_name_map import bone_name_map
 from freemocap_blender_addon.data_models.bones.bone_constraints import ConstraintType, \
     LimitRotationConstraint, CopyLocationConstraint, LockedTrackConstraint, DampedTrackConstraint, IKConstraint, \
-    get_bone_constraint_definitions
+    Constraint
 from freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
 from freemocap_blender_addon.data_models.poses.pose_element import PoseElement
 from freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE, FREEMOCAP_TPOSE, \
@@ -19,24 +19,26 @@ def apply_bone_constraints(
     rig: bpy.types.Object,
     add_fingers_constraints: bool,
     parent_object: bpy.types.Object,
-    armature: Dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
-    pose: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
+        bone_constraint_definitions=Dict[str, Constraint],
+    armature_definition: Dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
+    pose_definition: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
+
     use_limit_rotation: bool = False,
 ) -> None:
-    if armature == ArmatureType.UE_METAHUMAN_SIMPLE:
+    if armature_definition == ArmatureType.UE_METAHUMAN_SIMPLE:
         armature_name = UE_METAHUMAN_SIMPLE_ARMATURE
-    elif armature == ArmatureType.FREEMOCAP:
+    elif armature_definition == ArmatureType.FREEMOCAP:
         armature_name = FREEMOCAP_ARMATURE
     else:
         raise ValueError("Invalid armature name")
 
-    if pose == PoseType.FREEMOCAP_TPOSE:
+    if pose_definition == PoseType.FREEMOCAP_TPOSE:
         pose_name = FREEMOCAP_TPOSE
-    elif pose == PoseType.FREEMOCAP_APOSE:
+    elif pose_definition == PoseType.FREEMOCAP_APOSE:
         pose_name = FREEMOCAP_APOSE
-    elif pose == PoseType.UE_METAHUMAN_DEFAULT:
+    elif pose_definition == PoseType.UE_METAHUMAN_DEFAULT:
         pose_name = UE_METAHUMAN_DEFAULT
-    elif pose == PoseType.UE_METAHUMAN_TPOSE:
+    elif pose_definition == PoseType.UE_METAHUMAN_TPOSE:
         pose_name = UE_METAHUMAN_TPOSE
     else:
         raise ValueError("Invalid pose name")
@@ -57,11 +59,10 @@ def apply_bone_constraints(
     #     hand_damped_track_target = 'index'
 
     # Create each constraint
-    bone_definitions = get_bone_constraint_definitions()
     for (
         bone_name,
         constraint_definitions,
-    ) in bone_definitions.items():
+    ) in bone_constraint_definitions.items():
         # If pose bone does not exist, skip it
         if bone_name not in rig.pose.bones:
             continue
