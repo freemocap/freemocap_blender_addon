@@ -1,6 +1,8 @@
 
-from freemocap_blender_addon.blender_ui.ui_utilities import add_joint_angles
 import bpy
+
+from freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import add_joint_angles
+
 
 class FREEMOCAP_OT_add_joint_angles(bpy.types.Operator):
     bl_idname = 'freemocap._add_joint_angles'

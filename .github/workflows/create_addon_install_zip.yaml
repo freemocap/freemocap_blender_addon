@@ -3,7 +3,7 @@ name: Create and Upload Zip
 on:
   push:
     branches:
-      - main  # You can change this to any branch you want to trigger the action on
+      - main 
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Create zip file
-      run: zip -r freemocap_blender_addon.zip ajc27_freemocap_blender_addon/
+      run: zip -r freemocap_blender_addon.zip freemocap_blender_addon/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

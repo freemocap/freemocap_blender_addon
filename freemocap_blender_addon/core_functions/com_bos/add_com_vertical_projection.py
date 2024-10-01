@@ -9,10 +9,10 @@ class COMVerticalProjectionMaterial(Enum):
     OUT_BOS = "COM_Vertical_Projection_Out_BOS"
 
 
-COM_PROJECTION_NAME = "COM_Vertical_Projection"
+COM_PROJECTION_MESH_NAME = "COM_Vertical_Projection"
 
 
-def add_com_vertical_projection(data_parent_object: bpy.types.Object,
+def add_com_vertical_projection(data_parent_empty: bpy.types.Object,
                                 neutral_color: tuple,
                                 in_bos_color: tuple,
                                 out_bos_color: tuple) -> None:
@@ -20,8 +20,8 @@ def add_com_vertical_projection(data_parent_object: bpy.types.Object,
     bpy.ops.object.select_all(action='DESELECT')
 
     # Check if the COM_Vertical_Projection object exists, if it does, break
-    for child in data_parent_object.children:
-        if COM_PROJECTION_NAME in child.name:
+    for child in data_parent_empty.children:
+        if COM_PROJECTION_MESH_NAME in child.name:
             print("COM Vertical Projection already exists, returning...")
             return
 
@@ -32,18 +32,18 @@ def add_com_vertical_projection(data_parent_object: bpy.types.Object,
                                          scale=(0.025, 0.025, 0.025))
 
     # Change the name of the sphere mesh
-    bpy.context.active_object.name = COM_PROJECTION_NAME
+    bpy.context.active_object.name = COM_PROJECTION_MESH_NAME
 
     # Get the mesh object
-    com_projection_mesh = bpy.data.objects[COM_PROJECTION_NAME]
+    com_projection_mesh = bpy.data.objects[COM_PROJECTION_MESH_NAME]
 
-    com_projection_mesh.parent = data_parent_object
+    com_projection_mesh.parent = data_parent_empty
 
     # Add a copy location constraint to the COM vertical projection
     bpy.ops.object.constraint_add(type='COPY_LOCATION')
 
     # Set the copy location target as the Center of Mass emtpy
-    for child in data_parent_object.children:
+    for child in data_parent_empty.children:
         if "center_of_mass" in child.name and "mesh" not in child.name:
             com_projection_mesh.constraints["Copy Location"].target = child
 

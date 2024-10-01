@@ -165,21 +165,6 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().prop(ui_props, ViewPanelPropNames.COM_VERTICAL_PROJECTION_OUT_BOS_COLOR.value)
             box.operator('freemocap._add_com_vertical_projection', text='Add COM Vertical Projection')
 
-        # Joint Angles
-        row = layout.row(align=True)
-        row.prop(ui_props, "show_joint_angles_options", text="",
-                 icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
-        row.label(text="Joint Angles")
-
-        if ui_props.show_joint_angles_options:
-            box = layout.box()
-            split = box.column().row().split(factor=0.5)
-            split.column().label(text="Angle Color:")
-            split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_COLOR.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().label(text="Text Color:")
-            split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_TEXT_COLOR.value)
-            box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
 
         # Base of Support
         row = layout.row(align=True)
@@ -199,3 +184,19 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().label(text="Base of Support Color:")
             split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_COLOR.value)
             box.operator('freemocap._add_base_of_support', text='Add Base of Support')
+
+        # Joint Angles
+        row = layout.row(align=True)
+        row.prop(ui_props, "show_joint_angles_options", text="",
+                 icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Joint Angles")
+
+        if ui_props.show_joint_angles_options:
+            box = layout.box()
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Angle Color:")
+            split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_COLOR.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Text Color:")
+            split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_TEXT_COLOR.value)
+            box.operator('freemocap._add_joint_angles', text='Add Joint Angles')

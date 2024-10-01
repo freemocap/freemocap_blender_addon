@@ -37,7 +37,7 @@ class MainController:
     def __init__(self, recording_path: str, blend_file_path: str, config: Config):
         self.rig = None
         self.empties = None
-        self._data_parent_object = None
+        self._data_parent_empty = None
         self._empty_parent_object = None
         self._rigid_body_meshes_parent_object = None
         self._video_parent_object = None
@@ -58,8 +58,8 @@ class MainController:
         self.empties = None
 
     @property
-    def data_parent_object(self):
-        return self._data_parent_object
+    def data_parent_empty(self):
+        return self._data_parent_empty
 
     @property
     def empty_names(self) -> List[str]:
@@ -85,30 +85,30 @@ class MainController:
         return list(self.empties["other"]["center_of_mass"].values())[0]
 
     def _create_parent_empties(self):
-        self._data_parent_object = create_parent_empty(name=self.origin_name,
+        self._data_parent_empty = create_parent_empty(name=self.origin_name,
                                                        display_scale=1.0,
                                                        type="ARROWS")
         self._empty_parent_object = create_parent_empty(
             name="empties_parent",
-            parent_object=self._data_parent_object,
+            parent_object=self._data_parent_empty,
             type="PLAIN_AXES",
             display_scale=0.3,
         )
         self._rigid_body_meshes_parent_object = create_parent_empty(
             name="rigid_body_meshes_parent",
-            parent_object=self._data_parent_object,
+            parent_object=self._data_parent_empty,
             type="CUBE",
             display_scale=0.2,
         )
         self._video_parent_object = create_parent_empty(
             name="videos_parent",
-            parent_object=self._data_parent_object,
+            parent_object=self._data_parent_empty,
             type="IMAGE",
             display_scale=0.1,
         )
-        # self._data_parent_object = create_parent_empty(
+        # self._data_parent_empty = create_parent_empty(
         #     name="center_of_mass_data_parent",
-        #     parent_object=self._data_parent_object,
+        #     parent_object=self._data_parent_empty,
         #     type="SPHERE",
         #     display_scale=0.1,
         # )
@@ -192,7 +192,7 @@ class MainController:
             self.empties = create_freemocap_empties(
                 handler=self.freemocap_data_handler,
                 parent_object=self._empty_parent_object,
-                center_of_mass_data_parent=self._data_parent_object,
+                center_of_mass_data_parent=self._data_parent_empty,
             )
             print(f"Finished creating keyframed empties: {self.empties.keys()}")
         except Exception as e:
@@ -204,7 +204,7 @@ class MainController:
             self.rig = create_rig(
                 bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig_name=self.rig_name,
-                parent_object=self._data_parent_object,
+                parent_object=self._data_parent_empty,
                 add_rig_method=AddRigMethods.BY_BONE,
                 keep_symmetry=self.config.add_rig.keep_symmetry,
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
@@ -275,7 +275,7 @@ class MainController:
         try:
             print("Adding Center of Mass Mesh")
             create_center_of_mass_mesh(
-                parent_object=self._data_parent_object,
+                parent_object=self._data_parent_empty,
                 center_of_mass_empty=self.center_of_mass_empty,
             )
         except Exception as e:
@@ -289,7 +289,7 @@ class MainController:
 
             create_center_of_mass_trails(
                 center_of_mass_trajectory=np.squeeze(self.freemocap_data_handler.center_of_mass_trajectory),
-                parent_empty=self._data_parent_object,
+                parent_empty=self._data_parent_empty,
                 tail_past_frames=30,
                 trail_future_frames=30   ,
                 trail_starting_width=0.045,
@@ -327,11 +327,11 @@ class MainController:
                         if space.type == "VIEW_3D":  # check if space is a 3D view
                             space.shading.type = "MATERIAL"
 
-        # self.data_parent_object.hide_set(True)
+        # self.data_parent_empty.hide_set(True)
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self._video_parent_object.hide_set(True)
-        self._data_parent_object.hide_set(True)
+        self._data_parent_empty.hide_set(True)
 
         # remove default cube
         if "Cube" in bpy.data.objects:

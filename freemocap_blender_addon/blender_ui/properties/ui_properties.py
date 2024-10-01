@@ -368,7 +368,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         size=4,
         min=0.0,
         max=1.0,
-        default=(0.007, 0.267, 1.0, 1.0)
+        default=(1.0, 1.0, 1.0, 0.5)
     )  # type: ignore
 
 def update_motion_path(self, context, data_object_basename: str):

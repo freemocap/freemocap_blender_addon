@@ -12,7 +12,7 @@ joints_angle_points = {
     'right_ankle': {'parent': 'right_knee', 'child': 'right_foot_index'},
     'left_ankle': {'parent': 'left_knee', 'child': 'left_foot_index'},
 }
-points_of_contact = [
+ground_contact_points = [
     'right_heel',
     'left_heel',
     'right_foot_index',
