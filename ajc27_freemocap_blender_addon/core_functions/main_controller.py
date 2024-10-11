@@ -17,6 +17,7 @@ from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mes
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
+from .add_facial_shape_keys.add_facial_shape_keys import add_facial_shape_keys
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -309,6 +310,18 @@ class MainController:
             print(e)
             print(e)
             raise e
+        
+    def add_facial_shape_keys(self):
+        try:
+            print("Adding facial shape keys...")
+            add_facial_shape_keys(
+                recording_path=self.recording_path,
+                data_parent_object=self._data_parent_object,
+            )
+        except Exception as e:
+            print(f"Failed to add facial shape keys: {e}")
+            print(e)
+            raise e
 
     def setup_scene(self):
         import bpy
@@ -372,6 +385,7 @@ class MainController:
         self.attach_skelly_mesh_to_rig()
         self.create_center_of_mass_mesh()
         # self.create_center_of_mass_trails()
+        self.add_facial_shape_keys()
         self.add_videos()
         self.setup_scene()
         # self.create_video()
