@@ -163,7 +163,7 @@ def attach_skelly_by_bone_mesh(
  
     # Set material 'Base' as material 0 for all skelly bone meshes
     for skelly_mesh in skelly_meshes:
-        skelly_mesh.data.materials[0] = bpy.data.materials['Base']
+        skelly_mesh.data.materials[0] = bpy.data.materials['Bone']
 
     # Rename the first mesh to skelly_mesh
     skelly_meshes[0].name = "skelly_mesh"
