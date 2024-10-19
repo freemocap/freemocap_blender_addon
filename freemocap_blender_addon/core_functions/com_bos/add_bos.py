@@ -13,7 +13,7 @@ def add_base_of_support(data_parent_empty: bpy.types.Object,
     # Add a plane mesh
     bpy.ops.mesh.primitive_plane_add(enter_editmode=False,
                                      align='WORLD',
-                                     location=(0, 0, 0.01),
+                                     location=(0, 0, 0.002),
                                      scale=(1, 1, 1))
 
     # Change the name of the plane mesh

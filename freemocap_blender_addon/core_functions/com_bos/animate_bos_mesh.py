@@ -34,7 +34,11 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
             break
     if com_projection_mesh is None:
         raise ValueError("COM Projection Mesh not found")
-    
+
+    # Set switch node index based on Blender version (to void an error)
+    switch_node_index = 1 if bpy.app.version < (4, 1, 0) else 0
+
+    # Get current frame to restore it at the end
     current_frame = scene.frame_current
 
     for frame in range(scene.frame_start, scene.frame_end):
@@ -61,24 +65,24 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
                 bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Set Position_" + contact_point_object.name].inputs[3].keyframe_insert(data_path='default_value', frame=frame)
 
                 # Enable the Mesh Switch node
-                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[1].enabled = True
+                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[switch_node_index].default_value = True
 
                 # Insert a keyframe to the corresponding point
-                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[1].keyframe_insert(data_path='enabled', frame=frame)
+                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
 
             else:
 
                 # Disable the Circle Mesh node
-                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[1].enabled = False
+                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[switch_node_index].default_value = False
 
                 # Insert a keyframe to the corresponding point
-                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[1].keyframe_insert(data_path='enabled', frame=frame)
+                bpy.data.node_groups["Geometry Nodes_base_of_support"].nodes["Switch_" + contact_point_object.name].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
 
         # Check if the COM Vertical Projection is intersecting with the base of support to change its material accordingly
         if base_of_support_visible:
 
             # Enable the BOS Visible Switch
-            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[1].enabled = True
+            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = True
 
             # Get the location of the COM Vertical Projection
             com_vertical_projection_location = com_projection_mesh.matrix_world.translation
@@ -108,18 +112,18 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
             # Check if the COM Vertical Projection is intersecting with the base of support
             if polygon.contains(point):
                 # Change the material of the COM Vertical Projection to In Base of Support
-                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[1].default_value = True
+                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = True
             else:
                 # Change the material of the COM Vertical Projection to Out Base of Support
-                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[1].default_value = False
+                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = False
 
         else:
             # Disable the BOS Visible Switch
-            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[1].enabled = False
+            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = False
 
         # Insert a keyframe to the COM Vertical Projection switch nodes
-        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[1].keyframe_insert(data_path='enabled', frame=frame)
-        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[1].keyframe_insert(data_path='enabled', frame=frame)
+        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
+        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
 
     # Restore the current frame
     scene.frame_current = current_frame

@@ -166,24 +166,24 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             box.operator('freemocap._add_com_vertical_projection', text='Add COM Vertical Projection')
 
 
-        # # Base of Support
-        # row = layout.row(align=True)
-        # row.prop(ui_props, "show_base_of_support_options", text="",
-        #          icon='TRIA_DOWN' if ui_props.show_base_of_support_options else 'TRIA_RIGHT', emboss=False)
-        # row.label(text="Base of Support")
-        #
-        # if ui_props.show_base_of_support_options:
-        #     box = layout.box()
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Z Threshold (m):")
-        #     split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_Z_THRESHOLD.value)
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Point of Contact Radius (cm):")
-        #     split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_POINT_RADIUS.value)
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Base of Support Color:")
-        #     split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_COLOR.value)
-        #     box.operator('freemocap._add_base_of_support', text='Add Base of Support')
+        # Base of Support
+        row = layout.row(align=True)
+        row.prop(ui_props, "show_base_of_support_options", text="",
+                 icon='TRIA_DOWN' if ui_props.show_base_of_support_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Base of Support")
+        
+        if ui_props.show_base_of_support_options:
+            box = layout.box()
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Z Threshold (m):")
+            split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_Z_THRESHOLD.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Point of Contact Radius (cm):")
+            split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_POINT_RADIUS.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Base of Support Color:")
+            split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_COLOR.value)
+            box.operator('freemocap._add_base_of_support', text='Add Base of Support')
         #
         # # Joint Angles
         # row = layout.row(align=True)
