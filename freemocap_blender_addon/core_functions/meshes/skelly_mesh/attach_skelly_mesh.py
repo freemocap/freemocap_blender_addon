@@ -161,6 +161,10 @@ def attach_skelly_by_bone_mesh(
 
         # Apply the transformations to the Skelly part
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+ 
+    # Set material 'Base' as material 0 for all skelly bone meshes
+    for skelly_mesh in skelly_meshes:
+        skelly_mesh.data.materials[0] = bpy.data.materials['Bone']
 
     # Rename the first mesh to skelly_mesh
     skelly_meshes[0].name = "skelly_mesh"
