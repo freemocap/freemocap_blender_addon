@@ -17,8 +17,9 @@ from freemocap_blender_addon.data_models.data_references import ArmatureType, Po
 from freemocap_blender_addon.data_models.armatures.bone_name_map import (
     bone_name_map,
 )
-from freemocap_blender_addon.data_models.meshes.skelly_bones import (
-    SKELLY_BONES
+from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import (
+    skelly_bone_names,
+    get_skelly_bones,
 )
 
 SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")
