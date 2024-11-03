@@ -5,8 +5,8 @@ import numpy as np
 from freemocap_blender_addon.freemocap_data.calculate_keypoint_trajectories import \
     calculate_virtual_trajectories
 
-from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapRecordingData
-from skelly_blender.core.pure_python.freemocap_data.freemocap_recording_data.transform_skeleton_data import get_low_velocity_frame
+from skellyblender.core.pure_python.freemocap_data.freemocap_recording_data import FreemocapRecordingData
+from skellyblender.core.pure_python.freemocap_data.freemocap_recording_data.transform_skeleton_data import get_low_velocity_frame
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.helpers.transformer import FreemocapDataTransformer
 

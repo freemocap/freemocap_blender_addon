@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from skelly_blender.tests.download_test_data import get_test_data_path
+from skellyblender.tests.download_test_data import get_test_data_path
 
 
 @pytest.fixture()

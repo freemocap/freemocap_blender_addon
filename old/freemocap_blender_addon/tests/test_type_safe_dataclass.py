@@ -3,7 +3,7 @@ from typing import List, Dict
 
 import pytest
 
-from skelly_blender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass, TypeHintError, \
+from skellyblender.core.pure_python.utility_classes.type_safe_dataclass import TypeSafeDataclass, TypeHintError, \
     enforce_type_hints
 
 
