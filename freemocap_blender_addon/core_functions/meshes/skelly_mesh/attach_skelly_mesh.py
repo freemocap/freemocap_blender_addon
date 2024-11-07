@@ -17,7 +17,7 @@ from freemocap_blender_addon.data_models.data_references import ArmatureType, Po
 from freemocap_blender_addon.data_models.armatures.bone_name_map import (
     bone_name_map,
 )
-from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import (
+from freemocap_blender_addon.data_models.meshes.skelly_bones import (
     skelly_bone_names,
     get_skelly_bones,
 )
@@ -73,6 +73,9 @@ def attach_skelly_by_bone_mesh(
 
     # Change to edit mode
     bpy.ops.object.mode_set(mode='EDIT')
+
+    # Get the skelly bones dictionary
+    SKELLY_BONES = get_skelly_bones()
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
