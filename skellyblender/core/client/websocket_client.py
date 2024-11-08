@@ -88,9 +88,9 @@ class WebSocketClient:
         # elif payload['type'] == RecordingInfo.__name__:
         #     logger.gui(f"Received RecordingInfo object")
         #     self.new_recording_info_available.emit(RecordingInfo(**payload))
-        # elif payload['type'] == AppStateDTO.__name__:
-        #     logger.gui(f"Received AppStateDTO object")
-        #     self.new_app_state_available.emit(AppStateDTO(**payload))
+        # elif payload['type'] == SkellycamAppStateDTO.__name__:
+        #     logger.gui(f"Received SkellycamAppStateDTO object")
+        #     self.new_app_state_available.emit(SkellycamAppStateDTO(**payload))
         # elif payload['type'] == CurrentFrameRate.__name__:
         #     logger.gui(f"Received CurrentFrameRate object")
         #     self.new_framerate_info_available.emit(CurrentFrameRate(**payload))
