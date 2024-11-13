@@ -13,6 +13,7 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .create_video.create_video import create_video
+from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
@@ -350,6 +351,17 @@ class MainController:
             end_frame=bpy.context.scene.frame_end,
         )
 
+    def export_3d_model(self):
+        print("Exporting 3D model...")
+        try:
+            export_3d_model(
+                extensions=['fbx'],
+                recording_folder=self.recording_path,
+                rename_root_bone=False,
+            )
+        except Exception as e:
+            print(f"Failed to export 3D model: {e}")
+            raise e
 
     def save_blender_file(self):
         print("Saving blender file...")
@@ -380,6 +392,7 @@ class MainController:
         self.add_videos()
         self.setup_scene()
         # self.create_video()
+        self.export_3d_model()
         self.save_blender_file()
-        # export_fbx(recording_path=recording_path)
+
 
