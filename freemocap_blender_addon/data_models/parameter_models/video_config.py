@@ -1,49 +1,250 @@
-try:
-    import cv2
-except Exception as e:
-    pass
-export_profiles = {
+from pathlib import Path
+from freemocap_blender_addon import PACKAGE_ROOT_PATH
+
+EXPORT_PROFILES = {
     'debug': {
         'resolution_x': 1920,
         'resolution_y': 1080,
-        'bitrate': 2000000,
-        'visual_components': [
-            "frame_number",
-            "logo",
-            "recording_parameters",
-            "mediapipe_skeleton_segment_lengths",
+        'render_cameras': {
+            'Front': {
+                'resolution_x': 1920,
+                'resolution_y': 1080,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': 0.0, # value between -1 and 1
+                'translate_y': 0.0, # value between -1 and 1
+                'view_margin': 0.1, # margin between camera view and markers view area
+            },
+            # 'Right': {
+            #     'resolution_x': 720,
+            #     'resolution_y': 1280,
+            #     'scale_space': 'RELATIVE',
+            #     'scale_x': 0.3,
+            #     'scale_y': 0.3,
+            #     'translate_relative': True,
+            #     'translate_x': 0.4,
+            #     'translate_y': -0.3,
+            #     'view_margin': 0.0,
+            # },
+            # 'Left': {
+            #     'resolution_x': 720,
+            #     'resolution_y': 1280,
+            #     'scale_space': 'RELATIVE',
+            #     'scale_x': 0.3,
+            #     'scale_y': 0.3,
+            #     'translate_relative': True,
+            #     'translate_x': -0.4,
+            #     'translate_y': -0.3,
+            #     'view_margin': 0.0,
+            # },
+            # 'Back': {
+            #     'resolution_x': 720,
+            #     'resolution_y': 1280,
+            #     'scale_space': 'RELATIVE',
+            #     'scale_x': 0.5,
+            #     'scale_y': 0.5,
+            #     'translate_relative': True,
+            #     'translate_x': 0.0,
+            #     'translate_y': -0.2,
+            #     'view_margin': 0.0,
+            # },
+            # 'Top': {
+            #     'resolution_x': 1920,
+            #     'resolution_y': 1080,
+            #     'scale_space': 'RELATIVE',
+            #     'scale_x': 0.2,
+            #     'scale_y': 0.2,
+            #     'translate_relative': True,
+            #     'translate_x': -0.35,
+            #     'translate_y': 0.1,
+            #     'view_margin': 0.0,
+            # },
+        },
+        'overlays': {
+            "logo": {
+                'type': 'image',
+                'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo_white_outline.png"),
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.2,
+                'scale_y': 0.2,
+                'translate_relative': True,
+                'translate_x': 0.45,
+                'translate_y': 0.4,
+            },
+        },
+        'render_elements': [
+            "center_of_mass_data",
+            "rigid_body_meshes",
+            "videos",
+            "skelly_mesh",            
         ],
     },
     'showcase': {
         'resolution_x': 1080,
         'resolution_y': 1920,
-        'bitrate': 5000000,
-        'visual_components': [
-            "logo",
+        'render_cameras': {
+            'Front': {
+                'resolution_x': 1080,
+                'resolution_y': 1920,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': 0.0,
+                'translate_y': 0.0,
+                'view_margin': 0.1,
+            },
+        },
+        'overlays': {
+            "logo": {
+                'type': 'image',
+                'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo_white_outline.png"),
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.2,
+                'scale_y': 0.2,
+                'translate_relative': True,
+                'translate_x': 0.4,
+                'translate_y': 0.43,
+            },
+        },
+        'render_elements': [
+            "videos",
+            "skelly_mesh",            
         ],
-        'background_path': '/assets/charuco_board.png',
     },
     'scientific': {
         'resolution_x': 1920,
         'resolution_y': 1080,
-        'bitrate': 3000000,
-        'visual_components': [
-            "frame_number",
-            "logo",
-            "recording_parameters",
-            "mediapipe_skeleton_segment_lengths",
-            "plot_com_bos",
+        'render_cameras': {
+            'Front': {
+                'resolution_x': 1920,
+                'resolution_y': 1080,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': 0.0,
+                'translate_y': 0.0,
+                'view_margin': 0.1,
+            },
+            'Right': {
+                'resolution_x': 720,
+                'resolution_y': 1280,
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.3,
+                'scale_y': 0.3,
+                'translate_relative': True,
+                'translate_x': 0.4,
+                'translate_y': -0.3,
+                'view_margin': 0.0,
+            },
+            'Top': {
+                'resolution_x': 1920,
+                'resolution_y': 1080,
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.2,
+                'scale_y': 0.2,
+                'translate_relative': True,
+                'translate_x': -0.35,
+                'translate_y': -0.3,
+                'view_margin': 0.0,
+            },
+        },
+        'overlays': {
+            "logo": {
+                'type': 'image',
+                'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo_white_outline.png"),
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.2,
+                'scale_y': 0.2,
+                'translate_relative': True,
+                'translate_x': 0.45,
+                'translate_y': 0.4,
+            },
+        },
+        'render_elements': [
+            "center_of_mass_data",
+            "rigid_body_meshes",
+            "videos",
+        ],
+    },
+    'multiview': {
+        'resolution_x': 1920,
+        'resolution_y': 1080,
+        'render_cameras': {
+            'Front': {
+                'resolution_x': 960,
+                'resolution_y': 540,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': -0.25,
+                'translate_y': 0.25,
+                'view_margin': 0.05,
+            },
+            'Right': {
+                'resolution_x': 960,
+                'resolution_y': 540,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': 0.25,
+                'translate_y': 0.25,
+                'view_margin': 0.05,
+            },
+            'Top': {
+                'resolution_x': 960,
+                'resolution_y': 540,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': -0.25,
+                'translate_y': -0.25,
+                'view_margin': 0.05,
+            },
+            'Left': {
+                'resolution_x': 960,
+                'resolution_y': 540,
+                'scale_space': 'RELATIVE',
+                'scale_x': 1.0,
+                'scale_y': 1.0,
+                'translate_relative': True,
+                'translate_x': 0.25,
+                'translate_y': -0.25,
+                'view_margin': 0.05,
+            },
+        },
+        'overlays': {
+            "logo": {
+                'type': 'image',
+                'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo_white_outline.png"),
+                'scale_space': 'RELATIVE',
+                'scale_x': 0.2,
+                'scale_y': 0.2,
+                'translate_relative': True,
+                'translate_x': 0.45,
+                'translate_y': 0.4,
+            },
+        },
+        'render_elements': [
+            "center_of_mass_data",
+            "rigid_body_meshes",
         ],
     },
 }
 
-render_parameters = {
+RENDER_PARAMETERS = {
     'scene.render.engine': 'BLENDER_EEVEE',
     'scene.eevee.taa_render_samples': 1,
     'scene.render.image_settings.file_format': 'FFMPEG',
     'scene.render.ffmpeg.format': 'MPEG4',
     'scene.render.ffmpeg.codec': 'H264',
-    'scene.render.ffmpeg.constant_rate_factor': 'LOWEST',
+    'scene.render.ffmpeg.constant_rate_factor': 'VERYLOW',
     'scene.render.ffmpeg.ffmpeg_preset': 'REALTIME',
     'scene.render.fps': 30,
     'scene.render.resolution_percentage': 100,
@@ -56,133 +257,14 @@ render_parameters = {
     'scene.eevee.use_soft_shadows': True,
 }
 
-render_background = {
+RENDER_BACKGROUND = {
     'height': 10,
     'y_axis_offset': 0.1,
 }
 
-lens_FOVs = {
+LENS_FOVS = {
     '50mm': {
         'horizontal_fov': 39.6,
         'vertical_fov': 22.8965642148994,
-    }
-}
-
-color_palette = {
-    'crystal': {
-        'rgb': (164, 214, 217),
-        'bgr': (217, 214, 164),
-        'hex': '#A4D6D9',
-    },
-    'dark_terra_cotta': {
-        'rgb': (217, 81, 87),
-        'bgr': (87, 81, 217),
-        'hex': '#D95157',
-    },
-    'police_blue': {
-        'rgb': (54, 93, 95),
-        'bgr': (95, 93, 54),
-        'hex': '#365D5F',
-    },
-    'japanese_indigo': {
-        'rgb': (37, 67, 66),
-        'bgr': (66, 67, 37),
-        'hex': '#254342',
-    },
-    'glossy_gold': {
-        'rgb': (250, 228, 129),
-        'bgr': (129, 228, 250),
-        'hex': '#FAE481',
-    },
-
-}
-
-visual_components = {
-    'frame_number': {
-        'position_x_pct': 0.02,
-        'position_y_pct': 0.05,
-        'font': cv2.FONT_HERSHEY_SIMPLEX,
-        'fontScale': 1,
-        'color': color_palette['crystal']['bgr'],
-        'thickness': 2,
-        'lineType': cv2.LINE_AA,
-    },
-    'logo': {
-        'relative_path': '/assets/freemocap_logo.png',
-        'resize_largest_side_pct': 0.1,
-        'position_x_pct': 0.9,
-        'position_y_pct': 0.02,
-    },
-    'static_json_table': {
-        'float_decimal_digits': 2,
-    },
-    'recording_parameters': {
-        'relative_path': '/output_data/recording_parameters.json',
-        'position_x_pct': 0.79,
-        'position_y_pct': 0.6,
-        'text_parameters': {
-            'level_1': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.6,
-                'color': color_palette['dark_terra_cotta']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-            'level_2': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.55,
-                'color': color_palette['crystal']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-            'level_3': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.5,
-                'color': color_palette['glossy_gold']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-        },
-    },
-    'mediapipe_skeleton_segment_lengths': {
-        'relative_path': '/output_data/mediapipe_skeleton_segment_lengths.json',
-        'position_x_pct': 0.02,
-        'position_y_pct': 0.07,
-        'text_parameters': {
-            'level_1': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.4,
-                'color': color_palette['dark_terra_cotta']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-            'level_2': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.35,
-                'color': color_palette['crystal']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-            'level_3': {
-                'font': cv2.FONT_HERSHEY_SIMPLEX,
-                'fontScale': 0.3,
-                'color': color_palette['glossy_gold']['bgr'],
-                'thickness': 1,
-                'lineType': cv2.LINE_AA,
-            },
-        },
-    },
-    'plot_com_bos': {
-        'topleft_x_pct': 0.75,
-        'topleft_y_pct': 0.7,
-        'width_pct': 0.23,
-        'height_pct': 0.25,
-        'ground_contact_threshold': 0.05,
-    },
-    'plot_foot_deviation': {
-        'topleft_x_pct': 0.75,
-        'topleft_y_pct': 0.4,
-        'width_pct': 0.23,
-        'height_pct': 0.25,
     }
 }
