@@ -348,6 +348,7 @@ class MainController:
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
             end_frame=bpy.context.scene.frame_end,
+            export_profile="debug",
         )
 
 
@@ -379,7 +380,7 @@ class MainController:
         # self.create_center_of_mass_trails()
         self.add_videos()
         self.setup_scene()
-        # self.create_video()
+        self.create_video()
         self.save_blender_file()
         # export_fbx(recording_path=recording_path)
 

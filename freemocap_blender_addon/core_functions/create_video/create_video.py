@@ -1,44 +1,52 @@
-import time
-from pathlib import Path
-
 import bpy
 
+from freemocap_blender_addon.core_functions.create_video.helpers.place_render_cameras import place_render_cameras
+from freemocap_blender_addon.core_functions.create_video.helpers.place_lights import place_lights
+from freemocap_blender_addon.core_functions.create_video.helpers.rearrange_background_videos import rearrange_background_videos
+from freemocap_blender_addon.core_functions.create_video.helpers.set_render_elements import set_render_elements
+from freemocap_blender_addon.core_functions.create_video.helpers.set_render_parameters import set_render_parameters
+from freemocap_blender_addon.core_functions.create_video.helpers.render_cameras import render_cameras
+from freemocap_blender_addon.core_functions.create_video.helpers.composite_video import composite_video
+from freemocap_blender_addon.core_functions.create_video.helpers.reset_scene_defaults import reset_scene_defaults
 
-def create_video(scene: bpy.types.Scene,
-                 recording_folder: str,
-                 start_frame: int,
-                 end_frame: int,
-                 export_profile: str = 'debug',) -> None:
+from freemocap_blender_addon.data_models.parameter_models.video_config import (
+    EXPORT_PROFILES,
+)
 
-    # Set the output file name
-    video_file_name = Path(recording_folder).name + '.mp4'
-    # Set the output file
-    video_render_path = str(Path(recording_folder) / video_file_name)
-    bpy.context.scene.render.filepath = video_render_path
-    print(f"Exporting video to: {video_render_path} ...")
+def create_video(
+    scene: bpy.types.Scene,
+    recording_folder: str,
+    start_frame: int,
+    end_frame: int,
+    export_profile: str = 'debug',
+) -> None:
 
-    # Set the output format to MPEG4
-    bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-    bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+    place_render_cameras(scene, export_profile)
 
-    # Set the codec
-    bpy.context.scene.render.ffmpeg.codec = 'H264'
+    place_lights(scene)
+
+    rearrange_background_videos(scene, videos_x_separation=0.1)
+
+    set_render_elements(export_profile=export_profile)
+
+    set_render_parameters()
 
     # Set the start and end frames
     bpy.context.scene.frame_start = start_frame
     bpy.context.scene.frame_end = end_frame
 
-    # Get start time
-    start = time.time()
+    render_cameras(
+        recording_folder=recording_folder,
+        export_profile=export_profile,
+    )
 
+    composite_video(
+        scene=scene,
+        recording_folder=recording_folder,
+        export_profile=export_profile,
+    )
 
-    # Render the animation
-    bpy.ops.render.render(animation=True)
+    reset_scene_defaults()
 
-
-
-    if  Path(video_render_path).exists():
-        print(f"Video file successfully created at: {video_render_path}")
-    else:
-        print("ERROR - Video file was not created!! Nothing found at:  {video_render_path} ")
+    return
     
