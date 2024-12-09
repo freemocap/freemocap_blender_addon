@@ -1,8 +1,10 @@
 import bpy
 import os
 
+
 def export_3d_model(
-    extensions: list = ['fbx'],
+    rig: bpy.types.Armature,
+    extensions: list = ['fbx'],# 'bvh'],
     recording_folder: str = '',
     rename_root_bone: bool=False,
 ) -> None:
@@ -12,26 +14,33 @@ def export_3d_model(
 
     armature_original_name = ''
 
-    # Select the armature.
-    for capture_object in bpy.data.objects:
-        if capture_object.type == "ARMATURE":
-            # Rename the root bone if rename_root_bone is True
-            if rename_root_bone:
-                # Save the original rig name to restore it after the export
-                armature_original_name = capture_object.name
-                # Rename the rig if its name is different from root
-                if capture_object.name != "root":
-                    capture_object.name = "root"
+    # Select the rig                
+    rig.select_set(True)
 
-            # Select the rig                
-            capture_object.select_set(True)
+    # Select the meshes parented to the armature
+    child_objects = [obj for obj in bpy.data.objects if obj.parent == rig]
+    for child_object in child_objects:
+        child_object.select_set(True)
 
-            # Select the meshes parented to the armature
-            child_objects = [obj for obj in bpy.data.objects if obj.parent == capture_object]
-            for child_object in child_objects:
-                child_object.select_set(True)
+    # TODO - JSM - Do we need this?
+    if rename_root_bone:
+        # Save the original rig name to restore it after the export
+        armature_original_name = rig.name
+        # Rename the rig if its name is different from root
+        if rig.name != "root":
+            rig.name = "root"
 
-            break
+    # # Select the armature.
+    # for rig in bpy.data.objects:
+    #     if rig.type == "ARMATURE":
+    #         # Rename the root bone if rename_root_bone is True
+    #         if rename_root_bone:
+    #             # Save the original rig name to restore it after the export
+    #             armature_original_name = rig.name
+    #             # Rename the rig if its name is different from root
+    #             if rig.name != "root":
+    #                 rig.name = "root"
+    #         break
 
     # Ensure the folder '3D_model' exists within the recording folder
     export_folder = os.path.join(recording_folder, "3D_model")
@@ -57,9 +66,22 @@ def export_3d_model(
                 add_leaf_bones=True,
             )
 
+        elif extension == "bvh":
+            bpy.ops.export_anim.bvh(
+                filepath=export_path,
+                check_existing=True,
+                frame_start=bpy.context.scene.frame_start,
+                frame_end=bpy.context.scene.frame_end,
+                root_transform_only=False,
+                global_scale=1.0,
+                bone_correction_matrix=None,
+            )
+        else:
+            raise ValueError(f"Unsupported file extension: {extension}")
+
     # Restore the name of the rig object
     if rename_root_bone:
-        for capture_object in bpy.data.objects:
-            if capture_object.type == "ARMATURE":
+        for rig in bpy.data.objects:
+            if rig.type == "ARMATURE":
                 # Restore the original rig name
-                capture_object.name = armature_original_name
+                rig.name = armature_original_name

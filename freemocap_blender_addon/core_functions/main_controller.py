@@ -85,6 +85,9 @@ class MainController:
             raise ValueError("Empties have not been created yet!")
         return list(self.empties["other"]["center_of_mass"].values())[0]
 
+
+
+
     def _create_parent_empties(self):
         self._data_parent_empty = create_parent_empty(name=self.origin_name,
                                                        display_scale=1.0,
@@ -355,7 +358,7 @@ class MainController:
         print("Exporting 3D model...")
         try:
             export_3d_model(
-                extensions=['fbx'],
+                rig = self.rig,
                 recording_folder=self.recording_path,
                 rename_root_bone=False,
             )
@@ -370,10 +373,12 @@ class MainController:
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
 
+
     def load_data(self):
         print("Running all stages...")
 
-        #Pure python stuff
+        # Pure python stuff
+        # TODO - move the non-blender stuff to a another module (prob `skellyforge`)
         self.load_freemocap_data()
         self.calculate_virtual_trajectories()
         self.put_data_in_inertial_reference_frame()
@@ -394,5 +399,3 @@ class MainController:
         # self.create_video()
         self.export_3d_model()
         self.save_blender_file()
-
-
