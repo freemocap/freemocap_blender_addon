@@ -335,7 +335,6 @@ class MainController:
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self._video_parent_object.hide_set(True)
-        self._data_parent_empty.hide_set(True)
 
         # remove default cube
         if "Cube" in bpy.data.objects:

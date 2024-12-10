@@ -24,7 +24,7 @@ def export_3d_model(
             rig.name = "root"
 
     # Ensure the folder '3D_model' exists within the recording folder
-    export_folder = os.path.join(recording_folder, "3d_model")
+    export_folder = os.path.join(recording_folder, "3d_models")
     os.makedirs(export_folder, exist_ok=True)
 
     # Export the file extensions
