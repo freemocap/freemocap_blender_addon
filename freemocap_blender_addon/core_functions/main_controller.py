@@ -13,7 +13,6 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .create_video.create_video import create_video
-from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
@@ -84,9 +83,6 @@ class MainController:
         if self.empties is None:
             raise ValueError("Empties have not been created yet!")
         return list(self.empties["other"]["center_of_mass"].values())[0]
-
-
-
 
     def _create_parent_empties(self):
         self._data_parent_empty = create_parent_empty(name=self.origin_name,
@@ -206,7 +202,7 @@ class MainController:
         try:
             print("Adding rig...")
             self.rig = create_rig(
-                bone_data=self.freemocap_data_handler.metadata["bone_statistics"]["rigid"], #TODO - don't like pulling things out of a metadata dict, should find better solution
+                bone_data=self.freemocap_data_handler.metadata["bone_data"],
                 rig_name=self.rig_name,
                 parent_object=self._data_parent_empty,
                 add_rig_method=AddRigMethods.BY_BONE,
@@ -335,6 +331,7 @@ class MainController:
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self._video_parent_object.hide_set(True)
+        self._data_parent_empty.hide_set(True)
 
         # remove default cube
         if "Cube" in bpy.data.objects:
@@ -351,19 +348,9 @@ class MainController:
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
             end_frame=bpy.context.scene.frame_end,
+            export_profile="debug",
         )
 
-    def export_3d_model(self):
-        print("Exporting 3D model...")
-        try:
-            export_3d_model(
-                rig = self.rig,
-                recording_folder=self.recording_path,
-                rename_root_bone=False,
-            )
-        except Exception as e:
-            print(f"Failed to export 3D model: {e}")
-            raise e
 
     def save_blender_file(self):
         print("Saving blender file...")
@@ -372,12 +359,10 @@ class MainController:
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
 
-
     def load_data(self):
         print("Running all stages...")
 
-        # Pure python stuff
-        # TODO - move the non-blender stuff to a another module (prob `skellyforge`)
+        #Pure python stuff
         self.load_freemocap_data()
         self.calculate_virtual_trajectories()
         self.put_data_in_inertial_reference_frame()
@@ -395,6 +380,7 @@ class MainController:
         # self.create_center_of_mass_trails()
         self.add_videos()
         self.setup_scene()
-        # self.create_video()
-        self.export_3d_model()
+        self.create_video()
         self.save_blender_file()
+        # export_fbx(recording_path=recording_path)
+

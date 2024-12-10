@@ -18,8 +18,8 @@ class FreemocapDataHandler:
     def __init__(self,
                  freemocap_data: FreemocapData):
 
-        self.freemocap_data:FreemocapData = freemocap_data
-        self._intermediate_stages: Dict[str, FreemocapData] = {}
+        self.freemocap_data = freemocap_data
+        self._intermediate_stages = None
         self._transformer = FreemocapDataTransformer(handler=self)
         self._saver = FreemocapDataSaver(handler=self)
         self.mark_processing_stage(name="original_from_file")
