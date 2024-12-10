@@ -79,9 +79,15 @@ def attach_skelly_by_bone_mesh(
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
     for mesh in skelly_bones:
-        skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
-        skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
-        skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
+        try:
+            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
+            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
+            skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
+        except KeyError as e:
+            print(f"Error while updating skelly bones: {e}")
+            # TODO: does it make sense to pop the missing mesh from the dictionary?
+            print(traceback.format_exc())
+            continue
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -89,7 +95,7 @@ def attach_skelly_by_bone_mesh(
     # Define the list that will contain the different Skelly meshes
     skelly_meshes = []
 
-    # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
+    # Iterate through the skelly bones dictionary and add the corresponding skelly mesh
     for mesh in skelly_bones:
         print("Adding Skelly_" + mesh + " mesh...")
         try:
