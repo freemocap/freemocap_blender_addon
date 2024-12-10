@@ -13,6 +13,7 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .create_video.create_video import create_video
+from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
@@ -358,11 +359,22 @@ class MainController:
 
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
-
+    def export_3d_model(self):
+        print("Exporting 3D model...")
+        try:
+            export_3d_model(
+                rig = self.rig,
+                recording_folder=self.recording_path,
+                rename_root_bone=False,
+            )
+        except Exception as e:
+            print(f"Failed to export 3D model: {e}")
+            raise e
     def load_data(self):
         print("Running all stages...")
 
-        #Pure python stuff
+        # Pure python stuff
+        # TODO - move the non-blender stuff to a another module (prob `skellyforge`)
         self.load_freemocap_data()
         self.calculate_virtual_trajectories()
         self.put_data_in_inertial_reference_frame()
@@ -380,7 +392,6 @@ class MainController:
         # self.create_center_of_mass_trails()
         self.add_videos()
         self.setup_scene()
-        self.create_video()
+        # self.create_video()
+        self.export_3d_model()
         self.save_blender_file()
-        # export_fbx(recording_path=recording_path)
-
