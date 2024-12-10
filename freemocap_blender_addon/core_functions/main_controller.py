@@ -259,7 +259,7 @@ class MainController:
         if self.rig is None:
             raise ValueError("Rig is None!")
         try:
-            print("Adding Skelly mesh!!! :D")
+            print("Adding Skelly mesh!!!")
             body_dimensions = self.freemocap_data_handler.get_body_dimensions()
             attach_skelly_mesh_to_rig(
                 rig=self.rig,
