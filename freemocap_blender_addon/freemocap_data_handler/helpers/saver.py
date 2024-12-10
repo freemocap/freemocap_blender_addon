@@ -1,3 +1,4 @@
+import csv
 from dataclasses import asdict, is_dataclass
 import json
 import pickle
@@ -78,19 +79,23 @@ class FreemocapDataSaver:
         print(f"Saved all_frame_name_xyz to {Path(save_path) / 'all_trajectories.csv'}")
 
     def _save_bone_stats(self, save_path: Union[str, Path]):
+        # TODO - I don't like pulling this out of the metadata, but its fine enough for now while we're still living this 'handler' life
+        all_bone_stats = self.handler.metadata.get("bone_statistics", None)
+        file_path = Path(save_path) / "bone_statistics.csv"
+        if all_bone_stats:
+            bone_stats = all_bone_stats.get("measured", None)
 
-        bones = self.handler.metadata.get("measured_bone_data", None)
-
-        if bones is None:
-            raise ValueError("No bone data found in metadata")
+            if bone_stats is None:
+                raise ValueError("No bone data found in metadata")
 
         bone_statistics = []
-        for name, bone in bones.items():
+        for name, bone in bone_stats.items():
             try:
                 bone_statistics.append({
                     'name': name,
                     'mean': bone.mean,
                     'median': bone.median,
+                    'definition': bone.definition,
                     'standard_deviation': bone.standard_deviation,
                     'median_absolute_deviation': bone.median_absolute_deviation,
                     'coefficient_of_variation_std': bone.coefficient_of_variation_std,

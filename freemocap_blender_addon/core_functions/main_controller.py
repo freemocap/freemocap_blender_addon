@@ -206,7 +206,7 @@ class MainController:
         try:
             print("Adding rig...")
             self.rig = create_rig(
-                bone_data=self.freemocap_data_handler.metadata["bone_data"],
+                bone_data=self.freemocap_data_handler.metadata["bone_statistics"]["rigid"], #TODO - don't like pulling things out of a metadata dict, should find better solution
                 rig_name=self.rig_name,
                 parent_object=self._data_parent_empty,
                 add_rig_method=AddRigMethods.BY_BONE,

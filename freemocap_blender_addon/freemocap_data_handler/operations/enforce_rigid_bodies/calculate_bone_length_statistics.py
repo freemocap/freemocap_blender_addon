@@ -1,37 +1,27 @@
-import math
-import statistics
-from typing import Dict, Any
+from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from freemocap_blender_addon.data_models.bones.bone_definition_models import BoneDefinition, BoneStatistics
 
 
 def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
-                                     bone_definitions: Dict[str, BoneDefinition]):
+                                     bone_definitions: Dict[str, BoneDefinition]) -> Dict[str, BoneStatistics]:
     print('Calculating bone length statistics...')
+    bone_stats: Dict[str, BoneStatistics] = {}
 
-    # Reset the lengths list for every virtual bone
-    for bone in bone_definitions:
-        bone_definitions[bone].lengths = []
+    for bone_name, bone_definition in bone_definitions.items():
+        bone_stats[bone_name] = BoneStatistics(name=bone_name, definition=bone_definition)
 
-    bone_definitions['hand.R'].tail = 'right_hand_middle'
-    bone_definitions['hand.L'].tail = 'left_hand_middle'
+        head_name = bone_definition.head
+        tail_name = bone_definition.tail
 
-    # Iterate through the empty_positions dictionary and calculate the distance between the head and tail and append it to the lengths list
-    print(f'Calculating bone length statistics...')
-    for frame_number in range(0, trajectories['hips_center'].shape[0]):
-        # Iterate through each bone
-        for bone_name, bone_definition in bone_definitions.items():
-            # Calculate the length of the bone for this frame
-            head_name = bone_definition.head
-            tail_name = bone_definition.tail
+        head_positions = trajectories[head_name]
+        tail_positions = trajectories[tail_name]
 
-            head_pos = list(trajectories[head_name][frame_number, :])
-            tail_pos = list(trajectories[tail_name][frame_number, :])
+        # Calculate the Euclidean distance between head and tail positions for all frames
+        distances = np.linalg.norm(head_positions - tail_positions, axis=1)
+        bone_definition.lengths = distances.tolist()
 
-            bone_definition.lengths.append(math.dist(head_pos, tail_pos))
 
-    print(f'Bone lengths calculated successfully!\n\n bones: \n\n {bone_definitions.keys()}')
-
-    return bone_definitions
+    return bone_stats

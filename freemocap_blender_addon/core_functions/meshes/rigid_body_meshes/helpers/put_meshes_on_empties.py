@@ -2,7 +2,7 @@ from typing import Any, Dict, Tuple
 
 import bpy
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from freemocap_blender_addon.data_models.bones.bone_definition_models import BoneDefinition
 from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 from .make_bone_mesh import make_bone_mesh
 from .put_sphere_at_location import put_sphere_mesh_at_location

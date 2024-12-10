@@ -18,7 +18,7 @@ class FreemocapData:
     body: FreemocapComponentData
     hands: Dict[str, FreemocapComponentData]
     face: FreemocapComponentData
-    metadata: Optional[Dict[Any, Any]]
+    metadata: Dict[Any, Any] = field(default_factory=dict)
     other: Dict[str, FreemocapComponentData] = field(default_factory=dict)
 
     @classmethod
