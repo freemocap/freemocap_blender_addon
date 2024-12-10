@@ -18,7 +18,6 @@ from freemocap_blender_addon.data_models.armatures.bone_name_map import (
     bone_name_map,
 )
 from freemocap_blender_addon.data_models.meshes.skelly_bones import (
-    skelly_bone_names,
     get_skelly_bones,
 )
 
