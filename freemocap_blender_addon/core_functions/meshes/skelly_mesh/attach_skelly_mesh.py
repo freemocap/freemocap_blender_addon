@@ -78,6 +78,7 @@ def attach_skelly_by_bone_mesh(
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
+    print("Updating skelly bones values...")
     for mesh in skelly_bones:
         try:
             skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
@@ -85,9 +86,12 @@ def attach_skelly_by_bone_mesh(
             skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
         except KeyError as e:
             print(f"Error while updating skelly bones: {e}")
-            # TODO: does it make sense to pop the missing mesh from the dictionary?
+            print(f"missing mesh: {mesh}")
             print(traceback.format_exc())
+            skelly_bones.pop(mesh)
             continue
+        except Exception as e:
+            print("Undefined exception!!")
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
