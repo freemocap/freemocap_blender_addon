@@ -1,16 +1,58 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Dict
-
+import numpy as np
+import math
 
 @dataclass
 class BoneDefinition:
     head: str
     tail: str
-    lengths: list = field(default_factory=list)
-    median: float = 0.0
-    stdev: float = 0.0
 
+@dataclass
+class BoneStatistics:
+    lengths: list = field(default_factory=list) # List of bone lengths
+    _mean: float = None
+    _median: float = None
+    _standard_deviation: float = None
+    _median_absolute_deviation: float = None
+
+    @property
+    def mean(self):
+        if self._mean is None:
+            self._mean= np.nanmean(self.lengths)
+        return self._mean
+
+    @property
+    def median(self):
+        if self._median is  None:
+            self._median = np.nanmedian(self.lengths     )
+        return self._median
+
+    @property
+    def standard_deviation(self):
+        if self._standard_deviation is None:
+            self._standard_deviation = np.nanstd(self.lengths)
+        return self._standard_deviation
+    @property
+    def median_absolute_deviation(self):
+        if self._median_absolute_deviation is None:
+            self._median_absolute_deviation = np.nanmean(
+                [np.abs(length - self.mean) for length in self.lengths if not math.isnan(length)]
+            )
+        return self._median_absolute_deviation
+
+    @property
+    def coefficient_of_variation_std(self):
+        if self.mean is None or self.standard_deviation is None or self.mean == 0:
+            return None
+        return self.standard_deviation / self.mean
+
+    @property
+    def coefficient_of_variation_mad(self):
+        if self.median is None or self.median_absolute_deviation is None or self.median == 0:
+            return None
+        return self.median_absolute_deviation / self.median
 
 _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'pelvis.R': BoneDefinition(

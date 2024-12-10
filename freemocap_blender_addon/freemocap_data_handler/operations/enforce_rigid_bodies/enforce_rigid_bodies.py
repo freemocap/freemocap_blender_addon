@@ -17,17 +17,17 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
     updated_trajectories = deepcopy(original_trajectories)
     mediapipe_heirarchy = get_mediapipe_hierarchy()
 
+    bone_definition_template = get_bone_definitions()
     # Update the information of the virtual bones
-    bones = calculate_bone_length_statistics(trajectories=original_trajectories,
-                                             bone_definitions=get_bone_definitions())
+    measured_bones = calculate_bone_length_statistics(trajectories=original_trajectories,
+                                             bone_definitions=bone_definition_template)
 
     # Print the current bones length median, standard deviation and coefficient of variation
-    log_bone_statistics(bones=bones, type='original')
+    log_bone_statistics(bones=measured_bones, type='measured')
 
-    # Iterate through the lengths array of each bone and check if the length is outside the interval defined by x*stdev with x as a factor
-    # If the bone length is outside the interval, adjust the coordinates of the tail empty and its children so the new bone length is at the border of the interval
+    # Iterate through the lengths array of each bone and adjust the coordinates of the tail empty and its children so that the bone length is the same as the median
 
-    for name, bone in bones.items():
+    for name, bone in measured_bones.items():
         print(f"Enforcing rigid length for bone: {name}...")
 
         desired_length = bone.median
@@ -45,11 +45,7 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
             bone_vector = tail_position - head_position
 
             # Get the normalized bone vector by dividing the bone_vector by its length
-            try:
-                bone_vector_norm = bone_vector / raw_length
-            except ZeroDivisionError:
-                raw_length = 0.0001
-                bone_vector_norm = bone_vector / raw_length
+            bone_vector_norm = bone_vector / raw_length
 
             # Calculate the new tail position delta by multiplying the normalized bone vector by the difference of desired_length and original_length
             position_delta = bone_vector_norm * (desired_length - raw_length)
@@ -63,7 +59,7 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
     print('Bone lengths enforced successfully!')
 
     # Update the information of the virtual bones
-    updated_bones = calculate_bone_length_statistics(trajectories=updated_trajectories, bone_definitions=bones)
+    updated_bones = calculate_bone_length_statistics(trajectories=updated_trajectories, bone_definitions=measured_bones)
 
     # Print the current bones length median, standard deviation and coefficient of variation
     log_bone_statistics(bones=updated_bones, type='updated')
@@ -73,7 +69,8 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
         handler.set_trajectory(name=name, data=trajectory)
 
     handler.mark_processing_stage(name='enforced_rigid_bones',
-                                  metadata={"bone_data": updated_bones,
+                                  metadata={"rigid_bone_data": updated_bones,
+                                            "measured_bone_data": measured_bones,
                                             "body_dimensions": calculate_body_dimensions(bones_info=updated_bones),
                                             "skeleton_hierarchy": get_mediapipe_hierarchy()},
                                   )
@@ -106,16 +103,18 @@ def translate_trajectory_and_its_children(name: str,
 
 def log_bone_statistics(bones: Dict[str, BoneDefinition], type: str):
     log_string = f'\n\n[{type}] Bone Length Statistics:\n'
-    header_string = f"{'BONE':<15} {'MEDIAN (cm)':>12} {'STDEV (cm)':>12} {'CV (%)':>12}"
+    header_string = f"{'BONE':<15} {'MEDIAN (cm)':>12} {'MAD (cm)':>12}  {'MEAN':>12} {'STDEV (cm)':>12} {'CV_STD (%)':>12} {'CV_MAD (%)':>12}"
     log_string += header_string + '\n'
     for name, bone in bones.items():
         # Get the statistic values
         median_string = str(round(bone.median * 100, 7))
-        stdev_string = str(round(bone.stdev * 100, 7))
-        try:
-            cv_string = str(round(bone.stdev / bone.median * 100, 4))
-        except ZeroDivisionError:
-            cv_string = 'N/A'
-        log_string += f"{name:<15} {median_string:>12} {stdev_string:>12} {cv_string:>12}\n"
+        mad_string = str(round(bone.median_absolute_deviation * 100, 7))
+        mean_string = str(round(bone.mean * 100, 7))
+        stdev_string = str(round(bone.standard_deviation * 100, 7))
+        cv_std_string = str(round(bone.coefficient_of_variation_std * 100, 7))
+        cv_mad_string = str(round(bone.coefficient_of_variation_mad * 100, 7))
+
+        log_string += f"{name:<15} {median_string:>12}  {mad_string:>12} {mean_string:>12} {stdev_string:>12} {cv_std_string:>12} {cv_mad_string:>12}\n"
 
     print(log_string)
+

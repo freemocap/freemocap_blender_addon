@@ -6,6 +6,7 @@ from typing import Union, TYPE_CHECKING
 
 import numpy as np
 
+
 # this allows us to import the `FreemocapDataHandler` class for type hinting without causing a circular import
 if TYPE_CHECKING:
     from ..handler import FreemocapDataHandler
@@ -28,6 +29,7 @@ class FreemocapDataSaver:
 
             self._save_npy(save_path)
             self._save_csv(save_path)
+            self._save_bone_stats(save_path)
 
             print(f"Saved freemocap data to {save_path}")
 
@@ -74,6 +76,42 @@ class FreemocapDataSaver:
                    self.handler.all_frame_name_xyz.reshape(self.handler.all_frame_name_xyz.shape[0], -1), delimiter=",",
                    fmt='%s', header=all_csv_header)
         print(f"Saved all_frame_name_xyz to {Path(save_path) / 'all_trajectories.csv'}")
+
+    def _save_bone_stats(self, save_path: Union[str, Path]):
+
+        bones = self.handler.metadata.get("measured_bone_data", None)
+
+        if bones is None:
+            raise ValueError("No bone data found in metadata")
+
+        bone_statistics = []
+        for name, bone in bones.items():
+            try:
+                bone_statistics.append({
+                    'name': name,
+                    'mean': bone.mean,
+                    'median': bone.median,
+                    'standard_deviation': bone.standard_deviation,
+                    'median_absolute_deviation': bone.median_absolute_deviation,
+                    'coefficient_of_variation_std': bone.coefficient_of_variation_std,
+                    'coefficient_of_variation_mad': bone.coefficient_of_variation_mad
+                })
+            except Exception as e:
+                print(f"Error while calculating bone statistics for {name}: {e} - appending empty values")
+                bone_statistics.append({
+                    'name': name,
+                    'mean': None,
+                    'median': None,
+                    'standard_deviation': None,
+                    'median_absolute_deviation': None,
+                    'coefficient_of_variation_std': None,
+                    'coefficient_of_variation_mad': None
+                })
+
+        with open(file_path, 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=bone_statistics[0].keys())
+            writer.writeheader()
+            writer.writerows(bone_statistics)
 
     def _save_npy(self, save_path: Union[str, Path]):
         npy_path = Path(save_path) / "npy"
