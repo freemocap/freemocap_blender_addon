@@ -3,26 +3,28 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
+
 from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
+from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import \
+    create_rigid_body_meshes
 from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
 from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
-
+from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .create_video.create_video import create_video
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
-from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
+from freemocap_blender_addon.core_functions.setup_scene.scene_objects.create_ground_plane import create_ground_plane
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
-from ..data_models.bones.bone_definitions import get_bone_definitions
 from ..data_models.parameter_models.parameter_models import Config
+from ..data_models.parameter_models.video_config import EXPORT_PROFILES, LENS_FOVS, RENDER_PARAMETERS
 from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
@@ -331,13 +333,12 @@ class MainController:
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self._video_parent_object.hide_set(True)
-        self._data_parent_empty.hide_set(True)
 
         # remove default cube
         if "Cube" in bpy.data.objects:
             bpy.data.objects.remove(bpy.data.objects["Cube"])
 
-        # create_scene_objects(scene=bpy.context.scene)
+        create_ground_plane()
 
 
     def create_video(self):
@@ -348,7 +349,9 @@ class MainController:
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
             end_frame=bpy.context.scene.frame_end,
-            export_profile="debug",
+            render_parameters=RENDER_PARAMETERS,
+            export_config=EXPORT_PROFILES['default'],
+            fov_config=  LENS_FOVS['50mm']
         )
 
 
@@ -357,7 +360,7 @@ class MainController:
         import bpy
 
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
-        print(f"Saved .blend file to: {self.blend_file_path}")
+        print(f"Saved .blend file to: {self.blend_file_path} - opening file...")
 
     def load_data(self):
         print("Running all stages...")
@@ -380,7 +383,7 @@ class MainController:
         # self.create_center_of_mass_trails()
         self.add_videos()
         self.setup_scene()
-        self.create_video()
         self.save_blender_file()
+        self.create_video()
         # export_fbx(recording_path=recording_path)
 

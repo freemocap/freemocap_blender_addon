@@ -50,4 +50,3 @@ def place_lights(
         constraint = light.constraints.new(type='COPY_TRANSFORMS')
         constraint.target = bpy.data.objects[camera.name]
 
-    return

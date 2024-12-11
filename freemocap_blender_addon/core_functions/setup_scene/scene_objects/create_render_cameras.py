@@ -1,18 +1,16 @@
+from math import radians, atan
+from typing import Dict, Any
+
 import bpy
 from mathutils import Vector
-from math import radians, atan
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
-    LENS_FOVS,
-)
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
-    EXPORT_PROFILES,
-)
 
-def place_render_cameras(
-    scene: bpy.types.Scene=None,
-    export_profile: str='debug',
-) -> list:
 
+def create_render_cameras(
+        scene: bpy.types.Scene,
+        render_camera_configs: Dict[str, Any],
+        camera_horizontal_fov: float,
+        camera_vertical_fov: float,
+):
     # Delete existing cameras
     while bpy.data.cameras:
         bpy.data.cameras.remove(bpy.data.cameras[0])
@@ -20,10 +18,6 @@ def place_render_cameras(
     # Create a nested collection to store the cameras
     scene_collection = bpy.data.collections.new('Render_Cameras')
     scene.collection.children.link(scene_collection)
-
-    # Get FOV values
-    camera_horizontal_fov = LENS_FOVS['50mm']['horizontal_fov']
-    camera_vertical_fov = LENS_FOVS['50mm']['vertical_fov']
 
     # Set the starting extreme points
     lowest_x = Vector([0, 0, 0])
@@ -34,16 +28,17 @@ def place_render_cameras(
     highest_z = Vector([0, 0, 0])
 
     # Find the extreme points
-    for frame in range (scene.frame_start, scene.frame_end):
+    # TODO - JSM NOTE - Much faster/easier to get these values by analysis of the raw trajecotry data. I think it might already exist in the `FreeMoCap Data Handler` somewhere
+    for frame in range(scene.frame_start, scene.frame_end):
         scene.frame_set(frame)
         for object in scene.objects:
             if (object.type == 'EMPTY'
-                and object.name not in (
-                    'freemocap_origin_axes',
-                    'world_origin',
-                    'center_of_mass_data_parent',
-                    'head',
-                )
+                    and object.name not in (
+                            'freemocap_origin_axes',
+                            'world_origin',
+                            'center_of_mass_data_parent',
+                            'head',
+                    )
             ):
                 if object.matrix_world.translation[0] < lowest_x[0]:
                     lowest_x = object.matrix_world.translation.copy()
@@ -62,7 +57,7 @@ def place_render_cameras(
     scene.frame_set(scene.frame_start)
 
     # Create the cameras of the export profile
-    for camera in EXPORT_PROFILES[export_profile]['render_cameras']:
+    for camera in render_camera_configs:
 
         # Create the camera
         camera_data = bpy.data.cameras.new(name='Camera_' + camera)
@@ -70,7 +65,7 @@ def place_render_cameras(
         scene_collection.objects.link(camera_object)
 
         # Get the camera view margin
-        view_margin = EXPORT_PROFILES[export_profile]['render_cameras'][camera]['view_margin']
+        view_margin = render_camera_configs[camera]['view_margin']
 
         # Set the view leftmost, rightmost, lowest and highest points
         # depending on the camera
@@ -104,27 +99,29 @@ def place_render_cameras(
             rightmost_point = highest_x
             lowest_point = lowest_y
             highest_point = highest_y
+        else:
+            raise ValueError('Invalid camera name')
 
         # Camera distances to cover the view extreme points
         camera_distance_leftmost = (
-            leftmost_point[1]
-            - abs(leftmost_point[0])
-            / atan(radians(camera_horizontal_fov * (1 - view_margin) / 2))
+                leftmost_point[1]
+                - abs(leftmost_point[0])
+                / atan(radians(camera_horizontal_fov * (1 - view_margin) / 2))
         )
         camera_distance_rightmost = (
-            rightmost_point[1]
-            - abs(rightmost_point[0])
-            / atan(radians(camera_horizontal_fov * (1 - view_margin) / 2))
+                rightmost_point[1]
+                - abs(rightmost_point[0])
+                / atan(radians(camera_horizontal_fov * (1 - view_margin) / 2))
         )
         camera_distance_lowest = (
-            lowest_point[1]
-            - ((highest_point[2] - lowest_point[2]) / 2)
-            / atan(radians(camera_vertical_fov * (1 - view_margin) / 2))
+                lowest_point[1]
+                - ((highest_point[2] - lowest_point[2]) / 2)
+                / atan(radians(camera_vertical_fov * (1 - view_margin) / 2))
         )
         camera_distance_highest = (
-            highest_point[1]
-            - ((highest_point[2] - lowest_point[2]) / 2)
-            / atan(radians(camera_vertical_fov * (1 - view_margin) / 2))
+                highest_point[1]
+                - ((highest_point[2] - lowest_point[2]) / 2)
+                / atan(radians(camera_vertical_fov * (1 - view_margin) / 2))
         )
 
         # Calculate the final position of the camera
@@ -171,5 +168,3 @@ def place_render_cameras(
                 camera_distance_on_axis
             )
             camera_object.rotation_euler = (0, 0, 0)
-
-    return

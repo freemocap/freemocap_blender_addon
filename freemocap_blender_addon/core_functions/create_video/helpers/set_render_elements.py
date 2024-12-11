@@ -1,12 +1,9 @@
-import bpy
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
-    EXPORT_PROFILES
-)
+from typing import List, Any, Dict
 
-def set_render_elements(
-    export_profile: str='debug',
-) -> None:
-    
+import bpy
+
+
+def set_render_elements(render_elements: Dict[str, Any]):
     def set_hide_render_recursive(obj):
         obj.hide_render = False
         for child in obj.children:
@@ -19,8 +16,7 @@ def set_render_elements(
 
     # Set hide_render equal to False for the render elements
     for obj in bpy.data.objects:
-        if any(element in obj.name for element in EXPORT_PROFILES[export_profile]['render_elements']):
+        if any(element in obj.name for element in render_elements):
             print("Setting Render Hide: " + obj.name)
             set_hide_render_recursive(obj)
 
-    return

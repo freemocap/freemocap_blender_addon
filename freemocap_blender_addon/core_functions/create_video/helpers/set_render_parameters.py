@@ -1,12 +1,11 @@
+from typing import Dict, Any
+
 import bpy
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
-    RENDER_PARAMETERS
-)
 
-def set_render_parameters() -> None:
 
+def set_render_parameters(render_parameters: Dict[str, Any]) -> None:
     # Set the rendering properties
-    for key, value in RENDER_PARAMETERS.items():
+    for key, value in render_parameters.items():
 
         # Split the key into context and property names
         key_parts = key.split(".")

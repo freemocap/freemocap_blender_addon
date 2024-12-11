@@ -2,7 +2,7 @@ import bpy
 
 
 def create_scene_objects(scene: bpy.types.Scene, export_profile: str = 'debug') -> None:
-    from freemocap_blender_addon.core_functions.setup_scene.scene_objects.ground_plane.create_ground_plane import \
+    from freemocap_blender_addon.core_functions.setup_scene.scene_objects.create_ground_plane import \
         create_ground_plane
     from freemocap_blender_addon.core_functions.setup_scene.scene_objects.lights.create_lights import create_lights
 

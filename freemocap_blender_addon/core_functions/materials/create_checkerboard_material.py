@@ -17,7 +17,7 @@ def create_checker_texture(material,
                            specular: float,
                            metallic: float,
                            noise_scale: float,
-                           square_scale: float) -> Tuple[bpy.types.NodeTree, bpy.types.Node]:
+                           square_scale: float) -> Tuple[bpy.types.NodeTree, bpy.types.Node, bpy.types.Node]:
     nodes = material.node_tree.nodes
     if nodes.get('Principled BSDF'):
         nodes.remove(nodes.get('Principled BSDF'))
@@ -39,13 +39,7 @@ def create_checker_texture(material,
     # Connect the BSDF to the output
     material.node_tree.links.new(output_node.inputs['Surface'], bsdf_node.outputs['BSDF'])
 
-    return nodes, checker_node
-
-
-def create_bsdf_and_output_nodes(nodes):
-    bsdf_node = nodes.new(type='ShaderNodeBsdfPrincipled')
-    output_node = nodes.get('Material Output')
-    return bsdf_node, output_node
+    return nodes, bsdf_node, checker_node
 
 
 def create_checkerboard_material(name: str,
@@ -60,16 +54,16 @@ def create_checkerboard_material(name: str,
     material = bpy.data.materials.get(name)
     if material is None:
         material = create_material_for_mesh(name)
-        nodes, checker_node = create_checker_texture(material=material,
-                                                     color1=color1,
-                                                     color2=color2,
-                                                     square_scale=square_scale,
-                                                     roughness=roughness,
-                                                    specular=specular,
-                                                    metallic=metallic,
-                                                    noise_scale=noise_scale
-                                                     )
-        bsdf_node, output_node = create_bsdf_and_output_nodes(nodes)
+        nodes, bsdf_node, checker_node = create_checker_texture(material=material,
+                                                                color1=color1,
+                                                                color2=color2,
+                                                                square_scale=square_scale,
+                                                                roughness=roughness,
+                                                                specular=specular,
+                                                                metallic=metallic,
+                                                                noise_scale=noise_scale
+                                                                )
+        output_node = nodes.get('Material Output')
         # Connect the Checker Texture node to the BSDF
         material.node_tree.links.new(bsdf_node.inputs['Base Color'], checker_node.outputs['Color'])
         # Connect the BSDF to the output

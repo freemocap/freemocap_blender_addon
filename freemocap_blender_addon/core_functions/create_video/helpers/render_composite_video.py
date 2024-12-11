@@ -1,13 +1,14 @@
-import bpy
 from pathlib import Path
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
-    EXPORT_PROFILES,
-)
+from typing import Any, Dict
+
+import bpy
+
 
 def composite_video(
     scene: bpy.types.Scene,
     recording_folder: str,
-    export_profile: str = 'debug',
+    export_config:  Dict[str, Any],
+    render_camera_configs: Dict[str, Any],
 ) -> None:
     
     # Set up compositor
@@ -21,13 +22,11 @@ def composite_video(
 
     # Create a dictionary to store the render camera nodes
     render_camera_nodes = []
-    render_cameras_count = len(EXPORT_PROFILES[export_profile]['render_cameras'])
+    render_cameras_count = len(render_camera_configs)
 
     # For each render camera create MovieClip, Scale and Translate nodes
-    for index, camera in enumerate(EXPORT_PROFILES[export_profile]['render_cameras']):
-
-        #  Get a reference to the render_camera
-        render_camera = EXPORT_PROFILES[export_profile]['render_cameras'][camera]
+    for index, camera_item in enumerate(render_camera_configs.items()):
+        camera_name, camera_config = camera_item
 
         # Get the render camera file name
         render_camera_filename = Path(recording_folder).name + '_' + camera + '.mp4'
@@ -42,16 +41,16 @@ def composite_video(
 
         # Create Scale node
         scale_node = tree.nodes.new(type="CompositorNodeScale")
-        scale_node.space = render_camera['scale_space']
-        scale_node.inputs[1].default_value = render_camera['scale_x']
-        scale_node.inputs[2].default_value = render_camera['scale_y']
+        scale_node.space = camera_config['scale_space']
+        scale_node.inputs[1].default_value = camera_config['scale_x']
+        scale_node.inputs[2].default_value = camera_config['scale_y']
         scale_node.location = (-600, (render_cameras_count - index) * 300)
 
         # Create Translate node
         translate_node = tree.nodes.new(type="CompositorNodeTranslate")
-        translate_node.use_relative = render_camera['translate_relative']
-        translate_node.inputs[1].default_value = render_camera['translate_x']
-        translate_node.inputs[2].default_value = render_camera['translate_y']
+        translate_node.use_relative = camera_config['translate_relative']
+        translate_node.inputs[1].default_value = camera_config['translate_x']
+        translate_node.inputs[2].default_value = camera_config['translate_y']
         translate_node.location = (-400, (render_cameras_count - index) * 300)
 
         # Link nodes
@@ -103,13 +102,13 @@ def composite_video(
 
     # Create a dictionary to store the overlay nodes
     overlay_nodes = []
-    overlays_count = len(EXPORT_PROFILES[export_profile]['overlays'])
+    overlays_count = len(export_config['overlays'])
 
     # For each overlay create the corresponding node
-    for index, overlay in enumerate(EXPORT_PROFILES[export_profile]['overlays']):
+    for index, overlay in enumerate(export_config['overlays']):
 
         # Get a reference to the overlay object
-        overlay_dict = EXPORT_PROFILES[export_profile]['overlays'][overlay]
+        overlay_dict = export_config['overlays'][overlay]
 
         if overlay_dict['type'] == 'image':
             # Create Image node
@@ -125,6 +124,9 @@ def composite_video(
             plot_image.source = 'SEQUENCE'
             overlay_node.image = plot_image
             overlay_node.frame_duration = scene.frame_end - scene.frame_start
+
+        else:
+            raise ValueError(f"Overlay type {overlay_dict['type']} not supported")
 
         # Create Scale node
         scale_node = tree.nodes.new(type="CompositorNodeScale")
@@ -227,13 +229,12 @@ def composite_video(
     links.new(cameras_overlays_alpha_over_node.outputs[0], output_node.inputs[0])
 
     # Set render settings
-    bpy.context.scene.render.resolution_x = EXPORT_PROFILES[export_profile]['resolution_x']
-    bpy.context.scene.render.resolution_y = EXPORT_PROFILES[export_profile]['resolution_y']
-    output_render_name = Path(recording_folder).name + '_' + export_profile + '.mp4'
-    output_render_path = str(Path(recording_folder) / 'video_export' / output_render_name)
+    bpy.context.scene.render.resolution_x = export_config['resolution_x']
+    bpy.context.scene.render.resolution_y = export_config['resolution_y']
+    output_render_name = Path(recording_folder).name  + '.mp4'
+    output_render_path = str(Path(recording_folder) /  output_render_name)
     bpy.context.scene.render.filepath = output_render_path
 
     # Render the animation
     bpy.ops.render.render(animation=True)
 
-    return

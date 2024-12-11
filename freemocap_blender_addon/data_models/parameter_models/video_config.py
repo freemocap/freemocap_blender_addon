@@ -2,7 +2,7 @@ from pathlib import Path
 from freemocap_blender_addon import PACKAGE_ROOT_PATH
 
 EXPORT_PROFILES = {
-    'debug': {
+    'default': {
         'resolution_x': 1920,
         'resolution_y': 1080,
         'render_cameras': {
@@ -78,7 +78,8 @@ EXPORT_PROFILES = {
             "center_of_mass_data",
             "rigid_body_meshes",
             "videos",
-            "skelly_mesh",            
+            "skelly_mesh",
+            "ground_plane"
         ],
     },
     'showcase': {

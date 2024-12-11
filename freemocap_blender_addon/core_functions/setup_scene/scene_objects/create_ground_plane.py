@@ -8,7 +8,7 @@ from freemocap_blender_addon.core_functions.materials.create_checkerboard_materi
 @dataclass
 class GroundPlaneConfig:
     size: float = 10
-    square_scale: float = 20
+    square_scale: float = 10
     color1: tuple = (0, 0, .01, 1)
     color2: tuple = (0, .008, 0, 1)
     roughness: float = 0.9
@@ -19,7 +19,7 @@ class GroundPlaneConfig:
 
 def create_ground_plane(config: GroundPlaneConfig = GroundPlaneConfig()) -> None:
     # Create a plane object
-    bpy.ops.mesh.primitive_plane_add(size=config.size, enter_editmode=False, align='WORLD', location=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(size=config.size, enter_editmode=False, align='WORLD', location=(0, 0, 0),)
     ground_plane_mesh = bpy.context.object
     ground_plane_mesh.name = "ground_plane"
 

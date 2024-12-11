@@ -31,4 +31,3 @@ def rearrange_background_videos(
             * (videos_x_dimension + videos_x_separation)
         )
 
-    return
