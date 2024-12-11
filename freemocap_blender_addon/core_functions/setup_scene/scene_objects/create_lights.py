@@ -4,7 +4,7 @@ from typing import Dict
 import bpy
 
 
-def place_lights(
+def create_lights(
         scene: bpy.types.Scene = None,
         camera_objects_by_key: Dict[str, bpy.types.Object] = None,
 ) -> None:

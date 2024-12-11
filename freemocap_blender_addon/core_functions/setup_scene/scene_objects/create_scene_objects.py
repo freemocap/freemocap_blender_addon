@@ -4,19 +4,17 @@ import bpy
 def create_scene_objects(scene: bpy.types.Scene, export_profile: str = 'debug') -> None:
     from freemocap_blender_addon.core_functions.setup_scene.scene_objects.create_ground_plane import \
         create_ground_plane
-    from freemocap_blender_addon.core_functions.setup_scene.scene_objects.lights.create_lights import create_lights
+    from freemocap_blender_addon.core_functions.setup_scene.scene_objects.create_lights import create_lights
 
-    # from ajc27_freemocap_blender_addon.core_functions.setup_scene.scene_objects.cameras.create_cameras import create_cameras
-    # cameras = create_cameras(scene=scene, export_profile=export_profile)
-    create_lights(scene=scene, cameras_positions=cameras)
-    create_ground_plane()
-
+    from freemocap_blender_addon.core_functions.setup_scene.scene_objects.create_render_cameras import create_cameras_objects
+    
     # Place the required cameras
-    cameras_positions = create_cameras(scene, export_profile)
+    cameras_positions = create_cameras_objects(scene, export_profile)
 
     # Place the required lights
     create_lights(scene, cameras_positions)
 
+    create_ground_plane()
 
 
 if __name__ == "__main__":

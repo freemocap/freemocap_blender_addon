@@ -50,7 +50,7 @@ if __name__ == "__main__" or __name__ == "<run_path>":
             blender_file_save_path_input = recording_path_input / (recording_path_input.stem + ".blend")
 
         print(f"Running {__file__} with recording_path={recording_path_input}")
-        ajc27_run_as_main_function(recording_path=str(recording_path_input),
+        run_as_main_function(recording_path=str(recording_path_input),
                                    blend_file_path=str(blender_file_save_path_input))
     except Exception as e:
         print(f"ERROR RUNNING {__file__}: \n\n GOT ERROR \n\n {str(e)}")
