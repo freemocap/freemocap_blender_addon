@@ -2,8 +2,7 @@ import bpy
 
 def rearrange_background_videos(
     scene: bpy.types.Scene=None,
-    videos_x_separation: float=0.1
-) -> None:
+    videos_x_separation: float=0.1):
 
     # Create a list with the background videos
     background_videos = []

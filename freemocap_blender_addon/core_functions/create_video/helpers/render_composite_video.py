@@ -9,6 +9,7 @@ def composite_video(
     recording_folder: str,
     export_config:  Dict[str, Any],
     render_camera_configs: Dict[str, Any],
+    rendered_video_paths_by_camera_key: Dict[str, str],
 ) -> None:
     
     # Set up compositor
@@ -26,12 +27,12 @@ def composite_video(
 
     # For each render camera create MovieClip, Scale and Translate nodes
     for index, camera_item in enumerate(render_camera_configs.items()):
-        camera_name, camera_config = camera_item
+        camera_key, camera_config = camera_item
 
         # Get the render camera file name
-        render_camera_filename = Path(recording_folder).name + '_' + camera + '.mp4'
-        render_camera_filepath = str(Path(recording_folder) / 'video_export' / 'render_cameras' / render_camera_filename)
-
+        render_camera_filepath  = Path(rendered_video_paths_by_camera_key[camera_key])
+        if not Path(render_camera_filepath).exists():
+            raise FileNotFoundError(f"Render camera video {render_camera_filepath} not found - cannot create composite video")
         # Create MovieClip node
         video_node = tree.nodes.new(type="CompositorNodeMovieClip")
         video_node.clip = bpy.data.movieclips.load(render_camera_filepath)
@@ -59,6 +60,7 @@ def composite_video(
 
         # Store the last node as the render camera node
         render_camera_nodes.append(translate_node)
+
 
     # If the render cameras are more than one, then combine them using Alpha
     # Over nodes

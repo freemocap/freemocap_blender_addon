@@ -5,12 +5,12 @@ import bpy
 from mathutils import Vector
 
 
-def create_render_cameras(
+def create_cameras_objects(
         scene: bpy.types.Scene,
         render_camera_configs: Dict[str, Any],
         camera_horizontal_fov: float,
         camera_vertical_fov: float,
-):
+) -> Dict[str, bpy.types.Object]:
     # Delete existing cameras
     while bpy.data.cameras:
         bpy.data.cameras.remove(bpy.data.cameras[0])
@@ -57,44 +57,45 @@ def create_render_cameras(
     scene.frame_set(scene.frame_start)
 
     # Create the cameras of the export profile
-    for camera in render_camera_configs:
-
+    camera_objects_by_key = {}
+    for camera_key, camera_config in render_camera_configs.items():
+        camera_name = 'Camera_' + camera_key
         # Create the camera
-        camera_data = bpy.data.cameras.new(name='Camera_' + camera)
-        camera_object = bpy.data.objects.new(name='Camera_' + camera, object_data=camera_data)
+        camera_data = bpy.data.cameras.new(name=camera_name)
+        camera_object = bpy.data.objects.new(name=camera_name, object_data=camera_data)
         scene_collection.objects.link(camera_object)
 
         # Get the camera view margin
-        view_margin = render_camera_configs[camera]['view_margin']
+        view_margin = camera_config['view_margin']
 
         # Set the view leftmost, rightmost, lowest and highest points
         # depending on the camera
-        if camera == 'Front':
+        if camera_key == 'Front':
             leftmost_point = lowest_x
             rightmost_point = highest_x
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Right':
+        elif camera_key == 'Right':
             leftmost_point = lowest_y
             rightmost_point = highest_y
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Left':
+        elif camera_key == 'Left':
             leftmost_point = highest_y
             rightmost_point = lowest_y
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Back':
+        elif camera_key == 'Back':
             leftmost_point = highest_x
             rightmost_point = lowest_x
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Top':
+        elif camera_key == 'Top':
             leftmost_point = lowest_x
             rightmost_point = highest_x
             lowest_point = lowest_y
             highest_point = highest_y
-        elif camera == 'Bottom':
+        elif camera_key == 'Bottom':
             leftmost_point = lowest_x
             rightmost_point = highest_x
             lowest_point = lowest_y
@@ -133,38 +134,41 @@ def create_render_cameras(
         )
 
         #  Set the location and rotation depending on the camera
-        if camera == 'Front':
+        if camera_key == 'Front':
             camera_object.location = (
                 0,
                 -camera_distance_on_axis,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, 0)
-        elif camera == 'Right':
+        elif camera_key == 'Right':
             camera_object.location = (
                 camera_distance_on_axis,
                 0,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, radians(90))
-        elif camera == 'Left':
+        elif camera_key == 'Left':
             camera_object.location = (
                 -camera_distance_on_axis,
                 0,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, radians(-90))
-        elif camera == 'Back':
+        elif camera_key == 'Back':
             camera_object.location = (
                 0,
                 camera_distance_on_axis,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, radians(180))
-        elif camera == 'Top':
+        elif camera_key == 'Top':
             camera_object.location = (
                 0,
                 0,
                 camera_distance_on_axis
             )
             camera_object.rotation_euler = (0, 0, 0)
+
+        camera_objects_by_key[camera_key] = camera_object
+    return camera_objects_by_key
