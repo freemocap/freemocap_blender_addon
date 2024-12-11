@@ -18,7 +18,6 @@ from freemocap_blender_addon.data_models.armatures.bone_name_map import (
     bone_name_map,
 )
 from freemocap_blender_addon.data_models.meshes.skelly_bones import (
-    skelly_bone_names,
     get_skelly_bones,
 )
 
@@ -79,10 +78,22 @@ def attach_skelly_by_bone_mesh(
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
+    missing_meshes = []
     for mesh in skelly_bones:
-        skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
-        skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
-        skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
+        try:
+            skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
+            skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
+            skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
+        except KeyError as e:
+            print(f"missing data for mesh: {mesh}, excluding it from final mesh")
+            missing_meshes.append(mesh)
+            continue
+        except Exception as e:
+            print(f"Error while updating skelly bones: {e}")
+            print(traceback.format_exc())
+
+    for mesh in missing_meshes:
+        skelly_bones.pop(mesh)
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -90,7 +101,7 @@ def attach_skelly_by_bone_mesh(
     # Define the list that will contain the different Skelly meshes
     skelly_meshes = []
 
-    # Iterate through the skelly bones dictionary and add the correspondent skelly mesh
+    # Iterate through the skelly bones dictionary and add the corresponding skelly mesh
     for mesh in skelly_bones:
         print("Adding Skelly_" + mesh + " mesh...")
         try:

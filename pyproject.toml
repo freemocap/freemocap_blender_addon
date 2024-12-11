@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 
 [project]
-name = "freemocap_blender_addon"
+name = "ajc27_freemocap_blender_addon"
 description="A Blender add-on for loading and visualizing motion capture data recorded with the FreeMoCap software (https://freemocap.org)"
 readme = "README.md"
 authors = [
