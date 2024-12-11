@@ -86,7 +86,6 @@ def attach_skelly_by_bone_mesh(
             skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
         except KeyError as e:
             print(f"missing data for mesh: {mesh}, excluding it from final mesh")
-            print(traceback.format_exc())
             missing_meshes.append(mesh)
             continue
         except Exception as e:
