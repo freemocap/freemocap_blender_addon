@@ -78,20 +78,23 @@ def attach_skelly_by_bone_mesh(
 
     #  Iterate through the skelly bones dictionary and update the
     #  default origin, length and normalized direction
-    print("Updating skelly bones values...")
+    missing_meshes = []
     for mesh in skelly_bones:
         try:
             skelly_bones[mesh].bones_origin = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[0]]].head)
             skelly_bones[mesh].bones_end = Vector(rig.data.edit_bones[bone_name_map[armature_name][skelly_bones[mesh].bones[-1]]].tail)
             skelly_bones[mesh].bones_length = (skelly_bones[mesh].bones_end - skelly_bones[mesh].bones_origin).length
         except KeyError as e:
-            print(f"Error while updating skelly bones: {e}")
-            print(f"missing mesh: {mesh}")
+            print(f"missing data for mesh: {mesh}, excluding it from final mesh")
             print(traceback.format_exc())
-            skelly_bones.pop(mesh)
+            missing_meshes.append(mesh)
             continue
         except Exception as e:
-            print("Undefined exception!!")
+            print(f"Error while updating skelly bones: {e}")
+            print(traceback.format_exc())
+
+    for mesh in missing_meshes:
+        skelly_bones.pop(mesh)
 
     # Change to object mode
     bpy.ops.object.mode_set(mode='OBJECT')
