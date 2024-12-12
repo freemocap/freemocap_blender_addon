@@ -16,13 +16,13 @@ jobs:
       - name: Extract version from __init__.py
         id: get_version
         run: |
-          version=$(grep -Po '(?<=^__version__ = ")[^"]*' freemocap_blender_addon/__init__.py)
+          version=$(grep -Po '(?<=^__version__ = ")[^"]*' ajc27_freemocap_blender_addon/__init__.py)
           echo ::set-output name=version::$version
 
       - name: Create zip file
         run: |
           version=${{ steps.get_version.outputs.version }}
-          zip -r freemocap_blender_addon_$version.zip freemocap_blender_addon/
+          zip -r freemocap_blender_addon_$version.zip ajc27_freemocap_blender_addon/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
