@@ -33,4 +33,4 @@ tag             = true
 push            = true
 
 [tool.bumpver.file_patterns]
-"freemocap_blender_addon/__init__.py" = ["{version}"]
+"ajc27_freemocap_blender_addon/__init__.py" = ["{version}"]
