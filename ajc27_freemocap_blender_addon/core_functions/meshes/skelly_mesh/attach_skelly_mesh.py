@@ -103,7 +103,7 @@ def attach_skelly_by_bone_mesh(
 
     # Iterate through the skelly bones dictionary and add the corresponding skelly mesh
     for mesh in skelly_bones:
-        print("Adding Skelly_" + mesh + " mesh...")
+        # print("Adding Skelly_" + mesh + " mesh...")
         try:
             # Import the skelly mesh
             mesh_path = SKELLY_BONES_PATH + '/Skelly_' + mesh + '.fbx'

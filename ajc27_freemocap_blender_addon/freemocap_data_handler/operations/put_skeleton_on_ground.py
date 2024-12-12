@@ -9,8 +9,6 @@ if TYPE_CHECKING:
 
 
 def put_skeleton_on_ground(handler: 'FreemocapDataHandler'):
-    print(f"Putting freemocap data in inertial reference frame...")
-
     ground_reference_trajectories_with_error = handler.get_trajectories(
         trajectory_names=["right_heel", "left_heel", "right_foot_index", "left_foot_index"],
         with_error=True)

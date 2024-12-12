@@ -28,7 +28,7 @@ def enforce_rigid_bodies(handler: FreemocapDataHandler) -> FreemocapDataHandler:
     # If the bone length is outside the interval, adjust the coordinates of the tail empty and its children so the new bone length is at the border of the interval
 
     for name, bone in bones.items():
-        print(f"Enforcing rigid length for bone: {name}...")
+        # print(f"Enforcing rigid length for bone: {name}...")
 
         desired_length = bone.median
 
@@ -105,7 +105,7 @@ def translate_trajectory_and_its_children(name: str,
 
 
 def log_bone_statistics(bones: Dict[str, BoneDefinition], type: str):
-    log_string = f'\n\n[{type}] Bone Length Statistics:\n'
+    log_string = f'[{type}] Bone Length Statistics:\n'
     header_string = f"{'BONE':<15} {'MEDIAN (cm)':>12} {'STDEV (cm)':>12} {'CV (%)':>12}"
     log_string += header_string + '\n'
     for name, bone in bones.items():

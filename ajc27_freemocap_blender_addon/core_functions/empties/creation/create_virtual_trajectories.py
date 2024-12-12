@@ -57,9 +57,9 @@ def calculate_virtual_trajectories(body_frame_name_xyz: np.ndarray,
 
     virtual_trajectories = {}
     for virtual_trajectory_name, virtual_trajectory_definition in mediapipe_virtual_trajectory_definitions.items():
-        print(f"Calculating virtual marker trajectory: {virtual_trajectory_name} \n"
-                    f"Component trajectories: {virtual_trajectory_definition['marker_names']} \n"
-                    f" weights: {virtual_trajectory_definition['marker_weights']}\n")
+        # print(f"Calculating virtual marker trajectory: {virtual_trajectory_name} \n"
+        #             f"Component trajectories: {virtual_trajectory_definition['marker_names']} \n"
+        #             f"weights: {virtual_trajectory_definition['marker_weights']}")
 
         virtual_trajectory_frame_xyz = calculate_virtual_trajectory(
             all_trajectories=body_frame_name_xyz,
@@ -79,5 +79,5 @@ def calculate_virtual_trajectories(body_frame_name_xyz: np.ndarray,
             )
         virtual_trajectories[virtual_trajectory_name] = virtual_trajectory_frame_xyz
 
-        print(f"Finished calculating virtual marker trajectory: {virtual_trajectories.keys()}")
+        # print(f"Finished calculating virtual marker trajectory: {virtual_trajectories.keys()}")
     return virtual_trajectories
