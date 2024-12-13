@@ -166,7 +166,7 @@ class MainController:
 
     def fix_hand_data(self):
         try:
-            print("Fixing hand data...")
+            # print("Fixing hand data...")
             self.freemocap_data_handler = fix_hand_data(
                 handler=self.freemocap_data_handler
             )

@@ -38,7 +38,7 @@ def create_keyframed_empty_from_3d_trajectory_data(
     """
     Create a key framed empty from 3d trajectory data
     """
-    print(f"Creating keyframed empty from: {trajectory_name}...")
+    # print(f"Creating keyframed empty from: {trajectory_name}...")
     bpy.ops.object.empty_add(type=empty_type)
     empty_object = bpy.context.editable_objects[-1]
     empty_object.name = trajectory_name

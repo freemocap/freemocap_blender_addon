@@ -24,7 +24,7 @@ def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
                 all_empties.update(other_component)
 
     for parent_empty_name in mediapipe_hierarchy.keys():
-        print(f"Creating bone mesh for {parent_empty_name}...")
+        # print(f"Creating bone mesh for {parent_empty_name}...")
         color, squish_scale = get_bone_mesh_color_and_squish(parent_empty_name)
 
         for child_name in mediapipe_hierarchy[parent_empty_name]["children"]:
@@ -38,7 +38,7 @@ def put_rigid_body_meshes_on_empties(empties: Dict[str, bpy.types.Object],
             bone = find_bone(parent_name=parent_empty_name, child_name=child_name)
             if bone: 
                 # print(f"Segment length for {parent_empty_name} to {child_name} is {bone_data[parent_empty_name].median:.3f}m")
-                print(f"Segment length for {parent_empty_name} to {child_name} is {bone['median']:.3f}m")
+                print(f"Created bone mesh for {parent_empty_name}: Segment length to {child_name} is {bone['median']:.3f}m")
                 bone_mesh = make_bone_mesh(name=f"{parent_empty_name}_bone_mesh",
                                         length=bone['median'],
                                         squish_scale=squish_scale,
