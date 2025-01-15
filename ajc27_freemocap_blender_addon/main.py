@@ -24,7 +24,7 @@ def ajc27_run_as_main_function(recording_path: str,
 
 
 if __name__ == "__main__" or __name__ == "<run_path>":
-    print("Load DataNING FREEMOCAP BLENDER ADDON...")
+    print("LoadING FREEMOCAP BLENDER ADDON...")
     try:
         argv = sys.argv
         print(f"Received command line arguments: {argv}")
