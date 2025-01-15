@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from ajc27_freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos
+from ajc27_freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos_as_planes
 from ajc27_freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
 from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
@@ -42,6 +42,11 @@ class MainController:
         self._empty_parent_object = None
         self._rigid_body_meshes_parent_object = None
         self._video_parent_object = None
+        try:
+            import bpy
+            self._blender_version = bpy.app.version
+        except ImportError:
+            self._blender_version = None
 
         self.config = config
 
@@ -307,7 +312,7 @@ class MainController:
     def add_videos(self):
         try:
             print("Loading videos as planes...")
-            load_videos(
+            load_videos_as_planes(
                 recording_path=self.recording_path,
                 parent_object=self._video_parent_object,
             )
@@ -359,6 +364,8 @@ class MainController:
 
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
+
+
     def export_3d_model(self):
         print("Exporting 3D model...")
         try:
