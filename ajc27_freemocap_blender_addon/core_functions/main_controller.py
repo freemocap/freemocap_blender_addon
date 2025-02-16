@@ -13,6 +13,7 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .create_video.create_video import create_video
+from .add_capture_cameras.add_capture_cameras import add_capture_cameras
 from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
@@ -149,13 +150,15 @@ class MainController:
     def put_data_in_inertial_reference_frame(self):
         try:
             print("Putting freemocap data in inertial reference frame....")
-            put_skeleton_on_ground(handler=self.freemocap_data_handler)
+            skeleton_transform = put_skeleton_on_ground(handler=self.freemocap_data_handler)
         except Exception as e:
             print(
                 f"Failed when trying to put freemocap data in inertial reference frame: {e}"
             )
             print(traceback.format_exc())
             raise e
+
+        return skeleton_transform
 
     def enforce_rigid_bones(self):
         print("Enforcing rigid bones...")
@@ -377,6 +380,18 @@ class MainController:
         except Exception as e:
             print(f"Failed to export 3D model: {e}")
             raise e
+
+    def add_capture_cameras(self, skeleton_transform):
+        print("Adding capture cameras...")
+        try:
+            add_capture_cameras(
+                recording_folder=self.recording_path,
+                skeleton_transform=skeleton_transform,
+            )
+        except Exception as e:
+            print(f"Failed to add capture cameras: {e}")
+            raise e
+
     def load_data(self):
         print("Running all stages...")
 
@@ -384,7 +399,7 @@ class MainController:
         # TODO - move the non-blender stuff to a another module (prob `skellyforge`)
         self.load_freemocap_data()
         self.calculate_virtual_trajectories()
-        self.put_data_in_inertial_reference_frame()
+        skeleton_transform = self.put_data_in_inertial_reference_frame()
         self.enforce_rigid_bones()
         self.fix_hand_data()
         self.save_data_to_disk()
@@ -401,4 +416,5 @@ class MainController:
         self.setup_scene()
         # self.create_video()
         self.export_3d_model()
+        self.add_capture_cameras(skeleton_transform)
         self.save_blender_file()
