@@ -390,6 +390,7 @@ class MainController:
         self.save_data_to_disk()
 
         #Blender stuff
+        import bpy
         self.create_empties()
         self.add_rig()
         self.save_bone_and_joint_data_from_rig()
@@ -401,4 +402,11 @@ class MainController:
         self.setup_scene()
         # self.create_video()
         self.export_3d_model()
+
+        # Set the data parent empty
+        bpy.context.scene.freemocap_properties.data_parent_empty = self.data_parent_empty
+        print("Data Parent Empty:", self.data_parent_empty.name)
+
         self.save_blender_file()
+
+        

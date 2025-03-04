@@ -10,15 +10,15 @@ class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
         name="FreeMoCap data parent empty",
         description="Empty that serves as parent for all the freemocap empties",
         type=bpy.types.Object,
-        poll=lambda self, object_in: object_in.type == 'EMPTY',
-    )
+        # poll=lambda self, object_in: object_in.type == 'EMPTY',
+    ) # type: ignore
 
     recording_path: bpy.props.StringProperty(
         name="FreeMoCap recording path",
         description="Path to a freemocap recording",
         default=get_test_recording_path(),
         subtype='FILE_PATH',
-    )
+    ) # type: ignore
 
     video_export_profile: bpy.props.EnumProperty(
         name='',
@@ -28,4 +28,4 @@ class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
                ('showcase', 'Showcase', ''),
                ('scientific', 'Scientific', ''),
                ],
-    )
+    ) # type: ignore
