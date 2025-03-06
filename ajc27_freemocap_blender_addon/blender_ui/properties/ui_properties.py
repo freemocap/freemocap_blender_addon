@@ -395,7 +395,8 @@ def toggle_element_visibility(self,
                               parent_pattern: str,
                               toggle_children_not_parent: bool,)->None:
 
-    for data_object in context.scene.freemocap_properties.data_parent_empty.children_recursive:
+    data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
+    for data_object in data_parent_object.children_recursive:
         if re.search(parent_pattern, data_object.name):
             hide_objects(data_object,
                          not bool(self[panel_property]),
@@ -421,8 +422,9 @@ def toggle_motion_path(self,
     bpy.ops.object.select_all(action='DESELECT')
 
     # Get reference to the object
+    data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
     data_object_name = None
-    for child in context.scene.freemocap_properties.data_parent_empty.children_recursive:
+    for child in data_parent_object.children_recursive:
         if re.search(data_object_basename, child.name):
             data_object_name = child.name
             break

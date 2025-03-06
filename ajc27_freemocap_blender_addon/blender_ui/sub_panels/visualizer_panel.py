@@ -60,7 +60,7 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        if context.scene.freemocap_properties.data_parent_empty is None:
+        if context.scene.freemocap_properties.data_parent_collection is None:
             layout.label(text="Load a recording session to view data settings.")
             return
         ui_props = context.scene.freemocap_ui_properties

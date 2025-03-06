@@ -403,9 +403,15 @@ class MainController:
         # self.create_video()
         self.export_3d_model()
 
-        # Set the data parent empty
-        bpy.context.scene.freemocap_properties.data_parent_empty = self.data_parent_empty
-        print("Data Parent Empty:", self.data_parent_empty.name)
+        # Add the data parent empty to the collection of data parents
+        new_data_parent = bpy.context.scene.freemocap_properties.data_parent_collection.add()
+        new_data_parent.name = self.data_parent_empty.name
+        try:
+            # Set the new data parent as the scope data parent in the addon ui
+            bpy.context.scene.freemocap_properties.scope_data_parent = self.data_parent_empty.name
+        except Exception as e:
+            # Addon ui not loaded
+            print(e)
 
         self.save_blender_file()
 

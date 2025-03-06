@@ -22,7 +22,6 @@ class FREEMOCAP_OT_load_data(bpy.types.Operator):
             controller = MainController(recording_path=recording_path,
                                         blend_file_path=str(Path(recording_path) / (Path(recording_path).stem + ".blend")),
                                         config=config)
-            # context.scene.freemocap_properties.data_parent_empty = controller.data_parent_empty
             controller.load_data()
         except Exception as e:
             print(f"Failed to run main_controller.load_data() with config:{config}: `{e}`")

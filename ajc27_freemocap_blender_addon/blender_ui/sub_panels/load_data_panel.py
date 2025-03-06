@@ -23,4 +23,4 @@ class VIEW3D_PT_load_data(bpy.types.Panel):
 
         # Save data to disk panel
         box = layout.box()
-        box.prop(context.scene.freemocap_properties, "data_parent_empty", text="Data Parent Empty")
+        box.prop(context.scene.freemocap_properties, "scope_data_parent", text="Scope Data Parent")
