@@ -10,7 +10,7 @@ class FREEMOCAP_OT_add_com_vertical_projection(bpy.types.Operator):
 
     def execute(self, context):
         print("Adding COM Vertical Projection.......")
-        data_parent_empty = context.scene.freemocap_properties.data_parent_empty
+        data_parent_empty = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
         # Add COM Vertical Projection
         add_com_vertical_projection(data_parent_empty=data_parent_empty,
                                     neutral_color=context.scene.freemocap_ui_properties.com_vertical_projection_neutral_color,

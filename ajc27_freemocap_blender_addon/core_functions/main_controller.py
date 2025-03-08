@@ -333,9 +333,9 @@ class MainController:
                         if space.type == "VIEW_3D":  # check if space is a 3D view
                             space.shading.type = "MATERIAL"
 
-        # self.data_parent_empty.hide_set(True)
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
+        self.center_of_mass_empty.hide_set(True)
         self._video_parent_object.hide_set(True)
         self._data_parent_empty.hide_set(True)
 
@@ -403,10 +403,10 @@ class MainController:
         # self.create_video()
         self.export_3d_model()
 
-        # Add the data parent empty to the collection of data parents
-        new_data_parent = bpy.context.scene.freemocap_properties.data_parent_collection.add()
-        new_data_parent.name = self.data_parent_empty.name
         try:
+            # Add the data parent empty to the collection of data parents
+            new_data_parent = bpy.context.scene.freemocap_properties.data_parent_collection.add()
+            new_data_parent.name = self.data_parent_empty.name
             # Set the new data parent as the scope data parent in the addon ui
             bpy.context.scene.freemocap_properties.scope_data_parent = self.data_parent_empty.name
         except Exception as e:
