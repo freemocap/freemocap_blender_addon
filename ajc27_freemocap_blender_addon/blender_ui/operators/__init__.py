@@ -5,6 +5,9 @@ from ajc27_freemocap_blender_addon.blender_ui.operators._add_joint_angles import
 from ajc27_freemocap_blender_addon.blender_ui.operators._clear_scene import FREEMOCAP_OT_clear_scene
 from ajc27_freemocap_blender_addon.blender_ui.operators._create_video import FREEMOCAP_OT_create_video
 from ajc27_freemocap_blender_addon.blender_ui.operators._load_data import FREEMOCAP_OT_load_data
+from ajc27_freemocap_blender_addon.blender_ui.operators._add_motion_path import FREEMOCAP_OT_add_motion_path
+from ajc27_freemocap_blender_addon.blender_ui.operators._clear_motion_path import FREEMOCAP_OT_clear_motion_path
+from ajc27_freemocap_blender_addon.blender_ui.operators._clear_all_motion_paths import FREEMOCAP_OT_clear_all_motion_paths
 
 
 
@@ -16,5 +19,7 @@ BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
     FREEMOCAP_OT_add_joint_angles,
     FREEMOCAP_OT_add_base_of_support,
     FREEMOCAP_OT_create_video,
-
+    FREEMOCAP_OT_add_motion_path,
+    FREEMOCAP_OT_clear_motion_path,
+    FREEMOCAP_OT_clear_all_motion_paths,
 ]

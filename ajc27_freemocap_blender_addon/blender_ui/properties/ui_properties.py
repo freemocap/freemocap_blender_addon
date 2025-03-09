@@ -149,6 +149,14 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=(1.0, 1.0, 1.0),
     )  # type: ignore
 
+    motion_path_line_color_post: bpy.props.FloatVectorProperty(
+        name='',
+        subtype='COLOR',
+        min=0.0,
+        max=1.0,
+        default=(0.5, 0.5, 0.5),
+    )  # type: ignore
+
     motion_path_frames_before: bpy.props.IntProperty(
         name='',
         min=1,
@@ -180,6 +188,33 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     motion_path_show_keyframe_number: bpy.props.BoolProperty(
         name='Show Keyframe Number',
         default=False,
+    )  # type: ignore
+
+    motion_path_target_element: bpy.props.EnumProperty(
+        name='',
+        items=[
+            ('center_of_mass_mesh', 'Center of Mass', ''),
+            ('head_center', 'Head Center', ''),
+            ('neck_center', 'Neck Center', ''),
+            ('hips_center', 'Hips Center', ''),
+            ('left_shoulder', 'Left Shoulder', ''),
+            ('left_elbow', 'Left Elbow', ''),
+            ('left_wrist', 'Left Wrist', ''),
+            ('left_hip', 'Left Hip', ''),
+            ('left_knee', 'Left Knee', ''),
+            ('left_ankle', 'Left Ankle', ''),
+            ('left_heel', 'Left Heel', ''),
+            ('left_foot_index', 'Left Foot Index', ''),
+            ('right_shoulder', 'Right Shoulder', ''),
+            ('right_elbow', 'Right Elbow', ''),
+            ('right_wrist', 'Right Wrist', ''),
+            ('right_hip', 'Right Hip', ''),
+            ('right_knee', 'Right Knee', ''),
+            ('right_ankle', 'Right Ankle', ''),
+            ('right_heel', 'Right Heel', ''),
+            ('right_foot_index', 'Right Foot Index', ''),
+        ],
+        default='center_of_mass_mesh',
     )  # type: ignore
 
     motion_path_center_of_mass: bpy.props.BoolProperty(
