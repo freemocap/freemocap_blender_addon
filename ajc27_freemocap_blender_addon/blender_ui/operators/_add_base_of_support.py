@@ -14,7 +14,7 @@ class FREEMOCAP_OT_add_base_of_support(bpy.types.Operator):
         print("Adding Base of Support.......")
         ui_props = context.scene.freemocap_ui_properties
         # Check if the COM_Vertical_Projection object exists, if not create it
-        data_parent_empty = context.scene.freemocap_properties.data_parent_empty
+        data_parent_empty = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
 
         if bpy.data.objects.get("COM_Vertical_Projection") is None:
             add_com_vertical_projection(data_parent_empty=data_parent_empty,

@@ -15,12 +15,14 @@ def add_base_of_support(data_parent_empty: bpy.types.Object,
                                      align='WORLD',
                                      location=(0, 0, 0.002),
                                      scale=(1, 1, 1))
+    
+    # Get the newly created mesh object
+    base_of_support = bpy.context.active_object
 
     # Change the name of the plane mesh
-    bpy.context.active_object.name = "base_of_support"
+    base_of_support.name = "base_of_support"
 
-    #  Get reference to the plane mesh
-    base_of_support = bpy.data.objects["base_of_support"]
+    # Parent the plane mesh to the Data Parent empty
     base_of_support.parent = data_parent_empty
 
     # Create the material

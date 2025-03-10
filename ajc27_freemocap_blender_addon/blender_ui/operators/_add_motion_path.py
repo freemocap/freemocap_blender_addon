@@ -19,7 +19,7 @@ class FREEMOCAP_OT_add_motion_path(bpy.types.Operator):
             data_object_basename=ui_props.motion_path_target_element,
             show_line=ui_props.motion_path_show_line,
             line_thickness=ui_props.motion_path_line_thickness,
-            use_custom_color=ui_props.motion_path_use_custom_color,
+            use_custom_color=True,
             line_color=ui_props.motion_path_line_color,
             line_color_post=ui_props.motion_path_line_color_post,
             frames_before=ui_props.motion_path_frames_before,

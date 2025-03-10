@@ -14,7 +14,7 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
 
     except ImportError:
         print("shapely module is not installed. Please install `shapely` and `scipy` to visualize the BOS mesh.")
-        return
+        # return
 
 
     scene = bpy.context.scene
@@ -82,7 +82,7 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
         if base_of_support_visible:
 
             # Enable the BOS Visible Switch
-            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = True
+            bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = True
 
             # Get the location of the COM Vertical Projection
             com_vertical_projection_location = com_projection_mesh.matrix_world.translation
@@ -97,35 +97,66 @@ def animate_base_of_support(data_parent_empty:bpy.types.Object,
             points = np.array([(v[0], v[1]) for v in BOS_points])
 
             # Create a convex hull from the list of 2D points
-            hull = ConvexHull(points)
+            # hull = ConvexHull(points)
+            hull = convex_hull(points)
 
-            # Get the indices of the points that form the convex hull
-            indices = hull.vertices
+            # # Get the indices of the points that form the convex hull
+            # indices = hull.vertices
 
-            # Create a new list of consecutive points based on the convex hull indices
-            consecutive_points = [points[i] for i in indices]
+            # # Create a new list of consecutive points based on the convex hull indices
+            # consecutive_points = [points[i] for i in indices]
 
-            # Initiate the Shapely objects
-            point = Point(com_vertical_projection_location[0], com_vertical_projection_location[1])
-            polygon = Polygon(consecutive_points)
+            # # Initiate the Shapely objects
+            # point = Point(com_vertical_projection_location[0], com_vertical_projection_location[1])
+            # polygon = Polygon(consecutive_points)
+
+            com_vertical_projection_location = (com_projection_mesh.matrix_world.translation[0], com_projection_mesh.matrix_world.translation[1])
 
             # Check if the COM Vertical Projection is intersecting with the base of support
-            if polygon.contains(point):
+            # if polygon.contains(point):
+            if is_point_inside_polygon(com_vertical_projection_location, hull):
                 # Change the material of the COM Vertical Projection to In Base of Support
-                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = True
+                bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = True
             else:
                 # Change the material of the COM Vertical Projection to Out Base of Support
-                bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = False
+                bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].default_value = False
 
         else:
             # Disable the BOS Visible Switch
-            bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = False
+            bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].default_value = False
 
         # Insert a keyframe to the COM Vertical Projection switch nodes
-        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
-        bpy.data.node_groups["Geometry Nodes_COM_Vertical_Projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
+        bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["In-Out BOS Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
+        bpy.data.node_groups["Geometry Nodes_com_vertical_projection"].nodes["BOS Visible Switch"].inputs[switch_node_index].keyframe_insert(data_path='default_value', frame=frame)
 
     # Restore the current frame
     scene.frame_current = current_frame
 
 
+def is_point_inside_polygon(point, polygon):
+    n = len(polygon)
+    inside = False
+    p1x, p1y = polygon[0]
+    for i in range(n + 1):
+        p2x, p2y = polygon[i % n]
+        if point[1] > min(p1y, p2y):
+            if point[1] <= max(p1y, p2y):
+                if point[0] <= max(p1x, p2x):
+                    if p1y != p2y:
+                        xinters = (point[1] - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                    if p1x == p2x or point[0] <= xinters:
+                        inside = not inside
+        p1x, p1y = p2x, p2y
+    return inside
+
+def convex_hull(points):
+    points = sorted(points, key=lambda point: (point[0], point[1]))
+    hull = []
+    for point in points:
+        while len(hull) > 1 and not is_ccw(hull[-2], hull[-1], point):
+            hull.pop()
+        hull.append(point)
+    return hull
+
+def is_ccw(p1, p2, p3):
+    return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0]) > 0
