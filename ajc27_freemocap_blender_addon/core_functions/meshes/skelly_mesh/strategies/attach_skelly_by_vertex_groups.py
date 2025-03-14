@@ -9,12 +9,14 @@ from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.sca
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
+from pathlib import Path 
+import bpy 
 
 def attach_skelly_by_vertex_group(
     skelly_mesh_path: Path,
     rig: bpy.types.Object,
-    vertex_groups: Dict,
-    empty_markers: Dict,
+    vertex_groups: dict,
+    empty_markers: dict,
 ) -> None:
 
     bone_info = get_bone_info(rig)

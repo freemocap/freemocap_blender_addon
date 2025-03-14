@@ -3,6 +3,7 @@ import traceback
 from pathlib import Path
 from typing import Dict
 
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_FULL_MESH_PATH
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_bone_mesh import \
     attach_skelly_by_bone_mesh
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_full_mesh import \
@@ -50,10 +51,6 @@ from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.ske
     _SKELLY_VERTEX_GROUPS,
 )
 
-
-SKELLY_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_lowpoly_mesh.fbx")
-SKELLY_BONES_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_bones")
-SKELLY_FULL_MESH_PATH = str(Path(PACKAGE_ROOT_PATH) / "assets" / "skelly_full_mesh_20k_faces.blend")
 
 class AddSkellyMeshStrategies(Enum):
     BY_BONE_MESH = "by_bone_mesh"

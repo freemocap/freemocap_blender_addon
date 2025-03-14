@@ -1,9 +1,9 @@
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import SKELLY_MESH_PATH
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_MESH_PATH
 
-
+import bpy
 def attach_skelly_complete_mesh(
     rig: bpy.types.Object,
-    body_dimensions: Dict[str, float],
+    body_dimensions: dict[str, float],
     skelly_mesh_path: str = SKELLY_MESH_PATH
 ) -> None:
 

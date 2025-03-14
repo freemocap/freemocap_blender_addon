@@ -1,4 +1,4 @@
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.attach_skelly_mesh import SKELLY_BONES_PATH
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_BONES_PATH
 from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
 from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import bone_name_map
 from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
@@ -6,11 +6,12 @@ from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import get_sk
 from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
 from ajc27_freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE
 
+import bpy 
 
 def attach_skelly_by_bone_mesh(
     rig: bpy.types.Object,
-    armature: Dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
-    pose: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
+    armature: dict[str, ArmatureBoneInfo] = ArmatureType.FREEMOCAP,
+    pose: dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
 ) -> None:
 
     if armature == ArmatureType.UE_METAHUMAN_SIMPLE:
