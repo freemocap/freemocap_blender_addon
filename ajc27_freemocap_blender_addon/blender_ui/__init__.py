@@ -13,3 +13,4 @@ BLENDER_USER_INTERFACE_CLASSES = [FREEMOCAP_CORE_PROPERTIES,
                                   # VIEW3D_PT_freemocap_video_export,
                                   VIEW3D_PT_data_view_panel] + BLENDER_OPERATORS
 
+ 

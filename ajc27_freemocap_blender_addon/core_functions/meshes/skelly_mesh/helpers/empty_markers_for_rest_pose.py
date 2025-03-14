@@ -1,4 +1,5 @@
 # TODO: merge with a main empty information dictionary
+
 _EMPTY_MARKERS = {
     'hips_center': {
         "bone": 'pelvis',

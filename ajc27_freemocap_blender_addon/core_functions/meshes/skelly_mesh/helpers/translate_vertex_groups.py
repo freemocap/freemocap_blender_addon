@@ -70,4 +70,3 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
         # Update the mesh vertices' positions
         bmesh.update_edit_mesh(target_mesh.data)
 
-    return
