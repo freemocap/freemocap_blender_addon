@@ -25,12 +25,14 @@ class ViewPanelPropNames(enum.Enum):
     MOTION_PATH_LINE_THICKNESS = "motion_path_line_thickness"
     MOTION_PATH_USE_CUSTOM_COLOR = "motion_path_use_custom_color"
     MOTION_PATH_LINE_COLOR = "motion_path_line_color"
+    MOTION_PATH_LINE_COLOR_POST = "motion_path_line_color_post"
     MOTION_PATH_FRAMES_BEFORE = "motion_path_frames_before"
     MOTION_PATH_FRAMES_AFTER = "motion_path_frames_after"
     MOTION_PATH_FRAME_STEP = "motion_path_frame_step"
     MOTION_PATH_SHOW_FRAME_NUMBERS = "motion_path_show_frame_numbers"
     MOTION_PATH_SHOW_KEYFRAMES = "motion_path_show_keyframes"
     MOTION_PATH_SHOW_KEYFRAME_NUMBER = "motion_path_show_keyframe_number"
+    MOTION_PATH_TARGET_ELEMENT = "motion_path_target_element"
     MOTION_PATH_CENTER_OF_MASS = "motion_path_center_of_mass"
     MOTION_PATH_HEAD_CENTER = "motion_path_head_center"
     MOTION_PATH_NECK_CENTER = "motion_path_neck_center"
@@ -85,12 +87,12 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
             index = 0
             for base_element in ViewPanelPropNamesElements:
-                if index % 2 == 0:  # even index
-                    split = box.column().row().split(factor=0.5)
                 object_name_pattern = base_element.object_name_pattern
                 object_type = base_element.object_type
                 element_exists = any(re.search(object_name_pattern, child.name) and child.type == object_type for child in scope_data_parent.children_recursive)
                 if element_exists:
+                    if index % 2 == 0:  # even index
+                        split = box.column().row().split(factor=0.5)
                     split.column().prop(ui_props, base_element.property_name)
                 index += 1
 
@@ -102,55 +104,74 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
         if ui_props.show_motion_paths_options:
             box = layout.box()
             split = box.column().row().split(factor=0.5)
+            split.column().label(text="Target Element:")
+            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_TARGET_ELEMENT.value)
+
+            split = box.column().row().split(factor=0.5)
             split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_SHOW_LINE.value)
             split_2 = split.column().split(factor=0.5)
-            split_2.column().label(text="Thickness")
+            split_2.column().label(text="Thickness:")
             split_2.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LINE_THICKNESS.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_USE_CUSTOM_COLOR.value)
+
+            split = box.column().row().split(factor=0.25)
+            split.column().label(text="Range Before:")
             split_2 = split.column().split(factor=0.5)
-            split_2.column().label(text="Color")
-            split_2.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LINE_COLOR.value)
-            split = box.column().row().split(factor=0.5)
-            split_2 = split.column().split(factor=0.5)
-            split_2.column().label(text="Frames Before")
+            split_2.column().label(text="Frames:")
             split_2.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_FRAMES_BEFORE.value)
-            split_3 = split.column().split(factor=0.5)
-            split_3.column().label(text="Frames After")
-            split_3.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_FRAMES_AFTER.value)
+            split_3 = split.column().split(factor=0.3)
+            split_3.column().label(text="Color:")
+            split_3.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LINE_COLOR.value)
+
+            split = box.column().row().split(factor=0.25)
+            split.column().label(text="Range After:")
+            split_2 = split.column().split(factor=0.5)
+            split_2.column().label(text="Frames:")
+            split_2.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_FRAMES_AFTER.value)
+            split_3 = split.column().split(factor=0.3)
+            split_3.column().label(text="Color:")
+            split_3.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LINE_COLOR_POST.value)
+
             split = box.column().row().split(factor=0.5)
             split_2 = split.column().split(factor=0.5)
-            split_2.column().label(text="Frame Step")
+            split_2.column().label(text="Frame Step:")
             split_2.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_FRAME_STEP.value)
             split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_SHOW_FRAME_NUMBERS.value)
             split = box.column().row().split(factor=0.5)
             split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_SHOW_KEYFRAMES.value)
             split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_SHOW_KEYFRAME_NUMBER.value)
-            box = layout.box()
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_CENTER_OF_MASS.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HEAD_CENTER.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_NECK_CENTER.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HIPS_CENTER.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_SHOULDER.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_SHOULDER.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ELBOW.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ELBOW.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_WRIST.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_WRIST.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_HIP.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_HIP.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_KNEE.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_KNEE.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ANKLE.value)
-            split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ANKLE.value)
+
+            split = box.column().row().split(factor=0.6)
+            split1 = split.column().row().split(factor=0.5)
+            split1.operator('freemocap._add_motion_path', text='Add Motion Path')
+            split1.operator('freemocap._clear_motion_path', text='Clear Motion Path')
+            split.operator('freemocap._clear_all_motion_paths', text='Clear All Motion Paths')
+
+            # Individual Motion Paths checkboxes commented as they will probably be added dinamically in the future
+            # box = layout.box()
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_CENTER_OF_MASS.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HEAD_CENTER.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_NECK_CENTER.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HIPS_CENTER.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_SHOULDER.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_SHOULDER.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ELBOW.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ELBOW.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_WRIST.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_WRIST.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_HIP.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_HIP.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_KNEE.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_KNEE.value)
+            # split = box.column().row().split(factor=0.5)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ANKLE.value)
+            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ANKLE.value)
 
         # COM Vertical Projection
         row = layout.row(align=True)
