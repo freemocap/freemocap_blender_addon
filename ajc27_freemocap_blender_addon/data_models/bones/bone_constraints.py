@@ -133,6 +133,24 @@ _BONE_CONSTRAINT_DEFINITIONS: Dict[
             },
             influence=1.0,
         ),
+        LockedTrackConstraint(
+            target="trunk_center",
+            track_axis={
+                "freemocap_apose": TrackAxis.TRACK_Z,
+                "freemocap_tpose": TrackAxis.TRACK_Z,
+                "ue_metahuman_default": TrackAxis.TRACK_Z,
+                "ue_metahuman_tpose": TrackAxis.TRACK_Z,
+                "ue_metahuman_realtime": TrackAxis.TRACK_Y,
+            },
+            lock_axis={
+                "freemocap_apose": LockAxis.LOCK_X,
+                "freemocap_tpose": LockAxis.LOCK_X,
+                "ue_metahuman_default": LockAxis.LOCK_X,
+                "ue_metahuman_tpose": LockAxis.LOCK_X,
+                "ue_metahuman_realtime": LockAxis.LOCK_Z,
+            },
+            influence=1.0,
+        ),
     ],
     "pelvis.R": [
         DampedTrackConstraint(target="right_hip", track_axis=TrackAxis.TRACK_Y)
