@@ -1,18 +1,26 @@
 import enum
+import re
 
 import bpy
 
-class ViewPanelPropNames(enum.Enum):
-    SHOW_ARMATURE = "show_armature"
-    SHOW_SKELLY_MESH = "show_skelly_mesh"
-    SHOW_TRACKED_POINTS = "show_tracked_points"
-    SHOW_RIGID_BODIES = "show_rigid_bodies"
-    SHOW_CENTER_OF_MASS = "show_center_of_mass"
-    SHOW_VIDEOS = "show_videos"
-    SHOW_COM_VERTICAL_PROJECTION = "show_com_vertical_projection"
-    SHOW_JOINT_ANGLES = "show_joint_angles"
-    SHOW_BASE_OF_SUPPORT = "show_base_of_support"
+class ViewPanelPropNamesElements(enum.Enum):
+    def __init__(self, property_name, object_name_pattern, object_type):
+        self.property_name = property_name
+        self.object_name_pattern = object_name_pattern
+        self.object_type = object_type
 
+    SHOW_ARMATURE = ("show_armature", "_rig(\.\d+)?$", "ARMATURE")
+    SHOW_SKELLY_MESH = ("show_skelly_mesh", "skelly_mesh", "MESH")
+    SHOW_TRACKED_POINTS = ("show_tracked_points", "empties_parent", "EMPTY")
+    SHOW_RIGID_BODIES = ("show_rigid_bodies", "rigid_body_meshes_parent", "EMPTY")
+    SHOW_CENTER_OF_MASS = ("show_center_of_mass", "center_of_mass", "MESH")
+    SHOW_VIDEOS = ("show_videos", "videos_parent", "EMPTY")
+    SHOW_COM_VERTICAL_PROJECTION = ("show_com_vertical_projection", "com_vertical_projection", "MESH")
+    SHOW_JOINT_ANGLES = ("show_joint_angles", "joint_angles_parent", "EMPTY")
+    SHOW_BASE_OF_SUPPORT = ("show_base_of_support", "base_of_support", "MESH")
+
+class ViewPanelPropNames(enum.Enum):
+    
     MOTION_PATH_SHOW_LINE = "motion_path_show_line"
     MOTION_PATH_LINE_THICKNESS = "motion_path_line_thickness"
     MOTION_PATH_USE_CUSTOM_COLOR = "motion_path_use_custom_color"
@@ -60,7 +68,7 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        if context.scene.freemocap_properties.data_parent_empty is None:
+        if context.scene.freemocap_properties.data_parent_collection is None:
             layout.label(text="Load a recording session to view data settings.")
             return
         ui_props = context.scene.freemocap_ui_properties
@@ -73,20 +81,18 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
 
         if ui_props.show_base_elements_options:
             box = layout.box()
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_ARMATURE.value)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_SKELLY_MESH.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_TRACKED_POINTS.value)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_RIGID_BODIES.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_CENTER_OF_MASS.value)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_VIDEOS.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_COM_VERTICAL_PROJECTION.value)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_JOINT_ANGLES.value)
-            split = box.column().row().split(factor=0.5)
-            split.column().prop(ui_props, ViewPanelPropNames.SHOW_BASE_OF_SUPPORT.value)
+
+            scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
+            index = 0
+            for base_element in ViewPanelPropNamesElements:
+                if index % 2 == 0:  # even index
+                    split = box.column().row().split(factor=0.5)
+                object_name_pattern = base_element.object_name_pattern
+                object_type = base_element.object_type
+                element_exists = any(re.search(object_name_pattern, child.name) and child.type == object_type for child in scope_data_parent.children_recursive)
+                if element_exists:
+                    split.column().prop(ui_props, base_element.property_name)
+                index += 1
 
         # Motion Paths
         row = layout.row(align=True)

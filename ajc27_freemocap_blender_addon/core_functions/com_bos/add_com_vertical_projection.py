@@ -4,12 +4,12 @@ import bpy
 
 
 class COMVerticalProjectionMaterial(Enum):
-    NEUTRAL = "COM_Vertical_Projection_Neutral"
-    IN_BOS = "COM_Vertical_Projection_In_BOS"
-    OUT_BOS = "COM_Vertical_Projection_Out_BOS"
+    NEUTRAL = "_Neutral"
+    IN_BOS = "_In_BOS"
+    OUT_BOS = "_Out_BOS"
 
 
-COM_PROJECTION_MESH_NAME = "COM_Vertical_Projection"
+COM_PROJECTION_MESH_NAME = "com_vertical_projection"
 
 
 def add_com_vertical_projection(data_parent_empty: bpy.types.Object,
@@ -31,12 +31,13 @@ def add_com_vertical_projection(data_parent_empty: bpy.types.Object,
                                          location=(0, 0, 0),
                                          scale=(0.025, 0.025, 0.025))
 
+    # Get the newly created mesh object
+    com_projection_mesh = bpy.context.active_object
+
     # Change the name of the sphere mesh
     bpy.context.active_object.name = COM_PROJECTION_MESH_NAME
 
-    # Get the mesh object
-    com_projection_mesh = bpy.data.objects[COM_PROJECTION_MESH_NAME]
-
+    # Parent the sphere mesh to the Data Parent empty
     com_projection_mesh.parent = data_parent_empty
 
     # Add a copy location constraint to the COM vertical projection
@@ -61,30 +62,23 @@ def create_com_vertical_projection_materials(com_projection_mesh: bpy.types.Obje
                                              neutral_color: tuple,
                                              in_bos_color: tuple,
                                              out_bos_color: tuple) -> None:
+    
     # Create the mesh materials
-    bpy.ops.material.new()
-    bpy.data.materials["Material"].name = COMVerticalProjectionMaterial.NEUTRAL.value
-    com_projection_mesh.data.materials.append(bpy.data.materials[COMVerticalProjectionMaterial.NEUTRAL.value])
-    # Change the color of the material
-    bpy.data.materials[COMVerticalProjectionMaterial.NEUTRAL.value].node_tree.nodes["Principled BSDF"].inputs[
-        0].default_value = neutral_color
-    bpy.data.materials[COMVerticalProjectionMaterial.NEUTRAL.value].diffuse_color = neutral_color
+    color_map = {
+        COMVerticalProjectionMaterial.NEUTRAL: neutral_color,
+        COMVerticalProjectionMaterial.IN_BOS: in_bos_color,
+        COMVerticalProjectionMaterial.OUT_BOS: out_bos_color
+    }
 
-    bpy.ops.material.new()
-    bpy.data.materials["Material"].name = COMVerticalProjectionMaterial.IN_BOS.value
-    com_projection_mesh.data.materials.append(bpy.data.materials[COMVerticalProjectionMaterial.IN_BOS.value])
-    # Change the color of the material
-    bpy.data.materials[COMVerticalProjectionMaterial.IN_BOS.value].node_tree.nodes["Principled BSDF"].inputs[
-        0].default_value = in_bos_color
-    bpy.data.materials[COMVerticalProjectionMaterial.IN_BOS.value].diffuse_color = in_bos_color
-
-    bpy.ops.material.new()
-    bpy.data.materials["Material"].name = COMVerticalProjectionMaterial.OUT_BOS.value
-    com_projection_mesh.data.materials.append(bpy.data.materials[COMVerticalProjectionMaterial.OUT_BOS.value])
-    # Change the color of the material
-    bpy.data.materials[COMVerticalProjectionMaterial.OUT_BOS.value].node_tree.nodes["Principled BSDF"].inputs[
-        0].default_value = out_bos_color
-    bpy.data.materials[COMVerticalProjectionMaterial.OUT_BOS.value].diffuse_color = out_bos_color
+    for material_type in COMVerticalProjectionMaterial:
+        bpy.ops.material.new()
+        material_name = com_projection_mesh.name + material_type.value
+        bpy.data.materials["Material"].name = material_name
+        com_projection_mesh.data.materials.append(bpy.data.materials[material_name])
+        # Change the color of the material
+        bpy.data.materials[material_name].node_tree.nodes["Principled BSDF"].inputs[
+            0].default_value = color_map[material_type]
+        bpy.data.materials[material_name].diffuse_color = color_map[material_type]
 
     # Create a Geometry Nodes modifier to switch the material depending on the BOS intersection
     bpy.ops.node.new_geometry_nodes_modifier()
@@ -105,21 +99,21 @@ def create_com_vertical_projection_materials(com_projection_mesh: bpy.types.Obje
     # Change the node name
     material_neutral_node.name = "Material Neutral"
     # Assign the material to the node
-    node_tree.nodes["Material Neutral"].material = bpy.data.materials[COMVerticalProjectionMaterial.NEUTRAL.value]
+    node_tree.nodes["Material Neutral"].material = bpy.data.materials[com_projection_mesh.name + COMVerticalProjectionMaterial.NEUTRAL.value]
 
     # Add the Material node for the In BOS Material
     material_in_bos_node = node_tree.nodes.new(type="GeometryNodeInputMaterial")
     # Change the node name
     material_in_bos_node.name = "Material In BOS"
     # Assign the material to the node
-    node_tree.nodes["Material In BOS"].material = bpy.data.materials[COMVerticalProjectionMaterial.IN_BOS.value]
+    node_tree.nodes["Material In BOS"].material = bpy.data.materials[com_projection_mesh.name + COMVerticalProjectionMaterial.IN_BOS.value]
 
     # Add the Material node for the Out BOS Material
     material_out_bos_node = node_tree.nodes.new(type="GeometryNodeInputMaterial")
     # Change the node name
     material_out_bos_node.name = "Material Out BOS"
     # Assign the material to the node
-    node_tree.nodes["Material Out BOS"].material = bpy.data.materials[COMVerticalProjectionMaterial.OUT_BOS.value]
+    node_tree.nodes["Material Out BOS"].material = bpy.data.materials[com_projection_mesh.name + COMVerticalProjectionMaterial.OUT_BOS.value]
 
     # Add a Switch Node for the In-Out BOS materials
     in_out_bos_switch_node = node_tree.nodes.new(type='GeometryNodeSwitch')

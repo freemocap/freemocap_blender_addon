@@ -2,6 +2,7 @@ import re
 
 import bpy
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
+from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     show_base_elements_options: bpy.props.BoolProperty(
@@ -13,91 +14,109 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         name='Armature',
         description='Show Armature',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_ARMATURE.value,
-                                                      parent_pattern=r'_rig\Z|root\Z',
-                                                      toggle_children_not_parent=False),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_ARMATURE.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_ARMATURE.object_name_pattern,
+            toggle_children_not_parent=False
+        ),
     )  # type: ignore
 
     show_skelly_mesh: bpy.props.BoolProperty(
         name='Skelly Mesh',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_SKELLY_MESH.value,
-                                                      parent_pattern=r'skelly_mesh',
-                                                      toggle_children_not_parent=False),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_SKELLY_MESH.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_SKELLY_MESH.object_name_pattern,
+            toggle_children_not_parent=False
+        ),
     )  # type: ignore
 
     show_tracked_points: bpy.props.BoolProperty(
         name='Tracked Points',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_TRACKED_POINTS.value,
-                                                      parent_pattern=r'empties_parent',
-                                                      toggle_children_not_parent=True),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_TRACKED_POINTS.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_TRACKED_POINTS.object_name_pattern,
+            toggle_children_not_parent=True
+        ),
     )  # type: ignore
 
     show_rigid_bodies: bpy.props.BoolProperty(
         name='Rigid Bodies',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_RIGID_BODIES.value,
-                                                      parent_pattern=r'rigid_body_meshes_parent',
-                                                      toggle_children_not_parent=True),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_RIGID_BODIES.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_RIGID_BODIES.object_name_pattern,
+            toggle_children_not_parent=True
+        ),
     )  # type: ignore
 
     show_center_of_mass: bpy.props.BoolProperty(
         name='Center of Mass',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_CENTER_OF_MASS.value,
-                                                      parent_pattern=r'center_of_mass_data_parent',
-                                                      toggle_children_not_parent=True),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_CENTER_OF_MASS.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_CENTER_OF_MASS.object_name_pattern,
+            toggle_children_not_parent=True
+        ),
     )  # type: ignore
 
     show_videos: bpy.props.BoolProperty(
         name='Capture Videos',
         default=True,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_VIDEOS.value,
-                                                      parent_pattern=r'videos_parent',
-                                                      toggle_children_not_parent=True),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_VIDEOS.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_VIDEOS.object_name_pattern,
+            toggle_children_not_parent=True
+        ),
     )  # type: ignore
 
     show_com_vertical_projection: bpy.props.BoolProperty(
         name='COM Vertical Projection',
         default=False,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_COM_VERTICAL_PROJECTION.value,
-                                                      parent_pattern=r'COM_Vertical_Projection',
-                                                      toggle_children_not_parent=False),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_COM_VERTICAL_PROJECTION.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_COM_VERTICAL_PROJECTION.object_name_pattern,
+            toggle_children_not_parent=False
+        ),
     )  # type: ignore
 
     show_joint_angles: bpy.props.BoolProperty(
         name='Joint Angles',
         default=False,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_JOINT_ANGLES.value,
-                                                      parent_pattern=r'joint_angles_parent',
-                                                      toggle_children_not_parent=True),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_JOINT_ANGLES.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_JOINT_ANGLES.object_name_pattern,
+            toggle_children_not_parent=True
+        ),
     )  # type: ignore
 
     show_base_of_support: bpy.props.BoolProperty(
         name='Base of Support',
         default=False,
-        update=lambda a, b: toggle_element_visibility(a,
-                                                      b,
-                                                      panel_property=ViewPanelPropNames.SHOW_BASE_OF_SUPPORT.value,
-                                                      parent_pattern=r'base_of_support',
-                                                      toggle_children_not_parent=False),
+        update=lambda a, b: toggle_element_visibility(
+            a,
+            b,
+            panel_property=ViewPanelPropNamesElements.SHOW_BASE_OF_SUPPORT.property_name,
+            parent_pattern=ViewPanelPropNamesElements.SHOW_BASE_OF_SUPPORT.object_name_pattern,
+            toggle_children_not_parent=False
+        ),
     )  # type: ignore
 
     show_motion_paths_options: bpy.props.BoolProperty(
@@ -395,7 +414,8 @@ def toggle_element_visibility(self,
                               parent_pattern: str,
                               toggle_children_not_parent: bool,)->None:
 
-    for data_object in context.scene.freemocap_properties.data_parent_empty.children_recursive:
+    data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
+    for data_object in data_parent_object.children_recursive:
         if re.search(parent_pattern, data_object.name):
             hide_objects(data_object,
                          not bool(self[panel_property]),
@@ -421,8 +441,9 @@ def toggle_motion_path(self,
     bpy.ops.object.select_all(action='DESELECT')
 
     # Get reference to the object
+    data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
     data_object_name = None
-    for child in context.scene.freemocap_properties.data_parent_empty.children_recursive:
+    for child in data_parent_object.children_recursive:
         if re.search(data_object_basename, child.name):
             data_object_name = child.name
             break

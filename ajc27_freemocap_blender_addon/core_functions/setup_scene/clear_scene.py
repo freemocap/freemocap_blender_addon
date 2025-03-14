@@ -14,5 +14,10 @@ def clear_scene():
         bpy.ops.object.select_all(action="SELECT")  # select all objects
         bpy.ops.object.delete(use_global=True)  # delete all objects from all scenes
         bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
+        # Clear data parent collection
+        bpy.context.scene.freemocap_properties.data_parent_collection.clear()
+        # Clear scene collections
+        for collection in bpy.data.collections:
+            bpy.data.collections.remove(collection)
     except:
         pass
