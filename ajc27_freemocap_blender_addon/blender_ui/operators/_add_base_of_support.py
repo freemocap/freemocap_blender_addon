@@ -14,22 +14,32 @@ class FREEMOCAP_OT_add_base_of_support(bpy.types.Operator):
         print("Adding Base of Support.......")
         ui_props = context.scene.freemocap_ui_properties
         # Check if the COM_Vertical_Projection object exists, if not create it
-        data_parent_empty = context.scene.freemocap_properties.data_parent_empty
+        data_parent_empty = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
 
-        if bpy.data.objects.get("COM_Vertical_Projection") is None:
-            add_com_vertical_projection(data_parent_empty=data_parent_empty,
-                                        neutral_color=ui_props.com_vertical_projection_neutral_color,
-                                        in_bos_color=ui_props.com_vertical_projection_in_bos_color,
-                                        out_bos_color=ui_props.com_vertical_projection_out_bos_color)
+        com_vertical_projection = None
+        for child in data_parent_empty.children_recursive:
+            if "com_vertical_projection" in child.name:
+                com_vertical_projection = child
+
+        if com_vertical_projection is None:
+            com_vertical_projection = add_com_vertical_projection(
+                data_parent_empty=data_parent_empty,
+                neutral_color=ui_props.com_vertical_projection_neutral_color,
+                in_bos_color=ui_props.com_vertical_projection_in_bos_color,
+                out_bos_color=ui_props.com_vertical_projection_out_bos_color
+            )
 
             # Set the show COM Vertical Projection property to True
             ui_props.show_com_vertical_projection = True
 
         # Add Base of Support
-        add_base_of_support(data_parent_empty=data_parent_empty,
-                            z_threshold=ui_props.base_of_support_z_threshold,
-                            point_of_contact_radius=ui_props.base_of_support_point_radius,
-                            color=ui_props.base_of_support_color)
+        add_base_of_support(
+            data_parent_empty=data_parent_empty,
+            z_threshold=ui_props.base_of_support_z_threshold,
+            point_of_contact_radius=ui_props.base_of_support_point_radius,
+            color=ui_props.base_of_support_color,
+            com_vertical_projection=com_vertical_projection
+        )
 
         # Set the show Base of Support property to True
         ui_props.show_base_of_support = True

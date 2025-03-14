@@ -1,9 +1,12 @@
 import bpy
 
 
-def create_base_of_support_geometry_nodes(base_of_support_mesh: bpy.types.Object,
-                                          point_of_contact_radius: float,
-                                          points_of_contact: list) -> None:
+def create_base_of_support_geometry_nodes(
+    data_parent_empty: bpy.types.Object,
+    base_of_support_mesh: bpy.types.Object,
+    point_of_contact_radius: float,
+    points_of_contact: list
+) -> None:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -33,7 +36,7 @@ def create_base_of_support_geometry_nodes(base_of_support_mesh: bpy.types.Object
     material_node = node_tree.nodes.new(type="GeometryNodeInputMaterial")
 
     # Assign the material to the node
-    node_tree.nodes["Material"].material = bpy.data.materials["Base of Support"]
+    node_tree.nodes["Material"].material = bpy.data.materials[base_of_support_mesh.name]
 
     # Add a Set Material Node
     set_material_node = node_tree.nodes.new(type='GeometryNodeSetMaterial')
@@ -50,8 +53,16 @@ def create_base_of_support_geometry_nodes(base_of_support_mesh: bpy.types.Object
     # Connect the Set Material node to the Output node
     node_tree.links.new(set_material_node.outputs["Geometry"], output_node.inputs["Geometry"])
 
+    # Get the points of contact of the scope data parent empty
+    scope_points_of_contact = []
+    for child in data_parent_empty.children_recursive:
+        for point in points_of_contact:
+            if point in child.name:
+                scope_points_of_contact.append(child.name)
+                break
+
     # Add a new Circle Node for each point of contact
-    for point in points_of_contact:
+    for point in scope_points_of_contact:
         # Add a new Circle Node
         mesh_circle_node = node_tree.nodes.new(type='GeometryNodeMeshCircle')
 

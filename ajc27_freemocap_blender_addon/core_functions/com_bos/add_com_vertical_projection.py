@@ -15,7 +15,7 @@ COM_PROJECTION_MESH_NAME = "com_vertical_projection"
 def add_com_vertical_projection(data_parent_empty: bpy.types.Object,
                                 neutral_color: tuple,
                                 in_bos_color: tuple,
-                                out_bos_color: tuple) -> None:
+                                out_bos_color: tuple) -> bpy.types.Object:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -56,6 +56,8 @@ def add_com_vertical_projection(data_parent_empty: bpy.types.Object,
                                              neutral_color=neutral_color,
                                              in_bos_color=in_bos_color,
                                              out_bos_color=out_bos_color)
+    
+    return com_projection_mesh
 
 
 def create_com_vertical_projection_materials(com_projection_mesh: bpy.types.Object,

@@ -16,8 +16,9 @@ class ViewPanelPropNamesElements(enum.Enum):
     SHOW_CENTER_OF_MASS = ("show_center_of_mass", "center_of_mass", "MESH")
     SHOW_VIDEOS = ("show_videos", "videos_parent", "EMPTY")
     SHOW_COM_VERTICAL_PROJECTION = ("show_com_vertical_projection", "com_vertical_projection", "MESH")
-    SHOW_JOINT_ANGLES = ("show_joint_angles", "joint_angles_parent", "EMPTY")
     SHOW_BASE_OF_SUPPORT = ("show_base_of_support", "base_of_support", "MESH")
+    SHOW_JOINT_ANGLES = ("show_joint_angles", "joint_angles_parent", "EMPTY")
+    
 
 class ViewPanelPropNames(enum.Enum):
     
@@ -94,7 +95,7 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
                     if index % 2 == 0:  # even index
                         split = box.column().row().split(factor=0.5)
                     split.column().prop(ui_props, base_element.property_name)
-                index += 1
+                    index += 1
 
         # Motion Paths
         row = layout.row(align=True)
