@@ -22,12 +22,17 @@ def get_bone_info(armature):
     return bone_info
 
 
-def align_markers_to_armature(markers, bone_info):
+def align_markers_to_armature(
+    markers_list,
+    markers_reference,
+    bone_info
+) -> None:
     # Move the empty markers to make the T-Pose in frame 0
-    for marker, info in markers.items():
+    for marker, info in markers_reference.items():
+        target_marker = [obj for obj in markers_list if marker in obj.name][0]
         if info["at_head"]:
-            bpy.data.objects[marker].location = bone_info[info["bone"]]['head_position']
+            target_marker.location = bone_info[info["bone"]]['head_position']
         else:
-            bpy.data.objects[marker].location = bone_info[info["bone"]]['tail_position']
+            target_marker.location = bone_info[info["bone"]]['tail_position']
 
     return

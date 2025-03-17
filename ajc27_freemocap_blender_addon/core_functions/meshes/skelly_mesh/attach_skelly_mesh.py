@@ -58,6 +58,7 @@ class AddSkellyMeshStrategies(Enum):
     BY_VERTEX_GROUP = "by_vertex_group"
 
 def attach_skelly_mesh_to_rig(
+    data_parent_empty_name: str,
     rig: bpy.types.Object,
     body_dimensions: Dict[str, float],
     add_mesh_strategy: AddSkellyMeshStrategies = AddSkellyMeshStrategies.BY_VERTEX_GROUP,
@@ -77,10 +78,11 @@ def attach_skelly_mesh_to_rig(
         )
     elif add_mesh_strategy == AddSkellyMeshStrategies.BY_VERTEX_GROUP:
         attach_skelly_by_vertex_group(
+            data_parent_empty_name=data_parent_empty_name,
             skelly_mesh_path=SKELLY_FULL_MESH_PATH,
             rig=rig,
             vertex_groups=deepcopy(_SKELLY_VERTEX_GROUPS),
-            empty_markers=deepcopy(_EMPTY_MARKERS),
+            empty_markers_reference=deepcopy(_EMPTY_MARKERS),
         )
     else:
         raise ValueError("Invalid add_mesh_method")
