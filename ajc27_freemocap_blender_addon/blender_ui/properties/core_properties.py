@@ -72,7 +72,7 @@ class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
         name="FreeMoCap recording path",
         description="Path to a freemocap recording",
         default=get_test_recording_path(),
-        subtype='FILE_PATH',
+        subtype='DIR_PATH',
     ) # type: ignore
 
     video_export_profile: bpy.props.EnumProperty(
