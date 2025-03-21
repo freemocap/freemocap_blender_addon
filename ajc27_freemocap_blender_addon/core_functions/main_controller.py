@@ -378,30 +378,88 @@ class MainController:
             print(f"Failed to export 3D model: {e}")
             raise e
     def load_data(self):
+        import time
         print("Running all stages...")
+        stage_times = {}
 
         # Pure python stuff
         # TODO - move the non-blender stuff to a another module (prob `skellyforge`)
+        start_time = time.time()
         self.load_freemocap_data()
-        self.calculate_virtual_trajectories()
-        self.put_data_in_inertial_reference_frame()
-        self.enforce_rigid_bones()
-        self.fix_hand_data()
-        self.save_data_to_disk()
+        end_time = time.time()
+        stage_times['load_freemocap_data'] = end_time - start_time
 
-        #Blender stuff
+        start_time = time.time()
+        self.calculate_virtual_trajectories()
+        end_time = time.time()
+        stage_times['calculate_virtual_trajectories'] = end_time - start_time
+
+        start_time = time.time()
+        self.put_data_in_inertial_reference_frame()
+        end_time = time.time()
+        stage_times['put_data_in_inertial_reference_frame'] = end_time - start_time
+
+        start_time = time.time()
+        self.enforce_rigid_bones()
+        end_time = time.time()
+        stage_times['enforce_rigid_bones'] = end_time - start_time
+
+        start_time = time.time()
+        self.fix_hand_data()
+        end_time = time.time()
+        stage_times['fix_hand_data'] = end_time - start_time
+
+        start_time = time.time()
+        self.save_data_to_disk()
+        end_time = time.time()
+        stage_times['save_data_to_disk'] = end_time - start_time
+
+        # Blender stuff
         import bpy
+        start_time = time.time()
         self.create_empties()
+        end_time = time.time()
+        stage_times['create_empties'] = end_time - start_time
+
+        start_time = time.time()
         self.add_rig()
+        end_time = time.time()
+        stage_times['add_rig'] = end_time - start_time
+
+        start_time = time.time()
         self.save_bone_and_joint_data_from_rig()
+        end_time = time.time()
+        stage_times['save_bone_and_joint_data_from_rig'] = end_time - start_time
+
+        start_time = time.time()
         self.attach_rigid_body_mesh_to_rig()
+        end_time = time.time()
+        stage_times['attach_rigid_body_mesh_to_rig'] = end_time - start_time
+
+        start_time = time.time()
         self.attach_skelly_mesh_to_rig()
+        end_time = time.time()
+        stage_times['attach_skelly_mesh_to_rig'] = end_time - start_time
+
+        start_time = time.time()
         self.create_center_of_mass_mesh()
-        # self.create_center_of_mass_trails()
+        end_time = time.time()
+        stage_times['create_center_of_mass_mesh'] = end_time - start_time
+
+        start_time = time.time()
         self.add_videos()
+        end_time = time.time()
+        stage_times['add_videos'] = end_time - start_time
+
+        start_time = time.time()
         self.setup_scene()
-        # self.create_video()
+        end_time = time.time()
+        stage_times['setup_scene'] = end_time - start_time
+
+        start_time = time.time()
         self.export_3d_model()
+        end_time = time.time()
+        stage_times['export_3d_model'] = end_time - start_time
 
         try:
             # Add the data parent empty to the collection of data parents
@@ -415,4 +473,8 @@ class MainController:
 
         self.save_blender_file()
 
-        
+        # Print summary
+        print("\nSummary of stage times:")
+        for stage, time in stage_times.items():
+            print(f"{stage}: {time:.2f} seconds")
+        print(f"Total time: {sum(stage_times.values()):.2f} seconds")
