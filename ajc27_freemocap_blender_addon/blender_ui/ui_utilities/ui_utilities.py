@@ -261,3 +261,34 @@ def add_joint_angles(angles_color: tuple,
 
     # Animate the angle meshes
     animate_angle_meshes(joints_angle_points, angle_meshes, angleText_meshes)
+
+
+# Function to find the matching bone target for the retargeting the animation UI
+def find_matching_bone_in_target_list(
+    bone_name: str,
+    target_list: list
+)->str:
+    
+    # Direct name match
+    if bone_name in target_list:
+        return bone_name
+        
+    # Case-insensitive match
+    lower_name = bone_name.lower()
+    for tb in target_list:
+        if tb.lower() == lower_name:
+            return tb
+            
+    # Remove prefixes/suffixes
+    clean_name = bone_name.replace("Source_", "").replace("_L", "_Left")
+    if clean_name in target_list:
+        return clean_name
+        
+    # Regex substitution
+    import re
+    modified_name = re.sub(r'_([A-Z])', lambda m: m.group(1).upper(), bone_name)
+    if modified_name in target_list:
+        return modified_name
+    
+    # No match found
+    return ""

@@ -22,4 +22,14 @@ class PropertyTypes:
                 default=kwargs.get('default', 0),
                 description=kwargs.get('description', '')
             )
+    Collection = lambda **kwargs: bpy.props.CollectionProperty(
+                name=kwargs.get('name', ''),
+                description=kwargs.get('description', ''),
+                type=kwargs.get('type', bpy.types.PropertyGroup)
+            )
+    String = lambda **kwargs: bpy.props.StringProperty(
+                name=kwargs.get('name', ''),
+                default=kwargs.get('default', ''),
+                description=kwargs.get('description', '')
+            )
     

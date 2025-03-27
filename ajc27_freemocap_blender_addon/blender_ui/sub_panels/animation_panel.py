@@ -24,3 +24,28 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             split.column().label(text='Source Armature')
             split.column().prop(animation_props, 'retarget_source_armature')
 
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Armature')
+            split.column().prop(animation_props, 'retarget_target_armature')
+
+            box.operator(
+                'freemocap._detect_bone_mapping',
+                text='Detect Bone Mapping',
+            )
+
+            # Add the source bones list if any
+            if animation_props.retarget_pairs:
+
+                box.template_list(
+                    "UL_RetargetPairs",
+                    "",
+                    animation_props,
+                    "retarget_pairs",
+                    animation_props,
+                    "active_pair_index",
+                    rows=10
+                )
+                
+
+
+

@@ -8,6 +8,7 @@ from ajc27_freemocap_blender_addon.blender_ui.operators._load_data import FREEMO
 from ajc27_freemocap_blender_addon.blender_ui.operators._add_motion_path import FREEMOCAP_OT_add_motion_path
 from ajc27_freemocap_blender_addon.blender_ui.operators._clear_motion_path import FREEMOCAP_OT_clear_motion_path
 from ajc27_freemocap_blender_addon.blender_ui.operators._clear_all_motion_paths import FREEMOCAP_OT_clear_all_motion_paths
+from ajc27_freemocap_blender_addon.blender_ui.operators.animation.retarget._detect_bone_mapping import FREEMOCAP_OT_detect_bone_mapping
 
 
 
@@ -22,4 +23,5 @@ BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
     FREEMOCAP_OT_add_motion_path,
     FREEMOCAP_OT_clear_motion_path,
     FREEMOCAP_OT_clear_all_motion_paths,
+    FREEMOCAP_OT_detect_bone_mapping,
 ]
