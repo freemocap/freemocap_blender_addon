@@ -28,6 +28,14 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             split.column().label(text='Target Armature')
             split.column().prop(animation_props, 'retarget_target_armature')
 
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Source Root Bone')
+            split.column().prop(animation_props, 'retarget_source_root_bone')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Root Bone')
+            split.column().prop(animation_props, 'retarget_target_root_bone')
+
             box.operator(
                 'freemocap._detect_bone_mapping',
                 text='Detect Bone Mapping',
@@ -45,6 +53,14 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                     "active_pair_index",
                     rows=10
                 )
+
+            # Add the retarget animation button
+            if animation_props.retarget_pairs:
+                box.operator(
+                    'freemocap._retarget_animation',
+                    text='Retarget Animation',
+                )
+
                 
 
 

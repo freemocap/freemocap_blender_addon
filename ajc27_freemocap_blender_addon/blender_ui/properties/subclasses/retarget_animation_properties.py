@@ -10,6 +10,25 @@ def get_available_armatures(self, context):
 
     return available_armatures
 
+def get_available_bones(self, context, retarget_side):
+    if retarget_side == 'source':
+        armature = bpy.data.objects[self.retarget_source_armature]
+    elif retarget_side == 'target':
+        armature = bpy.data.objects[self.retarget_target_armature]
+
+    available_bones = []
+
+    # Append the bones to the list but put at the beginning the ones
+    # that are part of the list ['root', 'pelvis', 'spine']
+    for bone in armature.pose.bones:
+        if bone.name in ['root', 'pelvis']:
+            available_bones.insert(0, (bone.name, bone.name, ''))
+        else:
+            available_bones.append((bone.name, bone.name, ''))
+
+    return available_bones
+
+
 class RetargetBonePair(bpy.types.PropertyGroup):
     source_bone: PropertyTypes.String(
         name="Source Bone"
@@ -31,6 +50,20 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
         description = 'Target armature which constraints will be copied to',
         items = get_available_armatures,
     ) # type: ignore
+    retarget_source_root_bone: PropertyTypes.Enum(
+        description = 'Root bone of the source armature',
+        items = lambda a,b: get_available_bones(
+            a,
+            b,
+            'source')
+    ) # type: ignore
+    retarget_target_root_bone: PropertyTypes.Enum(
+        description = 'Root bone of the target armature',
+        items = lambda a,b: get_available_bones(
+            a,
+            b,
+            'target')
+    ) # type: ignore    
     retarget_pairs: PropertyTypes.Collection(
         type=RetargetBonePair
     ) # type: ignore

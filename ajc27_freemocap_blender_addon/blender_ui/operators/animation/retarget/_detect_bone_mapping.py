@@ -15,10 +15,6 @@ class FREEMOCAP_OT_detect_bone_mapping(bpy.types.Operator):
 
         # Get source and target pose bones names
         source_armature = animation_props.retarget_source_armature
-        # animation_props.retarget_source_bones.clear()
-        # for bone in bpy.data.objects[source_armature].pose.bones:
-        #     bone_name_prop = animation_props.retarget_source_bones.add()
-        #     bone_name_prop.name = bone.name
 
         animation_props.retarget_pairs.clear()
         for bone in bpy.data.objects[source_armature].pose.bones:
