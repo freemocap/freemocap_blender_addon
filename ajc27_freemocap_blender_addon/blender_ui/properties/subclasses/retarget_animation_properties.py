@@ -19,12 +19,18 @@ def get_available_bones(self, context, retarget_side):
     available_bones = []
 
     # Append the bones to the list but put at the beginning the ones
-    # that are part of the list ['root', 'pelvis', 'spine']
+    # that are part of the list ['root', 'pelvis']
     for bone in armature.pose.bones:
         if bone.name in ['root', 'pelvis']:
             available_bones.insert(0, (bone.name, bone.name, ''))
         else:
             available_bones.append((bone.name, bone.name, ''))
+
+    # Add a Object_origin bone for those armatures without root or pelvis bones
+    if 'root' not in armature.pose.bones and 'pelvis' not in armature.pose.bones:
+        available_bones.insert(0, ('Object_origin', 'Object_origin', ''))
+    else:
+        available_bones.insert(1, ('Object_origin', 'Object_origin', ''))
 
     return available_bones
 

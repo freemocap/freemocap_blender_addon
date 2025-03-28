@@ -24,11 +24,7 @@ class FREEMOCAP_OT_detect_bone_mapping(bpy.types.Operator):
         target_armature = animation_props.retarget_target_armature
         target_pose_bones = bpy.data.objects[target_armature].pose.bones
 
-        # print(f"Source bones: {animation_props.retarget_source_bones.keys()}")
-        # print(f"Target bones: {target_pose_bones.keys()}")
-
         for pair in animation_props.retarget_pairs:
             pair.target_bone = find_matching_bone_in_target_list(pair.source_bone, target_pose_bones.keys())
-
 
         return {'FINISHED'}

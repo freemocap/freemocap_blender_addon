@@ -3,7 +3,7 @@ import re
 import mathutils
 import math as m
 
-
+from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.common_bone_names import COMMON_BONE_NAMES
 
 # Function to draw a vector for debbuging purposes
 def draw_vector(origin, angle, name):
@@ -272,12 +272,19 @@ def find_matching_bone_in_target_list(
     # Direct name match
     if bone_name in target_list:
         return bone_name
+    
+    # Both bones in common bones names list
+    for bone_list in COMMON_BONE_NAMES:
+        if bone_name in bone_list:
+            for target_bone in target_list:
+                if target_bone in bone_list:
+                    return target_bone
         
     # Case-insensitive match
     lower_name = bone_name.lower()
-    for tb in target_list:
-        if tb.lower() == lower_name:
-            return tb
+    for target_bone in target_list:
+        if target_bone.lower() == lower_name:
+            return target_bone
             
     # Remove prefixes/suffixes
     clean_name = bone_name.replace("Source_", "").replace("_L", "_Left")
