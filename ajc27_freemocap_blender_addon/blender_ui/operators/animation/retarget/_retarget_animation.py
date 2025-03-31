@@ -1,5 +1,7 @@
 import bpy
+import math
 
+from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import get_edit_bones_adjusted_axes
 
 class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
     bl_idname = 'freemocap._retarget_animation'
@@ -19,6 +21,47 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
         if source_armature_name != target_armature_name:
             source_armature = bpy.data.objects[source_armature_name]
             target_armature = bpy.data.objects[target_armature_name]
+
+            # Get the adjusted axes of the edit bones
+            source_bones_adjusted_axes = get_edit_bones_adjusted_axes(
+                source_armature,
+                animation_props.retarget_source_axes_convention
+            )
+            target_bones_adjusted_axes = get_edit_bones_adjusted_axes(
+                target_armature,
+                animation_props.retarget_target_axes_convention
+            )
+
+            #  Select the target armature
+            target_armature.select_set(True)
+            # Set Edit Mode
+            bpy.ops.object.mode_set(mode="EDIT")
+
+            # For each one of the retarget pairs, get the angle between 
+            # the source and target x axes and add that angle to the
+            # roll value of the target bone
+            for pair in animation_props.retarget_pairs:
+                if pair.target_bone:
+                    angle = source_bones_adjusted_axes[pair.source_bone][0].angle(
+                        target_bones_adjusted_axes[pair.target_bone][0]
+                    )
+                    # Calculate the cross product of the two vectors
+                    cross_product = target_bones_adjusted_axes[pair.target_bone][0].cross(
+                        source_bones_adjusted_axes[pair.source_bone][0]
+                    )
+                    # Get the dot product of the cross product and the
+                    # y axis of the target bone
+                    dot_product = cross_product.dot(
+                        target_bones_adjusted_axes[pair.target_bone][1]
+                    )
+                    # If the dot product is negative, multiply the angle by -1
+                    if dot_product < 0:
+                        angle *= -1
+
+                    #  Set the adjusted bone roll
+                    current_roll = target_armature.data.edit_bones[pair.target_bone].roll
+                    target_armature.data.edit_bones[pair.target_bone].roll = current_roll + angle
+
             # Add a copy rotation constraint to each target bone
             for pair in animation_props.retarget_pairs:
                 if pair.target_bone:
@@ -27,22 +70,22 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
                     )
                     bone_constraint.target = source_armature
                     bone_constraint.subtarget = source_armature.pose.bones[pair.source_bone].name
+
+            # Set Object Mode
+            bpy.ops.object.mode_set(mode="OBJECT")
                 
             # Add a copy location constraint to the root bone of the target armature
-            if animation_props.retarget_target_root_bone == 'Object_origin':
+            if animation_props.retarget_target_root_bone == 'Armature_origin':
                 bone_constraint = target_armature.constraints.new('COPY_LOCATION')
-                bone_constraint.target = source_armature
-                bone_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
-                bone_constraint.use_offset = True
-                bone_constraint.target_space = 'LOCAL'
             else:
                 bone_constraint = target_armature.pose.bones[animation_props.retarget_target_root_bone].constraints.new(
                     'COPY_LOCATION'
                 )
-                bone_constraint.target = source_armature
-                bone_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
-                bone_constraint.use_offset = True
-                bone_constraint.target_space = 'LOCAL'
+
+            bone_constraint.target = source_armature
+            bone_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
+            bone_constraint.use_offset = True
+            bone_constraint.target_space = 'LOCAL'
 
         return {'FINISHED'}
     

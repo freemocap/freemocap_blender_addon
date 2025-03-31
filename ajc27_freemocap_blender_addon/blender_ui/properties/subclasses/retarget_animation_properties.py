@@ -28,9 +28,9 @@ def get_available_bones(self, context, retarget_side):
 
     # Add a Object_origin bone for those armatures without root or pelvis bones
     if 'root' not in armature.pose.bones and 'pelvis' not in armature.pose.bones:
-        available_bones.insert(0, ('Object_origin', 'Object_origin', ''))
+        available_bones.insert(0, ('Armature_origin', 'Armature_origin', ''))
     else:
-        available_bones.insert(1, ('Object_origin', 'Object_origin', ''))
+        available_bones.insert(1, ('Armature_origin', 'Armature_origin', ''))
 
     return available_bones
 
@@ -69,7 +69,21 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
             a,
             b,
             'target')
-    ) # type: ignore    
+    ) # type: ignore
+    retarget_source_axes_convention: PropertyTypes.Enum(
+        description = 'The source armature local axes convention. Default is xyz. Before retargeting, the local axes of the source armature will be converted to xyz.',
+        items = [
+            ('default', 'default', ''),
+            ('xz-y', 'xz-y', ''),
+        ]
+    ) # type: ignore
+    retarget_target_axes_convention: PropertyTypes.Enum(
+        description = 'The target armature local axes convention. Default is xyz. Before retargeting, the local axes of the target armature will be converted to xyz.',
+        items = [
+            ('default', 'default', ''),
+            ('xz-y', 'xz-y', ''),
+        ]
+    ) # type: ignore
     retarget_pairs: PropertyTypes.Collection(
         type=RetargetBonePair
     ) # type: ignore

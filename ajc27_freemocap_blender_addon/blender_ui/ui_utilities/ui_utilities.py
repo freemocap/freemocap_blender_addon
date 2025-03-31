@@ -1,6 +1,6 @@
 import bpy
 import re
-import mathutils
+from mathutils import Vector
 import math as m
 
 from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.common_bone_names import COMMON_BONE_NAMES
@@ -8,7 +8,7 @@ from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.common_bone_names imp
 # Function to draw a vector for debbuging purposes
 def draw_vector(origin, angle, name):
     bpy.ops.object.empty_add(type='SINGLE_ARROW', align='WORLD', location=origin,
-                             rotation=mathutils.Vector([0, 0, 1]).rotation_difference(angle).to_euler(),
+                             rotation=Vector([0, 0, 1]).rotation_difference(angle).to_euler(),
                              scale=(0.002, 0.002, 0.002))
     bpy.data.objects["Empty"].name = name
 
@@ -177,7 +177,7 @@ def animate_angle_meshes(joints_angle_points: dict,
             cross_vector = parent_vector.cross(child_vector)
 
             # Get the local z-axis of the angle mesh
-            local_z = meshes[mesh].matrix_world.to_quaternion() @ mathutils.Vector((0, 0, 1))
+            local_z = meshes[mesh].matrix_world.to_quaternion() @ Vector((0, 0, 1))
 
             # Calculate the rotation matrix to align the local z with the cross vector
             rotation_matrix = local_z.rotation_difference(cross_vector).to_matrix().to_4x4()
@@ -189,8 +189,8 @@ def animate_angle_meshes(joints_angle_points: dict,
             meshes[mesh].keyframe_insert(data_path="rotation_euler", frame=frame)
 
             # Get the new local x and y axis
-            new_local_x = meshes[mesh].matrix_world.to_quaternion() @ mathutils.Vector((1, 0, 0))
-            new_local_y = meshes[mesh].matrix_world.to_quaternion() @ mathutils.Vector((0, 1, 0))
+            new_local_x = meshes[mesh].matrix_world.to_quaternion() @ Vector((1, 0, 0))
+            new_local_y = meshes[mesh].matrix_world.to_quaternion() @ Vector((0, 1, 0))
 
             # Get the angles between the new local x axis and the parent and child vectors
             nlx_parent_angle = m.degrees(new_local_x.angle(parent_vector))
@@ -299,3 +299,90 @@ def find_matching_bone_in_target_list(
     
     # No match found
     return ""
+
+
+
+def get_edit_bones_adjusted_x_axis(
+    armature: bpy.types.Object,
+    axes_convention: str,
+):
+    bones_adjusted_x_axis = {}
+
+    # Set Object Mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    # Deselect all objects
+    for object in bpy.data.objects:
+        object.select_set(False)
+
+    # Select the armature
+    armature.select_set(True)
+
+    # Set Edit Mode
+    bpy.ops.object.mode_set(mode="EDIT")
+
+    for bone in armature.data.edit_bones:
+        if axes_convention == "default":
+            adjusted_vector = bone.x_axis
+        elif axes_convention == "xz-y":
+            adjusted_vector = Vector([
+                bone.x_axis[0],
+                -bone.x_axis[2],
+                bone.x_axis[1]
+            ])
+        
+        bones_adjusted_x_axis[bone.name] = adjusted_vector
+
+    # Set Object Mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    # Deselect all objects
+    for object in bpy.data.objects:
+        object.select_set(False)
+
+    return bones_adjusted_x_axis
+
+
+def get_edit_bones_adjusted_axes(
+    armature: bpy.types.Object,
+    axes_convention: str,
+):
+    bones_adjusted_axes = {}
+
+    # Set Object Mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    # Deselect all objects
+    for object in bpy.data.objects:
+        object.select_set(False)
+
+    # Select the armature
+    armature.select_set(True)
+
+    # Set Edit Mode
+    bpy.ops.object.mode_set(mode="EDIT")
+
+    for bone in armature.data.edit_bones:
+        if axes_convention == "default":
+            adjusted_vectors = [
+                bone.x_axis,
+                bone.y_axis,
+                bone.z_axis
+            ]
+        elif axes_convention == "xz-y":
+            adjusted_vectors = [
+                Vector([bone.x_axis[0],-bone.x_axis[2],bone.x_axis[1]]),
+                Vector([bone.y_axis[0],-bone.y_axis[2],bone.y_axis[1]]),
+                Vector([bone.z_axis[0],-bone.z_axis[2],bone.z_axis[1]])
+            ]
+        
+        bones_adjusted_axes[bone.name] = adjusted_vectors
+
+    # Set Object Mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+    # Deselect all objects
+    for object in bpy.data.objects:
+        object.select_set(False)
+
+    return bones_adjusted_axes

@@ -36,6 +36,14 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             split.column().label(text='Target Root Bone')
             split.column().prop(animation_props, 'retarget_target_root_bone')
 
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Source Axes Convention')
+            split.column().prop(animation_props, 'retarget_source_axes_convention')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Axes Convention')
+            split.column().prop(animation_props, 'retarget_target_axes_convention')
+
             box.operator(
                 'freemocap._detect_bone_mapping',
                 text='Detect Bone Mapping',
