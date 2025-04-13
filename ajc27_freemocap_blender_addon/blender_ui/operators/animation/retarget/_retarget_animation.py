@@ -70,22 +70,32 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
                     )
                     bone_constraint.target = source_armature
                     bone_constraint.subtarget = source_armature.pose.bones[pair.source_bone].name
+                    if pair.target_bone == animation_props.retarget_target_root_bone:
+                        bone_constraint.mix_mode = 'OFFSET'
 
             # Set Object Mode
             bpy.ops.object.mode_set(mode="OBJECT")
                 
             # Add a copy location constraint to the root bone of the target armature
+            # Add it to the armture itself if there is no root bone
             if animation_props.retarget_target_root_bone == 'Armature_origin':
-                bone_constraint = target_armature.constraints.new('COPY_LOCATION')
+                bone_location_constraint = target_armature.constraints.new('COPY_LOCATION')
+
+                bone_rotation_constraint = target_armature.constraints.new('COPY_ROTATION')
+                bone_rotation_constraint.target = source_armature
+                bone_rotation_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
+                bone_rotation_constraint.mix_mode = 'OFFSET'
+                bone_rotation_constraint.target_space = 'LOCAL'
+
             else:
-                bone_constraint = target_armature.pose.bones[animation_props.retarget_target_root_bone].constraints.new(
+                bone_location_constraint = target_armature.pose.bones[animation_props.retarget_target_root_bone].constraints.new(
                     'COPY_LOCATION'
                 )
 
-            bone_constraint.target = source_armature
-            bone_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
-            bone_constraint.use_offset = True
-            bone_constraint.target_space = 'LOCAL'
+            bone_location_constraint.target = source_armature
+            bone_location_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
+            bone_location_constraint.use_offset = True
+            bone_location_constraint.target_space = 'LOCAL'
 
         return {'FINISHED'}
     
