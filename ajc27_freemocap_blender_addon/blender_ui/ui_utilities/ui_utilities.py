@@ -301,48 +301,6 @@ def find_matching_bone_in_target_list(
     return ""
 
 
-
-def get_edit_bones_adjusted_x_axis(
-    armature: bpy.types.Object,
-    axes_convention: str,
-):
-    bones_adjusted_x_axis = {}
-
-    # Set Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-
-    # Deselect all objects
-    for object in bpy.data.objects:
-        object.select_set(False)
-
-    # Select the armature
-    armature.select_set(True)
-
-    # Set Edit Mode
-    bpy.ops.object.mode_set(mode="EDIT")
-
-    for bone in armature.data.edit_bones:
-        if axes_convention == "default":
-            adjusted_vector = bone.x_axis
-        elif axes_convention == "xz-y":
-            adjusted_vector = Vector([
-                bone.x_axis[0],
-                -bone.x_axis[2],
-                bone.x_axis[1]
-            ])
-        
-        bones_adjusted_x_axis[bone.name] = adjusted_vector
-
-    # Set Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-
-    # Deselect all objects
-    for object in bpy.data.objects:
-        object.select_set(False)
-
-    return bones_adjusted_x_axis
-
-
 def get_edit_bones_adjusted_axes(
     armature: bpy.types.Object,
     axes_convention: str,
