@@ -57,14 +57,14 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
         items = get_available_armatures,
     ) # type: ignore
     retarget_source_root_bone: PropertyTypes.Enum(
-        description = 'Root bone of the source armature',
+        description = 'Root bone of the source armature. In case there are no bones like root or pelvis, the armature origin can be used',
         items = lambda a,b: get_available_bones(
             a,
             b,
             'source')
     ) # type: ignore
     retarget_target_root_bone: PropertyTypes.Enum(
-        description = 'Root bone of the target armature',
+        description = 'Root bone of the target armature. In case there are no bones like root or pelvis, the armature origin can be used',
         items = lambda a,b: get_available_bones(
             a,
             b,
