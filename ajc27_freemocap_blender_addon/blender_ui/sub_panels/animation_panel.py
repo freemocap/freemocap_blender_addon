@@ -10,39 +10,40 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         ui_props = context.scene.freemocap_ui_properties
-        animation_props = ui_props.retarget_animation_properties
+        retarget_animation_props = ui_props.retarget_animation_properties
+        set_bone_rotation_limits_props = ui_props.set_bone_rotation_limits_properties
 
         # Retarget
         row = layout.row(align=True)
-        row.prop(animation_props, "show_retarget_animation_options", text="",
-                 icon='TRIA_DOWN' if animation_props.show_retarget_animation_options else 'TRIA_RIGHT', emboss=False)
+        row.prop(retarget_animation_props, "show_retarget_animation_options", text="",
+                 icon='TRIA_DOWN' if retarget_animation_props.show_retarget_animation_options else 'TRIA_RIGHT', emboss=False)
         row.label(text="Retarget")
 
-        if animation_props.show_retarget_animation_options:
+        if retarget_animation_props.show_retarget_animation_options:
             box = layout.box()
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Source Armature')
-            split.column().prop(animation_props, 'retarget_source_armature')
+            split.column().prop(retarget_animation_props, 'retarget_source_armature')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Armature')
-            split.column().prop(animation_props, 'retarget_target_armature')
+            split.column().prop(retarget_animation_props, 'retarget_target_armature')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Source Root Bone')
-            split.column().prop(animation_props, 'retarget_source_root_bone')
+            split.column().prop(retarget_animation_props, 'retarget_source_root_bone')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Root Bone')
-            split.column().prop(animation_props, 'retarget_target_root_bone')
+            split.column().prop(retarget_animation_props, 'retarget_target_root_bone')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Source Axes Convention')
-            split.column().prop(animation_props, 'retarget_source_axes_convention')
+            split.column().prop(retarget_animation_props, 'retarget_source_axes_convention')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Axes Convention')
-            split.column().prop(animation_props, 'retarget_target_axes_convention')
+            split.column().prop(retarget_animation_props, 'retarget_target_axes_convention')
 
             box.operator(
                 'freemocap._detect_bone_mapping',
@@ -50,25 +51,37 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             )
 
             # Add the source bones list if any
-            if animation_props.retarget_pairs:
+            if retarget_animation_props.retarget_pairs:
 
                 box.template_list(
                     "UL_RetargetPairs",
                     "",
-                    animation_props,
+                    retarget_animation_props,
                     "retarget_pairs",
-                    animation_props,
+                    retarget_animation_props,
                     "active_pair_index",
                     rows=10
                 )
 
             # Add the retarget animation button
-            if animation_props.retarget_pairs:
+            if retarget_animation_props.retarget_pairs:
                 box.operator(
                     'freemocap._retarget_animation',
                     text='Retarget Animation',
                 )
 
+        # Set Bone Rotation Limits
+        row = layout.row(align=True)
+        row.prop(set_bone_rotation_limits_props, "show_set_bone_rotation_limits_options", text="",
+                 icon='TRIA_DOWN' if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Set Bone Rotation Limits")
+
+        if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options:
+            box = layout.box()
+            box.operator(
+                'freemocap._set_bone_rotation_limits',
+                text='Set Bone Rotation Limits',
+            )
                 
 
 

@@ -7,6 +7,9 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_ani
     RetargetBonePair,
     UL_RetargetPairs,
 )
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.set_bone_rotation_limits_properties import (
+    SetBoneRotationLimitsProperties
+)
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.load_data_panel import VIEW3D_PT_load_data
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.video_export_panel import VIEW3D_PT_freemocap_video_export
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import VIEW3D_PT_data_view_panel
@@ -16,6 +19,7 @@ BLENDER_USER_INTERFACE_CLASSES = [FREEMOCAP_CORE_PROPERTIES,
                                   RetargetBonePair,
                                   RetargetAnimationProperties,
                                   UL_RetargetPairs,
+                                  SetBoneRotationLimitsProperties,
                                   FREEMOCAP_UI_PROPERTIES,
                                   VIEW3D_PT_freemocap_main_panel,
                                   VIEW3D_PT_load_data,

@@ -10,6 +10,7 @@ from ajc27_freemocap_blender_addon.blender_ui.operators._clear_motion_path impor
 from ajc27_freemocap_blender_addon.blender_ui.operators._clear_all_motion_paths import FREEMOCAP_OT_clear_all_motion_paths
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.retarget._detect_bone_mapping import FREEMOCAP_OT_detect_bone_mapping
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.retarget._retarget_animation import FREEMOCAP_OT_retarget_animation
+from ajc27_freemocap_blender_addon.blender_ui.operators.animation.set_bone_rotation_limits._set_bone_rotation_limits import FREEMOCAP_OT_set_bone_rotation_limits
 
 
 
@@ -25,4 +26,5 @@ BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
     FREEMOCAP_OT_clear_all_motion_paths,
     FREEMOCAP_OT_detect_bone_mapping,
     FREEMOCAP_OT_retarget_animation,
+    FREEMOCAP_OT_set_bone_rotation_limits,
 ]
