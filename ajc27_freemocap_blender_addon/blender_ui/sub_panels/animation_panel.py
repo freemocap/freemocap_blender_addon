@@ -12,6 +12,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         ui_props = context.scene.freemocap_ui_properties
         retarget_animation_props = ui_props.retarget_animation_properties
         set_bone_rotation_limits_props = ui_props.set_bone_rotation_limits_properties
+        limit_markers_range_of_motion_props = ui_props.limit_markers_range_of_motion_properties
 
         # Retarget
         row = layout.row(align=True)
@@ -81,6 +82,19 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             box.operator(
                 'freemocap._set_bone_rotation_limits',
                 text='Set Bone Rotation Limits',
+            )
+
+        # Limit Markers Range of Motion
+        row = layout.row(align=True)
+        row.prop(limit_markers_range_of_motion_props, "show_limit_markers_range_of_motion_options", text="",
+                 icon='TRIA_DOWN' if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Limit Markers Range of Motion")
+        
+        if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
+            box = layout.box()
+            box.operator(
+                'freemocap._limit_markers_range_of_motion',
+                text='Limit Markers Range of Motion',
             )
                 
 
