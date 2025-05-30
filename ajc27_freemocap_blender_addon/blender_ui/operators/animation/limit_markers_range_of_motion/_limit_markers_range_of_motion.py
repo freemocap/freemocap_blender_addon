@@ -22,6 +22,18 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         print("Limiting Markers Range of Motion.......")
 
         scene = context.scene
+        props = context.scene.freemocap_ui_properties.limit_markers_range_of_motion_properties
+
+        target_categories = []
+
+        if props.limit_palm_markers:
+            target_categories.append('palm')
+        if props.limit_finger_markers:
+            target_categories.append('finger')
+            
+        if len(target_categories) == 0:
+            print("No target categories selected")
+            return {'FINISHED'}
 
         BONE_DEFINITIONS = deepcopy(_BONE_DEFINITIONS)
         
@@ -41,12 +53,17 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         data_parent_empty = bpy.data.objects[scene.freemocap_properties.scope_data_parent]
 
-        # Go to object mode
-        bpy.ops.object.mode_set(mode='OBJECT')
-
+        #  Select the data_parent_empty
+        try:
+            data_parent_empty.select_set(True)
+            bpy.context.view_layer.objects.active = data_parent_empty
+            bpy.ops.object.mode_set(mode='OBJECT')
+        except:
+            pass
+        
         # Deselect all objects
         bpy.ops.object.select_all(action='DESELECT')
-
+        
         # Create a dictionary with all the markers that are children of the data parent empty
         markers = {}
         for child in data_parent_empty.children_recursive:
@@ -84,17 +101,18 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
 
-                hand_to_thumb_cmc = (
+                # TODO: Compare hand_thumb_cmc with index marker as the locked_track_marker
+                hand_to_locked_track_marker = (
                     Vector(markers[side + '_hand_thumb_cmc']['fcurves'][:, frame])
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
-                
+
                 # hand_z_axis as the projection of hand_to_thumb_cmc onto hand_y_axis
                 hand_z_axis = (
-                    hand_to_thumb_cmc
+                    hand_to_locked_track_marker
                     - hand_y_axis
                     * (
-                        hand_y_axis.dot(hand_to_thumb_cmc)
+                        hand_y_axis.dot(hand_to_locked_track_marker)
                         / hand_y_axis.length_squared
                     )
                 )
@@ -111,7 +129,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             for bone in VirtualBones:
 
                 # If the bone has the hands or fingers category then calculate its origin axes based on its parent bone's axes
-                if VirtualBones[bone].category in ['hand', 'finger']:
+                if VirtualBones[bone].category in ['palm', 'finger']:
 
                     # Calculate the bone's y axis
                     bone_y_axis = (
@@ -133,9 +151,10 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     VirtualBones[bone].bone_x_axis = bone_axes_from_parent[0]
                     VirtualBones[bone].bone_y_axis = bone_axes_from_parent[1]
                     VirtualBones[bone].bone_z_axis = bone_axes_from_parent[2]
-                    
+
                     # If the bone has the fingers category then calculate its origin axes based on its parent bone's axes and rotate the tail empty (and its children) to meet the constraints
-                    if VirtualBones[bone].category in ['hand', 'finger']:
+                    # if VirtualBones[bone].category in ['hand', 'finger'] and bone in ['palm.02.L', 'f_middle.01.L', 'f_middle.02.L', 'f_middle.03.L']:
+                    if VirtualBones[bone].category in target_categories:
                         for axis in ['x', 'z']:
                             # Get the rotation delta of the bone axis
                             rotation_delta = get_bone_axis_rot_delta(

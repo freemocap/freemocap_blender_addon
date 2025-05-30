@@ -92,6 +92,20 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Limit Palm Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_palm_markers')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Limit Finger Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_finger_markers')
+
+            # TODO: Add fields to adjust the min max axis limit values
+            # Not sure what to use, degrees amount, a percentage of the min-max range?
+            # The obvious choice would be to put the min and max limits on the UI
+            # but that would be too many inputs if each phalange has its own limit entry
+
             box.operator(
                 'freemocap._limit_markers_range_of_motion',
                 text='Limit Markers Range of Motion',
