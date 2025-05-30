@@ -93,11 +93,11 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
 
-            split = box.column().row().split(factor=0.5)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Palm Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_palm_markers')
 
-            split = box.column().row().split(factor=0.5)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Finger Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_finger_markers')
 
