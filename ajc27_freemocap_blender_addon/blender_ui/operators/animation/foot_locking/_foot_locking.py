@@ -343,6 +343,9 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                 fcurve.keyframe_points.foreach_set("co", co)
                 fcurve.update()  # Finalize changes
 
+        # Set the scene frame as the current frame just to update the viewport
+        scene.frame_current = scene.frame_current
+
         return {'FINISHED'}
 
 
