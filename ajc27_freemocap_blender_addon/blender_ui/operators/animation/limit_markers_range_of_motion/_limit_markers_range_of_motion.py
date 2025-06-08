@@ -7,7 +7,6 @@ from dataclasses import make_dataclass, field
 
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
-from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
 
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
 
@@ -34,6 +33,9 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         if len(target_categories) == 0:
             print("No target categories selected")
             return {'FINISHED'}
+        
+        range_of_motion_scale = props.range_of_motion_scale
+        hand_locked_track_marker = props.hand_locked_track_marker
 
         BONE_DEFINITIONS = deepcopy(_BONE_DEFINITIONS)
         
@@ -53,7 +55,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         data_parent_empty = bpy.data.objects[scene.freemocap_properties.scope_data_parent]
 
-        #  Select the data_parent_empty
+        # Select the data_parent_empty
         try:
             data_parent_empty.select_set(True)
             bpy.context.view_layer.objects.active = data_parent_empty
@@ -64,6 +66,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         # Deselect all objects
         bpy.ops.object.select_all(action='DESELECT')
         
+        # TODO: Move this code a separate module as it is used in more than one operator
         # Create a dictionary with all the markers that are children of the data parent empty
         markers = {}
         for child in data_parent_empty.children_recursive:
@@ -101,9 +104,8 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
 
-                # TODO: Compare hand_thumb_cmc with index marker as the locked_track_marker
                 hand_to_locked_track_marker = (
-                    Vector(markers[side + '_hand_thumb_cmc']['fcurves'][:, frame])
+                    Vector(markers[side + '_' + hand_locked_track_marker]['fcurves'][:, frame])
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
 
@@ -156,13 +158,21 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     # if VirtualBones[bone].category in ['hand', 'finger'] and bone in ['palm.02.L', 'f_middle.01.L', 'f_middle.02.L', 'f_middle.03.L']:
                     if VirtualBones[bone].category in target_categories:
                         for axis in ['x', 'z']:
+                            # Get the min and max rotation limits based on the range of motion scale
+                            axis_rotation_limit_min = getattr(VirtualBones[bone], f'{axis}_rotation_limit_min')
+                            axis_rotation_limit_max = getattr(VirtualBones[bone], f'{axis}_rotation_limit_max')
+                            range_of_motion = axis_rotation_limit_max - axis_rotation_limit_min
+                            scaled_range_of_motion = range_of_motion * range_of_motion_scale
+                            scaled_rotation_limit_min = max(-180, axis_rotation_limit_min + ((range_of_motion - scaled_range_of_motion) / 2))
+                            scaled_rotation_limit_max = min(180, axis_rotation_limit_max - ((range_of_motion - scaled_range_of_motion) / 2))
+                            
                             # Get the rotation delta of the bone axis
-                            rotation_delta = get_bone_axis_rot_delta(
+                            rotation_delta = get_bone_axis_rotation_delta(
                                 bone_axis=getattr(VirtualBones[bone], f'bone_{axis}_axis'),
                                 parent_bone_axis=Vector(getattr(VirtualBones[VirtualBones[bone].parent_bone], f'bone_{axis}_axis')),
                                 parent_bone_ort_axis=Vector(getattr(VirtualBones[VirtualBones[bone].parent_bone], f'bone_{"z" if axis == "x" else "x"}_axis')),
-                                axis_rotation_limit_min=getattr(VirtualBones[bone], f'{axis}_rotation_limit_min'),
-                                axis_rotation_limit_max=getattr(VirtualBones[bone], f'{axis}_rotation_limit_max'),
+                                axis_rotation_limit_min=scaled_rotation_limit_min,
+                                axis_rotation_limit_max=scaled_rotation_limit_max,
                             )
 
                             if rotation_delta != 0:
@@ -219,7 +229,9 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         return {'FINISHED'}
     
-
+# TODO: Move these functions to a separate module,
+# an scpecific module for limit markers range of motion or a general one
+# like utilities
 def calculate_bone_axes_from_parent(
     bone_y_axis: Vector,
     parent_bone_axes: list[Vector, Vector, Vector],
@@ -241,7 +253,7 @@ def calculate_bone_axes_from_parent(
     ]
 
 
-def get_bone_axis_rot_delta(
+def get_bone_axis_rotation_delta(
     bone_axis,
     parent_bone_axis,
     parent_bone_ort_axis,
