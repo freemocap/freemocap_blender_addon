@@ -30,4 +30,4 @@ def align_markers_to_armature(markers, bone_info):
         else:
             bpy.data.objects[marker].location = bone_info[info["bone"]]['tail_position']
 
-    return
+    return 
