@@ -7,14 +7,11 @@ from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.common_bone_names imp
 
 # Function to draw a vector for debbuging purposes
 def draw_vector(origin, angle, name):
-    bpy.ops.object.empty_add(type='SINGLE_ARROW', align='WORLD', location=origin,
-                             rotation=Vector([0, 0, 1]).rotation_difference(angle).to_euler(),
-                             scale=(0.002, 0.002, 0.002))
+    bpy.ops.object.empty_add(
+        type='SINGLE_ARROW', align='WORLD', location=origin,
+        rotation=Vector([0, 0, 1]).rotation_difference(angle).to_euler(),
+        scale=(0.002, 0.002, 0.002))
     bpy.data.objects["Empty"].name = name
-
-    bpy.ops.object.empty_add(type='SPHERE', align='WORLD', location=(origin + angle * 0.5), scale=(0.001, 0.001, 0.001))
-    bpy.data.objects["Empty"].scale = (0.01, 0.01, 0.01)
-    bpy.data.objects["Empty"].name = 'Sphere_' + name
 
     return
 

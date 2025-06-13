@@ -7,6 +7,13 @@ from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
     RetargetAnimationProperties
 )
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.set_bone_rotation_limits_properties import (
+    SetBoneRotationLimitsProperties
+)
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.limit_markers_range_of_motion_properties import (
+    LimitMarkersRangeOfMotionProperties
+)
+# TODO: Group the rest of the properties as the Retarget Animation and Set Bone Rotation Limits Properties
 
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     show_base_elements_options: bpy.props.BoolProperty(
@@ -432,6 +439,12 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     # Animation
     retarget_animation_properties: bpy.props.PointerProperty(
         type=RetargetAnimationProperties
+    ) # type: ignore
+    set_bone_rotation_limits_properties: bpy.props.PointerProperty(
+        type=SetBoneRotationLimitsProperties
+    ) # type: ignore
+    limit_markers_range_of_motion_properties: bpy.props.PointerProperty(
+        type=LimitMarkersRangeOfMotionProperties
     ) # type: ignore
 
 
