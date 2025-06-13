@@ -35,4 +35,4 @@ def align_markers_to_armature(
         else:
             target_marker.location = bone_info[info["bone"]]['tail_position']
 
-    return
+    return 

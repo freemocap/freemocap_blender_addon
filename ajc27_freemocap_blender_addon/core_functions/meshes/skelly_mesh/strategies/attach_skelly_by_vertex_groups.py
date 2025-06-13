@@ -9,7 +9,7 @@ from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.sca
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
-from pathlib import Path 
+from pathlib import Path  
 import bpy 
 
 def attach_skelly_by_vertex_group(
