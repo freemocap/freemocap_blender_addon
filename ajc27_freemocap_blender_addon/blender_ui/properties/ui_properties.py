@@ -4,6 +4,10 @@ import bpy
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
+    RetargetAnimationProperties
+)
+
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     show_base_elements_options: bpy.props.BoolProperty(
         name='',
@@ -424,6 +428,12 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         max=1.0,
         default=(1.0, 1.0, 1.0, 0.5)
     )  # type: ignore
+
+    # Animation
+    retarget_animation_properties: bpy.props.PointerProperty(
+        type=RetargetAnimationProperties
+    ) # type: ignore
+
 
 def update_motion_path(self, context, data_object_basename: str):
     toggle_motion_path(
