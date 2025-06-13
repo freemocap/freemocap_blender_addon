@@ -71,7 +71,9 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        if context.scene.freemocap_properties.data_parent_collection is None:
+        try:
+            scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
+        except KeyError:
             layout.label(text="Load a recording session to view data settings.")
             return
         ui_props = context.scene.freemocap_ui_properties
@@ -85,7 +87,6 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
         if ui_props.show_base_elements_options:
             box = layout.box()
 
-            scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
             index = 0
             for base_element in ViewPanelPropNamesElements:
                 object_name_pattern = base_element.object_name_pattern

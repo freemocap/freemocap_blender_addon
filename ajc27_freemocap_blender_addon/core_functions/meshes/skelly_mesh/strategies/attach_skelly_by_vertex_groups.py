@@ -13,32 +13,55 @@ from pathlib import Path
 import bpy 
 
 def attach_skelly_by_vertex_group(
+    data_parent_empty_name: str,
     skelly_mesh_path: Path,
     rig: bpy.types.Object,
     vertex_groups: dict,
-    empty_markers: dict,
+    empty_markers_reference: dict,
 ) -> None:
+    
+    # Get references to the data parent empty and the empties_parent
+    data_parent_empty = bpy.data.objects[data_parent_empty_name]
+    empties_parent = [obj for obj in data_parent_empty.children if 'empties_parent' in obj.name][0]
 
+    # Get the bone info (postions and lengths)
     bone_info = get_bone_info(rig)
-    align_markers_to_armature(empty_markers, bone_info)
 
-    object_name = 'Skelly_Full_Mesh'
+    # Move the empty markers to make the T-Pose in the current frame
+    align_markers_to_armature(
+        markers_list=empties_parent.children,
+        markers_reference=empty_markers_reference,
+        bone_info=bone_info
+    )
 
-    # Append the skelly mesh as blend file because the exports (fbx, obj) don't save all the vertex groups
+    object_name = 'skelly_mesh'
+
+    # bpy.ops.object.select_all(action='DESELECT')
+
+    # Append the skelly mesh as blend file because the exports (fbx, obj)
+    # don't save all the vertex groups
     with bpy.data.libraries.load(skelly_mesh_path, link=False) as (data_from, data_to):
         if object_name in data_from.objects:
             data_to.objects.append(object_name)
+            
+    # skelly_mesh = bpy.context.selected_objects[0]
 
     # Link the appended object to the current scene
-    if object_name in bpy.data.objects:
-        obj = bpy.data.objects[object_name]
-        bpy.context.collection.objects.link(obj)
+    for obj in bpy.data.objects:
+        if object_name in obj.name and obj.parent is None:
+            bpy.context.collection.objects.link(obj)
+            skelly_mesh = obj
+            break
+    # if object_name in bpy.data.objects:
+    #     obj = bpy.data.objects[object_name]
+    #     bpy.context.collection.objects.link(obj)
+    # bpy.context.collection.objects.link(skelly_mesh)
 
     # Deselect all objects
     for object in bpy.data.objects:
         object.select_set(False)
 
-    skelly_mesh = bpy.data.objects['Skelly_Full_Mesh']
+    # skelly_mesh = bpy.data.objects['skelly_mesh']
     skelly_mesh.select_set(True)
     bpy.context.view_layer.objects.active = skelly_mesh
 

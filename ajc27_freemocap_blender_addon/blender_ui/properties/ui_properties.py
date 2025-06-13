@@ -166,7 +166,7 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     motion_path_frames_after: bpy.props.IntProperty(
         name='',
         min=1,
-        default=10,
+        default=1,
     )  # type: ignore
 
     motion_path_frame_step: bpy.props.IntProperty(

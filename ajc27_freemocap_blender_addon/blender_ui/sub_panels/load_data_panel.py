@@ -17,7 +17,7 @@ class VIEW3D_PT_load_data(bpy.types.Panel):
         # Run all panel
         box = layout.box()
         row = box.row()
-        row.label(text="FreeMoCap Recording:")
+        row.label(text="FreeMoCap Recording Folder:")
         row.prop(context.scene.freemocap_properties, "recording_path", text="")
         box.operator('freemocap._load_data', text='Load Data')
 
