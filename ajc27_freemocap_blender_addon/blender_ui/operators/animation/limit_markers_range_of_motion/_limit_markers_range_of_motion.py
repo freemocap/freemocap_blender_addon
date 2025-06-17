@@ -100,15 +100,12 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             bone.head = next((k for k in markers.keys() if k.startswith(bone.head)), None)
             # Set bone.tail as the best match of bone.tail in markers.keys()
             bone.tail = next((k for k in markers.keys() if k.startswith(bone.tail)), None)
-            # print(f'Virtual bone: {bone}, head: {bone.head}, tail: {bone.tail}')
 
         # Modify the keys and the children values in MEDIAPIPE_HIERARCHY
         # so they match the markers that are children of the data parent empty
         for marker in markers.keys():
-            print(marker)
             # Get the closest match of marker in MEDIAPIPE_HIERARCHY
             closest_match = next((k for k in MEDIAPIPE_HIERARCHY.keys() if marker.startswith(k)), None)
-            print(closest_match)
             if marker == closest_match or closest_match is None:
                 continue
             # Create a new element in MEDIAPIPE_HIERARCHY with the info of the closest match
