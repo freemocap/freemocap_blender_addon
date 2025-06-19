@@ -3,10 +3,12 @@ import os
 
 
 def export_3d_model(
-        rig: bpy.types.Armature,
-        extensions: list = ['fbx', 'bvh'],  # , 'gltf'],
-        recording_folder: str = '',
+        armature: bpy.types.Armature,
+        formats: list = ['fbx', 'bvh'],  # , 'gltf'],
+        destination_folder: str = '',
+        add_subfolder: bool = False,
         rename_root_bone: bool = False,
+        add_leaf_bones: bool = True,
 ) -> None:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
@@ -15,32 +17,36 @@ def export_3d_model(
 
     # TODO - JSM - Do we need this?
     if rename_root_bone:
-        # Save the original rig name to restore it after the export
-        armature_original_name = rig.name
-        # Rename the rig if its name is different from root
-        if rig.name != "root":
-            rig.name = "root"
+        # Save the original armature name to restore it after the export
+        armature_original_name = armature.name
+        # Rename the armature if its name is different from root
+        if armature.name != "root":
+            armature.name = "root"
 
-    # Ensure the folder '3D_model' exists within the recording folder
-    export_folder = os.path.join(recording_folder, "3d_models")
-    os.makedirs(export_folder, exist_ok=True)
+    if add_subfolder:
+        # Ensure the folder '3D_model' exists within the recording folder
+        export_folder = os.path.join(destination_folder, "3d_models")
+        os.makedirs(export_folder, exist_ok=True)
+    else:
+        export_folder = destination_folder
 
-    # Export the file extensions
-    for extension in extensions:
+    # Export the file formats
+    for format in formats:
         bpy.ops.object.select_all(action='DESELECT')
         # set object mode
         bpy.ops.object.mode_set(mode='OBJECT')
 
         # Set the export file name based on the recording folder name
-        export_file_name = os.path.basename(recording_folder) + f".{extension}"
+        # export_file_name = os.path.basename(destination_folder) + f".{format}"
+        export_file_name = armature.name + f".{format}"
         export_path = os.path.join(export_folder, export_file_name)
         try:
-            if extension == "fbx":
-                # Select the rig
-                rig.select_set(True)
+            if format == "fbx":
+                # Select the armature
+                armature.select_set(True)
 
                 # Select the meshes parented to the armature
-                child_objects = [obj for obj in bpy.data.objects if obj.parent == rig]
+                child_objects = [obj for obj in bpy.data.objects if obj.parent == armature]
                 for child_object in child_objects:
                     child_object.select_set(True)
 
@@ -53,13 +59,13 @@ def export_3d_model(
                     bake_anim_use_nla_strips=False,
                     bake_anim_use_all_actions=False,
                     bake_anim_force_startend_keying=True,
-                    add_leaf_bones=True,
+                    add_leaf_bones=add_leaf_bones,
                 )
 
-            elif extension == "bvh":
-                rig.select_set(True)
-                # set rig as active object
-                bpy.context.view_layer.objects.active = rig
+            elif format == "bvh":
+                armature.select_set(True)
+                # set armature as active object
+                bpy.context.view_layer.objects.active = armature
 
                 bpy.ops.export_anim.bvh(
                     filepath=export_path,
@@ -70,7 +76,7 @@ def export_3d_model(
                     global_scale=1.0,
                 )
 
-            elif extension == "gltf":
+            elif format == "gltf":
                 # TODO - Fix glTF export of animations - output appears broken
                 bpy.ops.export_scene.gltf(
                     filepath=export_path,
@@ -81,13 +87,13 @@ def export_3d_model(
 
                 )
             else:
-                raise ValueError(f"Unsupported file extension: {extension}")
+                raise ValueError(f"Unsupported file format: {format}")
         except Exception as e:
-            print(f"Error exporting {extension} file: {e}")
+            print(f"Error exporting {format} file: {e}")
             raise
-    # Restore the name of the rig object
+    # Restore the name of the armature object
     if rename_root_bone:
-        for rig in bpy.data.objects:
-            if rig.type == "ARMATURE":
-                # Restore the original rig name
-                rig.name = armature_original_name
+        for armature in bpy.data.objects:
+            if armature.type == "ARMATURE":
+                # Restore the original armature name
+                armature.name = armature_original_name

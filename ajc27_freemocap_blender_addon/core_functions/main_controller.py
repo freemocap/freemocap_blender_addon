@@ -371,8 +371,9 @@ class MainController:
         print("Exporting 3D model...")
         try:
             export_3d_model(
-                rig = self.rig,
-                recording_folder=self.recording_path,
+                armature = self.rig,
+                destination_folder=self.recording_path,
+                add_subfolder=True,
                 rename_root_bone=False,
             )
         except Exception as e:

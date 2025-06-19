@@ -14,10 +14,13 @@ class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
 
         row = layout.row(align=True)
         split = row.column().row().split(factor=0.6)
-        split.column().label(text='Model Destination Path')
-        split.column().prop(export_3d_model_props, 'model_destination_path')
+        split.column().label(text='Model Destination Folder')
+        split.column().prop(export_3d_model_props, 'model_destination_folder')
 
-
+        row = layout.row(align=True)
+        split = row.column().row().split(factor=0.6)
+        split.column().label(text='Model Format')
+        split.column().prop(export_3d_model_props, 'model_format')
 
         # FBX Options
         row = layout.row(align=True)

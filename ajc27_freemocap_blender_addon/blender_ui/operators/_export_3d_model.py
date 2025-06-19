@@ -29,24 +29,23 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
             return {'FINISHED'}
         
         # Get the model destination path
-        model_destination_path = bpy.path.abspath(props.model_destination_path)
+        model_destination_folder = bpy.path.abspath(props.model_destination_folder)
 
         # If the model destination path is empty, return
-        if model_destination_path == '':
+        if model_destination_folder == '':
             print("Model destination path is empty")
             self.report({'INFO'}, "Model destination path is empty")
             # bpy.ops.wm.simple_popup('INVOKE_DEFAULT', message="This is a popup!")
             return {'FINISHED'}
 
-
         export_3d_model(
-            rig=armature,
-            recording_folder=model_destination_path,
+            armature=armature,
+            formats=[props.model_format],
+            destination_folder=model_destination_folder,
+            add_subfolder=False,
             rename_root_bone=True,
+            add_leaf_bones=props.fbx_add_leaf_bones
         )
-
-
-
 
         return {'FINISHED'}
     

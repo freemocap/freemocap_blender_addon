@@ -10,9 +10,19 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         description = 'Toggle Export FBX Format Options'
     ) # type: ignore
 
-    model_destination_path: PropertyTypes.Path(
+    model_destination_folder: PropertyTypes.Path(
         name='',
-        description='Path where the 3D model will be saved',
+        description='Folder where the 3D model will be saved',
+    ) # type: ignore
+
+    model_format: PropertyTypes.Enum(
+        name='',
+        description='Format of the 3D model',
+        items=[
+            ('fbx', 'FBX', 'FBX'),
+            ('bvh', 'BVH', 'BVH'),
+        ],
+        default='FBX',
     ) # type: ignore
 
     fbx_add_leaf_bones: PropertyTypes.Bool(
