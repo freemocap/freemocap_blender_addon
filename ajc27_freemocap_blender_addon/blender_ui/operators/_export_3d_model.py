@@ -39,11 +39,13 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
             return {'FINISHED'}
 
         export_3d_model(
+            data_parent_empty=data_parent_empty,
             armature=armature,
             formats=[props.model_format],
             destination_folder=model_destination_folder,
             add_subfolder=False,
             rename_root_bone=True,
+            bones_naming_convention=props.bones_naming_convention,
             add_leaf_bones=props.fbx_add_leaf_bones
         )
 

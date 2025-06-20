@@ -22,6 +22,11 @@ class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
         split.column().label(text='Model Format')
         split.column().prop(export_3d_model_props, 'model_format')
 
+        row = layout.row(align=True)
+        split = row.column().row().split(factor=0.6)
+        split.column().label(text='Bones Naming Convention')
+        split.column().prop(export_3d_model_props, 'bones_naming_convention')
+
         # FBX Options
         row = layout.row(align=True)
         row.prop(export_3d_model_props, "show_export_fbx_format_options", text="",

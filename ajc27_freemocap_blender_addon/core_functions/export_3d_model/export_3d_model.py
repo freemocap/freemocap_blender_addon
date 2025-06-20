@@ -1,17 +1,26 @@
 import bpy
 import os
 
+from mathutils import Vector
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose_by_markers
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
+
 
 def export_3d_model(
+        data_parent_empty: bpy.types.Object,
         armature: bpy.types.Armature,
         formats: list = ['fbx', 'bvh'],  # , 'gltf'],
         destination_folder: str = '',
         add_subfolder: bool = False,
         rename_root_bone: bool = False,
+        bones_naming_convention: str = 'default',
         add_leaf_bones: bool = True,
 ) -> None:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
+
+    # Set the frame to the scene start frame
+    bpy.context.scene.frame_set(bpy.context.scene.frame_start)
 
     armature_original_name = ''
 
@@ -30,14 +39,42 @@ def export_3d_model(
     else:
         export_folder = destination_folder
 
+
+    # Get references to the empties_parent object
+    empties_parent = [obj for obj in data_parent_empty.children if 'empties_parent' in obj.name][0]
+
+    # Get the current frame action position of the markers and save it in a dictionary
+    current_markers_position = {}
+    for marker in empties_parent.children:
+        current_markers_position[marker.name] = marker.matrix_world.translation.copy()
+
+    # Set the markers position in frame 0 equal to the expected armature rest pose
+    # This is because the exported fbx armature gets its rest pose as the
+    # pose the armature has in the current frame before the export
+    # Might be a change in the internal export function.
+    set_armature_rest_pose_by_markers(
+        data_parent_empty=data_parent_empty,
+        armature=armature
+    )
+
+    if bones_naming_convention != "default":
+        armature.select_set(True)
+        # Set Edit Mode
+        bpy.ops.object.mode_set(mode="EDIT")
+        print("Armature name: " + armature.name)
+
+        for bone in armature.data.bones:
+            if bone.name in bone_naming_mapping[bones_naming_convention]:
+                bone.name = bone_naming_mapping[bones_naming_convention][bone.name]
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode="OBJECT")
+        armature.select_set(False)
+
     # Export the file formats
     for format in formats:
-        bpy.ops.object.select_all(action='DESELECT')
-        # set object mode
-        bpy.ops.object.mode_set(mode='OBJECT')
-
+        
         # Set the export file name based on the recording folder name
-        # export_file_name = os.path.basename(destination_folder) + f".{format}"
         export_file_name = armature.name + f".{format}"
         export_path = os.path.join(export_folder, export_file_name)
         try:
@@ -59,7 +96,11 @@ def export_3d_model(
                     bake_anim_use_nla_strips=False,
                     bake_anim_use_all_actions=False,
                     bake_anim_force_startend_keying=True,
+                    use_mesh_modifiers=True,
                     add_leaf_bones=add_leaf_bones,
+                    bake_anim_step=1.0,
+                    bake_anim_simplify_factor=0.0,
+                    armature_nodetype='NULL',
                 )
 
             elif format == "bvh":
@@ -84,16 +125,48 @@ def export_3d_model(
                     export_cameras=True,
                     export_lights=True,
                     use_visible=True,
-
                 )
             else:
                 raise ValueError(f"Unsupported file format: {format}")
         except Exception as e:
             print(f"Error exporting {format} file: {e}")
             raise
+
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Restore (keyframe insert) the position of the markers in the start frame
+    for marker in empties_parent.children:
+        marker.matrix_world.translation = current_markers_position[marker.name]
+        # Insert keyframe in the start frame
+        marker.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_start)
+
+    # Restore the name of the bones 
+    if bones_naming_convention != "default":
+        armature.select_set(True)
+        
+        # Get the inverse mapping of the bone_naming_mapping
+        inverse_bone_naming_mapping = {v: k for k, v in bone_naming_mapping[bones_naming_convention].items()}
+
+        # Set Edit Mode
+        bpy.ops.object.mode_set(mode="EDIT")
+        print("Armature name: " + armature.name)
+
+        for bone in armature.data.bones:
+            if bone.name in inverse_bone_naming_mapping:
+                bone.name = inverse_bone_naming_mapping[bone.name]
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode="OBJECT")
+        armature.select_set(False)
+
     # Restore the name of the armature object
     if rename_root_bone:
         for armature in bpy.data.objects:
             if armature.type == "ARMATURE":
                 # Restore the original armature name
                 armature.name = armature_original_name
+
+
+    return
+
+

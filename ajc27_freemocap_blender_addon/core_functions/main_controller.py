@@ -371,6 +371,7 @@ class MainController:
         print("Exporting 3D model...")
         try:
             export_3d_model(
+                data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
                 destination_folder=self.recording_path,
                 add_subfolder=True,
