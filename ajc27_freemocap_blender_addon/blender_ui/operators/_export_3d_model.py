@@ -1,7 +1,6 @@
 import bpy
 
 from ajc27_freemocap_blender_addon.core_functions.export_3d_model.export_3d_model import export_3d_model
-from ajc27_freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
 
 class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
     bl_idname = 'freemocap._export_3d_model'
@@ -46,6 +45,7 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
             add_subfolder=False,
             rename_root_bone=True,
             bones_naming_convention=props.bones_naming_convention,
+            rest_pose_type=props.rest_pose_type,
             add_leaf_bones=props.fbx_add_leaf_bones
         )
 

@@ -1,8 +1,8 @@
 import bpy
 import os
 
-from mathutils import Vector
-from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose_by_markers
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
 from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
 
 
@@ -14,6 +14,7 @@ def export_3d_model(
         add_subfolder: bool = False,
         rename_root_bone: bool = False,
         bones_naming_convention: str = 'default',
+        rest_pose_type: str = 'default',
         add_leaf_bones: bool = True,
 ) -> None:
     # Deselect all objects
@@ -39,6 +40,13 @@ def export_3d_model(
     else:
         export_folder = destination_folder
 
+    # Change the rest pose if its type is different than default
+    if rest_pose_type != 'default':
+        set_armature_rest_pose(
+            armature=armature,
+            rest_pose_type=rest_pose_type
+        )
+
 
     # Get references to the empties_parent object
     empties_parent = [obj for obj in data_parent_empty.children if 'empties_parent' in obj.name][0]
@@ -52,7 +60,7 @@ def export_3d_model(
     # This is because the exported fbx armature gets its rest pose as the
     # pose the armature has in the current frame before the export
     # Might be a change in the internal export function.
-    set_armature_rest_pose_by_markers(
+    set_armature_pose_by_markers(
         data_parent_empty=data_parent_empty,
         armature=armature
     )

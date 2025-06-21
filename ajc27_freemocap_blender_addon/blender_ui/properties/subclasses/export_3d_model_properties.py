@@ -35,6 +35,16 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         default='Default',
     ) # type: ignore
 
+    rest_pose_type: PropertyTypes.Enum(
+        name='',
+        description='Type of the rest pose',
+        items=[
+            ('default', 'Default', 'Default'),
+            ('metahuman', 'Metahuman', 'Metahuman'),
+        ],
+        default='Default',
+    ) # type: ignore
+
     fbx_add_leaf_bones: PropertyTypes.Bool(
         name='',
         description='Add leaf bones to the FBX file (requires Blender 2.80 or newer)',
