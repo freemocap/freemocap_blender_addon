@@ -36,15 +36,11 @@ def attach_skelly_by_vertex_group(
 
     object_name = 'skelly_mesh'
 
-    # bpy.ops.object.select_all(action='DESELECT')
-
     # Append the skelly mesh as blend file because the exports (fbx, obj)
     # don't save all the vertex groups
     with bpy.data.libraries.load(skelly_mesh_path, link=False) as (data_from, data_to):
         if object_name in data_from.objects:
             data_to.objects.append(object_name)
-            
-    # skelly_mesh = bpy.context.selected_objects[0]
 
     # Link the appended object to the current scene
     for obj in bpy.data.objects:
@@ -52,16 +48,11 @@ def attach_skelly_by_vertex_group(
             bpy.context.collection.objects.link(obj)
             skelly_mesh = obj
             break
-    # if object_name in bpy.data.objects:
-    #     obj = bpy.data.objects[object_name]
-    #     bpy.context.collection.objects.link(obj)
-    # bpy.context.collection.objects.link(skelly_mesh)
 
     # Deselect all objects
     for object in bpy.data.objects:
         object.select_set(False)
 
-    # skelly_mesh = bpy.data.objects['skelly_mesh']
     skelly_mesh.select_set(True)
     bpy.context.view_layer.objects.active = skelly_mesh
 
