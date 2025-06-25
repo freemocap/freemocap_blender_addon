@@ -50,22 +50,3 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
         )
 
         return {'FINISHED'}
-    
-# bpy.utils.register_class(SimplePopupOperator)
-# class SimplePopupOperator(bpy.types.Operator):
-#     bl_idname = "wm.simple_popup"
-#     bl_label = "Popup Message"
-
-#     message: PropertyTypes.String() # type: ignore
-
-#     def execute(self, context):
-#         return {'FINISHED'}
-
-#     def invoke(self, context, event):
-#         return context.window_manager.invoke_props_dialog(self)
-
-#     def draw(self, context):
-#         layout = self.layout
-#         layout.label(text=self.message)
-
-

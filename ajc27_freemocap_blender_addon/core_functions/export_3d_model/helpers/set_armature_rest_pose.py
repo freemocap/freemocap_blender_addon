@@ -26,7 +26,6 @@ def set_armature_rest_pose(
     # Set the rest pose rotations
     for bone in armature.data.edit_bones:
         if bone.name in rest_pose_rotations:
-            print(bone.name, bone_info[bone.name]['length'])
 
             # If the bone is part of the palm, move its head to its parent
             # as it is not connected and didn't move with its parent rotation
@@ -61,6 +60,4 @@ def set_armature_rest_pose(
                 bone.parent = armature.data.edit_bones['pelvis']
 
     # Exit Edit Mode
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-        
+    bpy.ops.object.mode_set(mode='OBJECT')        

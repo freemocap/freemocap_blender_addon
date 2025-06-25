@@ -19,7 +19,7 @@ def set_armature_pose_by_markers(
     # Get the bone info (postions and lengths)
     bone_info = get_bone_info(armature)
 
-    # Move the empty markers to make the T-Pose in the current frame
+    # Move the empty markers to make the rest pose in the current frame
     align_markers_to_armature(
         markers_list=empties_parent.children,
         markers_reference=deepcopy(_EMPTY_MARKERS),

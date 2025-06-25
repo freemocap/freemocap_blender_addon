@@ -42,3 +42,9 @@ class PropertyTypes:
         subtype='DIR_PATH',
         description=kwargs.get('description', '')
     )
+    FilePath = lambda **kwargs: bpy.props.StringProperty(
+        name=kwargs.get('name', ''),
+        default=get_blank_default_value(),
+        subtype='FILE_PATH',
+        description=kwargs.get('description', '')
+    )

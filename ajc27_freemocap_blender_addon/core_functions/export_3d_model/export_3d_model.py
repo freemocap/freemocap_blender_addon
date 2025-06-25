@@ -4,6 +4,11 @@ import os
 from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
 from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
 from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
+    _SKELLY_VERTEX_GROUPS,
+)
 
 
 def export_3d_model(
@@ -40,13 +45,24 @@ def export_3d_model(
     else:
         export_folder = destination_folder
 
+    # Get references to the mesh object
+    mesh_object = [obj for obj in data_parent_empty.children_recursive if 'skelly_mesh' in obj.name][0]
+
     # Change the rest pose if its type is different than default
     if rest_pose_type != 'default':
+        # Save the current rest pose with bone_info to restore it after the export
+        current_bone_info = get_bone_info(armature)
+        # Set the export rest pose
         set_armature_rest_pose(
             armature=armature,
             rest_pose_type=rest_pose_type
         )
-
+        # Align and parent the mesh to the armature
+        align_and_parent_vertex_groups_to_armature(
+            armature=armature,
+            mesh_object=mesh_object,
+            vertex_groups=_SKELLY_VERTEX_GROUPS
+        )
 
     # Get references to the empties_parent object
     empties_parent = [obj for obj in data_parent_empty.children if 'empties_parent' in obj.name][0]
@@ -83,7 +99,7 @@ def export_3d_model(
     for format in formats:
         
         # Set the export file name based on the recording folder name
-        export_file_name = armature.name + f".{format}"
+        export_file_name = data_parent_empty.name.removesuffix("_origin") + f".{format}"
         export_path = os.path.join(export_folder, export_file_name)
         try:
             if format == "fbx":
@@ -167,6 +183,56 @@ def export_3d_model(
         bpy.ops.object.mode_set(mode="OBJECT")
         armature.select_set(False)
 
+
+
+    # Restore the rest pose of the armature if it was changed
+    if rest_pose_type != "default":
+        # Deselect all objects
+        bpy.ops.object.select_all(action='DESELECT')
+        # Select the armature
+        armature.select_set(True)
+
+        # Enter Edit Mode
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        # Set the rest pose rotations
+        for bone in armature.data.edit_bones:
+            if bone.name in current_bone_info:
+                bone.head = current_bone_info[bone.name]['head_position']
+                bone.tail = current_bone_info[bone.name]['tail_position']
+                bone.roll = current_bone_info[bone.name]['roll']
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode='OBJECT')
+        armature.select_set(False)
+
+        # Align and parent the mesh to the armature
+        align_and_parent_vertex_groups_to_armature(
+            armature=armature,
+            mesh_object=mesh_object,
+            vertex_groups=_SKELLY_VERTEX_GROUPS
+        )
+
+    # In case the rest pose type is metahuman, reparent the thigh bones to the pelvis.R and pelvis.L
+    if rest_pose_type == 'metahuman':
+        # Select the armature
+        armature.select_set(True)
+
+        # Enter Edit Mode
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        for bone in armature.data.edit_bones:
+            if 'thigh' in bone.name:
+                if 'thigh.R' in bone.name:
+                    bone.parent = armature.data.edit_bones['pelvis.R']
+                elif 'thigh.L' in bone.name:
+                    bone.parent = armature.data.edit_bones['pelvis.L']
+                bone.use_connect = True
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode='OBJECT')
+        armature.select_set(False)
+
     # Restore the name of the armature object
     if rename_root_bone:
         for armature in bpy.data.objects:
@@ -174,6 +240,8 @@ def export_3d_model(
                 # Restore the original armature name
                 armature.name = armature_original_name
 
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
 
     return
 
