@@ -85,7 +85,6 @@ def export_3d_model(
         armature.select_set(True)
         # Set Edit Mode
         bpy.ops.object.mode_set(mode="EDIT")
-        print("Armature name: " + armature.name)
 
         for bone in armature.data.bones:
             if bone.name in bone_naming_mapping[bones_naming_convention]:
@@ -173,7 +172,6 @@ def export_3d_model(
 
         # Set Edit Mode
         bpy.ops.object.mode_set(mode="EDIT")
-        print("Armature name: " + armature.name)
 
         for bone in armature.data.bones:
             if bone.name in inverse_bone_naming_mapping:
@@ -182,8 +180,6 @@ def export_3d_model(
         # Set Object Mode
         bpy.ops.object.mode_set(mode="OBJECT")
         armature.select_set(False)
-
-
 
     # Restore the rest pose of the armature if it was changed
     if rest_pose_type != "default":
@@ -244,5 +240,3 @@ def export_3d_model(
     bpy.ops.object.select_all(action='DESELECT')
 
     return
-
-
