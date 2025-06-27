@@ -10,8 +10,8 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
         vertex_group_index = target_mesh.vertex_groups[vertex_group].index
 
         # Set the origin and end vertex sufixes according to the group
-        origin_sufix = '_left' if vertex_group == "FMC_pelvis" else '_origin'
-        end_sufix = '_right' if vertex_group == "FMC_pelvis" else '_end'
+        origin_sufix = '_left' if vertex_group == "pelvis" else '_origin'
+        end_sufix = '_right' if vertex_group == "pelvis" else '_end'
 
         # Get the origin vertex group index
         origin_vertex_group_index = target_mesh.vertex_groups[vertex_group + origin_sufix].index
@@ -44,7 +44,7 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
             origin_end_distance = origin_end_vector.length
 
             # Get the corresponding bone length
-            if vertex_group == "FMC_pelvis":
+            if vertex_group == "pelvis":
                 # TODO : make length as the sum of the elements of a armature_bone list to avoid this if
                 bone_length = bone_info['pelvis.L']['length'] + bone_info['pelvis.R']['length']
             else:
