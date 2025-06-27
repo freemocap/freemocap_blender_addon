@@ -72,17 +72,17 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                 )
 
         # Set Bone Rotation Limits
-        row = layout.row(align=True)
-        row.prop(set_bone_rotation_limits_props, "show_set_bone_rotation_limits_options", text="",
-                 icon='TRIA_DOWN' if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options else 'TRIA_RIGHT', emboss=False)
-        row.label(text="Set Bone Rotation Limits")
+        # row = layout.row(align=True)
+        # row.prop(set_bone_rotation_limits_props, "show_set_bone_rotation_limits_options", text="",
+        #          icon='TRIA_DOWN' if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options else 'TRIA_RIGHT', emboss=False)
+        # row.label(text="Set Bone Rotation Limits")
 
-        if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options:
-            box = layout.box()
-            box.operator(
-                'freemocap._set_bone_rotation_limits',
-                text='Set Bone Rotation Limits',
-            )
+        # if set_bone_rotation_limits_props.show_set_bone_rotation_limits_options:
+        #     box = layout.box()
+        #     box.operator(
+        #         'freemocap._set_bone_rotation_limits',
+        #         text='Set Bone Rotation Limits',
+        #     )
 
         # Limit Markers Range of Motion
         row = layout.row(align=True)

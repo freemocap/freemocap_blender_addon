@@ -148,33 +148,6 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split1.operator('freemocap._clear_motion_path', text='Clear Motion Path')
             split.operator('freemocap._clear_all_motion_paths', text='Clear All Motion Paths')
 
-            # Individual Motion Paths checkboxes commented as they will probably be added dinamically in the future
-            # box = layout.box()
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_CENTER_OF_MASS.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HEAD_CENTER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_NECK_CENTER.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HIPS_CENTER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_SHOULDER.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_SHOULDER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ELBOW.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ELBOW.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_WRIST.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_WRIST.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_HIP.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_HIP.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_KNEE.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_KNEE.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ANKLE.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ANKLE.value)
-
         # COM Vertical Projection
         row = layout.row(align=True)
         row.prop(ui_props, "show_com_vertical_projection_options", text="",

@@ -51,14 +51,28 @@ def create_keyframed_empty_from_3d_trajectory_data(
     empty_object.animation_data_create()
     empty_object.animation_data.action = action
 
+    # If Blender version is >= 4.4, create the structure for the action
+    if bpy.app.version >= (4, 4):
+        slot = action.slots.new(id_type='OBJECT', name=trajectory_name)
+        layer = action.layers.new("Layer")
+        strip = layer.strips.new(type='KEYFRAME')
+        channelbag = strip.channelbag(slot, ensure=True)
+        empty_object.animation_data.action_slot = action.slots[0]
+
     # Precompute frames and locations
     num_frames = trajectory_fr_xyz.shape[0]
-    frames = np.arange(num_frames, dtype=np.float32)
+    start_frame = bpy.context.scene.frame_start
+    frames = np.arange(start_frame, start_frame + num_frames, dtype=np.float32)
 
     # For each axis (x, y, z), set keyframes in bulk
     for axis_idx in range(3):
-        fcurve = action.fcurves.new(data_path="location", index=axis_idx)
-        fcurve.keyframe_points.add(num_frames)
+
+        if bpy.app.version >= (4, 4):
+            fcurve = channelbag.fcurves.new(data_path="location", index=axis_idx)
+        else:
+            fcurve = action.fcurves.new(data_path="location", index=axis_idx)
+            
+        fcurve.keyframe_points.add(count=num_frames)
 
         # Create a flattened array of [frame0, value0, frame1, value1, ...]
         co = np.empty(2 * num_frames, dtype=np.float32)
@@ -67,6 +81,8 @@ def create_keyframed_empty_from_3d_trajectory_data(
 
         # Assign all keyframes at once
         fcurve.keyframe_points.foreach_set("co", co)
-        fcurve.update()  # Finalize changes
+
+        # Finalize changes
+        fcurve.update()
 
     return empty_object
