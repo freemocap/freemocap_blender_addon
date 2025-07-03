@@ -6,7 +6,7 @@ bone_naming_mapping = {
         'spine': 'spine_01',
         'spine.001': 'spine_04',
         'neck': 'neck_01',
-        'face': 'face',
+        'face': 'head',
         'shoulder.R': 'clavicle_r',
         'shoulder.L': 'clavicle_l',
         'upper_arm.R': 'upperarm_r',
