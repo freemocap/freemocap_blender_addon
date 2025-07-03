@@ -25,11 +25,15 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
             # Get the adjusted axes of the edit bones
             source_bones_adjusted_axes = get_edit_bones_adjusted_axes(
                 source_armature,
-                animation_props.retarget_source_axes_convention
+                animation_props.retarget_source_x_axis_convention,
+                animation_props.retarget_source_y_axis_convention,
+                animation_props.retarget_source_z_axis_convention
             )
             target_bones_adjusted_axes = get_edit_bones_adjusted_axes(
                 target_armature,
-                animation_props.retarget_target_axes_convention
+                animation_props.retarget_target_x_axis_convention,
+                animation_props.retarget_target_y_axis_convention,
+                animation_props.retarget_target_z_axis_convention
             )
 
             #  Select the target armature

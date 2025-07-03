@@ -40,11 +40,17 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Source Axes Convention')
-            split.column().prop(retarget_animation_props, 'retarget_source_axes_convention')
+            split_2 = split.column().split(factor=0.333)
+            split_2.column().prop(retarget_animation_props, 'retarget_source_x_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_source_y_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_source_z_axis_convention')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Axes Convention')
-            split.column().prop(retarget_animation_props, 'retarget_target_axes_convention')
+            split_2 = split.column().split(factor=0.333)
+            split_2.column().prop(retarget_animation_props, 'retarget_target_x_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_target_y_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_target_z_axis_convention')
 
             box.operator(
                 'freemocap._detect_bone_mapping',
