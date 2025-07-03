@@ -148,6 +148,37 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
             ('-z', '-z', ''),
         ]
     ) # type: ignore
+    retarget_target_bone_rotation_mixmode: PropertyTypes.Enum(
+        description = 'Mix Mode to use in the Copy Rotation bone constraint',
+        items = [
+            ('OFFSET', 'Offset (Legacy)', ''),
+            ('REPLACE', 'Replace', ''),
+            ('ADD', 'Add', ''),
+            ('BEFORE', 'Before Original', ''),
+            ('AFTER', 'After Original', ''),
+        ]
+    ) # type: ignore
+    retarget_target_bone_rotation_target_space: PropertyTypes.Enum(
+        description = 'Target Space to use in the Copy Rotation bone constraint',
+        items = [
+            ('LOCAL', 'Local Space', ''),
+            ('WORLD', 'World Space', ''),
+            ('CUSTOM', 'Custom Space', ''),
+            ('POSE', 'Pose Space', ''),
+            ('LOCAL_WITH_PARENT', 'Local With Parent', ''),
+            ('LOCAL_OWNER_ORIENT', 'Local Space (Owner Orientation)', '')
+        ]
+    ) # type: ignore
+    retarget_target_bone_rotation_owner_space: PropertyTypes.Enum(
+        description = 'Owner Space to use in the Copy Rotation bone constraint',
+        items = [
+            ('LOCAL', 'Local Space', ''),
+            ('WORLD', 'World Space', ''),
+            ('CUSTOM', 'Custom Space', ''),
+            ('POSE', 'Pose Space', ''),
+            ('LOCAL_WITH_PARENT', 'Local With Parent', '')
+        ]
+    ) # type: ignore
     retarget_pairs: PropertyTypes.Collection(
         type=RetargetBonePair
     ) # type: ignore

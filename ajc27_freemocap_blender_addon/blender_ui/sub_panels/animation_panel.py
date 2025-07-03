@@ -52,6 +52,18 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             split_2.column().prop(retarget_animation_props, 'retarget_target_y_axis_convention')
             split_2.column().prop(retarget_animation_props, 'retarget_target_z_axis_convention')
 
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Mixmode')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_mixmode')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Target Space')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_target_space')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Owner Space')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_owner_space')            
+
             box.operator(
                 'freemocap._detect_bone_mapping',
                 text='Detect Bone Mapping',
