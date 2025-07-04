@@ -45,6 +45,14 @@ class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
             split.column().label(text='Add Leaf Bones')
             split.column().prop(export_3d_model_props, 'fbx_add_leaf_bones')
 
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Primary Bone Axis')
+            split.column().prop(export_3d_model_props, 'fbx_primary_bone_axis')
+
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Secondary Bone Axis')
+            split.column().prop(export_3d_model_props, 'fbx_secondary_bone_axis')
+
         layout.operator(
             'freemocap._export_3d_model',
             text='Export 3D Model',

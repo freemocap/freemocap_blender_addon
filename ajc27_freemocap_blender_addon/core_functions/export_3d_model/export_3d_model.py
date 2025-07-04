@@ -20,7 +20,9 @@ def export_3d_model(
         rename_root_bone: bool = False,
         bones_naming_convention: str = 'default',
         rest_pose_type: str = 'default',
-        add_leaf_bones: bool = True,
+        fbx_add_leaf_bones: bool = True,
+        fbx_primary_bone_axis: str = 'Y',
+        fbx_secondary_bone_axis: str = 'X',
 ) -> None:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
@@ -54,6 +56,7 @@ def export_3d_model(
         current_bone_info = get_bone_info(armature)
         # Set the export rest pose
         set_armature_rest_pose(
+            data_parent_empty=data_parent_empty,
             armature=armature,
             rest_pose_type=rest_pose_type
         )
@@ -120,10 +123,12 @@ def export_3d_model(
                     bake_anim_use_all_actions=False,
                     bake_anim_force_startend_keying=True,
                     use_mesh_modifiers=True,
-                    add_leaf_bones=add_leaf_bones,
+                    add_leaf_bones=fbx_add_leaf_bones,
                     bake_anim_step=1.0,
                     bake_anim_simplify_factor=0.0,
                     armature_nodetype='NULL',
+                    primary_bone_axis=fbx_primary_bone_axis,
+                    secondary_bone_axis=fbx_secondary_bone_axis,
                 )
 
             elif format == "bvh":

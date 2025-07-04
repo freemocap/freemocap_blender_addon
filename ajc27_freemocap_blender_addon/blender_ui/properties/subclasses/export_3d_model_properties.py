@@ -47,3 +47,27 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         description='Add leaf bones to the FBX file (requires Blender 2.80 or newer)',
         default=False,
     ) # type: ignore
+    fbx_primary_bone_axis: PropertyTypes.Enum(
+        name='',
+        description='Primary bone axis.',
+        items=[
+            ('Y', 'Y', 'Y'),
+            ('X', 'X', 'X'),
+            ('Z', 'Z', 'Z'),
+            ('-X', '-X', '-X'),
+            ('-Y', '-Y', '-Y'),
+            ('-Z', '-Z', '-Z'),
+        ],
+    ) # type: ignore
+    fbx_secondary_bone_axis: PropertyTypes.Enum(
+        name='',
+        description='Secondary bone axis.',
+        items=[
+            ('X', 'X', 'X'),
+            ('Y', 'Y', 'Y'),
+            ('Z', 'Z', 'Z'),
+            ('-X', '-X', '-X'),
+            ('-Y', '-Y', '-Y'),
+            ('-Z', '-Z', '-Z'),
+        ],
+    ) # type: ignore
