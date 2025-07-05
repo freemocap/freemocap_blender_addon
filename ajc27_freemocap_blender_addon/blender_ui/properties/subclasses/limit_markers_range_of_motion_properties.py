@@ -13,9 +13,21 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
         default=False,
     )  # type: ignore
 
-    limit_finger_markers: PropertyTypes.Bool(
+    limit_proximal_phalanx_markers: PropertyTypes.Bool(
         name='',
-        description='Limit the range of motion of the finger markers',
+        description='Limit the range of motion of the proximal phalanx markers',
+        default=True,
+    )  # type: ignore
+
+    limit_intermediate_phalanx_markers: PropertyTypes.Bool(
+        name='',
+        description='Limit the range of motion of the intermediate phalanx markers',
+        default=True,
+    )  # type: ignore
+
+    limit_distal_phalanx_markers: PropertyTypes.Bool(
+        name='',
+        description='Limit the range of motion of the distal phalanx markers',
         default=True,
     )  # type: ignore
 

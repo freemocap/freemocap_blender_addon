@@ -40,11 +40,29 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Source Axes Convention')
-            split.column().prop(retarget_animation_props, 'retarget_source_axes_convention')
+            split_2 = split.column().split(factor=0.333)
+            split_2.column().prop(retarget_animation_props, 'retarget_source_x_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_source_y_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_source_z_axis_convention')
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Axes Convention')
-            split.column().prop(retarget_animation_props, 'retarget_target_axes_convention')
+            split_2 = split.column().split(factor=0.333)
+            split_2.column().prop(retarget_animation_props, 'retarget_target_x_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_target_y_axis_convention')
+            split_2.column().prop(retarget_animation_props, 'retarget_target_z_axis_convention')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Mixmode')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_mixmode')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Target Space')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_target_space')
+
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text='Target Bone Rotation Owner Space')
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_owner_space')            
 
             box.operator(
                 'freemocap._detect_bone_mapping',
@@ -93,19 +111,27 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Limit Palm Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_palm_markers')
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Limit Finger Markers')
-            split.column().prop(limit_markers_range_of_motion_props, 'limit_finger_markers')
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Proximal Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_proximal_phalanx_markers')
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Intermediate Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_intermediate_phalanx_markers')
+
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Distal Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_distal_phalanx_markers')
+
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Range of Motion Scale')
             split.column().prop(limit_markers_range_of_motion_props, 'range_of_motion_scale')
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Hand Locked Track Marker')
             split.column().prop(limit_markers_range_of_motion_props, 'hand_locked_track_marker')
 

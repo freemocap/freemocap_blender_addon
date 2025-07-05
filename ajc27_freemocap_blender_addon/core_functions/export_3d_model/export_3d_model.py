@@ -1,46 +1,115 @@
 import bpy
 import os
 
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
+from ajc27_freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
+from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
+    _SKELLY_VERTEX_GROUPS,
+)
+
 
 def export_3d_model(
-        rig: bpy.types.Armature,
-        extensions: list = ['fbx', 'bvh'],  # , 'gltf'],
-        recording_folder: str = '',
+        data_parent_empty: bpy.types.Object,
+        armature: bpy.types.Armature,
+        formats: list = ['fbx', 'bvh'],  # , 'gltf'],
+        destination_folder: str = '',
+        add_subfolder: bool = False,
         rename_root_bone: bool = False,
+        bones_naming_convention: str = 'default',
+        rest_pose_type: str = 'default',
+        fbx_add_leaf_bones: bool = True,
+        fbx_primary_bone_axis: str = 'Y',
+        fbx_secondary_bone_axis: str = 'X',
 ) -> None:
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
+
+    # Set the frame to the scene start frame
+    bpy.context.scene.frame_set(bpy.context.scene.frame_start)
 
     armature_original_name = ''
 
     # TODO - JSM - Do we need this?
     if rename_root_bone:
-        # Save the original rig name to restore it after the export
-        armature_original_name = rig.name
-        # Rename the rig if its name is different from root
-        if rig.name != "root":
-            rig.name = "root"
+        # Save the original armature name to restore it after the export
+        armature_original_name = armature.name
+        # Rename the armature if its name is different from root
+        if armature.name != "root":
+            armature.name = "root"
 
-    # Ensure the folder '3D_model' exists within the recording folder
-    export_folder = os.path.join(recording_folder, "3d_models")
-    os.makedirs(export_folder, exist_ok=True)
+    if add_subfolder:
+        # Ensure the folder '3D_model' exists within the recording folder
+        export_folder = os.path.join(destination_folder, "3d_models")
+        os.makedirs(export_folder, exist_ok=True)
+    else:
+        export_folder = destination_folder
 
-    # Export the file extensions
-    for extension in extensions:
-        bpy.ops.object.select_all(action='DESELECT')
-        # set object mode
-        bpy.ops.object.mode_set(mode='OBJECT')
+    # Get references to the mesh object
+    mesh_object = [obj for obj in data_parent_empty.children_recursive if 'skelly_mesh' in obj.name][0]
 
+    # Change the rest pose if its type is different than default
+    if rest_pose_type != 'default':
+        # Save the current rest pose with bone_info to restore it after the export
+        current_bone_info = get_bone_info(armature)
+        # Set the export rest pose
+        set_armature_rest_pose(
+            data_parent_empty=data_parent_empty,
+            armature=armature,
+            rest_pose_type=rest_pose_type
+        )
+        # Align and parent the mesh to the armature
+        align_and_parent_vertex_groups_to_armature(
+            armature=armature,
+            mesh_object=mesh_object,
+            vertex_groups=_SKELLY_VERTEX_GROUPS
+        )
+
+    # Get references to the empties_parent object
+    empties_parent = [obj for obj in data_parent_empty.children if 'empties_parent' in obj.name][0]
+
+    # Get the current frame action position of the markers and save it in a dictionary
+    current_markers_position = {}
+    for marker in empties_parent.children:
+        current_markers_position[marker.name] = marker.matrix_world.translation.copy()
+
+    # Set the markers position in frame 0 equal to the expected armature rest pose
+    # This is because the exported fbx armature gets its rest pose as the
+    # pose the armature has in the current frame before the export
+    # Might be a change in the internal export function.
+    set_armature_pose_by_markers(
+        data_parent_empty=data_parent_empty,
+        armature=armature
+    )
+
+    if bones_naming_convention != "default":
+        armature.select_set(True)
+        # Set Edit Mode
+        bpy.ops.object.mode_set(mode="EDIT")
+
+        for bone in armature.data.bones:
+            if bone.name in bone_naming_mapping[bones_naming_convention]:
+                bone.name = bone_naming_mapping[bones_naming_convention][bone.name]
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode="OBJECT")
+        armature.select_set(False)
+
+    # Export the file formats
+    for format in formats:
+        
         # Set the export file name based on the recording folder name
-        export_file_name = os.path.basename(recording_folder) + f".{extension}"
+        export_file_name = data_parent_empty.name.removesuffix("_origin") + f".{format}"
         export_path = os.path.join(export_folder, export_file_name)
         try:
-            if extension == "fbx":
-                # Select the rig
-                rig.select_set(True)
+            if format == "fbx":
+                # Select the armature
+                armature.select_set(True)
 
                 # Select the meshes parented to the armature
-                child_objects = [obj for obj in bpy.data.objects if obj.parent == rig]
+                child_objects = [obj for obj in bpy.data.objects if obj.parent == armature]
                 for child_object in child_objects:
                     child_object.select_set(True)
 
@@ -53,13 +122,19 @@ def export_3d_model(
                     bake_anim_use_nla_strips=False,
                     bake_anim_use_all_actions=False,
                     bake_anim_force_startend_keying=True,
-                    add_leaf_bones=True,
+                    use_mesh_modifiers=True,
+                    add_leaf_bones=fbx_add_leaf_bones,
+                    bake_anim_step=1.0,
+                    bake_anim_simplify_factor=0.0,
+                    armature_nodetype='NULL',
+                    primary_bone_axis=fbx_primary_bone_axis,
+                    secondary_bone_axis=fbx_secondary_bone_axis,
                 )
 
-            elif extension == "bvh":
-                rig.select_set(True)
-                # set rig as active object
-                bpy.context.view_layer.objects.active = rig
+            elif format == "bvh":
+                armature.select_set(True)
+                # set armature as active object
+                bpy.context.view_layer.objects.active = armature
 
                 bpy.ops.export_anim.bvh(
                     filepath=export_path,
@@ -70,7 +145,7 @@ def export_3d_model(
                     global_scale=1.0,
                 )
 
-            elif extension == "gltf":
+            elif format == "gltf":
                 # TODO - Fix glTF export of animations - output appears broken
                 bpy.ops.export_scene.gltf(
                     filepath=export_path,
@@ -78,16 +153,95 @@ def export_3d_model(
                     export_cameras=True,
                     export_lights=True,
                     use_visible=True,
-
                 )
             else:
-                raise ValueError(f"Unsupported file extension: {extension}")
+                raise ValueError(f"Unsupported file format: {format}")
         except Exception as e:
-            print(f"Error exporting {extension} file: {e}")
+            print(f"Error exporting {format} file: {e}")
             raise
-    # Restore the name of the rig object
+
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Restore (keyframe insert) the position of the markers in the start frame
+    for marker in empties_parent.children:
+        marker.matrix_world.translation = current_markers_position[marker.name]
+        # Insert keyframe in the start frame
+        marker.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_start)
+
+    # Restore the name of the bones 
+    if bones_naming_convention != "default":
+        armature.select_set(True)
+        
+        # Get the inverse mapping of the bone_naming_mapping
+        inverse_bone_naming_mapping = {v: k for k, v in bone_naming_mapping[bones_naming_convention].items()}
+
+        # Set Edit Mode
+        bpy.ops.object.mode_set(mode="EDIT")
+
+        for bone in armature.data.bones:
+            if bone.name in inverse_bone_naming_mapping:
+                bone.name = inverse_bone_naming_mapping[bone.name]
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode="OBJECT")
+        armature.select_set(False)
+
+    # Restore the rest pose of the armature if it was changed
+    if rest_pose_type != "default":
+        # Deselect all objects
+        bpy.ops.object.select_all(action='DESELECT')
+        # Select the armature
+        armature.select_set(True)
+
+        # Enter Edit Mode
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        # Set the rest pose rotations
+        for bone in armature.data.edit_bones:
+            if bone.name in current_bone_info:
+                bone.head = current_bone_info[bone.name]['head_position']
+                bone.tail = current_bone_info[bone.name]['tail_position']
+                bone.roll = current_bone_info[bone.name]['roll']
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode='OBJECT')
+        armature.select_set(False)
+
+        # Align and parent the mesh to the armature
+        align_and_parent_vertex_groups_to_armature(
+            armature=armature,
+            mesh_object=mesh_object,
+            vertex_groups=_SKELLY_VERTEX_GROUPS
+        )
+
+    # In case the rest pose type is metahuman, reparent the thigh bones to the pelvis.R and pelvis.L
+    if rest_pose_type == 'metahuman':
+        # Select the armature
+        armature.select_set(True)
+
+        # Enter Edit Mode
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        for bone in armature.data.edit_bones:
+            if 'thigh' in bone.name:
+                if 'thigh.R' in bone.name:
+                    bone.parent = armature.data.edit_bones['pelvis.R']
+                elif 'thigh.L' in bone.name:
+                    bone.parent = armature.data.edit_bones['pelvis.L']
+                bone.use_connect = True
+
+        # Set Object Mode
+        bpy.ops.object.mode_set(mode='OBJECT')
+        armature.select_set(False)
+
+    # Restore the name of the armature object
     if rename_root_bone:
-        for rig in bpy.data.objects:
-            if rig.type == "ARMATURE":
-                # Restore the original rig name
-                rig.name = armature_original_name
+        for armature in bpy.data.objects:
+            if armature.type == "ARMATURE":
+                # Restore the original armature name
+                armature.name = armature_original_name
+
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+
+    return

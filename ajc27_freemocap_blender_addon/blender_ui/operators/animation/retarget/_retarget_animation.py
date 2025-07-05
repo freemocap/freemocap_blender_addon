@@ -25,11 +25,15 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
             # Get the adjusted axes of the edit bones
             source_bones_adjusted_axes = get_edit_bones_adjusted_axes(
                 source_armature,
-                animation_props.retarget_source_axes_convention
+                animation_props.retarget_source_x_axis_convention,
+                animation_props.retarget_source_y_axis_convention,
+                animation_props.retarget_source_z_axis_convention
             )
             target_bones_adjusted_axes = get_edit_bones_adjusted_axes(
                 target_armature,
-                animation_props.retarget_target_axes_convention
+                animation_props.retarget_target_x_axis_convention,
+                animation_props.retarget_target_y_axis_convention,
+                animation_props.retarget_target_z_axis_convention
             )
 
             #  Select the target armature
@@ -70,8 +74,14 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
                     )
                     bone_constraint.target = source_armature
                     bone_constraint.subtarget = source_armature.pose.bones[pair.source_bone].name
+                    bone_constraint.mix_mode = animation_props.retarget_target_bone_rotation_mixmode
+                    bone_constraint.target_space = animation_props.retarget_target_bone_rotation_target_space
+                    bone_constraint.owner_space = animation_props.retarget_target_bone_rotation_owner_space
+
                     if pair.target_bone == animation_props.retarget_target_root_bone:
                         bone_constraint.mix_mode = 'OFFSET'
+                        bone_constraint.target_space = 'WORLD'
+                        bone_constraint.owner_space = 'WORLD'
 
             # Set Object Mode
             bpy.ops.object.mode_set(mode="OBJECT")
@@ -81,11 +91,11 @@ class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
             if animation_props.retarget_target_root_bone == 'Armature_origin':
                 bone_location_constraint = target_armature.constraints.new('COPY_LOCATION')
 
-                bone_rotation_constraint = target_armature.constraints.new('COPY_ROTATION')
-                bone_rotation_constraint.target = source_armature
-                bone_rotation_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
-                bone_rotation_constraint.mix_mode = 'OFFSET'
-                bone_rotation_constraint.target_space = 'LOCAL'
+                armature_rotation_constraint = target_armature.constraints.new('COPY_ROTATION')
+                armature_rotation_constraint.target = source_armature
+                armature_rotation_constraint.subtarget = source_armature.pose.bones[animation_props.retarget_source_root_bone].name
+                armature_rotation_constraint.mix_mode = 'OFFSET'
+                armature_rotation_constraint.target_space = 'LOCAL'
 
             else:
                 bone_location_constraint = target_armature.pose.bones[animation_props.retarget_target_root_bone].constraints.new(

@@ -13,7 +13,8 @@ def get_bone_info(armature):
         bone_info[bone.name] = {
             'head_position': bone.head.copy(),
             'tail_position': bone.tail.copy(),
-            'length': bone.length
+            'length': bone.length,
+            'roll': bone.roll
         }
 
     # Return to Object Mode after calculating bone positions
