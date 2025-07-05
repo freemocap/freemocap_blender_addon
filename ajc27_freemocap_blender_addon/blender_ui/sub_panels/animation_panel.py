@@ -111,19 +111,27 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Limit Palm Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_palm_markers')
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Limit Finger Markers')
-            split.column().prop(limit_markers_range_of_motion_props, 'limit_finger_markers')
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Proximal Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_proximal_phalanx_markers')
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Intermediate Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_intermediate_phalanx_markers')
+
+            split = box.column().row().split(factor=0.8)
+            split.column().label(text='Limit Distal Phalanx Markers')
+            split.column().prop(limit_markers_range_of_motion_props, 'limit_distal_phalanx_markers')
+
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Range of Motion Scale')
             split.column().prop(limit_markers_range_of_motion_props, 'range_of_motion_scale')
 
-            split = box.column().row().split(factor=0.6)
+            split = box.column().row().split(factor=0.8)
             split.column().label(text='Hand Locked Track Marker')
             split.column().prop(limit_markers_range_of_motion_props, 'hand_locked_track_marker')
 
