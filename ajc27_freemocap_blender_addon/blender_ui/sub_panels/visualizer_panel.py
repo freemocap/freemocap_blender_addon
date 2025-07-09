@@ -55,12 +55,13 @@ class ViewPanelPropNames(enum.Enum):
     COM_VERTICAL_PROJECTION_IN_BOS_COLOR = "com_vertical_projection_in_bos_color"
     COM_VERTICAL_PROJECTION_OUT_BOS_COLOR = "com_vertical_projection_out_bos_color"
 
-    JOINT_ANGLES_COLOR = "joint_angles_color"
-    JOINT_ANGLES_TEXT_COLOR = "joint_angles_text_color"
-
     BASE_OF_SUPPORT_Z_THRESHOLD = "base_of_support_z_threshold"
     BASE_OF_SUPPORT_POINT_RADIUS = "base_of_support_point_radius"
     BASE_OF_SUPPORT_COLOR = "base_of_support_color"
+
+    JOINT_ANGLE = "joint_angle"
+    JOINT_ANGLE_COLOR = "joint_angle_color"
+    JOINT_ANGLE_TEXT_COLOR = "joint_angle_text_color"
 
 class VIEW3D_PT_data_view_panel(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
@@ -148,33 +149,6 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split1.operator('freemocap._clear_motion_path', text='Clear Motion Path')
             split.operator('freemocap._clear_all_motion_paths', text='Clear All Motion Paths')
 
-            # Individual Motion Paths checkboxes commented as they will probably be added dinamically in the future
-            # box = layout.box()
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_CENTER_OF_MASS.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HEAD_CENTER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_NECK_CENTER.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_HIPS_CENTER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_SHOULDER.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_SHOULDER.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ELBOW.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ELBOW.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_WRIST.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_WRIST.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_HIP.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_HIP.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_KNEE.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_KNEE.value)
-            # split = box.column().row().split(factor=0.5)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_RIGHT_ANKLE.value)
-            # split.column().prop(ui_props, ViewPanelPropNames.MOTION_PATH_LEFT_ANKLE.value)
-
         # COM Vertical Projection
         row = layout.row(align=True)
         row.prop(ui_props, "show_com_vertical_projection_options", text="",
@@ -213,19 +187,22 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().label(text="Base of Support Color:")
             split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_COLOR.value)
             box.operator('freemocap._add_base_of_support', text='Add Base of Support')
-        #
+
         # # Joint Angles
-        # row = layout.row(align=True)
-        # row.prop(ui_props, "show_joint_angles_options", text="",
-        #          icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
-        # row.label(text="Joint Angles")
-        #
-        # if ui_props.show_joint_angles_options:
-        #     box = layout.box()
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Angle Color:")
-        #     split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_COLOR.value)
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Text Color:")
-        #     split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_TEXT_COLOR.value)
-        #     box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
+        row = layout.row(align=True)
+        row.prop(ui_props, "show_joint_angles_options", text="",
+                 icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Joint Angles")
+
+        if ui_props.show_joint_angles_options:
+            box = layout.box()
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Joint Angle:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Angle Color:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_COLOR.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Text Color:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_COLOR.value)
+            box.operator('freemocap._add_joint_angles', text='Add Joint Angles')

@@ -4,6 +4,9 @@ import bpy
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_joint_angles_properties import (
+    AddJointAnglesProperties
+)
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
     RetargetAnimationProperties
 )
@@ -435,6 +438,10 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         max=1.0,
         default=(1.0, 1.0, 1.0, 0.5)
     )  # type: ignore
+
+    add_joint_angles_properties: bpy.props.PointerProperty(
+        type=AddJointAnglesProperties
+    ) # type: ignore
 
     # Animation
     retarget_animation_properties: bpy.props.PointerProperty(
