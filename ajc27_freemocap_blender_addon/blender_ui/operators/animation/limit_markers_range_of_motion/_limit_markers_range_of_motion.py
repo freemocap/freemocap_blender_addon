@@ -29,8 +29,12 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         if props.limit_palm_markers:
             target_categories.append('palm')
-        if props.limit_finger_markers:
-            target_categories.append('finger')
+        if props.limit_proximal_phalanx_markers:
+            target_categories.append('proximal_phalanx')
+        if props.limit_intermediate_phalanx_markers:
+            target_categories.append('intermediate_phalanx')
+        if props.limit_distal_phalanx_markers:
+            target_categories.append('distal_phalanx')
             
         if len(target_categories) == 0:
             print("No target categories selected")
@@ -166,7 +170,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             for bone in VirtualBones:
 
                 # If the bone has the hands or fingers category then calculate its origin axes based on its parent bone's axes
-                if VirtualBones[bone].category in ['palm', 'finger']:
+                if VirtualBones[bone].category in ['palm', 'proximal_phalanx', 'intermediate_phalanx', 'distal_phalanx']:
 
                     # Calculate the bone's y axis
                     bone_y_axis = (
@@ -189,8 +193,9 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     VirtualBones[bone].bone_y_axis = bone_axes_from_parent[1]
                     VirtualBones[bone].bone_z_axis = bone_axes_from_parent[2]
 
-                    # If the bone has the fingers category then calculate its origin axes based on its parent bone's axes and rotate the tail empty (and its children) to meet the constraints
-                    # if VirtualBones[bone].category in ['hand', 'finger'] and bone in ['palm.02.L', 'f_middle.01.L', 'f_middle.02.L', 'f_middle.03.L']:
+                    # If the bone has the target category then calculate its
+                    # origin axes based on its parent bone's axes and rotate
+                    # the tail empty (and its children) to meet the constraints
                     if VirtualBones[bone].category in target_categories:
                         for axis in ['x', 'z']:
                             # Get the min and max rotation limits based on the range of motion scale
