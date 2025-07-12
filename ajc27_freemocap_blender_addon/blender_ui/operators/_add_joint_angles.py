@@ -1,7 +1,7 @@
-
 import bpy
+import numpy as np
 
-from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import add_joint_angles
+from ajc27_freemocap_blender_addon.core_functions.joint_angles.add_joint_angles import add_joint_angles
 from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
 
 
@@ -14,10 +14,11 @@ class FREEMOCAP_OT_add_joint_angles(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
 
+        data_parent_empty = bpy.data.objects[scene.freemocap_properties.scope_data_parent]
+
         print("Adding Joint Angles.......")
 
         joint_angles_properties = context.scene.freemocap_ui_properties.add_joint_angles_properties
-        # props = context.scene.freemocap_ui_properties.limit_markers_range_of_motion_properties
 
         # Get the list of joint angles
         joint_angle_group = joint_angles_properties.joint_angle
@@ -34,14 +35,16 @@ class FREEMOCAP_OT_add_joint_angles(bpy.types.Operator):
         
         print(f"Joint angles: {joint_angle_list}")
 
-        # Calculate the joint angle values
-        # get_joint_angle_values(joint_angle_list)
+        # Execute the add joint angles function
+        add_joint_angles(
+            data_parent_empty=data_parent_empty,
+            joint_angle_list=joint_angle_list,
+            angle_mesh_color=joint_angles_properties.joint_angle_color,
+            angle_text_color=joint_angles_properties.joint_angle_text_color,
+        )
 
-        # # Add Joint Angles
-        # add_joint_angles(angles_color=scene.freemocap_ui_properties.joint_angles_color,
-        #                  text_color=scene.freemocap_ui_properties.joint_angles_text_color)
+        # Set the show Joint Angles property to True
+        scene.freemocap_ui_properties.show_joint_angles = True
 
-        # # Set the show Joint Angles property to True
-        # scene.freemocap_ui_properties.show_joint_angles = True
 
         return {'FINISHED'}
