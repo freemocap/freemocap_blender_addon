@@ -1,21 +1,17 @@
 import bpy
 import numpy as np
 from mathutils import Vector, Matrix
-from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
+
 
 def animate_angle_meshes(
     angle_values: np.ndarray,
     reference_vectors: np.ndarray,
-    cross_products: np.ndarray,
+    rotation_plane_normals: np.ndarray,
     angle_meshes: dict,
     angleText_meshes: dict,
-):
+    angle_text_orientation: str,
+) -> None:
 
-    # draw_vector(
-    #     bpy.data.objects["left_elbow"].location,
-    #     cross_products[135, 0, :],
-    #     "left_elbow_cross_product"
-    # )
     for i, angle_mesh in enumerate(angle_meshes):
         #  Set a simple reference to the angle mesh
         obj = angle_meshes[angle_mesh]
@@ -40,7 +36,7 @@ def animate_angle_meshes(
         for frame in range(num_frames):
 
             # Get vectors and normalize
-            z_axis = Vector(cross_products[frame, i]).normalized()
+            z_axis = Vector(rotation_plane_normals[frame, i]).normalized()
             x_raw = Vector(reference_vectors[frame, i]).normalized()
 
             # Project x to be orthogonal to z (Gram-Schmidt)
@@ -168,5 +164,46 @@ def animate_angle_meshes(
         co[1::2] = text_degrees
         text_fcurve.keyframe_points.foreach_set("co", co)
         text_fcurve.update()
+
+        # Animate the text mesh rotation depending on the orientation option
+        if angle_text_orientation == 'rotation_plane_normal':
+            text_rotation_eulers = np.zeros((num_frames, 3))
+            for frame in range(num_frames):
+                normal = Vector(rotation_plane_normals[frame, i])
+                z_angle = np.arctan2(normal.x, -normal.y)
+
+                # Set the euler rotation, preserving the initial 90-degree X rotation.
+                text_rotation_eulers[frame] = [np.pi / 2, 0, z_angle]
+
+        elif angle_text_orientation == 'global_x':
+            text_rotation_eulers = np.tile([np.pi / 2, 0, 0], (num_frames, 1))
+        elif angle_text_orientation == 'global_y':
+            text_rotation_eulers = np.tile([np.pi / 2, 0, np.pi / 2], (num_frames, 1))
+        elif angle_text_orientation == 'global_z':
+            text_rotation_eulers = np.tile([0, 0, 0], (num_frames, 1))
+        elif angle_text_orientation == 'global_-x':
+            text_rotation_eulers = np.tile([np.pi / 2, 0, np.pi], (num_frames, 1))
+        elif angle_text_orientation == 'global_-y':
+            text_rotation_eulers = np.tile([np.pi / 2, 0, -np.pi / 2], (num_frames, 1))
+        elif angle_text_orientation == 'global_-z':
+            text_rotation_eulers = np.tile([np.pi, 0, 0], (num_frames, 1))
+        else:
+            raise ValueError(f"Invalid angle text orientation: {angle_text_orientation}")        
+
+        # For each axis (x, y, z), set keyframes in bulk for the text mesh rotation
+        for axis in range(3):
+            if bpy.app.version >= (4, 4):
+                rot_fcurve = channelbag.fcurves.new(data_path="rotation_euler", index=axis)
+            else:
+                rot_fcurve = text_action.fcurves.new(data_path="rotation_euler", index=axis)
+
+            rot_fcurve.keyframe_points.add(count=num_frames)
+
+            co = np.empty(2 * num_frames, dtype=np.float32)
+            co[0::2] = frames
+            co[1::2] = text_rotation_eulers[:, axis]
+
+            rot_fcurve.keyframe_points.foreach_set("co", co)
+            rot_fcurve.update()
 
     return

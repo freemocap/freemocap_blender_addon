@@ -7,12 +7,21 @@ from ajc27_freemocap_blender_addon.core_functions.joint_angles.add_angle_meshes 
 from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import parent_meshes
 from ajc27_freemocap_blender_addon.core_functions.joint_angles.create_angle_geometry_nodes import create_angle_geometry_nodes
 from ajc27_freemocap_blender_addon.core_functions.joint_angles.animate_angle_meshes import animate_angle_meshes
+from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
 
+# TODO: Add multicapture support. Change the joint_angles dict to have the correct scope marker names (left_elbow.001, etc.)
+# but have to check the impact on the new angle/text meshes, if getting a sufix like .001 would affect the functions.
 def add_joint_angles(
     data_parent_empty: bpy.types.Object,
     joint_angle_list: list,
-    angle_mesh_color: tuple,
-    angle_text_color: tuple,
+    angle_radius: float = 10.0,
+    overwrite_colors: bool = False,
+    angle_mesh_color: tuple = (0.694,0.082,0.095,1.0),
+    angle_text_color: tuple = (1.0,0.365,0.048,1.0),
+    angle_text_size: float = 5.0,
+    angle_text_orientation: str = 'rotation_plane_normal',
+    angle_text_local_x_offset: float = 3.0,
+    angle_text_local_y_offset: float = 0.0,
 ):
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
@@ -42,14 +51,28 @@ def add_joint_angles(
                     }
 
     # Calculate the joint angle values and vectors
-    angle_values, reference_vectors, rotation_vectors, cross_products = calculate_joint_angle_info(
+    angle_values, reference_vectors, rotation_vectors, rotation_plane_normals = calculate_joint_angle_info(
         joint_angle_list,
         markers,
     )
 
-    print(angle_values[:, 0])
-    print(reference_vectors[:, 0, :])
-    # print(cross_products[:, 0, :])
+    # Temporal debug vectors code
+    # draw_vector(
+    #     bpy.data.objects["left_wrist"].location,
+    #     rotation_vectors[bpy.context.scene.frame_current, 0, :],
+    #     "left_ankle_rotation_vector"
+    # )
+    # draw_vector(
+    #     bpy.data.objects["left_wrist"].location,
+    #     reference_vectors[bpy.context.scene.frame_current, 0, :],
+    #     "left_ankle_reference_vector"
+    # )
+    # draw_vector(
+    #     bpy.data.objects["left_wrist"].location,
+    #     rotation_plane_normals[bpy.context.scene.frame_current, 0, :],
+    #     "left_ankle_rotation_plane_normal"
+    # )
+    
 
     # Get a list of the joint_centers
     joint_centers = []
@@ -71,27 +94,31 @@ def add_joint_angles(
     parent_meshes(data_parent_empty, 'joint_angles_parent', angle_meshes)
     parent_meshes(data_parent_empty, 'joint_angles_parent', angletext_meshes)
 
-    # Create the angle and angletext materials if they don't exist
-    if "Angle Mesh" not in bpy.data.materials.keys():
-        bpy.data.materials.new(name = "Angle Mesh")
-    bpy.data.materials["Angle Mesh"].diffuse_color = angle_mesh_color
-    if "Angle Text" not in bpy.data.materials.keys():
-        bpy.data.materials.new(name = "Angle Text")
-    bpy.data.materials["Angle Text"].diffuse_color = angle_text_color
-    
-
     # Create Geometry Nodes for each angle mesh
-    create_angle_geometry_nodes(angle_meshes, 'angle')
-    create_angle_geometry_nodes(angletext_meshes, 'angletext')
+    create_angle_geometry_nodes(
+        angle_meshes,
+        'angle',
+        angle_radius,
+        overwrite_colors,
+        angle_mesh_color,
+        angle_text_color,
+    )
+    create_angle_geometry_nodes(
+        angletext_meshes,
+        'angletext',
+        angle_text_size = angle_text_size,
+        angle_text_local_x_offset = angle_text_local_x_offset,
+        angle_text_local_y_offset = angle_text_local_y_offset,
+    )
     
-
     # Animate the angle meshes
     animate_angle_meshes(
         angle_values,
         reference_vectors,
-        cross_products,
+        rotation_plane_normals,
         angle_meshes,
         angletext_meshes,
+        angle_text_orientation,
     )
 
     return

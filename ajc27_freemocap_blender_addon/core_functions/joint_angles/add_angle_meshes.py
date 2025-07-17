@@ -31,8 +31,9 @@ def add_angle_meshes(
                 scale=(1, 1, 1)
             )
     
-        # Change the name of the circle mesh
-        bpy.context.active_object.name = mesh_type + "_" + joint_angle
+        # Change the name of the circle mesh. Used "#" as the joint angle name
+        # has a "_" separator
+        bpy.context.active_object.name = mesh_type + "#" + joint_angle
 
         # Add a copy location constraint to the angle mesh
         bpy.ops.object.constraint_add(type='COPY_LOCATION')
@@ -41,6 +42,6 @@ def add_angle_meshes(
         bpy.context.object.constraints["Copy Location"].target = bpy.data.objects[points[i]]
 
         # Append the angle mesh to the angle meshes dictionary
-        angle_meshes[joint_angle] = bpy.data.objects[mesh_type + "_" + joint_angle]
+        angle_meshes[joint_angle] = bpy.data.objects[mesh_type + "#" + joint_angle]
 
     return angle_meshes
