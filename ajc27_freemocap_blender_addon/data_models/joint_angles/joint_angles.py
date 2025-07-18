@@ -463,9 +463,9 @@ joint_angles = {
         'reference_vector': {
             'type': 'doublecrossproduct',
                 'reference_cross_1_origin': 'left_knee',
-                'reference_cross_1_end': 'left_hip',
-                'reference_cross_2_origin': 'left_knee',
-                'reference_cross_2_end': 'left_ankle',
+                'reference_cross_1_end': 'left_ankle',
+                'reference_cross_2_origin': 'left_ankle',
+                'reference_cross_2_end': 'left_foot_index',
                 'reference_cross_3_origin': 'left_knee',
                 'reference_cross_3_end': 'left_ankle',
         },
@@ -478,12 +478,12 @@ joint_angles = {
                     'plane_axis_1': {
                         'type': 'vector',
                         'plane_axis_1_origin': 'left_knee',
-                        'plane_axis_1_end': 'left_hip',
+                        'plane_axis_1_end': 'left_ankle',
                     },
                     'plane_axis_2': {
                         'type': 'vector',
                         'plane_axis_2_origin': 'left_knee',
-                        'plane_axis_2_end': 'left_ankle',
+                        'plane_axis_2_end': 'left_foot_index',
                     },
                 }
             }
@@ -529,9 +529,9 @@ joint_angles = {
         'reference_vector': {
             'type': 'doublecrossproduct',
                 'reference_cross_1_origin': 'right_knee',
-                'reference_cross_1_end': 'right_hip',
-                'reference_cross_2_origin': 'right_knee',
-                'reference_cross_2_end': 'right_ankle',
+                'reference_cross_1_end': 'right_ankle',
+                'reference_cross_2_origin': 'right_ankle',
+                'reference_cross_2_end': 'right_foot_index',
                 'reference_cross_3_origin': 'right_knee',
                 'reference_cross_3_end': 'right_ankle',
         },
@@ -544,12 +544,12 @@ joint_angles = {
                     'plane_axis_1': {
                         'type': 'vector',
                         'plane_axis_1_origin': 'right_knee',
-                        'plane_axis_1_end': 'right_hip',
+                        'plane_axis_1_end': 'right_ankle',
                     },
                     'plane_axis_2': {
                         'type': 'vector',
                         'plane_axis_2_origin': 'right_knee',
-                        'plane_axis_2_end': 'right_ankle',
+                        'plane_axis_2_end': 'right_foot_index',
                     },
                 }
             }
