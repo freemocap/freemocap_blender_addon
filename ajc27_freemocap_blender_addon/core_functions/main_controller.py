@@ -268,7 +268,6 @@ class MainController:
             print("Adding Skelly mesh!!! :D")
             body_dimensions = self.freemocap_data_handler.get_body_dimensions()
             attach_skelly_mesh_to_rig(
-                data_parent_empty_name=self.data_parent_empty.name,
                 rig=self.rig,
                 body_dimensions=body_dimensions,
             )
@@ -371,8 +370,10 @@ class MainController:
         print("Exporting 3D model...")
         try:
             export_3d_model(
-                rig = self.rig,
-                recording_folder=self.recording_path,
+                data_parent_empty=self.data_parent_empty,
+                armature = self.rig,
+                destination_folder=self.recording_path,
+                add_subfolder=True,
                 rename_root_bone=False,
             )
         except Exception as e:
