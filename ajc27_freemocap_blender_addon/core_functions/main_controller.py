@@ -397,7 +397,8 @@ class MainController:
         stage_times['calculate_virtual_trajectories'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
-        self.put_data_in_inertial_reference_frame()
+        if not self.freemocap_data_handler.freemocap_data.groundplane_calibration:
+            self.put_data_in_inertial_reference_frame()
         end_time = time.perf_counter_ns()
         stage_times['put_data_in_inertial_reference_frame'] = (end_time - start_time)/1e9
 

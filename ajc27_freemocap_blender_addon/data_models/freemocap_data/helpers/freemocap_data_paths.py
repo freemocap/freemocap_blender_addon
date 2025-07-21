@@ -12,6 +12,7 @@ class FreemocapDataPaths:
     center_of_mass_npy: str
     segment_centers_of_mass_npy: str
     reprojection_error_npy: str
+    calibration_toml:str
 
     @classmethod
     def from_recording_folder(cls, path: str):
@@ -32,6 +33,8 @@ class FreemocapDataPaths:
         if not reprojection_error_path.exists():
             reprojection_error_path = output_data_path / "raw_data" / "mediapipe3dData_numFrames_numTrackedPoints_reprojectionError.npy"
 
+        calibration_toml_path = list(recording_path.glob("*camera_calibration.toml"))[0]
+
         return cls(
             body_npy=str(output_data_path / "mediapipe_body_3d_xyz.npy"),
             right_hand_npy=str(output_data_path / "mediapipe_right_hand_3d_xyz.npy"),
@@ -43,6 +46,8 @@ class FreemocapDataPaths:
 
             reprojection_error_npy=str(
                 reprojection_error_path),
+
+            calibration_toml=str(calibration_toml_path)
         )
 
     @staticmethod

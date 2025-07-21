@@ -10,6 +10,8 @@ from .helpers.freemocap_data_stats import FreemocapDataStats
 from ..mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
 
+import tomllib
+
 FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
 
 
@@ -19,6 +21,7 @@ class FreemocapData:
     hands: Dict[str, FreemocapComponentData]
     face: FreemocapComponentData
     metadata: Optional[Dict[Any, Any]]
+    groundplane_calibration: bool = False
     other: Dict[str, FreemocapComponentData] = field(default_factory=dict)
 
     @classmethod
@@ -30,6 +33,7 @@ class FreemocapData:
                   error: np.ndarray,
                   data_source: str = "mediapipe",
                   error_type: str = "mean_reprojection_error",
+                  groundplane_calibration: bool = False,
                   other: Optional[Dict[str, Union[FreemocapComponentData, Dict[str, Any]]]] = None,
                   metadata: Optional[Dict[Any, Any]] = None) -> "FreemocapData":
 
@@ -79,6 +83,7 @@ class FreemocapData:
                                         error=face_error,
                                         error_type=error_type),
             other=other,
+            groundplane_calibration=groundplane_calibration,
             metadata=metadata,
         )
 
@@ -167,6 +172,14 @@ class FreemocapData:
         else:
             metadata = {}
 
+        with open (data_paths.calibration_toml, "rb") as f:
+            calibration_data = tomllib.load(f)
+        
+        try:
+            groundplane_calibration:bool = calibration_data['metadata']['groundplane_calibration']
+        except KeyError: #for backwards compatibility
+            groundplane_calibration:bool = False
+
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,
             right_hand_frame_name_xyz=np.load(data_paths.right_hand_npy) / scale,
@@ -180,6 +193,7 @@ class FreemocapData:
                                                             data_source="freemocap",
                                                             trajectory_names=["center_of_mass"])},
             metadata=metadata,
+            groundplane_calibration=groundplane_calibration,
         )
 
     @classmethod
