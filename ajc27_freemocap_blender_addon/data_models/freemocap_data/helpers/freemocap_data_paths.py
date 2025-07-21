@@ -33,7 +33,7 @@ class FreemocapDataPaths:
         if not reprojection_error_path.exists():
             reprojection_error_path = output_data_path / "raw_data" / "mediapipe3dData_numFrames_numTrackedPoints_reprojectionError.npy"
 
-        calibration_toml_path = list(recording_path.glob("*camera_calibration.toml"))[0]
+        calibration_toml_path = list(recording_path.glob("*calibration.toml"))[0]
 
         return cls(
             body_npy=str(output_data_path / "mediapipe_body_3d_xyz.npy"),
