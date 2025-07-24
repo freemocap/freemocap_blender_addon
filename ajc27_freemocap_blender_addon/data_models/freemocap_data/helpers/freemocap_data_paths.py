@@ -12,7 +12,7 @@ class FreemocapDataPaths:
     center_of_mass_npy: str
     segment_centers_of_mass_npy: str
     reprojection_error_npy: str
-    calibration_toml:str
+    calibration_toml: str | None
 
     @classmethod
     def from_recording_folder(cls, path: str):
@@ -32,8 +32,9 @@ class FreemocapDataPaths:
         reprojection_error_path = output_data_path / "raw_data" / "mediapipe_3dData_numFrames_numTrackedPoints_reprojectionError.npy"
         if not reprojection_error_path.exists():
             reprojection_error_path = output_data_path / "raw_data" / "mediapipe3dData_numFrames_numTrackedPoints_reprojectionError.npy"
-
-        calibration_toml_path = list(recording_path.glob("*calibration.toml"))[0]
+        
+        possible_calibration_files = list(recording_path.glob("*calibration.toml"))
+        calibration_toml_path = str(possible_calibration_files[0]) if possible_calibration_files else None #for single-cam recording cases where there is no calibration file
 
         return cls(
             body_npy=str(output_data_path / "mediapipe_body_3d_xyz.npy"),
@@ -47,7 +48,7 @@ class FreemocapDataPaths:
             reprojection_error_npy=str(
                 reprojection_error_path),
 
-            calibration_toml=str(calibration_toml_path)
+            calibration_toml= calibration_toml_path
         )
 
     @staticmethod
@@ -62,6 +63,8 @@ class FreemocapDataPaths:
 
     def __post_init__(self):
         for path in self.__dict__.values():
+            if path is None:
+                continue 
             if not Path(path).exists():
                 print(f"Path {path} does not exist")
                 raise FileNotFoundError(f"Path {path} does not exist")

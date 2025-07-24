@@ -172,13 +172,11 @@ class FreemocapData:
         else:
             metadata = {}
 
-        with open (data_paths.calibration_toml, "rb") as f:
-            calibration_data = tomllib.load(f)
-        
-        try:
-            groundplane_calibration:bool = calibration_data['metadata']['groundplane_calibration']
-        except KeyError: #for backwards compatibility
-            groundplane_calibration:bool = False
+        groundplane_calibration:bool = False #set default value
+        if data_paths.calibration_toml is not None: #for single-cam recording cases where there is no calibration file
+            with open (data_paths.calibration_toml, "rb") as f:
+                calibration_data = tomllib.load(f)
+            groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
 
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,
