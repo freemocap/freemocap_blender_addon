@@ -44,7 +44,7 @@ jobs:
           - Go to Edit > Preferences > Add-ons
           - Click Install... and select the .zip file
           - Enable the add-on by checking the box next to it
-          - The add-on should now be available in Blender under the "💀FreeMoCap" tab in the 3d Viewport (press 'n' if its not visible)
+          - The add-on should now be available in Blender under the "FreeMoCap" tab in the 3d Viewport (press 'n' if its not visible)
           (See README.md for more detailed instructions and usage information)
           EOL
           sed -i "s/\${version}/$version/g" release_notes.md
