@@ -1,4 +1,4 @@
-name: Create and Upload Zip
+name: Create and Upload Addon Zip
 
 on:
   push:
@@ -17,8 +17,8 @@ jobs:
         id: get_version
         run: |
           version=$(grep -Po '(?<=^__version__ = ")[^"]*' ajc27_freemocap_blender_addon/__init__.py)
-          echo ::set-output name=version::$version
-
+          version=${version#v}
+          echo "version=$version" >> $GITHUB_OUTPUT
       - name: Create zip file
         run: |
           version=${{ steps.get_version.outputs.version }}
@@ -34,18 +34,20 @@ jobs:
         id: create_release_notes
         run: |
           version=${{ steps.get_version.outputs.version }}
-          echo "You can install the attached .zip as a Blender Add-on. See README.md for basic installation and usage instructions" > release_notes.md
-          echo "Attached Files" >> release_notes.md
-          echo "" >> release_notes.md
-          echo "- freemocap_blender_addon_${version}.zip - A zipped archive of the freemocap_blender_addon folder in this repo." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "To install this addon, download the .zip file and follow these steps:" >> release_notes.md
-          echo "- Download/install/open Blender (https://www.blender.org/download/)" >> release_notes.md
-          echo "- Go to Edit > Preferences > Add-ons" >> release_notes.md
-          echo "- Click Install... and select the .zip file" >> release_notes.md
-          echo "- Enable the add-on by checking the box next to it" >> release_notes.md
-          echo "- The add-on should now be available in Blender under the `💀FreeMoCap` tab in the 3d Viewport (press `n` if its not visible)" >> release_notes.md
-          echo "(See README.md for more detailed instructions and usage information)" >> release_notes.md
+          cat > release_notes.md << 'EOL'
+          You can install the attached .zip as a Blender Add-on. See README.md for basic installation and usage instructions
+
+          Attached Files
+          - freemocap_blender_addon_${version}.zip - A zipped archive of the freemocap_blender_addon folder in this repo.
+          To install this addon, download the .zip file and follow these steps:
+          - Download/install/open Blender (https://www.blender.org/download/)
+          - Go to Edit > Preferences > Add-ons
+          - Click Install... and select the .zip file
+          - Enable the add-on by checking the box next to it
+          - The add-on should now be available in Blender under the "💀FreeMoCap" tab in the 3d Viewport (press 'n' if its not visible)
+          (See README.md for more detailed instructions and usage information)
+          EOL
+          sed -i "s/\${version}/$version/g" release_notes.md
 
       - name: Create GitHub Release
         id: create_release
