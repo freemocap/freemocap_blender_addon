@@ -53,7 +53,7 @@ def add_rig_by_bone(
     )
 
     # Get reference to armature
-    rig = bpy.data.objects["Armature"]
+    rig = bpy.data.objects[bpy.app.translations.pgettext_data("Armature")]
     # Rename the armature
     rig.name = rig_name
     # Rename the rig object to pelvis
@@ -63,7 +63,7 @@ def add_rig_by_bone(
     bpy.ops.object.mode_set(mode="EDIT")
 
     # Remove the default bone
-    rig.data.edit_bones.remove(rig.data.edit_bones["Bone"])
+    rig.data.edit_bones.remove(rig.data.edit_bones[bpy.app.translations.pgettext_data("Bone")])
 
     # Get the inverse bone_map_dict
     inv_bone_name_map = {
