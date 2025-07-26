@@ -11,7 +11,7 @@ def draw_vector(origin, angle, name):
         type='SINGLE_ARROW', align='WORLD', location=origin,
         rotation=Vector([0, 0, 1]).rotation_difference(angle).to_euler(),
         scale=(0.002, 0.002, 0.002))
-    bpy.data.objects["Empty"].name = name
+    bpy.data.objects[bpy.app.translations.pgettext_data("Empty")].name = name
 
     return
 
@@ -86,7 +86,7 @@ def add_angle_meshes(points: dict,
             bpy.ops.object.constraint_add(type='COPY_LOCATION')
 
             # Set the copy location target as the joint object
-            bpy.context.object.constraints["Copy Location"].target = bpy.data.objects[point]
+            bpy.context.object.constraints[bpy.app.translations.pgettext_data("Copy Location")].target = bpy.data.objects[point]
 
             # Append the angle mesh to the angle meshes dictionary
             angle_meshes[point] = bpy.data.objects["angle_" + point]
@@ -107,7 +107,7 @@ def add_angle_meshes(points: dict,
             bpy.ops.object.constraint_add(type='COPY_LOCATION')
 
             # Set the copy location target as the joint object
-            bpy.context.object.constraints["Copy Location"].target = bpy.data.objects[point]
+            bpy.context.object.constraints[bpy.app.translations.pgettext_data("Copy Location")].target = bpy.data.objects[point]
 
             # Append the text mesh to the angle meshes dictionary
             angle_meshes[point] = bpy.data.objects["angleText_" + point]

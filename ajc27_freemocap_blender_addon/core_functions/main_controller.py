@@ -340,8 +340,8 @@ class MainController:
         self._data_parent_empty.hide_set(True)
 
         # remove default cube
-        if "Cube" in bpy.data.objects:
-            bpy.data.objects.remove(bpy.data.objects["Cube"])
+        if bpy.app.translations.pgettext_data("Cube") in bpy.data.objects:
+            bpy.data.objects.remove(bpy.data.objects[bpy.app.translations.pgettext_data("Cube")])
 
         # create_scene_objects(scene=bpy.context.scene)
 
