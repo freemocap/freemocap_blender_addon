@@ -56,4 +56,3 @@ class PropertyTypes:
         max=kwargs.get('max', 1.0),
         default=kwargs.get('default', tuple((0.0, 0.0, 0.0, 1.0))),
     )
-    
