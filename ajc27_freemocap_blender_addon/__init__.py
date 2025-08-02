@@ -1,6 +1,6 @@
 __author__ = """Skelly FreeMoCap"""
 __email__ = "info@freemocap.org"
-__version__ = "v2025.08.1036"
+__version__ = "v2025.08.1037"
 
 #######################################################################
 ### Add-on to adapt the Freemocap Blender output. It can adjust the
