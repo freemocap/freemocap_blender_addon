@@ -133,9 +133,29 @@ def find_matching_bone_in_target_list(
 
 def get_edit_bones_adjusted_axes(
     armature: bpy.types.Object,
-    axes_convention: str,
+    x_axis_convention: str,
+    y_axis_convention: str,
+    z_axis_convention: str,
 ):
     bones_adjusted_axes = {}
+
+    axes_indexes = {
+        "x": 0,
+        "y": 1,
+        "z": 2,
+        "-x": 0,
+        "-y": 1,
+        "-z": 2
+    }
+
+    axes_signs = {
+        "x": 1,
+        "y": 1,
+        "z": 1,
+        "-x": -1,
+        "-y": -1,
+        "-z": -1
+    }
 
     # Set Object Mode
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -151,19 +171,24 @@ def get_edit_bones_adjusted_axes(
     bpy.ops.object.mode_set(mode="EDIT")
 
     for bone in armature.data.edit_bones:
-        if axes_convention == "default":
-            adjusted_vectors = [
-                bone.x_axis,
-                bone.y_axis,
-                bone.z_axis
-            ]
-        elif axes_convention == "xz-y":
-            adjusted_vectors = [
-                Vector([bone.x_axis[0],-bone.x_axis[2],bone.x_axis[1]]),
-                Vector([bone.y_axis[0],-bone.y_axis[2],bone.y_axis[1]]),
-                Vector([bone.z_axis[0],-bone.z_axis[2],bone.z_axis[1]])
-            ]
-        
+        adjusted_vectors = [
+            Vector([
+                axes_signs[x_axis_convention] * bone.x_axis[axes_indexes[x_axis_convention]],
+                axes_signs[y_axis_convention] * bone.x_axis[axes_indexes[y_axis_convention]],
+                axes_signs[z_axis_convention] * bone.x_axis[axes_indexes[z_axis_convention]]
+            ]),
+            Vector([
+                axes_signs[x_axis_convention] * bone.y_axis[axes_indexes[x_axis_convention]],
+                axes_signs[y_axis_convention] * bone.y_axis[axes_indexes[y_axis_convention]],
+                axes_signs[z_axis_convention] * bone.y_axis[axes_indexes[z_axis_convention]]
+            ]),
+            Vector([
+                axes_signs[x_axis_convention] * bone.z_axis[axes_indexes[x_axis_convention]],
+                axes_signs[y_axis_convention] * bone.z_axis[axes_indexes[y_axis_convention]],
+                axes_signs[z_axis_convention] * bone.z_axis[axes_indexes[z_axis_convention]]
+            ])
+        ]
+
         bones_adjusted_axes[bone.name] = adjusted_vectors
 
     # Set Object Mode

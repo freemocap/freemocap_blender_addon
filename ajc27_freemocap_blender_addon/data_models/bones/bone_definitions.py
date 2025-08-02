@@ -115,7 +115,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.01.R': BoneDefinition(
         head='right_hand_thumb_cmc',
         tail='right_hand_thumb_mcp',
-        category='finger',
+        category='palm',
         parent_bone='thumb.carpal.R',
         x_rotation_limit_min=-50,
         x_rotation_limit_max=50,
@@ -125,7 +125,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.01.L': BoneDefinition(
         head='left_hand_thumb_cmc',
         tail='left_hand_thumb_mcp',
-        category='finger',
+        category='palm',
         parent_bone='thumb.carpal.L',
         x_rotation_limit_min=-50,
         x_rotation_limit_max=50,
@@ -135,7 +135,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.02.R': BoneDefinition(
         head='right_hand_thumb_mcp',
         tail='right_hand_thumb_ip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='thumb.01.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=40,
@@ -145,7 +145,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.02.L': BoneDefinition(
         head='left_hand_thumb_mcp',
         tail='left_hand_thumb_ip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='thumb.01.L',
         x_rotation_limit_min=-40,
         x_rotation_limit_max=0,
@@ -155,7 +155,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.03.R': BoneDefinition(
         head='right_hand_thumb_ip',
         tail='right_hand_thumb_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='thumb.02.R',
         x_rotation_limit_min=-10,
         x_rotation_limit_max=90,
@@ -165,7 +165,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'thumb.03.L': BoneDefinition(
         head='left_hand_thumb_ip',
         tail='left_hand_thumb_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='thumb.02.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=10,
@@ -195,7 +195,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.01.R': BoneDefinition(
         head='right_hand_index_finger_mcp',
         tail='right_hand_index_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.01.R',
         x_rotation_limit_min=-30,
         x_rotation_limit_max=90,
@@ -205,7 +205,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.01.L': BoneDefinition(
         head='left_hand_index_finger_mcp',
         tail='left_hand_index_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.01.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=30,
@@ -215,7 +215,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.02.R': BoneDefinition(
         head='right_hand_index_finger_pip',
         tail='right_hand_index_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_index.01.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=90,
@@ -225,7 +225,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.02.L': BoneDefinition(
         head='left_hand_index_finger_pip',
         tail='left_hand_index_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_index.01.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=0,
@@ -235,7 +235,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.03.R': BoneDefinition(
         head='right_hand_index_finger_dip',
         tail='right_hand_index_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_index.02.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=60,
@@ -245,7 +245,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_index.03.L': BoneDefinition(
         head='left_hand_index_finger_dip',
         tail='left_hand_index_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_index.02.L',
         x_rotation_limit_min=-60,
         x_rotation_limit_max=0,
@@ -275,7 +275,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.01.R': BoneDefinition(
         head='right_hand_middle_finger_mcp',
         tail='right_hand_middle_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.02.R',
         x_rotation_limit_min=-30,
         x_rotation_limit_max=90,
@@ -285,7 +285,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.01.L': BoneDefinition(
         head='left_hand_middle_finger_mcp',
         tail='left_hand_middle_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.02.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=30,
@@ -295,7 +295,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.02.R': BoneDefinition(
         head='right_hand_middle_finger_pip',
         tail='right_hand_middle_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_middle.01.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=90,
@@ -305,7 +305,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.02.L': BoneDefinition(
         head='left_hand_middle_finger_pip',
         tail='left_hand_middle_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_middle.01.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=0,
@@ -315,7 +315,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.03.R': BoneDefinition(
         head='right_hand_middle_finger_dip',
         tail='right_hand_middle_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_middle.02.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=60,
@@ -325,7 +325,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_middle.03.L': BoneDefinition(
         head='left_hand_middle_finger_dip',
         tail='left_hand_middle_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_middle.02.L',
         x_rotation_limit_min=-60,
         x_rotation_limit_max=0,
@@ -355,7 +355,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.01.R': BoneDefinition(
         head='right_hand_ring_finger_mcp',
         tail='right_hand_ring_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.03.R',
         x_rotation_limit_min=-30,
         x_rotation_limit_max=90,
@@ -365,7 +365,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.01.L': BoneDefinition(
         head='left_hand_ring_finger_mcp',
         tail='left_hand_ring_finger_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.03.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=30,
@@ -375,7 +375,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.02.R': BoneDefinition(
         head='right_hand_ring_finger_pip',
         tail='right_hand_ring_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_ring.01.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=90,
@@ -385,7 +385,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.02.L': BoneDefinition(
         head='left_hand_ring_finger_pip',
         tail='left_hand_ring_finger_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_ring.01.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=0,
@@ -395,7 +395,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.03.R': BoneDefinition(
         head='right_hand_ring_finger_dip',
         tail='right_hand_ring_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_ring.02.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=60,
@@ -405,7 +405,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_ring.03.L': BoneDefinition(
         head='left_hand_ring_finger_dip',
         tail='left_hand_ring_finger_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_ring.02.L',
         x_rotation_limit_min=-60,
         x_rotation_limit_max=0,
@@ -435,7 +435,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.01.R': BoneDefinition(
         head='right_hand_pinky_mcp',
         tail='right_hand_pinky_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.04.R',
         x_rotation_limit_min=-30,
         x_rotation_limit_max=90,
@@ -445,7 +445,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.01.L': BoneDefinition(
         head='left_hand_pinky_mcp',
         tail='left_hand_pinky_pip',
-        category='finger',
+        category='proximal_phalanx',
         parent_bone='palm.04.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=30,
@@ -455,7 +455,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.02.R': BoneDefinition(
         head='right_hand_pinky_pip',
         tail='right_hand_pinky_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_pinky.01.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=90,
@@ -465,7 +465,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.02.L': BoneDefinition(
         head='left_hand_pinky_pip',
         tail='left_hand_pinky_dip',
-        category='finger',
+        category='intermediate_phalanx',
         parent_bone='f_pinky.01.L',
         x_rotation_limit_min=-90,
         x_rotation_limit_max=0,
@@ -475,7 +475,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.03.R': BoneDefinition(
         head='right_hand_pinky_dip',
         tail='right_hand_pinky_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_pinky.02.R',
         x_rotation_limit_min=0,
         x_rotation_limit_max=60,
@@ -485,7 +485,7 @@ _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
     'f_pinky.03.L': BoneDefinition(
         head='left_hand_pinky_dip',
         tail='left_hand_pinky_tip',
-        category='finger',
+        category='distal_phalanx',
         parent_bone='f_pinky.02.L',
         x_rotation_limit_min=-60,
         x_rotation_limit_max=0,

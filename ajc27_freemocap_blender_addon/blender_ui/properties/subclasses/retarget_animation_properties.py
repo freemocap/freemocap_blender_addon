@@ -70,18 +70,113 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
             b,
             'target')
     ) # type: ignore
-    retarget_source_axes_convention: PropertyTypes.Enum(
-        description = 'The source armature local axes convention. Default is xyz. Before retargeting, the local axes of the source armature will be converted to xyz.',
+    retarget_source_x_axis_convention: PropertyTypes.Enum(
+        description = 'The source armature local x axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
         items = [
-            ('default', 'default', ''),
-            ('xz-y', 'xz-y', ''),
+            ('x', 'x', ''),
+            ('y', 'y', ''),
+            ('z', 'z', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
         ]
     ) # type: ignore
-    retarget_target_axes_convention: PropertyTypes.Enum(
-        description = 'The target armature local axes convention. Default is xyz. Before retargeting, the local axes of the target armature will be converted to xyz.',
+    retarget_source_y_axis_convention: PropertyTypes.Enum(
+        description = 'The source armature local y axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
         items = [
-            ('default', 'default', ''),
-            ('xz-y', 'xz-y', ''),
+            ('y', 'y', ''),
+            ('x', 'x', ''),
+            ('z', 'z', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
+        ]
+    ) # type: ignore
+    retarget_source_z_axis_convention: PropertyTypes.Enum(
+        description = 'The source armature local z axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
+        items = [
+            ('z', 'z', ''),
+            ('x', 'x', ''),
+            ('y', 'y', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
+        ]
+    ) # type: ignore
+    retarget_target_x_axis_convention: PropertyTypes.Enum(
+        description = 'The target armature local x axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
+        items = [
+            ('x', 'x', ''),
+            ('y', 'y', ''),
+            ('z', 'z', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
+        ]
+    ) # type: ignore
+    retarget_target_y_axis_convention: PropertyTypes.Enum(
+        description = 'The target armature local y axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
+        items = [
+            ('y', 'y', ''),
+            ('x', 'x', ''),
+            ('z', 'z', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
+        ]
+    ) # type: ignore
+    retarget_target_z_axis_convention: PropertyTypes.Enum(
+        description = 'The target armature local z axis convention. '
+            + 'Before retargeting, the local axes of the source armature will be converted to xyz. '
+            + 'Some common conventions are: Mixamo=x-zy.',
+        items = [
+            ('z', 'z', ''),
+            ('x', 'x', ''),
+            ('y', 'y', ''),
+            ('-x', '-x', ''),
+            ('-y', '-y', ''),
+            ('-z', '-z', ''),
+        ]
+    ) # type: ignore
+    retarget_target_bone_rotation_mixmode: PropertyTypes.Enum(
+        description = 'Mix Mode to use in the Copy Rotation bone constraint',
+        items = [
+            ('OFFSET', 'Offset (Legacy)', ''),
+            ('REPLACE', 'Replace', ''),
+            ('ADD', 'Add', ''),
+            ('BEFORE', 'Before Original', ''),
+            ('AFTER', 'After Original', ''),
+        ]
+    ) # type: ignore
+    retarget_target_bone_rotation_target_space: PropertyTypes.Enum(
+        description = 'Target Space to use in the Copy Rotation bone constraint',
+        items = [
+            ('LOCAL', 'Local Space', ''),
+            ('WORLD', 'World Space', ''),
+            ('CUSTOM', 'Custom Space', ''),
+            ('POSE', 'Pose Space', ''),
+            ('LOCAL_WITH_PARENT', 'Local With Parent', ''),
+            ('LOCAL_OWNER_ORIENT', 'Local Space (Owner Orientation)', '')
+        ]
+    ) # type: ignore
+    retarget_target_bone_rotation_owner_space: PropertyTypes.Enum(
+        description = 'Owner Space to use in the Copy Rotation bone constraint',
+        items = [
+            ('LOCAL', 'Local Space', ''),
+            ('WORLD', 'World Space', ''),
+            ('CUSTOM', 'Custom Space', ''),
+            ('POSE', 'Pose Space', ''),
+            ('LOCAL_WITH_PARENT', 'Local With Parent', '')
         ]
     ) # type: ignore
     retarget_pairs: PropertyTypes.Collection(
