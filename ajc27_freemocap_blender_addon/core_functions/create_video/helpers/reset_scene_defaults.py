@@ -7,7 +7,8 @@ def reset_scene_defaults() -> None:
         obj.hide_render = False
 
     # Hide the background if present
-    if "background" in bpy.data.objects:
-        bpy.data.objects["background"].hide_set(True)
+    background_name = bpy.app.translations.pgettext_data("background")
+    if background_name in bpy.data.objects:
+        bpy.data.objects[background_name].hide_set(True)
 
     return

@@ -63,7 +63,9 @@ def add_rig_by_bone(
     bpy.ops.object.mode_set(mode="EDIT")
 
     # Remove the default bone
-    rig.data.edit_bones.remove(rig.data.edit_bones["Bone"])
+    default_bone_name = bpy.app.translations.pgettext_data("Bone")
+    if default_bone_name in rig.data.edit_bones:
+        rig.data.edit_bones.remove(rig.data.edit_bones[default_bone_name])
 
     # Get the inverse bone_map_dict
     inv_bone_name_map = {
