@@ -1,4 +1,4 @@
-name: Create and Upload Zip
+name: Create and Upload Addon Zip
 
 on:
   push:
@@ -17,8 +17,8 @@ jobs:
         id: get_version
         run: |
           version=$(grep -Po '(?<=^__version__ = ")[^"]*' ajc27_freemocap_blender_addon/__init__.py)
-          echo ::set-output name=version::$version
-
+          version=${version#v}
+          echo "version=$version" >> $GITHUB_OUTPUT
       - name: Create zip file
         run: |
           version=${{ steps.get_version.outputs.version }}

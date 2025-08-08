@@ -55,12 +55,20 @@ class ViewPanelPropNames(enum.Enum):
     COM_VERTICAL_PROJECTION_IN_BOS_COLOR = "com_vertical_projection_in_bos_color"
     COM_VERTICAL_PROJECTION_OUT_BOS_COLOR = "com_vertical_projection_out_bos_color"
 
-    JOINT_ANGLES_COLOR = "joint_angles_color"
-    JOINT_ANGLES_TEXT_COLOR = "joint_angles_text_color"
-
     BASE_OF_SUPPORT_Z_THRESHOLD = "base_of_support_z_threshold"
     BASE_OF_SUPPORT_POINT_RADIUS = "base_of_support_point_radius"
     BASE_OF_SUPPORT_COLOR = "base_of_support_color"
+
+    JOINT_ANGLE = "joint_angle"
+    JOINT_ANGLE_RADIUS = "joint_angle_radius"
+    JOINT_ANGLE_OVERWRITE_COLORS = "joint_angle_overwrite_colors"
+    JOINT_ANGLE_COLOR = "joint_angle_color"
+    JOINT_ANGLE_TEXT_COLOR = "joint_angle_text_color"
+    JOINT_ANGLE_TEXT_SIZE = "joint_angle_text_size"
+    JOINT_ANGLE_TEXT_ORIENTATION = "joint_angle_text_orientation"
+    JOINT_ANGLE_TEXT_LOCAL_X_OFFSET = "joint_angle_text_local_x_offset"
+    JOINT_ANGLE_TEXT_LOCAL_Y_OFFSET = "joint_angle_text_local_y_offset"
+    
 
 class VIEW3D_PT_data_view_panel(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
@@ -186,19 +194,40 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().label(text="Base of Support Color:")
             split.column().prop(ui_props, ViewPanelPropNames.BASE_OF_SUPPORT_COLOR.value)
             box.operator('freemocap._add_base_of_support', text='Add Base of Support')
-        #
+
         # # Joint Angles
-        # row = layout.row(align=True)
-        # row.prop(ui_props, "show_joint_angles_options", text="",
-        #          icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
-        # row.label(text="Joint Angles")
-        #
-        # if ui_props.show_joint_angles_options:
-        #     box = layout.box()
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Angle Color:")
-        #     split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_COLOR.value)
-        #     split = box.column().row().split(factor=0.5)
-        #     split.column().label(text="Text Color:")
-        #     split.column().prop(ui_props, ViewPanelPropNames.JOINT_ANGLES_TEXT_COLOR.value)
-        #     box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
+        row = layout.row(align=True)
+        row.prop(ui_props, "show_joint_angles_options", text="",
+                 icon='TRIA_DOWN' if ui_props.show_joint_angles_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Joint Angles")
+
+        if ui_props.show_joint_angles_options:
+            box = layout.box()
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Joint Angle:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Angle Radius [cm]:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_RADIUS.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Overwrite Default Colors:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_OVERWRITE_COLORS.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Angle Color:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_COLOR.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Text Color:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_COLOR.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Text Size [cm]:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_SIZE.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Text Orientation:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_ORIENTATION.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Local X Offset [cm]:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_LOCAL_X_OFFSET.value)
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Local Y Offset [cm]:")
+            split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_LOCAL_Y_OFFSET.value)
+            box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
