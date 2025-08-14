@@ -13,6 +13,7 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
+from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
 
 from .create_video.create_video import create_video
 from .export_3d_model.export_3d_model import export_3d_model
@@ -202,7 +203,8 @@ class MainController:
             calculate_joint_angles(
                 output_path=str(Path(self.recording_path) / "output_data" / "joint_angles.csv"),
                 marker_names=marker_names,
-                marker_frame_xyz=marker_frame_xyz
+                marker_frame_xyz=marker_frame_xyz,
+                joint_angles_definitions=joint_angles_definitions,
             )
             self.freemocap_data_handler.mark_processing_stage("calculate_joint_angles")
         except Exception as e:
