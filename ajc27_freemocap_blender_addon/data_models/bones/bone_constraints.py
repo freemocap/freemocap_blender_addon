@@ -310,7 +310,7 @@ _BONE_CONSTRAINT_DEFINITIONS: Dict[
         ),
     ],
     "hand.R": [
-        DampedTrackConstraint(target="right_index", track_axis=TrackAxis.TRACK_Y),
+        DampedTrackConstraint(target="right_hand_middle", track_axis=TrackAxis.TRACK_Y),
         LockedTrackConstraint(
             target="right_hand_thumb_cmc",
             track_axis={
@@ -343,7 +343,7 @@ _BONE_CONSTRAINT_DEFINITIONS: Dict[
         ),
     ],
     "hand.L": [
-        DampedTrackConstraint(target="left_index", track_axis=TrackAxis.TRACK_Y),
+        DampedTrackConstraint(target="left_hand_middle", track_axis=TrackAxis.TRACK_Y),
         LockedTrackConstraint(
             target="left_hand_thumb_cmc",
             track_axis={

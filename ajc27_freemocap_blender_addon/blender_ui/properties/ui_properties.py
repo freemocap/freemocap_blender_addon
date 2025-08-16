@@ -4,6 +4,9 @@ import bpy
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_joint_angles_properties import (
+    AddJointAnglesProperties
+)
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
     RetargetAnimationProperties
 )
@@ -13,7 +16,12 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.set_bone_rot
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.limit_markers_range_of_motion_properties import (
     LimitMarkersRangeOfMotionProperties
 )
-from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import FootLockingProperties
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_model_properties import (
+    Export3DModelProperties
+)
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
+    FootLockingProperties
+)
 # TODO: Group the rest of the properties as the Retarget Animation and Set Bone Rotation Limits Properties
 
 class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
@@ -229,134 +237,6 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default='center_of_mass_mesh',
     )  # type: ignore
 
-    motion_path_center_of_mass: bpy.props.BoolProperty(
-        name='Center of Mass',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='center_of_mass'),
-    )  # type: ignore
-
-    motion_path_head_center: bpy.props.BoolProperty(
-        name='Head Center',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='head_center'),
-    )  # type: ignore
-
-    motion_path_neck_center: bpy.props.BoolProperty(
-        name='Neck Center',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='neck_center'),
-    )  # type: ignore
-
-    motion_path_hips_center: bpy.props.BoolProperty(
-        name='Hips Center',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='hips_center'),
-    )  # type: ignore
-
-    motion_path_right_shoulder: bpy.props.BoolProperty(
-        name='Right Shoulder',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_shoulder'),
-    )  # type: ignore
-
-    motion_path_left_shoulder: bpy.props.BoolProperty(
-        name='Left Shoulder',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_shoulder'),
-    )  # type: ignore
-
-    motion_path_right_elbow: bpy.props.BoolProperty(
-        name='Right Elbow',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_elbow'),
-    )  # type: ignore
-
-    motion_path_left_elbow: bpy.props.BoolProperty(
-        name='Left Elbow',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_elbow'),
-    )  # type: ignore
-
-    motion_path_right_wrist: bpy.props.BoolProperty(
-        name='Right Wrist',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_wrist'),
-    )  # type: ignore
-
-    motion_path_left_wrist: bpy.props.BoolProperty(
-        name='Left Wrist',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_wrist'),
-    )  # type: ignore
-
-    motion_path_right_hip: bpy.props.BoolProperty(
-        name='Right Hip',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_hip'),
-    )  # type: ignore
-
-    motion_path_left_hip: bpy.props.BoolProperty(
-        name='Left Hip',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_hip'),
-    )  # type: ignore
-
-    motion_path_right_knee: bpy.props.BoolProperty(
-        name='Right Knee',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_knee'),
-    )  # type: ignore
-
-    motion_path_left_knee: bpy.props.BoolProperty(
-        name='Left Knee',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_knee'),
-    )  # type: ignore
-
-    motion_path_right_ankle: bpy.props.BoolProperty(
-        name='Right Ankle',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='right_ankle'),
-    )  # type: ignore
-
-    motion_path_left_ankle: bpy.props.BoolProperty(
-        name='Left Ankle',
-        default=False,
-        update=lambda a, b: update_motion_path(a,
-                                               b,
-                                               data_object_basename='left_ankle'),
-    )  # type: ignore
-
     show_com_vertical_projection_options: bpy.props.BoolProperty(
         name='',
         default=False,
@@ -437,6 +317,10 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         default=(1.0, 1.0, 1.0, 0.5)
     )  # type: ignore
 
+    add_joint_angles_properties: bpy.props.PointerProperty(
+        type=AddJointAnglesProperties
+    ) # type: ignore
+
     # Animation
     retarget_animation_properties: bpy.props.PointerProperty(
         type=RetargetAnimationProperties
@@ -451,24 +335,14 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
         type=FootLockingProperties
     ) # type: ignore
 
+    # Export 3D Model
+    export_3d_model_properties: bpy.props.PointerProperty(
+        type=Export3DModelProperties
+    ) # type: ignore
+    foot_locking_properties: bpy.props.PointerProperty(
+        type=FootLockingProperties
+    ) # type: ignore
 
-def update_motion_path(self, context, data_object_basename: str):
-    toggle_motion_path(
-        self,
-        context,
-        panel_property='motion_path_' + data_object_basename,
-        data_object_basename=data_object_basename,
-        show_line=self.motion_path_show_line,
-        line_thickness=self.motion_path_line_thickness,
-        use_custom_color=self.motion_path_use_custom_color,
-        line_color=self.motion_path_line_color,
-        frames_before=self.motion_path_frames_before,
-        frames_after=self.motion_path_frames_after,
-        frame_step=self.motion_path_frame_step,
-        show_frame_numbers=self.motion_path_show_frame_numbers,
-        show_keyframes=self.motion_path_show_keyframes,
-        show_keyframe_number=self.motion_path_show_keyframe_number
-    )
 
 def toggle_element_visibility(self,
                               context,
@@ -483,60 +357,6 @@ def toggle_element_visibility(self,
                          not bool(self[panel_property]),
                          toggle_children_not_parent)
 
-# Function to toggle the visibility of the motion paths
-def toggle_motion_path(self,
-                       context,
-                       panel_property: str,
-                       data_object_basename: str,
-                       show_line: bool = True,
-                       line_thickness: int = 6,
-                       use_custom_color: bool = False,
-                       line_color: tuple = (0.5, 1.0, 0.8),
-                       frames_before: int = 10,
-                       frames_after: int = 10,
-                       frame_step: int = 1,
-                       show_frame_numbers: bool = False,
-                       show_keyframes: bool = False,
-                       show_keyframe_number: bool = False)->None:
-
-    # Deselect all objects
-    bpy.ops.object.select_all(action='DESELECT')
-
-    # Get reference to the object
-    data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
-    data_object_name = None
-    for child in data_parent_object.children_recursive:
-        if re.search(data_object_basename, child.name):
-            data_object_name = child.name
-            break
-    if not data_object_name:
-        raise ValueError(f'Object with name {data_object_basename} not found in children of `data_parent_empty`: {context.scene.freemocap_properties.data_parent_empty}')
-
-    obj = bpy.data.objects[data_object_basename]
-
-    # Select the object
-    obj.select_set(True)
-
-    # Set the object as active object
-    bpy.context.view_layer.objects.active = obj
-
-    if bool(self[panel_property]):
-        # Calculate paths
-        bpy.ops.object.paths_calculate(display_type='CURRENT_FRAME', range='SCENE')
-        # Set motion path properties for the specific object
-        if obj.motion_path:
-            obj.motion_path.lines = show_line
-            obj.motion_path.line_thickness = line_thickness
-            obj.motion_path.use_custom_color = use_custom_color
-            obj.motion_path.color = line_color
-            obj.animation_visualization.motion_path.frame_before = frames_before
-            obj.animation_visualization.motion_path.frame_after = frames_after
-            obj.animation_visualization.motion_path.frame_step = frame_step
-            obj.animation_visualization.motion_path.show_frame_numbers = show_frame_numbers
-            obj.animation_visualization.motion_path.show_keyframe_highlight = show_keyframes
-            obj.animation_visualization.motion_path.show_keyframe_numbers = show_keyframe_number
-    else:
-        bpy.ops.object.paths_clear(only_selected=True)
 
 # Function to hide (or unhide) Blender objects
 def hide_objects(data_object: bpy.types.Object,

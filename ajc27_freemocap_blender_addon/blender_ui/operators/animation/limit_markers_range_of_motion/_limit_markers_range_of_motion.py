@@ -8,7 +8,7 @@ from dataclasses import make_dataclass, field
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
-MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
+
 
 class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
     bl_idname = 'freemocap._limit_markers_range_of_motion'
@@ -20,6 +20,8 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         print("Limiting Markers Range of Motion.......")
 
+        MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
+
         scene = context.scene
         props = context.scene.freemocap_ui_properties.limit_markers_range_of_motion_properties
 
@@ -27,15 +29,19 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         if props.limit_palm_markers:
             target_categories.append('palm')
-        if props.limit_finger_markers:
-            target_categories.append('finger')
+        if props.limit_proximal_phalanx_markers:
+            target_categories.append('proximal_phalanx')
+        if props.limit_intermediate_phalanx_markers:
+            target_categories.append('intermediate_phalanx')
+        if props.limit_distal_phalanx_markers:
+            target_categories.append('distal_phalanx')
             
         if len(target_categories) == 0:
             print("No target categories selected")
             return {'FINISHED'}
         
         range_of_motion_scale = props.range_of_motion_scale
-        hand_locked_track_marker = props.hand_locked_track_marker
+        hand_locked_track_marker_name = props.hand_locked_track_marker
 
         BONE_DEFINITIONS = deepcopy(_BONE_DEFINITIONS)
         
@@ -90,12 +96,42 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                             'object': marker,
                             'fcurves': fcurve_data,
                         }
-        
+
+        # Modify the head and tail markers of each virtual bone to match
+        # the markers that are children of the data parent empty
+        for bone in VirtualBones.values():
+            # Set bone.head as the best match of bone.head in markers.keys()
+            bone.head = next((k for k in markers.keys() if k.startswith(bone.head)), None)
+            # Set bone.tail as the best match of bone.tail in markers.keys()
+            bone.tail = next((k for k in markers.keys() if k.startswith(bone.tail)), None)
+
+        # Modify the keys and the children values in MEDIAPIPE_HIERARCHY
+        # so they match the markers that are children of the data parent empty
+        for marker in markers.keys():
+            # Get the closest match of marker in MEDIAPIPE_HIERARCHY
+            closest_match = next((k for k in MEDIAPIPE_HIERARCHY.keys() if marker.startswith(k)), None)
+            if marker == closest_match or closest_match is None:
+                continue
+            # Create a new element in MEDIAPIPE_HIERARCHY with the info of the closest match
+            MEDIAPIPE_HIERARCHY[marker] = deepcopy(MEDIAPIPE_HIERARCHY[closest_match])
+
+            # Get the base children markers
+            base_children_markers = MEDIAPIPE_HIERARCHY[closest_match]['children']
+            
+            # Change the values of the children with their closest match
+            modified_children = []
+            for child in base_children_markers:
+                modified_children.append(next((k for k in markers.keys() if k.startswith(child)), None))
+            MEDIAPIPE_HIERARCHY[marker]['children'] = modified_children
+
+            # Remove the closest match from MEDIAPIPE_HIERARCHY
+            del MEDIAPIPE_HIERARCHY[closest_match]
+
+        # Iterate through each frame of the scene
         for frame in range (scene.frame_start, scene.frame_end):
 
             # Calculate the hand axes as a starting point.
             # TODO: Extend the function to start from the pelvis bone
-
             for side in ['left', 'right']:
                 side_initial = side[0].upper()
                 
@@ -104,8 +140,11 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
 
+                # Get the hand_locked_track_marker as the best match of markers.keys()
+                hand_locked_track_marker = next((k for k in markers.keys() if k.startswith(side + '_' + hand_locked_track_marker_name)), None)
+
                 hand_to_locked_track_marker = (
-                    Vector(markers[side + '_' + hand_locked_track_marker]['fcurves'][:, frame])
+                    Vector(markers[hand_locked_track_marker]['fcurves'][:, frame])
                     - Vector(markers[VirtualBones['hand.' + side_initial].head]['fcurves'][:, frame])
                 )
 
@@ -131,7 +170,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             for bone in VirtualBones:
 
                 # If the bone has the hands or fingers category then calculate its origin axes based on its parent bone's axes
-                if VirtualBones[bone].category in ['palm', 'finger']:
+                if VirtualBones[bone].category in ['palm', 'proximal_phalanx', 'intermediate_phalanx', 'distal_phalanx']:
 
                     # Calculate the bone's y axis
                     bone_y_axis = (
@@ -154,8 +193,9 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     VirtualBones[bone].bone_y_axis = bone_axes_from_parent[1]
                     VirtualBones[bone].bone_z_axis = bone_axes_from_parent[2]
 
-                    # If the bone has the fingers category then calculate its origin axes based on its parent bone's axes and rotate the tail empty (and its children) to meet the constraints
-                    # if VirtualBones[bone].category in ['hand', 'finger'] and bone in ['palm.02.L', 'f_middle.01.L', 'f_middle.02.L', 'f_middle.03.L']:
+                    # If the bone has the target category then calculate its
+                    # origin axes based on its parent bone's axes and rotate
+                    # the tail empty (and its children) to meet the constraints
                     if VirtualBones[bone].category in target_categories:
                         for axis in ['x', 'z']:
                             # Get the min and max rotation limits based on the range of motion scale
@@ -189,7 +229,8 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                                     pivot=Vector(markers[VirtualBones[bone].head]['fcurves'][:, frame]),
                                     rotation_matrix=rotation_matrix,
                                     frame=frame,
-                                    markers_fcurves=markers
+                                    markers_fcurves=markers,
+                                    mediapipe_hierarchy=MEDIAPIPE_HIERARCHY
                                 )
 
                                 # Recalculate the bone y axis
@@ -307,6 +348,7 @@ def rotate_marker_around_pivot(
     rotation_matrix: Matrix,
     frame: int,
     markers_fcurves: dict,
+    mediapipe_hierarchy: dict,
 ):
     marker_global_position = Vector(markers_fcurves[marker]['fcurves'][:, frame])
     marker_pivot_vector = marker_global_position - pivot
@@ -317,14 +359,15 @@ def rotate_marker_around_pivot(
     markers_fcurves[marker]['fcurves'][:, frame] = marker_new_global_position[:]
 
     # If marker has children then call this function for every child
-    if marker in MEDIAPIPE_HIERARCHY and MEDIAPIPE_HIERARCHY[marker]['children']:
-        for child in MEDIAPIPE_HIERARCHY[marker]['children']:
+    if marker in mediapipe_hierarchy and mediapipe_hierarchy[marker]['children']:
+        for child in mediapipe_hierarchy[marker]['children']:
             rotate_marker_around_pivot(
                 marker=child,
                 pivot=pivot,
                 rotation_matrix=rotation_matrix,
                 frame=frame,
-                markers_fcurves=markers_fcurves
+                markers_fcurves=markers_fcurves,
+                mediapipe_hierarchy=mediapipe_hierarchy
             )
 
     return
