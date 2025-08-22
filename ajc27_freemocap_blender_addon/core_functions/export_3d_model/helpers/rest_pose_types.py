@@ -611,5 +611,480 @@ rest_pose_type_rotations = {
             ),
             'roll': 0,
         },
+    },
+    'daz_g8.1': {
+        'pelvis': {
+            'rotation': (
+                m.radians(97.93982420705119),
+                m.radians(0.0),
+                m.radians(0.0),
+            ),
+            # 'roll': m.radians(180.00000500895632),
+            'roll': m.radians(0),
+        },
+        'pelvis.R': {
+            'rotation' : (
+                0,
+                m.radians(-90),
+                0
+            ),
+            'roll': 0,
+        },
+        'pelvis.L': {
+            'rotation' : (
+                0,
+                m.radians(90),
+                0
+            ),
+            'roll': 0,
+        },
+        'spine': {
+            'rotation': (
+                m.radians(-81.66986964178477),
+                m.radians(0.0),
+                m.radians(0.0),
+            ),
+            'roll': m.radians(0.0),
+        },
+        'spine.001': {
+            'rotation': (
+                m.radians(-124.21377926471686),
+                m.radians(0.0),
+                m.radians(0.0),
+            ),
+            'roll': m.radians(0.0),
+        },
+        'neck': {
+            'rotation': (
+                m.radians(-58.8822480421687),
+                m.radians(0.0),
+                m.radians(0.0),
+            ),
+            'roll': m.radians(0.0),
+        },
+        'face': {
+            'rotation': (
+                m.radians(-39.2654154062314),
+                m.radians(0.0),
+                m.radians(0.0),
+            ),
+            'roll': m.radians(0.0),
+        },
+        'shoulder.L': {
+            'rotation': (
+                m.radians(-58.87267211695234),
+                m.radians(97.44213564298904),
+                m.radians(-65.46691923227617),
+            ),
+            'roll': m.radians(-176.5416070246121),
+        },
+        'shoulder.R': {
+            'rotation': (
+                m.radians(-58.87267211695234),
+                m.radians(-97.44213564298904),
+                m.radians(65.46691923227617),
+            ),
+            'roll': m.radians(-3.458391794485321),
+        },
+        'upper_arm.L': {
+            'rotation': (
+                m.radians(89.50488209154395),
+                m.radians(41.8654532722964),
+                m.radians(41.53607081466712),
+            ),
+            'roll': m.radians(178.17668601002143),
+        },
+        'upper_arm.R': {
+            'rotation': (
+                m.radians(89.50487526135477),
+                m.radians(-41.8654532722964),
+                m.radians(-41.5360742297617),
+            ),
+            'roll': m.radians(1.8233166510573766),
+        },
+        'forearm.L': {
+            'rotation': (
+                m.radians(67.75316113239785),
+                m.radians(43.456381914910786),
+                m.radians(29.958042982754666),
+            ),
+            'roll': m.radians(143.0310870318854),
+        },
+        'forearm.R': {
+            'rotation': (
+                m.radians(67.75316113239785),
+                m.radians(-43.456381914910786),
+                m.radians(-29.958042982754666),
+            ),
+            'roll': m.radians(36.96891456197635),
+        },
+        'hand.L': {
+            'rotation': (
+                m.radians(75.56505339181653),
+                m.radians(58.6673907814476),
+                m.radians(47.07748183547392),
+            ),
+            'roll': m.radians(179.87208922618032),
+        },
+        'hand.R': {
+            'rotation': (
+                m.radians(75.56505339181653),
+                m.radians(-58.6673907814476),
+                m.radians(-47.07748183547392),
+            ),
+            'roll': m.radians(0.1279174369624384),
+        },
+        'palm.01.L': {
+            'rotation': (
+                m.radians(70.31513776931295),
+                m.radians(40.30687923578036),
+                m.radians(28.986021686497228),
+            ),
+            'roll': m.radians(145.14024944758535),
+        },
+        'palm.01.R': {
+            'rotation': (
+                m.radians(70.31513776931295),
+                m.radians(-40.30687923578036),
+                m.radians(-28.986021686497228),
+            ),
+            'roll': m.radians(34.85975214627641),
+        },
+        'palm.02.L': {
+            'rotation': (
+                m.radians(81.70380885177056),
+                m.radians(43.25344333429137),
+                m.radians(37.84844485158806),
+            ),
+            'roll': m.radians(166.2270514910307),
+        },
+        'palm.02.R': {
+            'rotation': (
+                m.radians(81.70379519139222),
+                m.radians(-43.25347748523722),
+                m.radians(-37.84846875725016),
+            ),
+            'roll': m.radians(13.772947541510128),
+        },
+        'palm.03.L': {
+            'rotation': (
+                m.radians(91.11853477352696),
+                m.radians(42.78162069661606),
+                m.radians(43.54682727990009),
+            ),
+            'roll': m.radians(-175.09155786381837),
+        },
+        'palm.03.R': {
+            'rotation': (
+                m.radians(91.11853477352696),
+                m.radians(-42.78162069661606),
+                m.radians(-43.54682727990009),
+            ),
+            'roll': m.radians(-4.908438607401501),
+        },
+        'palm.04.L': {
+            'rotation': (
+                m.radians(103.5196106457097),
+                m.radians(36.7321597147762),
+                m.radians(45.690031358423376),
+            ),
+            'roll': m.radians(-151.06709145835055),
+        },
+        'palm.04.R': {
+            'rotation': (
+                m.radians(103.5196106457097),
+                m.radians(-36.7321597147762),
+                m.radians(-45.690031358423376),
+            ),
+            'roll': m.radians(-28.932906720416625),
+        },
+        'thumb.01.L': {
+            'rotation': (
+                m.radians(33.24153006773865),
+                m.radians(14.441372905576024),
+                m.radians(4.331762747569562),
+            ),
+            'roll': m.radians(32.0464108875265),
+        },
+        'thumb.01.R': {
+            'rotation': (
+                m.radians(33.241574463968256),
+                m.radians(-14.44144462256231),
+                m.radians(-4.3317913489867115),
+            ),
+            'roll': m.radians(147.95359070633523),
+        },
+        'thumb.02.L': {
+            'rotation': (
+                m.radians(56.434895639904745),
+                m.radians(16.860332211460232),
+                m.radians(9.093759110958228),
+            ),
+            'roll': m.radians(42.603222985684496),
+        },
+        'thumb.02.R': {
+            'rotation': (
+                m.radians(56.4348375832968),
+                m.radians(-16.860320258629184),
+                m.radians(-9.093741181711657),
+            ),
+            'roll': m.radians(137.39675470251515),
+        },
+        'thumb.03.L': {
+            'rotation': (
+                m.radians(43.69396321500051),
+                m.radians(18.370317989768093),
+                m.radians(7.418449457563854),
+            ),
+            'roll': m.radians(31.720617694306064),
+        },
+        'thumb.03.R': {
+            'rotation': (
+                m.radians(43.69396321500051),
+                m.radians(-18.370317989768093),
+                m.radians(-7.418449457563854),
+            ),
+            'roll': m.radians(148.2793634089882),
+        },
+        'f_index.01.L': {
+            'rotation': (
+                m.radians(79.28760894231104),
+                m.radians(39.02619486074087),
+                m.radians(32.72678652131898),
+            ),
+            'roll': m.radians(158.39025636189814),
+        },
+        'f_index.01.R': {
+            'rotation': (
+                m.radians(79.28760211212187),
+                m.radians(-39.026201690930044),
+                m.radians(-32.726783106224396),
+            ),
+            'roll': m.radians(21.609736694227156),
+        },
+        'f_index.02.L': {
+            'rotation': (
+                m.radians(83.50721784927488),
+                m.radians(38.501161634336576),
+                m.radians(34.62832484662887),
+            ),
+            'roll': m.radians(166.85889863077023),
+        },
+        'f_index.02.R': {
+            'rotation': (
+                m.radians(83.50723150965321),
+                m.radians(-38.50112406829614),
+                m.radians(-34.62830435606136),
+            ),
+            'roll': m.radians(13.141098694223297),
+        },
+        'f_index.03.L': {
+            'rotation': (
+                m.radians(84.57117690685527),
+                m.radians(37.391761328208084),
+                m.radians(34.21315862811882),
+            ),
+            'roll': m.radians(168.81123990312668),
+        },
+        'f_index.03.R': {
+            'rotation': (
+                m.radians(84.57117690685527),
+                m.radians(-37.39180572443769),
+                m.radians(-34.213199609253834),
+            ),
+            'roll': m.radians(11.188757421866852),
+        },
+        'f_middle.01.L': {
+            'rotation': (
+                m.radians(85.48554799142322),
+                m.radians(42.40385317890641),
+                m.radians(39.444748853079254),
+            ),
+            'roll': m.radians(172.3400707981921),
+        },
+        'f_middle.01.R': {
+            'rotation': (
+                m.radians(85.48556848199073),
+                m.radians(-42.40385317890641),
+                m.radians(-39.44476592855218),
+            ),
+            'roll': m.radians(7.6599205503859),
+        },
+        'f_middle.02.L': {
+            'rotation': (
+                m.radians(85.20254593335291),
+                m.radians(35.96119186692725),
+                m.radians(33.23525995408058),
+            ),
+            'roll': m.radians(169.62026214993634),
+        },
+        'f_middle.02.R': {
+            'rotation': (
+                m.radians(85.20254593335291),
+                m.radians(-35.96119186692725),
+                m.radians(-33.23525995408058),
+            ),
+            'roll': m.radians(10.379741151472706),
+        },
+        'f_middle.03.L': {
+            'rotation': (
+                m.radians(89.62202666599883),
+                m.radians(42.980304069382555),
+                m.radians(42.72324306977996),
+            ),
+            'roll': m.radians(-179.49958436922617),
+        },
+        'f_middle.03.R': {
+            'rotation': (
+                m.radians(89.62202666599883),
+                m.radians(-42.980304069382555),
+                m.radians(-42.72324306977996),
+            ),
+            'roll': m.radians(-0.5004194124305378),
+        },
+        'f_ring.01.L': {
+            'rotation': (
+                m.radians(93.9718462992998),
+                m.radians(40.30804719812843),
+                m.radians(42.9477923689333),
+            ),
+            'roll': m.radians(-169.51092448170277),
+        },
+        'f_ring.01.R': {
+            'rotation': (
+                m.radians(93.9718462992998),
+                m.radians(-40.30804719812843),
+                m.radians(-42.9477923689333),
+            ),
+            'roll': m.radians(-10.489072843290746),
+        },
+        'f_ring.02.L': {
+            'rotation': (
+                m.radians(93.1844689219699),
+                m.radians(39.65217828307795),
+                m.radians(41.729023658719974),
+            ),
+            'roll': m.radians(-169.67831875788144),
+        },
+        'f_ring.02.R': {
+            'rotation': (
+                m.radians(93.1844689219699),
+                m.radians(-39.65217828307795),
+                m.radians(-41.729023658719974),
+            ),
+            'roll': m.radians(-10.321684543527597),
+        },
+        'f_ring.03.L': {
+            'rotation': (
+                m.radians(92.19247273748475),
+                m.radians(40.14798854511835),
+                m.radians(41.58270051613079),
+            ),
+            'roll': m.radians(-174.30351795813897),
+        },
+        'f_ring.03.R': {
+            'rotation': (
+                m.radians(92.19247273748475),
+                m.radians(-40.14798854511835),
+                m.radians(-41.58270051613079),
+            ),
+            'roll': m.radians(-5.6964823550623),
+        },
+        'f_pinky.01.L': {
+            'rotation': (
+                m.radians(97.94405209414742),
+                m.radians(40.72085700137483),
+                m.radians(46.19584101740867),
+            ),
+            'roll': m.radians(-160.90383427835454),
+        },
+        'f_pinky.01.R': {
+            'rotation': (
+                m.radians(97.94409990547162),
+                m.radians(-40.72085358628024),
+                m.radians(-46.19587516835452),
+            ),
+            'roll': m.radians(-19.096167315507223),
+        },
+        'f_pinky.02.L': {
+            'rotation': (
+                m.radians(98.65848988133077),
+                m.radians(40.888541560593225),
+                m.radians(46.906283143927546),
+            ),
+            'roll': m.radians(-163.33170698110558),
+        },
+        'f_pinky.02.R': {
+            'rotation': (
+                m.radians(98.65840791906072),
+                m.radians(-40.88825469264809),
+                m.radians(-46.90590065333403),
+            ),
+            'roll': m.radians(-16.668294612756153),
+        },
+        'f_pinky.03.L': {
+            'rotation': (
+                m.radians(98.88062129351792),
+                m.radians(40.620326862076),
+                m.radians(46.77054679455188),
+            ),
+            'roll': m.radians(-165.0401421982009),
+        },
+        'f_pinky.03.R': {
+            'rotation': (
+                m.radians(98.88062812370708),
+                m.radians(-40.62039857906228),
+                m.radians(-46.77063217191651),
+            ),
+            'roll': m.radians(-14.959850857924401),
+        },
+        'thigh.L': {
+            'rotation': (
+                m.radians(92.22969726846132),
+                m.radians(7.9210378285818415),
+                m.radians(8.23438556336087),
+            ),
+            'roll': m.radians(-168.06668098170357),
+        },
+        'thigh.R': {
+            'rotation': (
+                m.radians(92.22969726846132),
+                m.radians(-7.921036121034549),
+                m.radians(-8.234383855813578),
+            ),
+            'roll': m.radians(168.06668098170357),
+        },
+        'shin.L': {
+            'rotation': (
+                m.radians(93.90165927538874),
+                m.radians(8.330614391029886),
+                m.radians(8.915842074589504),
+            ),
+            'roll': m.radians(-122.81061252238612),
+        },
+        'shin.R': {
+            'rotation': (
+                m.radians(93.90165244519957),
+                m.radians(-8.330610122161655),
+                m.radians(-8.915836951947627),
+            ),
+            'roll': m.radians(122.81061252238612),
+        },
+        'foot.L': {
+            'rotation': (
+                m.radians(144.81453138644576),
+                m.radians(6.770566314313594),
+                m.radians(21.134852424256387),
+            ),
+            'roll': m.radians(-32.07587632360594),
+        },
+        'foot.R': {
+            'rotation': (
+                m.radians(144.8145450468241),
+                m.radians(-6.7706777317744296),
+                m.radians(-21.135205886545933),
+            ),
+            'roll': m.radians(32.07587632360594),
+        },
     }
 }

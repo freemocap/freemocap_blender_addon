@@ -99,5 +99,17 @@ def set_armature_rest_pose(
             #     bone_location_constraint.target = thumb_cmc
             #     armature.pose.bones[bone.name].constraints.move(1, 0)
 
+    if rest_pose_type == 'daz_g8.1':
+        # Parent the thigh bones to the pelvis
+        for bone in armature.data.edit_bones:
+            if 'thigh' in bone.name:
+                bone.use_connect = False
+                bone.parent = armature.data.edit_bones['pelvis']
+            # if 'thumb.01.L' in bone.name:
+            #     bone.use_connect = False
+            #     bone.parent = armature.data.edit_bones['hand.L']
+            #     bone.use_inherit_rotation = False
+
+
     # Exit Edit Mode
     bpy.ops.object.mode_set(mode='OBJECT')        

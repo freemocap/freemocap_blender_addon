@@ -28,6 +28,7 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         items=[
             ('default', 'Default', 'Default'),
             ('metahuman', 'Metahuman', 'Metahuman'),
+            ('daz_g8.1', 'DAZ G8.1', 'DAZ G8.1'),
         ],
         default='Default',
     ) # type: ignore
@@ -38,6 +39,7 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         items=[
             ('default', 'Default', 'Default'),
             ('metahuman', 'Metahuman', 'Metahuman'),
+            ('daz_g8.1', 'DAZ G8.1', 'DAZ G8.1'),
         ],
         default='Default',
     ) # type: ignore

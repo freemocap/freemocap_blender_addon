@@ -214,8 +214,8 @@ def export_3d_model(
             vertex_groups=_SKELLY_VERTEX_GROUPS
         )
 
-    # In case the rest pose type is metahuman, reparent the thigh bones to the pelvis.R and pelvis.L
-    if rest_pose_type == 'metahuman':
+    # In case the rest pose type is metahuman or daz_g8.1, reparent the thigh bones to the pelvis.R and pelvis.L
+    if rest_pose_type in ('metahuman', 'daz_g8.1'):
         # Select the armature
         armature.select_set(True)
 
