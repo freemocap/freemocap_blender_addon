@@ -231,3 +231,13 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().label(text="Local Y Offset [cm]:")
             split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_LOCAL_Y_OFFSET.value)
             box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
+
+        # Data Overlays
+        row = layout.row(align=True)
+        row.prop(ui_props.add_data_overlays_properties, "show_add_data_overlays_options", text="",
+                 icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_add_data_overlays_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Data Overlays")
+
+        if ui_props.add_data_overlays_properties.show_add_data_overlays_options:
+            box = layout.box()
+            box.operator('freemocap._add_data_overlay', text='Add Data Overlay')
