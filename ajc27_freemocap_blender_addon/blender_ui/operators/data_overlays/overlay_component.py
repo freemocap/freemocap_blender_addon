@@ -1,7 +1,7 @@
 class OverlayComponent:
-    def __init__(self, name, pos=(10,10), size=(200,150)):
+    def __init__(self, name, position=(10,10), size=(200,150)):
         self.name = name
-        self.pos = pos
+        self.position = position
         self.size = size
         self.visible = True
 
