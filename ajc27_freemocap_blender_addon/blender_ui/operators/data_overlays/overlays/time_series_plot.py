@@ -24,14 +24,14 @@ class TimeSeriesPlot(OverlayComponent):
         border_line_width=1.0,
     ):
         super().__init__(name, position, size)
-        # Load angle data from numpy file
-        self.angle_data = np.load(data_path)[:, column_index]
+        # Load time series data from numpy file
+        self.time_series_data = np.load(data_path)[:, column_index]
         self.window_size = window_size
         self.current_frame = bpy.context.scene.frame_current
         
         # Set y-axis limits based on data range with 10% padding
-        self.y_min = np.min(self.angle_data) * 0.9
-        self.y_max = np.max(self.angle_data) * 1.1
+        self.y_min = np.min(self.time_series_data) * 0.9
+        self.y_max = np.max(self.time_series_data) * 1.1
         
         # Create shader for line drawing
         self.shader = gpu.shader.from_builtin('UNIFORM_COLOR')
@@ -57,13 +57,13 @@ class TimeSeriesPlot(OverlayComponent):
         
         # Calculate window bounds
         start = max(0, current_frame - half_window)
-        end = min(len(self.angle_data), current_frame + half_window)
+        end = min(len(self.time_series_data), current_frame + half_window)
         
         # Get x coordinates (frame numbers)
         x_frames = np.arange(start, end)
         
-        # Get corresponding angle values
-        y_values = self.angle_data[start:end]
+        # Get corresponding time series values
+        y_values = self.time_series_data[start:end]
         
         return x_frames, y_values
     
@@ -171,7 +171,7 @@ class TimeSeriesPlot(OverlayComponent):
         
         # Draw current value at the bottom
         if x_frames[0] <= bpy.context.scene.frame_current <= x_frames[-1]:
-            current_value = self.angle_data[bpy.context.scene.frame_current]
+            current_value = self.time_series_data[bpy.context.scene.frame_current]
             value_text = f"{current_value:.2f}°"
             value_position = (
                 self.position[0] + 5,

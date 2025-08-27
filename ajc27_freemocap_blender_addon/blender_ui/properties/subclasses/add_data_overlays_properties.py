@@ -71,9 +71,36 @@ class AddDataOverlaysProperties(bpy.types.PropertyGroup):
         default = 'angle#left_elbow_extension_flexion',
         description = 'Which parameter to plot in the time series overlay.'
     ) # type: ignore
+    time_series_window_size: PropertyTypes.Int(
+        default = 200,
+        min = 10,
+        description = 'Number of frames to display in the time series plot window.'
+    ) # type: ignore
     time_series_line_color: PropertyTypes.FloatVector(
-        default = tuple((0.694,0.082,0.095,1.0))
+        default = tuple((0.371235,0.672444,0.693872,1.0))
     ) # type: ignore
     time_series_current_frame_line_color: PropertyTypes.FloatVector(
-        default = tuple((1.0,1.0,1.0,1.0))
+        default = tuple((0.693868,0.082283,0.095308,1.0))
     ) # type: ignore
+    time_series_background_color: PropertyTypes.FloatVector(
+        default = tuple((0.0185,0.056129,0.05448, 0.2))
+    ) # type: ignore
+    time_series_line_width: PropertyTypes.Float(
+        default = 1.0,
+        min = 0.1,
+        precision = 1,
+        description = 'Width of the time series plot line.'
+    ) # type: ignore
+    time_series_current_frame_line_width: PropertyTypes.Float(
+        default = 1.5,
+        min = 0.1,
+        precision = 1,
+        description = 'Width of the current frame indicator line.'
+    ) # type: ignore
+    time_series_border_line_width: PropertyTypes.Float(
+        default = 1.0,
+        min = 0.1,
+        precision = 1,
+        description = 'Width of the border around the time series plot.'
+    ) # type: ignore
+    

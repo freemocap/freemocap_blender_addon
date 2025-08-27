@@ -69,7 +69,7 @@ class FREEMOCAP_OT_add_time_series_plot(bpy.types.Operator):
             # data_path="C:/Users/andre/freemocap_data/recording_sessions/freemocap_test_data/output_data/joint_angles.npy",
             data_path=data_path,
             column_index=parameter_index,  # Which column to use from the numpy file
-            window_size=200,  # Number of frames to show
+            window_size=data_overlay_props.time_series_window_size,  # Number of frames to show
             position=(
                 position_x,
                 position_y,
@@ -81,6 +81,10 @@ class FREEMOCAP_OT_add_time_series_plot(bpy.types.Operator):
             plot_title=parameter_title,
             line_color=tuple(data_overlay_props.time_series_line_color),
             current_frame_line_color=tuple(data_overlay_props.time_series_current_frame_line_color),
+            background_color=tuple(data_overlay_props.time_series_background_color),
+            line_width=data_overlay_props.time_series_line_width,
+            current_frame_line_width=data_overlay_props.time_series_current_frame_line_width,
+            border_line_width=data_overlay_props.time_series_border_line_width,
         )
 
         overlay_manager.add(angle_overlay, alignment=data_overlay_props.common_viewport_position)
