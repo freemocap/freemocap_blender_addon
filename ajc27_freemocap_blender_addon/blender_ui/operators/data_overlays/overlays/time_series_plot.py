@@ -16,12 +16,15 @@ class TimeSeriesPlot(OverlayComponent):
         position=(10, 10),
         size=(200, 150),
         plot_title="",
-        line_color=(0.694,0.082,0.095,1.0),
-        current_frame_line_color=(1.0,1.0,1.0,1.0),
-        background_color=(0.1, 0.1, 0.1, 0.2),
-        line_width=2.0,
+        line_color=(0.371235,0.672444,0.693872,1.0),
+        current_frame_line_color=(0.693868,0.082283,0.095308,1.0),
+        background_color=(0.0185,0.056129,0.05448,0.2),
+        line_width=1.0,
         current_frame_line_width=1.5,
         border_line_width=1.0,
+        title_height_percentage=0.15,
+        min_font_size=8,  # Minimum font size to prevent it from getting too small
+        max_font_size=24,  # Maximum font size to prevent it from getting too large
     ):
         super().__init__(name, position, size)
         # Load time series data from numpy file
@@ -45,10 +48,58 @@ class TimeSeriesPlot(OverlayComponent):
         self.line_width = line_width
         self.current_frame_line_width = current_frame_line_width
         self.border_line_width = border_line_width
+        self.title_height_percentage = title_height_percentage
+        self.min_font_size = min_font_size
+        self.max_font_size = max_font_size
+
+        # Calculate title area and plot area
+        self.title_area_height = int(self.size[1] * self.title_height_percentage)
+        self.plot_area_height = self.size[1] - self.title_area_height
 
         # Set up font for text rendering
         self.font_id = 0  # Default font
-        self.font_size = 18
+        self.font_size = self.calculate_optimal_font_size()
+
+    def calculate_optimal_font_size(self):
+        """Calculate the optimal font size based on title area dimensions and title text"""
+        if not self.plot_title:
+            return self.min_font_size
+        
+        # Start with the maximum font size
+        test_font_size = self.max_font_size
+        
+        # Calculate available width and height in title area
+        available_width = self.size[0] * 0.9  # 90% of component width (with some margin)
+        available_height = self.title_area_height * 0.8  # 80% of title area height
+        
+        # Test different font sizes to find the best fit
+        while test_font_size >= self.min_font_size:
+            blf.size(self.font_id, test_font_size)
+            text_width, text_height = blf.dimensions(self.font_id, self.plot_title)
+            
+            # Check if text fits within available space
+            if text_width <= available_width and text_height <= available_height:
+                return test_font_size
+            
+            # Reduce font size and try again
+            test_font_size -= 1
+        
+        # If no suitable size found, return minimum
+        return self.min_font_size
+
+    def get_text_width(self, text):
+        """Calculate the actual width of text in pixels"""
+        blf.size(self.font_id, self.font_size)
+        width, height = blf.dimensions(self.font_id, text)
+        return width
+
+    def get_text_height(self, text, font_size=None):
+        """Calculate the actual height of text in pixels"""
+        if font_size is None:
+            font_size = self.font_size
+        blf.size(self.font_id, font_size)
+        width, height = blf.dimensions(self.font_id, text)
+        return height
 
     def get_window_data(self):
         """Get data points for the current frame window"""
@@ -67,10 +118,12 @@ class TimeSeriesPlot(OverlayComponent):
         
         return x_frames, y_values
     
-    def draw_text(self, text, position, color=(1, 1, 1, 1)):
+    def draw_text(self, text, position, color=(1, 1, 1, 1), font_size=None):
         """Helper function to draw text using blf"""
+        if font_size is None:
+            font_size = self.font_size
         blf.position(self.font_id, position[0], position[1], 0)
-        blf.size(self.font_id, self.font_size)
+        blf.size(self.font_id, font_size)
         blf.color(self.font_id, color[0], color[1], color[2], color[3])
         blf.draw(self.font_id, text)
 
@@ -108,15 +161,19 @@ class TimeSeriesPlot(OverlayComponent):
         if len(x_frames) < 2:
             print("Not enough data points to draw")
             return
+        
+        # Calculate plot area position (below title area)
+        plot_area_y = self.position[1]  # Plot area starts at bottom
+        plot_area_height = self.plot_area_height
 
-        # Normalize coordinates to overlay area
+        # Normalize coordinates to plot area (excluding title area)
         x_coords = np.interp(x_frames, 
                             [x_frames[0], x_frames[-1]],
                             [self.position[0], self.position[0] + self.size[0]])
         
         y_coords = np.interp(y_values,
                             [self.y_min, self.y_max],
-                            [self.position[1], self.position[1] + self.size[1]])
+                            [plot_area_y, plot_area_y + plot_area_height])
 
         # Create line vertices
         vertices = np.column_stack((x_coords, y_coords)).tolist()
@@ -137,8 +194,8 @@ class TimeSeriesPlot(OverlayComponent):
                                  [self.position[0], self.position[0] + self.size[0]])
             
             marker_vertices = [
-                (current_x, self.position[1]),
-                (current_x, self.position[1] + self.size[1])
+                (current_x, plot_area_y),  # Start at bottom of plot area
+                (current_x, plot_area_y + plot_area_height)  # End at top of plot area
             ]
             
             gpu.state.line_width_set(self.current_frame_line_width)
@@ -162,19 +219,32 @@ class TimeSeriesPlot(OverlayComponent):
         batch.draw(self.shader)
         gpu.state.line_width_set(1.0)
 
-        # Draw title at the top of the plot
-        title_position = (
-            self.position[0] + self.size[0] / 2 - (len(self.plot_title) * self.font_size / 4),
-            self.position[1] + self.size[1] - self.font_size - 5
-        )
-        self.draw_text(self.plot_title, title_position)
+        # Draw title in the title area (top portion)
+        if self.plot_title:  # Only draw if title is not empty
+            title_area_top = self.position[1] + self.size[1]  # Top of entire component
+            title_area_bottom = title_area_top - self.title_area_height  # Bottom of title area
+            
+            # Calculate text dimensions for proper centering
+            text_width = self.get_text_width(self.plot_title)
+            text_height = self.get_text_height(self.plot_title)
+            
+            # Center title horizontally and vertically in title area
+            title_x = self.position[0] + (self.size[0] - text_width) / 2
+            title_y = title_area_bottom + (self.title_area_height - text_height) / 2
+            
+            self.draw_text(self.plot_title, (title_x, title_y))
         
-        # Draw current value at the bottom
+        # Draw current value at the bottom of the plot area
         if x_frames[0] <= bpy.context.scene.frame_current <= x_frames[-1]:
             current_value = self.time_series_data[bpy.context.scene.frame_current]
             value_text = f"{current_value:.2f}°"
+            
+            # Calculate value font size based on plot area height
+            # Use a percentage of the plot area height for the value text
+            value_font_size = max(self.min_font_size, min(self.max_font_size, int(self.plot_area_height * 0.15)))
+            
             value_position = (
                 self.position[0] + 5,
-                self.position[1] + 5
+                plot_area_y + 5  # Bottom of plot area + small margin
             )
-            self.draw_text(value_text, value_position, (1, 1, 0, 1))
+            self.draw_text(value_text, value_position, (1, 1, 0, 1), value_font_size)
