@@ -14,6 +14,10 @@ try:
     import tomllib
 except ModuleNotFoundError:
     tomllib = None
+    try:
+        import toml
+    except ModuleNotFoundError:
+        toml = None
 
 
 FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
@@ -182,11 +186,10 @@ class FreemocapData:
                 with open (data_paths.calibration_toml, "rb") as f:
                     calibration_data = tomllib.load(f)
                 groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
-            else: # Just read the toml file and search for the string "groundplane_calibration = true"
+            elif toml is not None:
                 with open (data_paths.calibration_toml, "r", encoding="utf-8") as f:
-                    calibration_text = f.read()
-                if "groundplane_calibration = true" in calibration_text:
-                    groundplane_calibration = True
+                    calibration_data = toml.load(f)
+                groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
 
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,
