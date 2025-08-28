@@ -24,8 +24,8 @@ class TimeSeriesPlot(OverlayComponent):
         border_line_width=1.0,
         value_unit="°",
         title_height_percentage=0.15,
-        min_font_size=8,  # Minimum font size to prevent it from getting too small
-        max_font_size=24,  # Maximum font size to prevent it from getting too large        
+        min_font_size=8,
+        max_font_size=44,
     ):
         super().__init__(name, position, size)
         # Load time series data from numpy file
@@ -71,8 +71,8 @@ class TimeSeriesPlot(OverlayComponent):
         test_font_size = self.max_font_size
         
         # Calculate available width and height in title area
-        available_width = self.size[0] * 0.9  # 90% of component width (with some margin)
-        available_height = self.title_area_height * 0.8  # 80% of title area height
+        available_width = self.size[0] * 0.9
+        available_height = self.title_area_height * 0.6
         
         # Test different font sizes to find the best fit
         while test_font_size >= self.min_font_size:
