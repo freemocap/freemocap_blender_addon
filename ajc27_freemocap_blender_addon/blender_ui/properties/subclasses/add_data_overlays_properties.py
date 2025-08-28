@@ -67,6 +67,7 @@ class AddDataOverlaysProperties(bpy.types.PropertyGroup):
             ('angle#spine_lateral_flexion', 'Angle: Spine Lateral/Flexion', ''),
             ('angle#left_hand_extension_flexion', 'Angle: Left Hand Extension/Flexion', ''),
             ('angle#right_hand_extension_flexion', 'Angle: Right Hand Extension/Flexion', ''),
+            ('com#center_of_mass_z', 'Center of Mass: Z Position', ''),
         ],
         default = 'angle#left_elbow_extension_flexion',
         description = 'Which parameter to plot in the time series overlay.'

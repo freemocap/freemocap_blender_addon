@@ -22,9 +22,10 @@ class TimeSeriesPlot(OverlayComponent):
         line_width=1.0,
         current_frame_line_width=1.5,
         border_line_width=1.0,
+        value_unit="°",
         title_height_percentage=0.15,
         min_font_size=8,  # Minimum font size to prevent it from getting too small
-        max_font_size=24,  # Maximum font size to prevent it from getting too large
+        max_font_size=24,  # Maximum font size to prevent it from getting too large        
     ):
         super().__init__(name, position, size)
         # Load time series data from numpy file
@@ -48,6 +49,7 @@ class TimeSeriesPlot(OverlayComponent):
         self.line_width = line_width
         self.current_frame_line_width = current_frame_line_width
         self.border_line_width = border_line_width
+        self.value_unit = value_unit
         self.title_height_percentage = title_height_percentage
         self.min_font_size = min_font_size
         self.max_font_size = max_font_size
@@ -237,7 +239,7 @@ class TimeSeriesPlot(OverlayComponent):
         # Draw current value at the bottom of the plot area
         if x_frames[0] <= bpy.context.scene.frame_current <= x_frames[-1]:
             current_value = self.time_series_data[bpy.context.scene.frame_current]
-            value_text = f"{current_value:.2f}°"
+            value_text = f"{current_value:.2f}{self.value_unit}"
             
             # Calculate value font size based on plot area height
             # Use a percentage of the plot area height for the value text
