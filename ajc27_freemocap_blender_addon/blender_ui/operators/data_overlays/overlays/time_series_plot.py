@@ -249,6 +249,6 @@ class TimeSeriesPlot(OverlayComponent):
             
             value_position = (
                 self.position[0] + 5,
-                plot_area_y + 5  # Bottom of plot area + small margin
+                plot_area_y + 15  # Bottom of plot area + small margin
             )
             self.draw_text(value_text, value_position, (1, 1, 0, 1), value_font_size)

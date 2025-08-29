@@ -27,7 +27,7 @@ class ROMGauge(OverlayComponent):
         border_line_width=1.0,
         title_height_percentage=0.15,
         min_font_size=8,
-        max_font_size=24,
+        max_font_size=44,
     ):
         super().__init__(name, position, size)
         
@@ -44,6 +44,7 @@ class ROMGauge(OverlayComponent):
         self.reference_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('reference_vector', (1, 0))).normalized()
         self.proximal_segment_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('proximal_segment_vector', (0, -1))).normalized()
         self.rotation_plane_name = rom_gauge_angle_definitions.get(name, {}).get('rotation_plane_name', 'Unknown Plane')
+        self.rotation_direction = rom_gauge_angle_definitions.get(name, {}).get('rotation_direction', 1)
         self.background_color = background_color
         self.reference_vector_color = reference_vector_color
         self.rotation_vector_color = rotation_vector_color
@@ -75,8 +76,9 @@ class ROMGauge(OverlayComponent):
 
     def rotate_vector_2d(self, vector, angle):
         """Rotate a 2D vector by a given angle (in radians)"""
-        cos_angle = math.cos(angle)
-        sin_angle = math.sin(angle)
+        effective_angle = angle * self.rotation_direction
+        cos_angle = math.cos(effective_angle)
+        sin_angle = math.sin(effective_angle)
         x = vector.x * cos_angle - vector.y * sin_angle
         y = vector.x * sin_angle + vector.y * cos_angle
         return Vector((x, y))
@@ -284,17 +286,17 @@ class ROMGauge(OverlayComponent):
         # value_y = self.gauge_center_y - text_height / 2
 
         value_x = self.position[0] + 5
-        value_y = self.position[1] + 5
+        value_y = self.position[1] + 15
         
-        self.draw_text(angle_text, (value_x, value_y), (1, 1, 1, 1), value_font_size)
+        self.draw_text(angle_text, (value_x, value_y), (1, 1, 0, 1), value_font_size)
 
         # Draw rotation plane name in lower right corner
-        plane_font_size = max(self.min_font_size, min(self.max_font_size - 2, int(self.gauge_area_height * 0.08)))
+        plane_font_size = max(self.min_font_size, min(self.max_font_size, int(self.gauge_area_height * 0.08)))
         plane_text_width = self.get_text_width(self.rotation_plane_name, plane_font_size)
 
         # Position in lower right corner with some margin
         plane_x = self.position[0] + self.size[0] - plane_text_width - 5
-        plane_y = self.position[1] + 5
+        plane_y = self.position[1] + 15
 
         self.draw_text(self.rotation_plane_name, (plane_x, plane_y), (0.8, 0.8, 0.8, 1.0), plane_font_size)
 

@@ -265,7 +265,7 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             row = box2.row(align=True)
             row.prop(ui_props.add_data_overlays_properties, "show_time_series_plot_options", text="",
                      icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_time_series_plot_options else 'TRIA_RIGHT', emboss=False)
-            row.label(text="Time Series Plot")
+            row.label(text="Time Series Plot", icon='GRAPH')
             if ui_props.add_data_overlays_properties.show_time_series_plot_options:
                 split = box2.column().row().split(factor=0.3)
                 split.column().label(text="Parameter:")
@@ -299,13 +299,13 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             row = box3.row(align=True)
             row.prop(ui_props.add_data_overlays_properties, "show_rom_gauge_options", text="",
                      icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_rom_gauge_options else 'TRIA_RIGHT', emboss=False)
-            row.label(text="ROM Gauge")
+            row.label(text="ROM Gauge", icon='DRIVER_ROTATIONAL_DIFFERENCE')
             if ui_props.add_data_overlays_properties.show_rom_gauge_options:
                 split = box3.column().row().split(factor=0.3)
                 split.column().label(text="Parameter:")
                 split.column().prop(ui_props.add_data_overlays_properties, 'rom_gauge_parameter')
 
-                box3.operator('freemocap._add_rom_gauge', text='Add ROM Gauge Overlay', icon='DRIVER_DISTANCE')
+                box3.operator('freemocap._add_rom_gauge', text='Add ROM Gauge Overlay', icon='DRIVER_ROTATIONAL_DIFFERENCE')
                 
 
             box.operator('freemocap._clear_all_data_overlays', text='Clear All Data Overlays', icon='TRASH')
