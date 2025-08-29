@@ -293,5 +293,19 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
                 split.column().prop(ui_props.add_data_overlays_properties, 'time_series_border_line_width')
 
                 box2.operator('freemocap._add_time_series_plot', text='Add Time Series Plot Overlay', icon='GRAPH')
+            
+            # ROM Gauge Properties
+            box3 = box.box()
+            row = box3.row(align=True)
+            row.prop(ui_props.add_data_overlays_properties, "show_rom_gauge_options", text="",
+                     icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_rom_gauge_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="ROM Gauge")
+            if ui_props.add_data_overlays_properties.show_rom_gauge_options:
+                split = box3.column().row().split(factor=0.3)
+                split.column().label(text="Parameter:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'rom_gauge_parameter')
+
+                box3.operator('freemocap._add_rom_gauge', text='Add ROM Gauge Overlay', icon='DRIVER_DISTANCE')
+                
 
             box.operator('freemocap._clear_all_data_overlays', text='Clear All Data Overlays', icon='TRASH')

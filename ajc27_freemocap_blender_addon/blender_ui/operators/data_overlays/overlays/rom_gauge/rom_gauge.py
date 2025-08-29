@@ -7,6 +7,9 @@ from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
 from ajc27_freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_component import OverlayComponent
+from ajc27_freemocap_blender_addon.blender_ui.operators.data_overlays.overlays.rom_gauge.rom_gauge_angle_definitions import rom_gauge_angle_definitions
+
+# TODO: Move the shared methods to a utility module
 
 class ROMGauge(OverlayComponent):
     def __init__(
@@ -17,7 +20,6 @@ class ROMGauge(OverlayComponent):
         position=(10, 10),
         size=(200, 200),  # Square gauge by default
         plot_title="ROM Gauge",
-        reference_vector=(1, 0),  # Normalized reference direction (right)
         background_color=(0.1, 0.1, 0.1, 0.2),
         reference_vector_color=(0.0, 1.0, 0.0, 1.0),  # Green reference
         rotation_vector_color=(1.0, 0.0, 0.0, 1.0),  # Red rotation
@@ -39,7 +41,9 @@ class ROMGauge(OverlayComponent):
         self.background_shader = gpu.shader.from_builtin('UNIFORM_COLOR')
 
         self.plot_title = plot_title
-        self.reference_vector = Vector(reference_vector).normalized()
+        self.reference_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('reference_vector', (1, 0))).normalized()
+        self.proximal_segment_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('proximal_segment_vector', (0, -1))).normalized()
+        self.rotation_plane_name = rom_gauge_angle_definitions.get(name, {}).get('rotation_plane_name', 'Unknown Plane')
         self.background_color = background_color
         self.reference_vector_color = reference_vector_color
         self.rotation_vector_color = rotation_vector_color
@@ -55,7 +59,7 @@ class ROMGauge(OverlayComponent):
         
         # Calculate gauge center and radius
         self.gauge_center_x = self.position[0] + self.size[0] / 2
-        self.gauge_center_y = self.position[1] + self.title_area_height + self.gauge_area_height / 2
+        self.gauge_center_y = self.position[1] + self.gauge_area_height / 2
         self.gauge_radius = min(self.size[0], self.gauge_area_height) * 0.4  # 40% of min dimension
 
         # Set up font for text rendering
@@ -68,6 +72,14 @@ class ROMGauge(OverlayComponent):
         if 0 <= current_frame < len(self.angle_data):
             return math.radians(self.angle_data[current_frame])
         return 0.0
+
+    def rotate_vector_2d(self, vector, angle):
+        """Rotate a 2D vector by a given angle (in radians)"""
+        cos_angle = math.cos(angle)
+        sin_angle = math.sin(angle)
+        x = vector.x * cos_angle - vector.y * sin_angle
+        y = vector.x * sin_angle + vector.y * cos_angle
+        return Vector((x, y))
 
     def calculate_optimal_font_size(self):
         """Calculate the optimal font size based on title area dimensions and title text"""
@@ -159,8 +171,8 @@ class ROMGauge(OverlayComponent):
         self.shader.uniform_float("color", (0.7, 0.7, 0.7, 1.0))
         batch.draw(self.shader)
 
-    def draw_vector(self, center_x, center_y, vector, length, color):
-        """Draw a vector from the center point"""
+    def draw_vector(self, center_x, center_y, vector, length, color, draw_arrow=True):
+        """Draw a vector from the center point with optional arrowhead"""
         # Calculate end point
         end_x = center_x + vector.x * length
         end_y = center_y + vector.y * length
@@ -176,28 +188,30 @@ class ROMGauge(OverlayComponent):
         self.shader.uniform_float("color", color)
         batch.draw(self.shader)
         
-        # Draw arrowhead
-        arrow_length = length * 0.2
-        arrow_angle = math.atan2(vector.y, vector.x)
+        # Draw arrowhead if requested
+        if draw_arrow:
+            arrow_length = length * 0.2
+            arrow_angle = math.atan2(vector.y, vector.x)
+            
+            # Arrowhead points
+            arrow1_angle = arrow_angle + math.radians(135)
+            arrow2_angle = arrow_angle - math.radians(135)
+            
+            arrow1_x = end_x + arrow_length * math.cos(arrow1_angle)
+            arrow1_y = end_y + arrow_length * math.sin(arrow1_angle)
+            arrow2_x = end_x + arrow_length * math.cos(arrow2_angle)
+            arrow2_y = end_y + arrow_length * math.sin(arrow2_angle)
+            
+            arrow_vertices = [
+                (end_x, end_y),
+                (arrow1_x, arrow1_y),
+                (end_x, end_y),
+                (arrow2_x, arrow2_y)
+            ]
+            
+            batch = batch_for_shader(self.shader, 'LINES', {"pos": arrow_vertices})
+            batch.draw(self.shader)
         
-        # Arrowhead points
-        arrow1_angle = arrow_angle + math.radians(135)
-        arrow2_angle = arrow_angle - math.radians(135)
-        
-        arrow1_x = end_x + arrow_length * math.cos(arrow1_angle)
-        arrow1_y = end_y + arrow_length * math.sin(arrow1_angle)
-        arrow2_x = end_x + arrow_length * math.cos(arrow2_angle)
-        arrow2_y = end_y + arrow_length * math.sin(arrow2_angle)
-        
-        arrow_vertices = [
-            (end_x, end_y),
-            (arrow1_x, arrow1_y),
-            (end_x, end_y),
-            (arrow2_x, arrow2_y)
-        ]
-        
-        batch = batch_for_shader(self.shader, 'LINES', {"pos": arrow_vertices})
-        batch.draw(self.shader)
         gpu.state.line_width_set(1.0)
 
     def draw(self):
@@ -213,9 +227,18 @@ class ROMGauge(OverlayComponent):
         # Get current rotation angle from data
         current_angle = self.get_current_angle()
 
-        # Calculate rotation vector by rotating reference vector
-        rotation_vector = self.reference_vector.copy()
-        rotation_vector.rotate(Vector((0, 0, 1)), current_angle)
+        # Calculate rotation vector by rotating reference vector using our 2D rotation function
+        rotation_vector = self.rotate_vector_2d(self.reference_vector, current_angle)
+
+        # Draw proximal segment vector (no arrow)
+        self.draw_vector(
+            self.gauge_center_x, 
+            self.gauge_center_y, 
+            self.proximal_segment_vector, 
+            self.gauge_radius, 
+            (0.5, 0.5, 0.8, 1.0),  # Blue-ish color
+            draw_arrow=False  # No arrow for proximal segment
+        )
 
         # Draw reference vector
         self.draw_vector(
@@ -257,10 +280,23 @@ class ROMGauge(OverlayComponent):
         text_width = self.get_text_width(angle_text, value_font_size)
         text_height = self.get_text_height(angle_text, value_font_size)
         
-        value_x = self.gauge_center_x - text_width / 2
-        value_y = self.gauge_center_y - text_height / 2
+        # value_x = self.gauge_center_x - text_width / 2
+        # value_y = self.gauge_center_y - text_height / 2
+
+        value_x = self.position[0] + 5
+        value_y = self.position[1] + 5
         
         self.draw_text(angle_text, (value_x, value_y), (1, 1, 1, 1), value_font_size)
+
+        # Draw rotation plane name in lower right corner
+        plane_font_size = max(self.min_font_size, min(self.max_font_size - 2, int(self.gauge_area_height * 0.08)))
+        plane_text_width = self.get_text_width(self.rotation_plane_name, plane_font_size)
+
+        # Position in lower right corner with some margin
+        plane_x = self.position[0] + self.size[0] - plane_text_width - 5
+        plane_y = self.position[1] + 5
+
+        self.draw_text(self.rotation_plane_name, (plane_x, plane_y), (0.8, 0.8, 0.8, 1.0), plane_font_size)
 
         # Draw border around the component
         border_vertices = [
