@@ -42,7 +42,12 @@ class ROMGauge(OverlayComponent):
 
         self.plot_title = plot_title
         self.reference_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('reference_vector', (1, 0))).normalized()
-        self.proximal_segment_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('proximal_segment_vector', (0, -1))).normalized()
+        proximal_segment_vector = rom_gauge_angle_definitions.get(name, {}).get('proximal_segment_vector', None)
+        if proximal_segment_vector is not None:
+            self.proximal_segment_vector = Vector(proximal_segment_vector).normalized()
+        else:
+            self.proximal_segment_vector = None
+        # self.proximal_segment_vector = Vector(rom_gauge_angle_definitions.get(name, {}).get('proximal_segment_vector', (0, -1))).normalized()
         self.rotation_plane_name = rom_gauge_angle_definitions.get(name, {}).get('rotation_plane_name', 'Unknown Plane')
         self.rotation_direction = rom_gauge_angle_definitions.get(name, {}).get('rotation_direction', 1)
         self.background_color = background_color
@@ -233,14 +238,15 @@ class ROMGauge(OverlayComponent):
         rotation_vector = self.rotate_vector_2d(self.reference_vector, current_angle)
 
         # Draw proximal segment vector (no arrow)
-        self.draw_vector(
-            self.gauge_center_x, 
-            self.gauge_center_y, 
-            self.proximal_segment_vector, 
-            self.gauge_radius, 
-            (0.5, 0.5, 0.8, 1.0),  # Blue-ish color
-            draw_arrow=False  # No arrow for proximal segment
-        )
+        if self.proximal_segment_vector:
+            self.draw_vector(
+                self.gauge_center_x, 
+                self.gauge_center_y, 
+                self.proximal_segment_vector, 
+                self.gauge_radius, 
+                (0.5, 0.5, 0.8, 1.0),  # Blue-ish color
+                draw_arrow=False  # No arrow for proximal segment
+            )
 
         # Draw reference vector
         self.draw_vector(
