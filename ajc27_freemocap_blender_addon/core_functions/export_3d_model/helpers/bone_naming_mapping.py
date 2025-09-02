@@ -65,10 +65,10 @@ bone_naming_mapping = {
         'heel.02.L': 'heel_l',
     },
     "daz_g8.1": {
-        'pelvis': 'pelvis',
+        'pelvis': 'hip',
         'spine': 'abdomenLower',
-        'spine.001': 'chestLower',
-        'neck': 'neckLower',
+        'spine.001': 'chestUpper',
+        'neck': 'neckUpper',
         'face': 'head',
         'shoulder.R': 'rCollar',
         'shoulder.L': 'lCollar',
@@ -120,7 +120,7 @@ bone_naming_mapping = {
         'thigh.L': 'lThighBend',
         'shin.R': 'rShin',
         'shin.L': 'lShin',
-        'foot.R': 'rFoot',
-        'foot.L': 'lFoot',
+        'foot.R': 'rMetatarsals',
+        'foot.L': 'lMetatarsals',
     }
 }
