@@ -84,6 +84,7 @@ def export_3d_model(
         armature=armature
     )
 
+    # Change the name of the bones according to the selected naming convention
     if bones_naming_convention != "default":
         armature.select_set(True)
         # Set Edit Mode
@@ -167,7 +168,7 @@ def export_3d_model(
         marker.matrix_world.translation = current_markers_position[marker.name]
         # Insert keyframe in the start frame
         marker.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_start)
-
+    return
     # Restore the name of the bones 
     if bones_naming_convention != "default":
         armature.select_set(True)

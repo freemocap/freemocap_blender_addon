@@ -16,15 +16,15 @@ bone_naming_mapping = {
         'hand.R': 'hand_r',
         'hand.L': 'hand_l',
         'thumb.carpal.R': 'thumb_metacarpal_r',
-        'palm.01.R': 'index_metacarpal_r',
-        'palm.02.R': 'middle_metacarpal_r',
-        'palm.03.R': 'ring_metacarpal_r',
-        'palm.04.R': 'pinky_metacarpal_r',
+        'palm.01.R': 'index_mcarpal_r', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.02.R': 'middle_mcarpal_r', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.03.R': 'ring_mcarpal_r', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.04.R': 'pinky_mcarpal_r', # Changed name so the automatic retargeting in UE does not detect this bone
         'thumb.carpal.L': 'thumb_metacarpal_l',
-        'palm.01.L': 'index_metacarpal_l',
-        'palm.02.L': 'middle_metacarpal_l',
-        'palm.03.L': 'ring_metacarpal_l',
-        'palm.04.L': 'pinky_metacarpal_l',
+        'palm.01.L': 'index_mcarpal_l', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.02.L': 'middle_mcarpal_l', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.03.L': 'ring_mcarpal_l', # Changed name so the automatic retargeting in UE does not detect this bone
+        'palm.04.L': 'pinky_mcarpal_l', # Changed name so the automatic retargeting in UE does not detect this bone
         'thumb.01.R': 'thumb_01_r',
         'thumb.01.L': 'thumb_01_l',
         'thumb.02.R': 'thumb_02_r',

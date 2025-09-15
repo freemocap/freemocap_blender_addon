@@ -33,9 +33,11 @@ def set_armature_rest_pose(
             if 'palm' in bone.name or 'thumb.carpal' in bone.name:
                 bone.head = bone.parent.head
 
+            # TODO: Check again the metahuman metacarpal offset values
+            # TODO: Generalize this for other rest pose types if needed
             # If the armature is a metahuman, move the metacarpals using the offset info
-            # if rest_pose_type == 'metahuman' and False:
-            #     if bone.name in ['palm.01.L', 'palm.02.L', 'palm.03.L', 'palm.04.L']:
+            # if rest_pose_type == 'metahuman':
+            #     if bone.name in ['palm.01.L', 'palm.02.L', 'palm.03.L', 'palm.04.L'] and 'position_offset' in rest_pose_rotations[bone.name].keys():
             #         print("Bone head position:", bone.head)
             #         print("Bone tail position:", bone_info[bone.name]['tail_position'])
             #         print("Bone length:", bone_info[bone.name]['length'])
@@ -85,19 +87,29 @@ def set_armature_rest_pose(
             if 'thigh' in bone.name:
                 bone.use_connect = False
                 bone.parent = armature.data.edit_bones['pelvis']
-            # if 'thumb.01.L' in bone.name:
-            #     bone.use_connect = False
-            #     bone.parent = armature.data.edit_bones['hand.L']
-            #     bone.use_inherit_rotation = False
 
-            #     # Get the thumb cmc marker
-            #     thumb_cmc = [
-            #         marker for marker in data_parent_empty.children_recursive
-            #         if 'left_hand_thumb_cmc' in marker.name
-            #     ][0]
-            #     bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
-            #     bone_location_constraint.target = thumb_cmc
-            #     armature.pose.bones[bone.name].constraints.move(1, 0)
+            if 'thumb.01' in bone.name:
+                thumb_side = 'left' if '.L' in bone.name else 'right'
+
+                bone.use_connect = False
+                # Set the new parent to the hand using the uppercase first letter of side
+                bone.parent = armature.data.edit_bones[f'hand.{thumb_side[0].upper()}']
+
+                # Get the thumb cmc marker
+                thumb_cmc = [
+                    marker for marker in data_parent_empty.children_recursive
+                    if thumb_side + '_hand_thumb_cmc' in marker.name
+                ][0]
+
+                bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
+                bone_location_constraint.target = thumb_cmc
+                armature.pose.bones[bone.name].constraints.move(1, 0)
+
+                # Remove the thumb.carpal bone
+                if 'thumb.carpal.' + thumb_side[0].upper() in armature.data.edit_bones:
+                    armature.data.edit_bones.remove(armature.data.edit_bones['thumb.carpal.' + thumb_side[0].upper()])
+
+
 
     if rest_pose_type == 'daz_g8.1':
         # Parent the thigh bones to the pelvis
