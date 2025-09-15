@@ -46,6 +46,7 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
             rename_root_bone=True,
             bones_naming_convention=props.bones_naming_convention,
             rest_pose_type=props.rest_pose_type,
+            restore_defaults_after_export=props.restore_defaults_after_export,
             fbx_add_leaf_bones=props.fbx_add_leaf_bones,
             fbx_primary_bone_axis=props.fbx_primary_bone_axis,
             fbx_secondary_bone_axis=props.fbx_secondary_bone_axis,

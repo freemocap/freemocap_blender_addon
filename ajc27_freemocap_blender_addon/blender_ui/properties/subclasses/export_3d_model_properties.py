@@ -44,6 +44,12 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         default='Default',
     ) # type: ignore
 
+    restore_defaults_after_export: PropertyTypes.Bool(
+        name='',
+        description='Restore the original bone names, rest pose and added/deleted bone after exporting the model',
+        default=True,
+    ) # type: ignore
+
     fbx_add_leaf_bones: PropertyTypes.Bool(
         name='',
         description='Add leaf bones to the FBX file (requires Blender 2.80 or newer)',
