@@ -239,7 +239,7 @@ def export_3d_model(
             armature.select_set(False)
 
         # Recreate the thumb.carpal bones if the rest pose type is metahuman
-        if rest_pose_type == 'metahuman':
+        if rest_pose_type in ('metahuman', 'daz_g8.1'):
             # Select the armature
             armature.select_set(True)
 
@@ -254,6 +254,44 @@ def export_3d_model(
                     new_bone.roll = 0.0
                     new_bone.parent = armature.data.edit_bones['hand' + side]
                     new_bone.use_connect = False
+
+            # Set Object Mode
+            bpy.ops.object.mode_set(mode='OBJECT')
+            armature.select_set(False)
+
+        if rest_pose_type == 'daz_g8.1':
+            # Remove the DazG8.1_Face_Correction constraint if it exists
+            if "DazG8.1_Face_Correction" in armature.pose.bones["face"].constraints:
+                constraint = armature.pose.bones["face"].constraints["DazG8.1_Face_Correction"]
+                armature.pose.bones["face"].constraints.remove(constraint)
+
+            # Remove the DazG8.1_Pelvis_Correction constraint if it exists
+            if "DazG8.1_Pelvis_Correction" in armature.pose.bones["pelvis"].constraints:
+                constraint = armature.pose.bones["pelvis"].constraints["DazG8.1_Pelvis_Correction"]
+                armature.pose.bones["pelvis"].constraints.remove(constraint)
+
+            # Remove the DazG8.1_Spine_Correction constraint if it exists
+            if "DazG8.1_Spine_Correction" in armature.pose.bones["spine"].constraints:
+                constraint = armature.pose.bones["spine"].constraints["DazG8.1_Spine_Correction"]
+                armature.pose.bones["spine"].constraints.remove(constraint)
+
+            # Remove the DazG8.1_Forearm_Bend_Correction constraint if it exists
+            for side in ['.L', '.R']:
+                forearm_bone_name = 'forearm' + side
+                if forearm_bone_name in armature.pose.bones:
+                    forearm_bone = armature.pose.bones[forearm_bone_name]
+                    if "DazG8.1_Forearm_Bend_Correction" in forearm_bone.constraints:
+                        constraint = forearm_bone.constraints["DazG8.1_Forearm_Bend_Correction"]
+                        forearm_bone.constraints.remove(constraint)
+
+            # Remove the forearm twist bones if they were created
+            armature.select_set(True)
+            bpy.ops.object.mode_set(mode='EDIT')
+            for side in ['.L', '.R']:
+                twist_bone_name = 'forearm_twist' + side
+                if twist_bone_name in armature.data.edit_bones:
+                    bone = armature.data.edit_bones[twist_bone_name]
+                    armature.data.edit_bones.remove(bone)
 
             # Set Object Mode
             bpy.ops.object.mode_set(mode='OBJECT')

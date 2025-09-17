@@ -67,7 +67,7 @@ bone_naming_mapping = {
     "daz_g8.1": {
         'pelvis': 'hip',
         'spine': 'abdomenLower',
-        'spine.001': 'chestUpper',
+        'spine.001': 'chestLower',
         'neck': 'neckUpper',
         'face': 'head',
         'shoulder.R': 'rCollar',
@@ -76,6 +76,8 @@ bone_naming_mapping = {
         'upper_arm.L': 'lShldrBend',
         'forearm.R': 'rForearmBend',
         'forearm.L': 'lForearmBend',
+        'forearm_twist.R': 'rForearmTwist',
+        'forearm_twist.L': 'lForearmTwist',
         'hand.R': 'rHand',
         'hand.L': 'lHand',
         'palm.01.R': 'rCarpal1',
@@ -120,7 +122,7 @@ bone_naming_mapping = {
         'thigh.L': 'lThighBend',
         'shin.R': 'rShin',
         'shin.L': 'lShin',
-        'foot.R': 'rMetatarsals',
-        'foot.L': 'lMetatarsals',
+        'foot.R': 'rFoot',
+        'foot.L': 'lFoot',
     }
 }

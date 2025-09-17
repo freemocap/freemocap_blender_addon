@@ -396,8 +396,8 @@ rest_pose_type_rotations = {
     'daz_g8.1': { # TODO: Adjust rotations to match UE G8.1 skeleton and change bone constraints (damped track or locked track)
         'pelvis': {
             'rotation': (
-                # m.radians(-21.5533654355),
-                m.radians(0.0000000000),
+                m.radians(-21.5533654355),
+                # m.radians(0.0000000000),
                 m.radians(0.0000000000),
                 m.radians(0.0000000000),
             ),
@@ -411,15 +411,31 @@ rest_pose_type_rotations = {
             ),
             'roll': m.radians(0.0000000000),
         },
-        'spine.001': {
+        'spine.001': { # chestLower
             'rotation': (
-                m.radians(-6.7837554096),
+                m.radians(-34.2140909489),
                 m.radians(0.0000000000),
                 m.radians(0.0000000000),
             ),
             'roll': m.radians(0.0000000000),
         },
-        'neck': {
+        # 'spine.001': { # chestUpper
+        #     'rotation': (
+        #         m.radians(-6.7837554096),
+        #         m.radians(0.0000000000),
+        #         m.radians(0.0000000000),
+        #     ),
+        #     'roll': m.radians(0.0000000000),
+        # },
+        # 'neck': { # neckLower
+        #     'rotation': (
+        #         m.radians(31.1163884245),
+        #         m.radians(0.0000000000),
+        #         m.radians(0.0000000000),
+        #     ),
+        #     'roll': m.radians(0.0000000000),
+        # },
+        'neck': { # neckUpper
             'rotation': (
                 m.radians(0.0000000000),
                 m.radians(-0.0000000000),
@@ -438,7 +454,8 @@ rest_pose_type_rotations = {
         'shoulder.R': {
             'rotation': (
                 m.radians(31.1178876510),
-                m.radians(-97.4433036053),
+                # m.radians(-97.4433036053),
+                m.radians(-91.8433036053), # To compensate for the longer spine.001 bone
                 m.radians(-35.1954456987),
             ),
             'roll': m.radians(-95.5465259219),
@@ -446,7 +463,8 @@ rest_pose_type_rotations = {
         'shoulder.L': {
             'rotation': (
                 m.radians(31.1179661982),
-                m.radians(97.4432694544),
+                # m.radians(97.4432694544),
+                m.radians(91.8432694544), # To compensate for the longer spine.001 bone
                 m.radians(35.1955140006),
             ),
             'roll': m.radians(-84.4534585965),
@@ -481,7 +499,8 @@ rest_pose_type_rotations = {
                 m.radians(136.5449481507),
                 m.radians(-52.5219041701),
             ),
-            'roll': m.radians(-45.8334448404),
+            # 'roll': m.radians(-45.8334448404),
+            'roll': m.radians(134.1665551596),
         },
         'hand.R': {
             'rotation': (
@@ -497,7 +516,24 @@ rest_pose_type_rotations = {
                 m.radians(121.3464248700),
                 m.radians(-25.4044258725),
             ),
-            'roll': m.radians(-46.6059289903),
+            # 'roll': m.radians(-46.6059289903),
+            'roll': m.radians(133.3940452828),
+        },
+        'thumb.carpal.R': {
+            'rotation': (
+                m.radians(133.7236838726),
+                m.radians(-13.0736667979),
+                m.radians(-30.0214817798),
+            ),
+            'roll': m.radians(0.0000000000),
+        },
+        'thumb.carpal.L': {
+            'rotation': (
+                m.radians(133.7236838726),
+                m.radians(13.0736667979),
+                m.radians(30.0214817798),
+            ),
+            'roll': m.radians(0.0000000000),
         },
         'palm.01.R': {
             'rotation': (
