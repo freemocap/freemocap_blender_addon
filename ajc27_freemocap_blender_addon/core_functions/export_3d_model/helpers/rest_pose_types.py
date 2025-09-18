@@ -175,24 +175,19 @@ rest_pose_type_rotations = {
         },
         'hand.R': {
             'rotation' : (
-                m.radians(136.60972566483292),
-                m.radians(-19.358236551318736),
-                m.radians(-46.40956446672754),
+                m.radians(134.3696695039),
+                m.radians(-30.2726517412),
+                m.radians(-65.4836463656),
             ),
-            'roll': m.radians(-178),
+            'roll': m.radians(-135.9674829772),           
         },
         'hand.L': {
             'rotation' : (
-                # m.radians(136.47491139099523),
-                # m.radians(18.1806521742533),
-                # m.radians(43.68087998764535),
                 m.radians(134.37488776840476),
                 m.radians(30.27156232603659),
                 m.radians(65.48831821494582),
             ),
-            # 'roll': m.radians(178),
-            'roll': m.radians(-224.0328),
-            # 'roll': m.radians(135.9672),
+            'roll': m.radians(135.9672),
         },
         'palm.01.R': {
             'rotation': (m.radians(116.2904046577), m.radians(-20.5056144168), m.radians(-32.4613551249)),
@@ -393,11 +388,10 @@ rest_pose_type_rotations = {
         },
     },
 
-    'daz_g8.1': { # TODO: Adjust rotations to match UE G8.1 skeleton and change bone constraints (damped track or locked track)
+    'daz_g8.1': {
         'pelvis': {
             'rotation': (
                 m.radians(-21.5533654355),
-                # m.radians(0.0000000000),
                 m.radians(0.0000000000),
                 m.radians(0.0000000000),
             ),
@@ -419,22 +413,6 @@ rest_pose_type_rotations = {
             ),
             'roll': m.radians(0.0000000000),
         },
-        # 'spine.001': { # chestUpper
-        #     'rotation': (
-        #         m.radians(-6.7837554096),
-        #         m.radians(0.0000000000),
-        #         m.radians(0.0000000000),
-        #     ),
-        #     'roll': m.radians(0.0000000000),
-        # },
-        # 'neck': { # neckLower
-        #     'rotation': (
-        #         m.radians(31.1163884245),
-        #         m.radians(0.0000000000),
-        #         m.radians(0.0000000000),
-        #     ),
-        #     'roll': m.radians(0.0000000000),
-        # },
         'neck': { # neckUpper
             'rotation': (
                 m.radians(0.0000000000),

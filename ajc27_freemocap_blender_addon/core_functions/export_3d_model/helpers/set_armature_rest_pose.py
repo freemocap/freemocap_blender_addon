@@ -110,6 +110,25 @@ def set_armature_rest_pose(
                 if 'thumb.carpal.' + thumb_side[0].upper() in armature.data.edit_bones:
                     armature.data.edit_bones.remove(armature.data.edit_bones['thumb.carpal.' + thumb_side[0].upper()])
 
+        # Change the targets of the hand constraints
+        # TODO: Delete this code if the default target markers change to these ones in the future
+        for side in ['left', 'right']:
+            hand_bone = armature.pose.bones['hand' + '.' + side[0].upper()]
+
+            # Get the hand_middle_finger_mcp
+            hand_middle_finger_mcp = [
+                marker for marker in data_parent_empty.children_recursive
+                if side + '_hand_middle_finger_mcp' in marker.name
+            ][0]
+
+            # Get the hand_index_finger_mcp
+            hand_index_finger_mcp = [
+                marker for marker in data_parent_empty.children_recursive
+                if side + '_hand_index_finger_mcp' in marker.name
+            ][0]
+
+            hand_bone.constraints['Damped Track'].target = hand_middle_finger_mcp
+            hand_bone.constraints['Locked Track'].target = hand_index_finger_mcp
 
     if rest_pose_type == 'daz_g8.1':
         # Parent the thigh bones to the pelvis

@@ -259,6 +259,27 @@ def export_3d_model(
             bpy.ops.object.mode_set(mode='OBJECT')
             armature.select_set(False)
 
+        if rest_pose_type == 'metahuman':
+            # Restore the hand bone connstraints target markers
+            # TODO: Delete this code if the default target markers are not hand_middle and hand_thumb_cmc
+            for side in ['left', 'right']:
+                hand_bone = armature.pose.bones['hand' + '.' + side[0].upper()]
+
+                # Get the hand_middle
+                hand_middle = [
+                    marker for marker in data_parent_empty.children_recursive
+                    if side + '_hand_middle' == marker.name or side + '_hand_middle.' in marker.name # Consider suffixes like .001
+                ][0]
+
+                # Get the hand_thumb_cmc
+                hand_thumb_cmc = [
+                    marker for marker in data_parent_empty.children_recursive
+                    if side + '_hand_thumb_cmc' in marker.name
+                ][0]
+
+                hand_bone.constraints['Damped Track'].target = hand_middle
+                hand_bone.constraints['Locked Track'].target = hand_thumb_cmc
+
         if rest_pose_type == 'daz_g8.1':
             # Remove the DazG8.1_Face_Correction constraint if it exists
             if "DazG8.1_Face_Correction" in armature.pose.bones["face"].constraints:
