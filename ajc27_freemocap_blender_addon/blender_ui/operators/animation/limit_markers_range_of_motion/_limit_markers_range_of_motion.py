@@ -8,7 +8,6 @@ import re
 
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
-from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
 
 
 class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
@@ -199,23 +198,11 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                             angle_offset=VirtualBones[bone].angle_offset,
                         )
 
-                        # # Add an empty marker at the new head position for debugging
-                        if frame == 316:
-                            bpy.ops.object.empty_add(type='PLAIN_AXES', location=bone_head_position)
-                            empty = bpy.context.active_object
-                            empty.name = f"Debug New Head {bone} Frame {frame}"
-                    
                     # Calculate the bone's y axis
                     bone_y_axis = (
                         bone_tail_position
                         - bone_head_position
                     )
-
-                    # # Calculate the bone's y axis
-                    # bone_y_axis = (
-                    #     Vector(markers[VirtualBones[bone].tail]['fcurves'][:, frame])
-                    #     - Vector(markers[VirtualBones[bone].head]['fcurves'][:, frame])
-                    # )
 
                     # Get the bone axes from its parent
                     bone_axes_from_parent = calculate_bone_axes_from_parent(
@@ -227,35 +214,6 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                         ],
                     )
 
-                    if bone in {'palm.01.L'} and frame == 316:
-                        # Debugging
-                        draw_vector(
-                            bone_head_position,
-                            VirtualBones[bone].bone_y_axis,
-                            'Palm 01 L Y Axis from parent',
-                            )
-                        draw_vector(
-                            bone_head_position,
-                            VirtualBones[bone].bone_z_axis,
-                            'Palm 01 L Z Axis from parent',
-                            )
-                        
-                    if bone in {'f_index.01.L'} and frame == 316:
-                        # Debugging
-                        draw_vector(
-                            markers[VirtualBones[bone].head]['fcurves'][:, frame],
-                            bone_axes_from_parent[2],
-                            'Index 01 L Z Axis from parent',
-                            )
-                        
-                    if bone in {'f_index.02.L'} and frame == 316:
-                        # Debugging
-                        draw_vector(
-                            markers[VirtualBones[bone].head]['fcurves'][:, frame],
-                            bone_axes_from_parent[2],
-                            'Index 02 L Z Axis from parent',
-                            )
-
                     # Save the vectors in the virtual_bones dictionary
                     VirtualBones[bone].bone_x_axis = bone_axes_from_parent[0]
                     VirtualBones[bone].bone_y_axis = bone_axes_from_parent[1]
@@ -265,13 +223,6 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     # origin axes based on its parent bone's axes and rotate
                     # the tail empty (and its children) to meet the constraints
                     if VirtualBones[bone].category in target_categories:
-                        if bone == 'f_index.02.L' and frame == 316:
-                            # Debugging
-                            draw_vector(
-                                markers[VirtualBones['f_index.01.L'].head]['fcurves'][:, frame],
-                                VirtualBones[bone].bone_z_axis,
-                                'Index 02 Z Axis',
-                                )
                         for axis in ['x', 'z']:
                             # Get the min and max rotation limits based on the range of motion scale
                             axis_rotation_limit_min = getattr(VirtualBones[bone], f'{axis}_rotation_limit_min')
