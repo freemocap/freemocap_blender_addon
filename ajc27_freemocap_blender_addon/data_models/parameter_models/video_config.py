@@ -239,22 +239,36 @@ EXPORT_PROFILES = {
 }
 
 RENDER_PARAMETERS = {
-    'scene.render.engine': 'BLENDER_EEVEE',
+    'scene.render.engine': 'BLENDER_EEVEE_NEXT',
     'scene.eevee.taa_render_samples': 1,
+    'scene.eevee.taa_samples': 1,
     'scene.render.image_settings.file_format': 'FFMPEG',
     'scene.render.ffmpeg.format': 'MPEG4',
     'scene.render.ffmpeg.codec': 'H264',
-    'scene.render.ffmpeg.constant_rate_factor': 'VERYLOW',
+    'scene.render.ffmpeg.constant_rate_factor': 'LOWEST',
     'scene.render.ffmpeg.ffmpeg_preset': 'REALTIME',
     'scene.render.fps': 30,
     'scene.render.resolution_percentage': 100,
     'scene.eevee.use_gtao': False,
-    'scene.eevee.use_bloom': False,
-    'scene.eevee.use_ssr': False,
-    'scene.eevee.use_motion_blur': False,
-    'scene.eevee.volumetric_samples': 4,
-    'scene.eevee.use_volumetric_lights': False,
-    'scene.eevee.use_soft_shadows': True,
+    # 'scene.eevee.use_bloom': False,
+    # 'scene.eevee.use_ssr': False,
+    'scene.render.use_motion_blur': False,
+    'scene.eevee.volumetric_samples': 1,
+    # 'scene.eevee.use_volumetric_lights': False,
+    'scene.eevee.use_volumetric_shadows': False,
+    'scene.eevee.use_shadows': False,
+    # 'scene.eevee.shadow_cube_size': '64',
+    # 'scene.eevee.shadow_cascade_size': '64',
+
+    'scene.render.image_settings.color_depth': '8',
+    'scene.render.image_settings.color_mode': 'RGB',
+
+    # 'scene.eevee.use_transparent': False,
+    'scene.eevee.use_overscan': False,
+
+    'scene.render.simplify_subdivision': 0,
+    'scene.render.simplify_subdivision_render': 0,
+    'scene.render.use_simplify': True,
 }
 
 RENDER_BACKGROUND = {

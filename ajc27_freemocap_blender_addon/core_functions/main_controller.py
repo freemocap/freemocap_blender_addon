@@ -12,7 +12,7 @@ from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data im
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
-from .create_video.create_video import create_video
+from .export_video.export_video import export_video
 from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
@@ -349,7 +349,7 @@ class MainController:
     def create_video(self):
         print("Creating export video...")
         import bpy
-        create_video(
+        export_video(
             scene=bpy.context.scene,
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
