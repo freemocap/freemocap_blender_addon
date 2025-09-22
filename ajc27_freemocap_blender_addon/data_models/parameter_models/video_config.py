@@ -232,7 +232,7 @@ EXPORT_PROFILES = {
             },
         },
         'render_elements': [
-            "center_of_mass_data",
+            "center_of_mass",
             "rigid_body_meshes",
         ],
     },
@@ -272,8 +272,8 @@ RENDER_PARAMETERS = {
 }
 
 RENDER_BACKGROUND = {
-    'height': 10,
-    'y_axis_offset': 0.1,
+    'base_image_path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "video_composite_background.png"),
+    'color_modifier': (0.05, 0.05, 0.05, 1.0),
 }
 
 LENS_FOVS = {

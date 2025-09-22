@@ -1,3 +1,4 @@
+import time
 import bpy
 
 from ajc27_freemocap_blender_addon.core_functions.export_video.helpers.place_render_cameras import place_render_cameras
@@ -34,17 +35,23 @@ def export_video(
     # Set the start and end frames
     bpy.context.scene.frame_start = start_frame
     bpy.context.scene.frame_end = end_frame
-
+    
+    start_time = time.perf_counter_ns()
     render_cameras(
         recording_folder=recording_folder,
         export_profile=export_profile,
     )
+    end_time = time.perf_counter_ns()
+    print(f"Rendering cameras time: {(end_time - start_time) / 1e9} seconds")
 
+    start_frame = time.perf_counter_ns()
     composite_video(
         scene=scene,
         recording_folder=recording_folder,
         export_profile=export_profile,
     )
+    end_frame = time.perf_counter_ns()
+    print(f"Compositing video time: {(end_frame - start_frame) / 1e9} seconds")
 
     reset_scene_defaults()
 
