@@ -110,7 +110,8 @@ def create_camera_nodes(
     background_end_node,
     tree,
     links
-):
+) -> None:
+    
     render_cameras_count = len(EXPORT_PROFILES[export_profile]['render_cameras'])
 
     # For each render camera create MovieClip, Scale and Translate nodes
@@ -119,13 +120,19 @@ def create_camera_nodes(
         #  Get a reference to the render_camera
         render_camera = EXPORT_PROFILES[export_profile]['render_cameras'][camera]
 
-        # Get the render camera file name
-        render_camera_filename = Path(recording_folder).name + '_' + camera + '.mp4'
-        render_camera_filepath = str(Path(recording_folder) / 'video_export' / 'render_cameras' / render_camera_filename)
+        # Create a MovieClip or Render Layer node depending on the export profile
+        if EXPORT_PROFILES[export_profile]['prerender_cameras']:
+            # Get the render camera file name
+            render_camera_filename = Path(recording_folder).name + '_' + camera + '.mp4'
+            render_camera_filepath = str(Path(recording_folder) / 'video_export' / 'render_cameras' / render_camera_filename)
 
-        # Create MovieClip node
-        video_node = tree.nodes.new(type="CompositorNodeMovieClip")
-        video_node.clip = bpy.data.movieclips.load(render_camera_filepath)
+            # Create MovieClip node
+            video_node = tree.nodes.new(type="CompositorNodeMovieClip")
+            video_node.clip = bpy.data.movieclips.load(render_camera_filepath)
+        else:
+            # Create Render Layer node
+            video_node = tree.nodes.new(type="CompositorNodeRLayers")
+            video_node.scene = bpy.data.scenes[f"Render_Camera_{camera}"]
         
         #  Set the node position
         video_node.location = (-800, (render_cameras_count - index) * 300)

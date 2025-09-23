@@ -10,15 +10,12 @@ class VIEW3D_PT_export_video_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+        ui_props = context.scene.freemocap_ui_properties
+        export_video_props = ui_props.export_video_properties
 
         box = layout.box()
-        # split = box.column().row().split(factor=0.6)
-        # split.column().label(text='Video Profile')
-        # split.split().column().prop(context.scene.freemocap_properties, 'video_export_profile')
-
-        # box.label(text='Scientific Profile Options')
-        # split = box.column().row().split(factor=0.6)
-        # split.column().label(text='Ground Contact Threshold (m)')
-        # split.split().column().prop(context.scene.freemocap_properties, 'ground_contact_threshold')
+        split = box.column().row().split(factor=0.6)
+        split.column().label(text='Video Profile')
+        split.column().prop(export_video_props, 'export_profile')
 
         box.operator('freemocap._export_video', text='Export Video')

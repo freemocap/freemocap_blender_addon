@@ -11,6 +11,8 @@ class FREEMOCAP_OT_export_video(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
 
+        export_video_props = scene.freemocap_ui_properties.export_video_properties
+
         print("Exporting video.......")
 
         export_video(
@@ -18,7 +20,7 @@ class FREEMOCAP_OT_export_video(bpy.types.Operator):
             recording_folder=context.scene.freemocap_properties.recording_path,
             start_frame=scene.frame_start,
             end_frame=scene.frame_end,
-            export_profile="multiview",
+            export_profile=export_video_props.export_profile,
         )
 
         print("Video export completed.")

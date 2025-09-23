@@ -11,7 +11,7 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 def place_render_cameras(
     scene: bpy.types.Scene=None,
     export_profile: str='debug',
-) -> list:
+) -> None:
 
     # Delete existing cameras
     while bpy.data.cameras:
@@ -79,12 +79,12 @@ def place_render_cameras(
             rightmost_point = highest_x
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Right':
+        elif camera == 'Left':
             leftmost_point = lowest_y
             rightmost_point = highest_y
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Left':
+        elif camera == 'Right':
             leftmost_point = highest_y
             rightmost_point = lowest_y
             lowest_point = lowest_z
@@ -143,14 +143,14 @@ def place_render_cameras(
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, 0)
-        elif camera == 'Right':
+        elif camera == 'Left':
             camera_object.location = (
                 camera_distance_on_axis,
                 0,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, radians(90))
-        elif camera == 'Left':
+        elif camera == 'Right':
             camera_object.location = (
                 -camera_distance_on_axis,
                 0,

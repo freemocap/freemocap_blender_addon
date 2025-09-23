@@ -5,6 +5,7 @@ EXPORT_PROFILES = {
     'debug': {
         'resolution_x': 1920,
         'resolution_y': 1080,
+        'prerender_cameras': True,
         'render_cameras': {
             'Front': {
                 'resolution_x': 1920,
@@ -82,12 +83,13 @@ EXPORT_PROFILES = {
         ],
     },
     'showcase': {
-        'resolution_x': 1080,
-        'resolution_y': 1920,
+        'resolution_x': 540,
+        'resolution_y': 960,
+        'prerender_cameras': True,
         'render_cameras': {
             'Front': {
-                'resolution_x': 1080,
-                'resolution_y': 1920,
+                'resolution_x': 540,
+                'resolution_y': 960,
                 'scale_space': 'RELATIVE',
                 'scale_x': 1.0,
                 'scale_y': 1.0,
@@ -117,6 +119,7 @@ EXPORT_PROFILES = {
     'scientific': {
         'resolution_x': 1920,
         'resolution_y': 1080,
+        'prerender_cameras': True,
         'render_cameras': {
             'Front': {
                 'resolution_x': 1920,
@@ -173,6 +176,7 @@ EXPORT_PROFILES = {
     'multiview': {
         'resolution_x': 1920,
         'resolution_y': 1080,
+        'prerender_cameras': True,
         'render_cameras': {
             'Front': {
                 'resolution_x': 960,
@@ -269,6 +273,11 @@ RENDER_PARAMETERS = {
     'scene.render.simplify_subdivision': 0,
     'scene.render.simplify_subdivision_render': 0,
     'scene.render.use_simplify': True,
+
+    'scene.render.film_transparent': True,
+    'scene.render.compositor_device': 'GPU',
+    'scene.render.compositor_precision': 'FULL'
+
 }
 
 RENDER_BACKGROUND = {
