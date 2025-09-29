@@ -9,13 +9,18 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 )
 
 def place_render_cameras(
-    scene: bpy.types.Scene=None,
-    export_profile: str='debug',
+    scene: bpy.types.Scene,
+    export_profile: dict,
 ) -> None:
 
     # Delete existing cameras
     while bpy.data.cameras:
         bpy.data.cameras.remove(bpy.data.cameras[0])
+
+    # Delete the collections that have "Render_Cameras" in their name
+    for collection in bpy.data.collections:
+        if "Render_Cameras" in collection.name:
+            bpy.data.collections.remove(collection)
 
     # Create a nested collection to store the cameras
     scene_collection = bpy.data.collections.new('Render_Cameras')
@@ -62,7 +67,8 @@ def place_render_cameras(
     scene.frame_set(scene.frame_start)
 
     # Create the cameras of the export profile
-    for camera in EXPORT_PROFILES[export_profile]['render_cameras']:
+    # for camera in EXPORT_PROFILES[export_profile]['render_cameras']:
+    for camera in export_profile['render_cameras']:
 
         # Create the camera
         camera_data = bpy.data.cameras.new(name='Camera_' + camera)
@@ -70,7 +76,8 @@ def place_render_cameras(
         scene_collection.objects.link(camera_object)
 
         # Get the camera view margin
-        view_margin = EXPORT_PROFILES[export_profile]['render_cameras'][camera]['view_margin']
+        # view_margin = EXPORT_PROFILES[export_profile]['render_cameras'][camera]['view_margin']
+        view_margin = export_profile['render_cameras'][camera]['view_margin']
 
         # Set the view leftmost, rightmost, lowest and highest points
         # depending on the camera

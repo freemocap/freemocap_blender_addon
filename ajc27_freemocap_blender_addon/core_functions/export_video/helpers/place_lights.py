@@ -8,21 +8,20 @@ def place_lights(
     #  Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
+    # Delete the current lights
+    for obj in scene.objects:
+        if obj.type == 'LIGHT':
+            obj.select_set(True)
+            bpy.ops.object.delete()
+
+    # Delete the collections that have "Lights" in their name
+    for collection in bpy.data.collections:
+        if "Lights" in collection.name:
+            bpy.data.collections.remove(collection)
+
     # Create a nested collection to store the lights
     scene_collection = bpy.data.collections.new('Lights')
     scene.collection.children.link(scene_collection)
-
-    # Delete the current lights
-    for obj in scene.objects:
-        if obj.type == 'LIGHT':
-            obj.select_set(True)
-            bpy.ops.object.delete()
-
-    # Delete the current lights
-    for obj in scene.objects:
-        if obj.type == 'LIGHT':
-            obj.select_set(True)
-            bpy.ops.object.delete()
 
     # For each camera in the scene create a light
     for camera in bpy.data.cameras:

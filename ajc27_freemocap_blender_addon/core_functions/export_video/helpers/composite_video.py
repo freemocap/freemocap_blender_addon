@@ -8,8 +8,19 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 def composite_video(
     scene: bpy.types.Scene,
     recording_folder: str,
-    export_profile: str = 'debug',
+    export_profile: dict,
+    start_frame: int,
+    end_frame: int
 ) -> None:
+    
+    # Get the total amount of frames to render
+    total_render_frames = end_frame - start_frame
+
+    # Set the start and end frames as one and total_render_frames as
+    # The compositor plays movieclips from frame 1 instead of the
+    # current frame
+    bpy.context.scene.frame_start = 1
+    bpy.context.scene.frame_end = total_render_frames
     
     # Set up compositor
     bpy.context.scene.use_nodes = True
@@ -64,14 +75,18 @@ def composite_video(
         links.new(background_end_node.outputs[0], output_node.inputs[0])
 
     # Set render settings
-    bpy.context.scene.render.resolution_x = EXPORT_PROFILES[export_profile]['resolution_x']
-    bpy.context.scene.render.resolution_y = EXPORT_PROFILES[export_profile]['resolution_y']
-    output_render_name = Path(recording_folder).name + '_' + export_profile + '.mp4'
+    bpy.context.scene.render.resolution_x = export_profile['resolution_x']
+    bpy.context.scene.render.resolution_y = export_profile['resolution_y']
+    output_render_name = Path(recording_folder).name + export_profile['output_name_sufix'] + '.mp4'
     output_render_path = str(Path(recording_folder) / 'video_export' / output_render_name)
     bpy.context.scene.render.filepath = output_render_path
 
     # Render the animation
     bpy.ops.render.render(animation=True)
+
+    # Restore the start and end frames
+    bpy.context.scene.frame_start = start_frame
+    bpy.context.scene.frame_end = end_frame
 
     return
 
@@ -81,7 +96,7 @@ def create_background_nodes(
     links
 ) -> bpy.types.CompositorNodeScale:
     
-    render_cameras_count = len(EXPORT_PROFILES[export_profile]['render_cameras'])
+    render_cameras_count = len(export_profile['render_cameras'])
 
     # Create Image node
     background_image_node = tree.nodes.new(type="CompositorNodeImage")
@@ -112,16 +127,16 @@ def create_camera_nodes(
     links
 ) -> None:
     
-    render_cameras_count = len(EXPORT_PROFILES[export_profile]['render_cameras'])
+    render_cameras_count = len(export_profile['render_cameras'])
 
     # For each render camera create MovieClip, Scale and Translate nodes
-    for index, camera in enumerate(EXPORT_PROFILES[export_profile]['render_cameras']):
+    for index, camera in enumerate(export_profile['render_cameras']):
 
         #  Get a reference to the render_camera
-        render_camera = EXPORT_PROFILES[export_profile]['render_cameras'][camera]
+        render_camera = export_profile['render_cameras'][camera]
 
         # Create a MovieClip or Render Layer node depending on the export profile
-        if EXPORT_PROFILES[export_profile]['prerender_cameras']:
+        if export_profile['prerender_cameras']:
             # Get the render camera file name
             render_camera_filename = Path(recording_folder).name + '_' + camera + '.mp4'
             render_camera_filepath = str(Path(recording_folder) / 'video_export' / 'render_cameras' / render_camera_filename)
@@ -147,8 +162,8 @@ def create_camera_nodes(
         # Create Translate node
         translate_node = tree.nodes.new(type="CompositorNodeTranslate")
         translate_node.use_relative = render_camera['translate_relative']
-        translate_node.inputs[1].default_value = EXPORT_PROFILES[export_profile]['resolution_x'] * render_camera['translate_x']
-        translate_node.inputs[2].default_value = EXPORT_PROFILES[export_profile]['resolution_y'] * render_camera['translate_y']
+        translate_node.inputs[1].default_value = export_profile['resolution_x'] * render_camera['translate_x']
+        translate_node.inputs[2].default_value = export_profile['resolution_y'] * render_camera['translate_y']
         translate_node.location = (-400, (render_cameras_count - index) * 300)
 
         # Link nodes
@@ -196,13 +211,13 @@ def create_overlay_nodes(
     links
 ):
 
-    overlays_count = len(EXPORT_PROFILES[export_profile]['overlays'])
+    overlays_count = len(export_profile['overlays'])
 
     # For each overlay create the corresponding node
-    for index, overlay in enumerate(EXPORT_PROFILES[export_profile]['overlays']):
+    for index, overlay in enumerate(export_profile['overlays']):
 
         # Get a reference to the overlay object
-        overlay_dict = EXPORT_PROFILES[export_profile]['overlays'][overlay]
+        overlay_dict = export_profile['overlays'][overlay]
 
         if overlay_dict['type'] == 'image':
             # Create Image node
@@ -233,8 +248,8 @@ def create_overlay_nodes(
         translate_node = tree.nodes.new(type="CompositorNodeTranslate")
         translate_node.use_relative = overlay_dict['translate_relative']
         # translate_node.inputs[1].default_value = overlay_dict['translate_x']
-        translate_node.inputs[1].default_value = EXPORT_PROFILES[export_profile]['resolution_x'] * overlay_dict['translate_x']
-        translate_node.inputs[2].default_value = EXPORT_PROFILES[export_profile]['resolution_y'] * overlay_dict['translate_y']
+        translate_node.inputs[1].default_value = export_profile['resolution_x'] * overlay_dict['translate_x']
+        translate_node.inputs[2].default_value = export_profile['resolution_y'] * overlay_dict['translate_y']
         translate_node.location = (
             -400,
             -(overlays_count - index - 1) * 400 - 50

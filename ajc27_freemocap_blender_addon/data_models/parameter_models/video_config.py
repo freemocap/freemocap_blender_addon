@@ -3,6 +3,7 @@ from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
 
 EXPORT_PROFILES = {
     'debug': {
+        'output_name_sufix': '_debug',
         'resolution_x': 1920,
         'resolution_y': 1080,
         'prerender_cameras': True,
@@ -18,50 +19,6 @@ EXPORT_PROFILES = {
                 'translate_y': 0.0, # value between -1 and 1
                 'view_margin': 0.1, # margin between camera view and markers view area
             },
-            # 'Right': {
-            #     'resolution_x': 720,
-            #     'resolution_y': 1280,
-            #     'scale_space': 'RELATIVE',
-            #     'scale_x': 0.3,
-            #     'scale_y': 0.3,
-            #     'translate_relative': True,
-            #     'translate_x': 0.4,
-            #     'translate_y': -0.3,
-            #     'view_margin': 0.0,
-            # },
-            # 'Left': {
-            #     'resolution_x': 720,
-            #     'resolution_y': 1280,
-            #     'scale_space': 'RELATIVE',
-            #     'scale_x': 0.3,
-            #     'scale_y': 0.3,
-            #     'translate_relative': True,
-            #     'translate_x': -0.4,
-            #     'translate_y': -0.3,
-            #     'view_margin': 0.0,
-            # },
-            # 'Back': {
-            #     'resolution_x': 720,
-            #     'resolution_y': 1280,
-            #     'scale_space': 'RELATIVE',
-            #     'scale_x': 0.5,
-            #     'scale_y': 0.5,
-            #     'translate_relative': True,
-            #     'translate_x': 0.0,
-            #     'translate_y': -0.2,
-            #     'view_margin': 0.0,
-            # },
-            # 'Top': {
-            #     'resolution_x': 1920,
-            #     'resolution_y': 1080,
-            #     'scale_space': 'RELATIVE',
-            #     'scale_x': 0.2,
-            #     'scale_y': 0.2,
-            #     'translate_relative': True,
-            #     'translate_x': -0.35,
-            #     'translate_y': 0.1,
-            #     'view_margin': 0.0,
-            # },
         },
         'overlays': {
             "logo": {
@@ -76,13 +33,14 @@ EXPORT_PROFILES = {
             },
         },
         'render_elements': [
-            "center_of_mass_data",
+            "center_of_mass",
             "rigid_body_meshes",
             "videos",
             "skelly_mesh",            
         ],
     },
     'showcase': {
+        'output_name_sufix': '_showcase',
         'resolution_x': 540,
         'resolution_y': 960,
         'prerender_cameras': True,
@@ -104,8 +62,8 @@ EXPORT_PROFILES = {
                 'type': 'image',
                 'path': str(Path(PACKAGE_ROOT_PATH) / "assets" / "freemocap_logo_white_outline.png"),
                 'scale_space': 'RELATIVE',
-                'scale_x': 0.2,
-                'scale_y': 0.2,
+                'scale_x': 0.1,
+                'scale_y': 0.1,
                 'translate_relative': True,
                 'translate_x': 0.4,
                 'translate_y': 0.43,
@@ -117,6 +75,7 @@ EXPORT_PROFILES = {
         ],
     },
     'scientific': {
+        'output_name_sufix': '_scientific',
         'resolution_x': 1920,
         'resolution_y': 1080,
         'prerender_cameras': True,
@@ -168,12 +127,13 @@ EXPORT_PROFILES = {
             },
         },
         'render_elements': [
-            "center_of_mass_data",
+            "center_of_mass",
             "rigid_body_meshes",
             "videos",
         ],
     },
     'multiview': {
+        'output_name_sufix': '_multiview',
         'resolution_x': 1920,
         'resolution_y': 1080,
         'prerender_cameras': True,
@@ -187,7 +147,7 @@ EXPORT_PROFILES = {
                 'translate_relative': True,
                 'translate_x': -0.25,
                 'translate_y': 0.25,
-                'view_margin': 0.05,
+                'view_margin': 0.1,
             },
             'Right': {
                 'resolution_x': 960,
@@ -198,7 +158,7 @@ EXPORT_PROFILES = {
                 'translate_relative': True,
                 'translate_x': 0.25,
                 'translate_y': 0.25,
-                'view_margin': 0.05,
+                'view_margin': 0.1,
             },
             'Top': {
                 'resolution_x': 960,
@@ -209,7 +169,7 @@ EXPORT_PROFILES = {
                 'translate_relative': True,
                 'translate_x': -0.25,
                 'translate_y': -0.25,
-                'view_margin': 0.05,
+                'view_margin': 0.1,
             },
             'Left': {
                 'resolution_x': 960,
@@ -220,7 +180,7 @@ EXPORT_PROFILES = {
                 'translate_relative': True,
                 'translate_x': 0.25,
                 'translate_y': -0.25,
-                'view_margin': 0.05,
+                'view_margin': 0.1,
             },
         },
         'overlays': {
@@ -240,7 +200,18 @@ EXPORT_PROFILES = {
             "rigid_body_meshes",
         ],
     },
+    # Custom profile that is modified before rendering with the UI options
+    'custom': {
+        'output_name_sufix': '',
+        'resolution_x': 1920,
+        'resolution_y': 1080,
+        'prerender_cameras': True,
+        'render_cameras': {},
+        'overlays': {},
+        'render_elements': [],
+    },
 }
+
 
 RENDER_PARAMETERS = {
     'scene.render.engine': 'BLENDER_EEVEE_NEXT',
@@ -254,28 +225,18 @@ RENDER_PARAMETERS = {
     'scene.render.fps': 30,
     'scene.render.resolution_percentage': 100,
     'scene.eevee.use_gtao': False,
-    # 'scene.eevee.use_bloom': False,
-    # 'scene.eevee.use_ssr': False,
     'scene.render.use_motion_blur': False,
     'scene.eevee.volumetric_samples': 1,
-    # 'scene.eevee.use_volumetric_lights': False,
     'scene.eevee.use_volumetric_shadows': False,
     'scene.eevee.use_shadows': False,
-    # 'scene.eevee.shadow_cube_size': '64',
-    # 'scene.eevee.shadow_cascade_size': '64',
-
     'scene.render.image_settings.color_depth': '8',
     'scene.render.image_settings.color_mode': 'RGB',
-
-    # 'scene.eevee.use_transparent': False,
     'scene.eevee.use_overscan': False,
-
     'scene.render.simplify_subdivision': 0,
     'scene.render.simplify_subdivision_render': 0,
     'scene.render.use_simplify': True,
-
     'scene.render.film_transparent': True,
-    'scene.render.compositor_device': 'GPU',
+    'scene.render.compositor_device': 'CPU',
     'scene.render.compositor_precision': 'FULL'
 
 }

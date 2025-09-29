@@ -1,4 +1,5 @@
 import bpy
+from pathlib import Path
 from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
@@ -6,8 +7,9 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 # Funtion to create individual render scenes for each camera in the scene
 # This helps to manage rendering settings and compositing for each camera separately
 def create_render_scenes(
-    scene: bpy.types.Scene=None,
-    export_profile: str = 'debug',
+    scene: bpy.types.Scene,
+    recording_folder: str,
+    export_profile: dict,
 ) -> None:
     
     # Get a list of all cameras in the scene
@@ -23,9 +25,15 @@ def create_render_scenes(
         render_scene.camera = camera
 
         # Set render resolution based on the export profile and camera settings
-        camera_settings = EXPORT_PROFILES.get(export_profile, EXPORT_PROFILES['debug'])['render_cameras']
+        camera_settings = export_profile['render_cameras']
         render_scene.render.resolution_x = camera_settings[camera.name.split('_')[1]]['resolution_x']
         render_scene.render.resolution_y = camera_settings[camera.name.split('_')[1]]['resolution_y']
+
+        # Set the output file name
+        video_file_name = Path(recording_folder).name + '_' + camera.name.split('_')[1] + '.mp4'
+        # Set the output file
+        video_render_path = str(Path(recording_folder) / 'video_export' / 'render_cameras' / video_file_name)
+        bpy.context.scene.render.filepath = video_render_path
 
 
     # Set the current scene back to the original scene
