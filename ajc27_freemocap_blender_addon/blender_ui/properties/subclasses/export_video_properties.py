@@ -45,17 +45,17 @@ class ExportVideoProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     custom_front_camera_position_x: PropertyTypes.Float(
         name='',
-        description='Horizontal position of the Front camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Horizontal position of the Front camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_front_camera_position_y: PropertyTypes.Float(
         name='',
-        description='Vertical position of the Front camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Vertical position of the Front camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_use_left_camera: PropertyTypes.Bool(
         name='Left Camera',
@@ -74,17 +74,17 @@ class ExportVideoProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     custom_left_camera_position_x: PropertyTypes.Float(
         name='',
-        description='Horizontal position of the Left camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Horizontal position of the Left camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_left_camera_position_y: PropertyTypes.Float(
         name='',
-        description='Vertical position of the Left camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Vertical position of the Left camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_use_right_camera: PropertyTypes.Bool(
         name='Right Camera',
@@ -103,17 +103,17 @@ class ExportVideoProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     custom_right_camera_position_x: PropertyTypes.Float(
         name='',
-        description='Horizontal position of the Right camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Horizontal position of the Right camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_right_camera_position_y: PropertyTypes.Float(
         name='',
-        description='Vertical position of the Right camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Vertical position of the Right camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_use_top_camera: PropertyTypes.Bool(
         name='Top Camera',
@@ -132,17 +132,17 @@ class ExportVideoProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     custom_top_camera_position_x: PropertyTypes.Float(
         name='',
-        description='Horizontal position of the Top camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Horizontal position of the Top camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_top_camera_position_y: PropertyTypes.Float(
         name='',
-        description='Vertical position of the Top camera overlay in the video based on total resolution (from -0.5 to 0.5)',
+        description='Vertical position of the Top camera overlay in the video based on total resolution (from -1.0 to 1.0)',
         default=0.0,
-        min=-0.5,
-        max=0.5,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_overlays_add_freemocap_logo: PropertyTypes.Bool(
         name='FreeMoCap Logo',
@@ -165,16 +165,16 @@ class ExportVideoProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     custom_overlays_freemocap_logo_position_x: PropertyTypes.Float(
         name='',
-        description='Logo x axis position',
-        default=0.45,
-        min=-0.5,
-        max=0.5,
+        description='Horizontal position of the logo overlay in the video based on total resolution (from -1.0 to 1.0)',
+        default=0.9,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
     custom_overlays_freemocap_logo_position_y: PropertyTypes.Float(
         name='',
-        description='Logo y axis position',
-        default=0.4,
-        min=-0.5,
-        max=0.5,
+        description='Vertical position of the logo overlay in the video based on total resolution (from -1.0 to 1.0)',
+        default=0.8,
+        min=-1.0,
+        max=1.0,
     ) # type: ignore
 
