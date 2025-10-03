@@ -1,15 +1,13 @@
 import bpy
 import numpy as np
 import math
-from copy import deepcopy
-from dataclasses import make_dataclass, field
-# from scipy.optimize import minimize
 
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import get_bone_definitions
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
-from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
 
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.foot_locking_markers import foot_locking_markers
+from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import translate_marker, quadratic_function, error_function
+from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.minimize_functions import gradient_descent_central
 
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
 
@@ -135,15 +133,12 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
 
                 # Iterate through the animation frames
                 while frame < last_frame:
-                    # print(f"Frame: {frame}, Z: {markers[base_marker]['fcurves'][2, frame]}, Window: {window}")
 
                     if markers[base_marker]['fcurves'][2, frame] < z_threshold:
                         # Marker is under threshold the next frames are checked to conform the window
                         window += 1
-                        
 
                         for following_frame in range(frame + 1, last_frame):
-                            # print(f"Following Frame: {following_frame}, Z: {markers[base_marker]['fcurves'][2, following_frame]}, Window: {window}")
                             if markers[base_marker]['fcurves'][2, following_frame] < z_threshold:
                                 # Following marker is under threshold, the window is increased
                                 window += 1
@@ -156,7 +151,6 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                                         if markers[base_marker]['fcurves'][2, start_frame + window_frame] < ground_level:
                                             # Marker's z position is forced to the ground level
                                             markers[base_marker]['fcurves'][2, start_frame + window_frame] = ground_level
-                                            # print("base marker:", base_marker, "frame:", str(start_frame + window_frame), "z_value", str(markers[base_marker]['fcurves'][2, start_frame + window_frame]))
                                             # Add the frame to the list of changed frames
                                             changed_frames.append(start_frame + window_frame)
 
@@ -172,7 +166,6 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                                         new_z_position = round(initial_attenuation(locking_frame - frame), 5)
                                         # Change the marker's z position
                                         markers[base_marker]['fcurves'][2, start_frame + locking_frame] = new_z_position
-                                        # print("base marker:", base_marker, "frame:", str(start_frame + locking_frame), "z_value", str(markers[base_marker]['fcurves'][2, start_frame + locking_frame]))
                                         # Add the frame to the list of changed frames
                                         changed_frames.append(start_frame + locking_frame)
 
@@ -183,7 +176,6 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                                     # For the frames between the initial attenuation and the final attenuation the z position is set to the ground level
                                     for locking_frame in range(frame + initial_attenuation_count, frame + (window - final_attenuation_aux)):
                                         markers[base_marker]['fcurves'][2, start_frame + locking_frame] = ground_level
-                                        # print("base marker:", base_marker, "frame:", str(start_frame + locking_frame), "z_value", str(markers[base_marker]['fcurves'][2, start_frame + locking_frame]))
                                         # Add the frame to the list of changed frames
                                         changed_frames.append(start_frame + locking_frame)
 
@@ -193,7 +185,6 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                                         new_z_position = round(final_attenuation(locking_frame - (frame + window - final_attenuation_aux)), 5)
                                         # Change the marker's z position
                                         markers[base_marker]['fcurves'][2, start_frame + locking_frame] = new_z_position
-                                        # print("base marker:", base_marker, "frame:", str(start_frame + locking_frame), "z_value", str(markers[base_marker]['fcurves'][2, start_frame + locking_frame]))
                                         # Add the frame to the list of changed frames
                                         changed_frames.append(start_frame + locking_frame)
 
@@ -251,38 +242,8 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                     max_iterations=5000
                 )
 
-                # Usage example in your context:
-                # optimized_ankle_z = minimize_custom(
-                #     error_function,
-                #     initial_ankle_z_guess,
-                #     args=(
-                #         ankle_marker_x, ankle_marker_y,
-                #         base_marker_0_x, base_marker_0_y, base_marker_0_z,
-                #         base_marker_1_x, base_marker_1_y, base_marker_1_z,
-                #         base_bone_0_distance, base_bone_1_distance
-                #     )
-                # )
-
-                # scipy_optimized_ankle_z = minimize(
-                #     error_function,
-                #     initial_ankle_z_guess,
-                #     args=(
-                #         ankle_marker_x,
-                #         ankle_marker_y,
-                #         base_marker_0_x,
-                #         base_marker_0_y,
-                #         base_marker_0_z,
-                #         base_marker_1_x,
-                #         base_marker_1_y,
-                #         base_marker_1_z,
-                #         base_bone_0_distance,
-                #         base_bone_1_distance)
-                # ).x[0]
-
                 optimized_ankle_z = gdc_optimized_ankle_z
 
-                print(f"gradient_descent_central Optimized ankle z position: {gdc_optimized_ankle_z} for frame: {changed_frame - start_frame}")
-                # print(f"Scipy Optimized ankle z position: {scipy_optimized_ankle_z} for frame: {changed_frame - start_frame}")
                 # Set the new ankle z position
                 markers[foot_locking_markers[foot]['ankle'][0]]['fcurves'][2, changed_frame] = optimized_ankle_z
 
@@ -328,7 +289,6 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
                         changed_frame - start_frame,
                     )
 
-
         # Write the markers dictionary fcurve data to the objects fcurves
         for marker_name, marker_data in markers.items():
             for axis_idx in range(3):
@@ -347,168 +307,4 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
         scene.frame_current = scene.frame_current
 
         return {'FINISHED'}
-
-
-def translate_marker(
-    hierarchy,
-    markers,
-    marker_name,
-    z_delta,
-    frame,
-):
-    markers[marker_name]['fcurves'][:, frame] += z_delta
-
-    if marker_name in hierarchy and hierarchy[marker_name]['children']:
-        for child in hierarchy[marker_name]['children']:
-            translate_marker(
-                hierarchy,
-                markers,
-                child,
-                z_delta,
-                frame,
-            )
-
-    return
-
-#  Function to define a quadratic function for the ik pole bone position calculus transition
-def quadratic_function(x1, x2, x3, y1, y2, y3):
-    A = np.array([
-        [x1**2, x1, 1],
-        [x2**2, x2, 1],
-        [x3**2, x3, 1]
-    ])
-    b = np.array([y1, y2, y3])
-    
-    # Solve for the coefficients
-    a, b, c = np.linalg.solve(A, b)
-    
-    # Define the quadratic function
-    def quadratic_function(t):
-        return a*t**2 + b*t + c
-    
-    return quadratic_function
-
-def error_function(z_C, x_C, y_C, x_A, y_A, z_A, x_B, y_B, z_B, length_A_to_C, length_B_to_C):
-    error1 = (x_A - x_C)**2 + (y_A - y_C)**2 + (z_A - z_C)**2 - length_A_to_C**2
-    error2 = (x_B - x_C)**2 + (y_B - y_C)**2 + (z_B - z_C)**2 - length_B_to_C**2
-    return error1**2 + error2**2
-
-def gradient_descent(error_func, initial_z, args, learning_rate=0.01, tolerance=1e-5, max_iterations=1000):
-    z_val = initial_z
-    for _ in range(max_iterations):
-        gradient = (error_func(z_val + tolerance, *args) - error_func(z_val, *args)) / tolerance
-        next_z = z_val - learning_rate * gradient
-
-        # If the change is smaller than the tolerance, optimization is complete
-        if abs(next_z - z_val) < tolerance:
-            break
-
-        z_val = next_z
-
-    return z_val
-
-def gradient_descent_central(error_func, initial_z, args, learning_rate=0.01, tolerance=1e-7, max_iterations=3000):
-    z_val = initial_z
-    for _ in range(max_iterations):
-        gradient = (error_func(z_val + tolerance, *args) - error_func(z_val - tolerance, *args)) / (2 * tolerance)
-        next_z = z_val - learning_rate * gradient
-
-        # If the change is smaller than the tolerance, optimization is complete
-        if abs(next_z - z_val) < tolerance:
-            break
-
-        z_val = next_z
-
-    return z_val
-
-
-def minimize_custom(func, x0, args=(), tol=1e-6, max_iter=100):
-    """
-    Custom 1D minimizer using Brent-Dekker method.
-    Returns the optimal z_C value that minimizes the error function.
-    """
-    # Define the function to minimize (with fixed args)
-    f = lambda z: func(z, *args)
-    
-    # Initial bracketing of the minimum (find a, b such that f(a) > f(c) < f(b))
-    a = x0
-    c = a
-    step = 0.1  # Initial step size (adjust based on expected solution scale)
-    fa = fc = f(a)
-    
-    # Expand search until we find a downward slope
-    for _ in range(max_iter):
-        b = a + step
-        fb = f(b)
-        if fb > fc:  # Found upward slope - minimum is bracketed
-            break
-        a, c, fa, fc = c, b, fc, fb
-    else:
-        # Fallback if max_iter reached (use last values)
-        b = c + step
-        fb = f(b)
-    
-    # Ensure a < b and fa > fc < fb
-    if a > b:
-        a, b = b, a
-        fa, fb = fb, fa
-    
-    # Brent's method parameters
-    gr = (math.sqrt(5) - 1) / 2  # Golden ratio (~0.618)
-    d = e = 0.0
-    x = w = v = a + gr * (b - a)
-    fw = fv = fx = f(x)
-    
-    # Main optimization loop
-    for _ in range(max_iter):
-        m = 0.5 * (a + b)
-        tol_act = tol * abs(x) + 1e-9
-        
-        if abs(x - m) <= 2 * tol_act:  # Convergence check
-            break
-        
-        # Try parabolic interpolation
-        if abs(e) > tol_act:
-            # Fit parabola through x, w, v
-            r = (x - w) * (fx - fv)
-            q = (x - v) * (fx - fw)
-            p = (x - v) * q - (x - w) * r
-            q = 2 * (q - r)
-            p = -p / q if q > 0 else abs(p) / abs(q) if q != 0 else p
-            s = e
-            e = d
-            
-            # Accept parabola if it's "well-behaved"
-            if abs(p) < abs(0.5 * q * s) and p > q * (a - x) and p < q * (b - x):
-                d = p
-            else:
-                e = d = gr * (b - x) if x < m else gr * (a - x)
-        else:
-            e = d = gr * (b - x) if x < m else gr * (a - x)
-        
-        # Next trial point
-        u = x + d if abs(d) > tol_act else x + (tol_act if d >= 0 else -tol_act)
-        fu = f(u)
-        
-        # Update brackets
-        if fu <= fx:
-            if u >= x:
-                a = x
-            else:
-                b = x
-            v, w, x = w, x, u
-            fv, fw, fx = fw, fx, fu
-        else:
-            if u < x:
-                a = u
-            else:
-                b = u
-            if fu <= fw or w == x:
-                v, w = w, u
-                fv, fw = fw, fu
-            elif fu <= fv or v == x or v == w:
-                v = u
-                fv = fu
-    
-    return x
 

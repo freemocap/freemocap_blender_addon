@@ -153,83 +153,96 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         row.label(text="Foot Locking")
 
         if foot_locking_props.show_foot_locking_options:
-            box = layout.box()
+            row = layout.row(align=True)
+            split = row.split(factor=0.5)
+            split.column().label(text='Foot Locking Method')
+            split.column().prop(foot_locking_props, 'foot_locking_method')
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Target Foot')
-            split.split().column().prop(
-                foot_locking_props,
-                'target_foot'
-            )
+            row = layout.row(align=True)
+            row.prop(foot_locking_props, "show_individual_marker_height_options", text="",
+                icon='TRIA_DOWN' if foot_locking_props.show_individual_marker_height_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="Individual Marker Height Options")
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Target foot base markers')
-            split.split().column().prop(
-                foot_locking_props,
-                'target_base_markers'
-            )
+            if foot_locking_props.show_individual_marker_height_options:
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Z Threshold (m)')
-            split.split().column().prop(
-                foot_locking_props,
-                'z_threshold'
-            )
+                box = layout.box()
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Ground Level (m)')
-            split.split().column().prop(
-                foot_locking_props,
-                'ground_level'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target Foot')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'target_foot'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Frame Window Minimum Size')
-            split.split().column().prop(
-                foot_locking_props,
-                'frame_window_min_size'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target foot base markers')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'target_base_markers'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Initial Attenuation Count')
-            split.split().column().prop(
-                foot_locking_props,
-                'initial_attenuation_count'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Z Threshold (m)')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'z_threshold'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Final Attenuation Count')
-            split.split().column().prop(
-                foot_locking_props,
-                'final_attenuation_count'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Ground Level (m)')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'ground_level'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Lock XY at Ground Level')
-            split.split().column().prop(
-                foot_locking_props,
-                'lock_xy_at_ground_level'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Frame Window Minimum Size')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'frame_window_min_size'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Knee Hip Compensation Coefficient')
-            split.split().column().prop(
-                foot_locking_props,
-                'knee_hip_compensation_coefficient'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Initial Attenuation Count')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'initial_attenuation_count'
+                )
 
-            split = box.column().row().split(factor=0.6)
-            split.column().label(text='Compensate Upper Body Markers')
-            split.split().column().prop(
-                foot_locking_props,
-                'compensate_upper_body'
-            )
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Final Attenuation Count')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'final_attenuation_count'
+                )
 
-            box.operator(
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Lock XY at Ground Level')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'lock_xy_at_ground_level'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Knee Hip Compensation Coefficient')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'knee_hip_compensation_coefficient'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Compensate Upper Body Markers')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'compensate_upper_body'
+                )
+
+            row = layout.row(align=True)
+            row.operator(
                 'freemocap._foot_locking',
                 text='Apply Foot Locking',
             )
-                
+                    
 
 
 

@@ -6,6 +6,14 @@ class FootLockingProperties(bpy.types.PropertyGroup):
     show_foot_locking_options: PropertyTypes.Bool(
         description = 'Toggle Foot Locking Options'
     ) # type: ignore
+    foot_locking_method: PropertyTypes.Enum(
+        description = 'Foot locking method',
+        items = [('individual_marker_height', 'Individual Marker Height', ''),
+        ]
+    ) # type: ignore
+    show_individual_marker_height_options: PropertyTypes.Bool(
+        description = 'Toggle Individual Marker Height Options'
+    ) # type: ignore
     target_foot: PropertyTypes.Enum(
         description = 'Target foot for applying foot locking',
         items = [('both_feet', 'Both Feet', ''),
@@ -21,7 +29,7 @@ class FootLockingProperties(bpy.types.PropertyGroup):
                 ]
     ) # type: ignore
     z_threshold: PropertyTypes.Float(
-        default = 0.01,
+        default = 0.02,
         precision = 3,
         description = 'Vertical threshold under which foot markers are '
                       'considered for applying foot locking'
@@ -79,6 +87,7 @@ class FootLockingProperties(bpy.types.PropertyGroup):
                       'knee IK bending'
     ) # type: ignore
     compensate_upper_body: PropertyTypes.Bool(
+        default = True,
         description = 'Compensate the upper body markers by setting the new '
                       'z coordinate of the hips_center marker as the average '
                       'z coordinate of left and right hips markers.'
