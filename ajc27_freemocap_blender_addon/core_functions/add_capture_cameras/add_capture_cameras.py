@@ -77,12 +77,15 @@ def add_capture_cameras(
     bpy.context.scene.render.resolution_x = cameras_dict['cam_0']['size'][0]
     bpy.context.scene.render.resolution_y = cameras_dict['cam_0']['size'][1]
 
-    # Get a list of the videos in the annotated videos folder
+    # TODO: Change the synchronized videos for annotated videos when those
+    # they are not being used elsewhere to avoid EXCEPTION_ACCESS_VIOLATION
+
+    # Get a list of the videos in the synchronized videos folder
     # This is because the calibration and capture can be in different folders
     # So in the calibration file there is no link between the calibration camera videos
     # and the final capture videos
-    annotated_videos_folder = os.path.join(recording_folder, 'annotated_videos')
-    annotated_videos = [f for f in os.listdir(annotated_videos_folder) if f.endswith('.mp4')]
+    synchronized_videos_folder = os.path.join(recording_folder, 'synchronized_videos')
+    synchronized_videos = [f for f in os.listdir(synchronized_videos_folder) if f.endswith('.mp4')]
 
     # Add the cameras to the scene
     for key, camera_data in cameras_dict.items():
@@ -133,8 +136,8 @@ def add_capture_cameras(
         # Get the path of the capture video
         capture_video_path = (
             recording_folder
-            + '/annotated_videos/'
-            + annotated_videos[int(key.split('_')[1])]
+            + '/synchronized_videos/'
+            + synchronized_videos[int(key.split('_')[1])]
         )
 
         # Normalize the path
@@ -149,7 +152,7 @@ def add_capture_cameras(
         camera_background.source = 'MOVIE_CLIP'
         camera_background.clip = capture_video
         camera_background.alpha = 1
-        camera_background.clip.frame_start = 0  # make it start at frame 0
+        camera_background.clip.frame_offset = 1
         camera_data.show_background_images = True
 
     return
