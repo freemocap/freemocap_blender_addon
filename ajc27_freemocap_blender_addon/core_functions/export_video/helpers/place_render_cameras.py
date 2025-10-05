@@ -13,9 +13,10 @@ def place_render_cameras(
     export_profile: dict,
 ) -> None:
 
-    # Delete existing cameras
-    while bpy.data.cameras:
-        bpy.data.cameras.remove(bpy.data.cameras[0])
+    # Delete existing cameras. Exclude cameras that start with Capture_ prefix
+    for camera in bpy.data.cameras:
+        if not camera.name.startswith('Capture_'):
+            bpy.data.cameras.remove(camera)
 
     # Delete the collections that have "Render_Cameras" in their name
     for collection in bpy.data.collections:
