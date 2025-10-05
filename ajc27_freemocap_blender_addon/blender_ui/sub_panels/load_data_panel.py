@@ -24,3 +24,4 @@ class VIEW3D_PT_load_data(bpy.types.Panel):
         # Save data to disk panel
         box = layout.box()
         box.prop(context.scene.freemocap_properties, "scope_data_parent", text="Scope Data Parent")
+        box.operator('freemocap._add_capture_cameras', text='Add Capture Cameras')        

@@ -14,6 +14,9 @@ from ajc27_freemocap_blender_addon.blender_ui.operators.animation.set_bone_rotat
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion._limit_markers_range_of_motion import FREEMOCAP_OT_limit_markers_range_of_motion
 from ajc27_freemocap_blender_addon.blender_ui.operators._export_3d_model import FREEMOCAP_OT_export_3d_model
 
+from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import FREEMOCAP_OT_add_capture_cameras
+
+
 
 
 BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
@@ -30,5 +33,6 @@ BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
     FREEMOCAP_OT_retarget_animation,
     FREEMOCAP_OT_set_bone_rotation_limits,
     FREEMOCAP_OT_limit_markers_range_of_motion,
-    FREEMOCAP_OT_export_3d_model
+    FREEMOCAP_OT_export_3d_model,
+    FREEMOCAP_OT_add_capture_cameras,
 ]
