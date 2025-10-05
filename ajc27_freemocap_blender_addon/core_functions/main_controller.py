@@ -29,6 +29,8 @@ from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodi
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
+from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
+
 
 class MainController:
     """
@@ -379,6 +381,17 @@ class MainController:
         except Exception as e:
             print(f"Failed to export 3D model: {e}")
             raise e
+        
+    def add_capture_cameras(self):
+        print("Adding capture cameras...")
+        try:
+            add_capture_cameras(
+                recording_folder=self.recording_path
+            )
+        except Exception as e:
+            print(f"Failed to add capture cameras: {e}")
+            raise e
+
     def load_data(self):
         import time
         print("Running all stages...")
@@ -453,6 +466,11 @@ class MainController:
         self.add_videos()
         end_time = time.perf_counter_ns()
         stage_times['add_videos'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.add_capture_cameras()
+        end_time = time.perf_counter_ns()
+        stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()

@@ -12,21 +12,8 @@ except ModuleNotFoundError:
     except ModuleNotFoundError:
         toml = None
 
-# Assumed sensor width in mm becuase the variable is the focal length
+# Assumed fixed sensor width in mm becuase the variable is the focal length
 DEFAULT_SENSOR_WIDTH = 36.0 # Same as Blender default
-
-class FREEMOCAP_OT_add_capture_cameras(bpy.types.Operator):
-    bl_idname = 'freemocap._add_capture_cameras'
-    bl_label = 'Add Capture Cameras'
-    bl_description = "Add Capture Cameras"
-    bl_options = {'REGISTER', 'UNDO_GROUPED'}
-
-    def execute(self, context):
-        add_capture_cameras(
-            recording_folder=context.scene.freemocap_properties.recording_path
-        )
-        return {'FINISHED'}
-
 
 def add_capture_cameras(
     recording_folder: str='',
@@ -133,7 +120,7 @@ def add_capture_cameras(
         camera_object.data.lens = f_mm
 
         # Set the name of the camera
-        camera_object.name = key
+        camera_object.name = 'Capture_' + key
         # Show the name in the viewport
         camera_object.show_name = True
         # Reduce the scale of the camera object
@@ -157,7 +144,7 @@ def add_capture_cameras(
         capture_video = bpy.data.movieclips.load(capture_video_path)
 
         # Add the capture video as a background image
-        camera_data = bpy.data.objects[key].data
+        camera_data = camera_object.data
         camera_background = camera_data.background_images.new()
         camera_background.source = 'MOVIE_CLIP'
         camera_background.clip = capture_video
