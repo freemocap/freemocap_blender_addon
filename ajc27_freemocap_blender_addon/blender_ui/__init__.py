@@ -19,6 +19,9 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.limit_marker
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_model_properties import (
     Export3DModelProperties
 )
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
+    FootLockingProperties
+)
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
     AddDataOverlaysProperties
 )
@@ -37,6 +40,7 @@ BLENDER_USER_INTERFACE_CLASSES = [FREEMOCAP_CORE_PROPERTIES,
                                   SetBoneRotationLimitsProperties,
                                   LimitMarkersRangeOfMotionProperties,
                                   Export3DModelProperties,
+                                  FootLockingProperties,
                                   AddDataOverlaysProperties,
                                   FREEMOCAP_UI_PROPERTIES,
                                   VIEW3D_PT_freemocap_main_panel,
