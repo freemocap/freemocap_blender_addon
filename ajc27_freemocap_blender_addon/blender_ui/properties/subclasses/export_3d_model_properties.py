@@ -28,6 +28,7 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         items=[
             ('default', 'Default', 'Default'),
             ('metahuman', 'Metahuman', 'Metahuman'),
+            ('daz_g8.1', 'DAZ G8.1', 'DAZ G8.1'),
         ],
         default='Default',
     ) # type: ignore
@@ -38,8 +39,15 @@ class Export3DModelProperties(bpy.types.PropertyGroup):
         items=[
             ('default', 'Default', 'Default'),
             ('metahuman', 'Metahuman', 'Metahuman'),
+            ('daz_g8.1', 'DAZ G8.1', 'DAZ G8.1'),
         ],
         default='Default',
+    ) # type: ignore
+
+    restore_defaults_after_export: PropertyTypes.Bool(
+        name='',
+        description='Restore the original bone names, rest pose and added/deleted bone after exporting the model',
+        default=True,
     ) # type: ignore
 
     fbx_add_leaf_bones: PropertyTypes.Bool(

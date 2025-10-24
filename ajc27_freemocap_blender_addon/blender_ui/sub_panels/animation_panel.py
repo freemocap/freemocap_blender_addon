@@ -13,6 +13,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         retarget_animation_props = ui_props.retarget_animation_properties
         set_bone_rotation_limits_props = ui_props.set_bone_rotation_limits_properties
         limit_markers_range_of_motion_props = ui_props.limit_markers_range_of_motion_properties
+        foot_locking_props = ui_props.foot_locking_properties
 
         # Retarget
         row = layout.row(align=True)
@@ -111,29 +112,33 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Palm Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_palm_markers')
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Proximal Phalanx Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_proximal_phalanx_markers')
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Intermediate Phalanx Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_intermediate_phalanx_markers')
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Limit Distal Phalanx Markers')
             split.column().prop(limit_markers_range_of_motion_props, 'limit_distal_phalanx_markers')
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Range of Motion Scale')
             split.column().prop(limit_markers_range_of_motion_props, 'range_of_motion_scale')
 
-            split = box.column().row().split(factor=0.8)
+            split = box.column().row().split(factor=0.7)
             split.column().label(text='Hand Locked Track Marker')
             split.column().prop(limit_markers_range_of_motion_props, 'hand_locked_track_marker')
+
+            split = box.column().row().split(factor=0.7)
+            split.column().label(text='Hand Damped Track Marker')
+            split.column().prop(limit_markers_range_of_motion_props, 'hand_damped_track_marker')
 
             # TODO: Add fields to adjust the min max axis limit values
             # Not sure what to use, degrees amount, a percentage of the min-max range?
@@ -144,7 +149,104 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                 'freemocap._limit_markers_range_of_motion',
                 text='Limit Markers Range of Motion',
             )
-                
+
+        # Foot Locking
+        row = layout.row(align=True)
+        row.prop(foot_locking_props, "show_foot_locking_options", text="",
+                 icon='TRIA_DOWN' if foot_locking_props.show_foot_locking_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Foot Locking")
+
+        if foot_locking_props.show_foot_locking_options:
+            row = layout.row(align=True)
+            split = row.split(factor=0.5)
+            split.column().label(text='Foot Locking Method')
+            split.column().prop(foot_locking_props, 'foot_locking_method')
+
+            row = layout.row(align=True)
+            row.prop(foot_locking_props, "show_individual_marker_height_options", text="",
+                icon='TRIA_DOWN' if foot_locking_props.show_individual_marker_height_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="Individual Marker Height Options")
+
+            if foot_locking_props.show_individual_marker_height_options:
+
+                box = layout.box()
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target Foot')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'target_foot'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target foot base markers')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'target_base_markers'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Z Threshold (m)')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'z_threshold'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Ground Level (m)')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'ground_level'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Frame Window Minimum Size')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'frame_window_min_size'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Initial Attenuation Count')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'initial_attenuation_count'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Final Attenuation Count')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'final_attenuation_count'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Lock XY at Ground Level')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'lock_xy_at_ground_level'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Knee Hip Compensation Coefficient')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'knee_hip_compensation_coefficient'
+                )
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Compensate Upper Body Markers')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'compensate_upper_body'
+                )
+
+            row = layout.row(align=True)
+            row.operator(
+                'freemocap._foot_locking',
+                text='Apply Foot Locking',
+            )
+                    
 
 
 

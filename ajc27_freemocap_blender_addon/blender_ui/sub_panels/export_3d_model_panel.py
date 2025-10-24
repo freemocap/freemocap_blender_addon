@@ -32,6 +32,11 @@ class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
         split.column().label(text='Rest Pose Type')
         split.column().prop(export_3d_model_props, 'rest_pose_type')
 
+        row = layout.row(align=True)
+        split = row.column().row().split(factor=0.6)
+        split.column().label(text='Restore Defaults After Export')
+        split.column().prop(export_3d_model_props, 'restore_defaults_after_export')
+
         # FBX Options
         row = layout.row(align=True)
         row.prop(export_3d_model_props, "show_export_fbx_format_options", text="",

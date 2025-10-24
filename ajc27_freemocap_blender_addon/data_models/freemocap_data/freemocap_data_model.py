@@ -10,7 +10,15 @@ from .helpers.freemocap_data_stats import FreemocapDataStats
 from ..mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
 
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:
+    tomllib = None
+    try:
+        import toml
+    except ModuleNotFoundError:
+        toml = None
+
 
 FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
 
@@ -173,10 +181,15 @@ class FreemocapData:
             metadata = {}
 
         groundplane_calibration:bool = False #set default value
-        if data_paths.calibration_toml is not None: #for single-cam recording cases where there is no calibration file
-            with open (data_paths.calibration_toml, "rb") as f:
-                calibration_data = tomllib.load(f)
-            groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
+        if data_paths.calibration_toml is not None: #for single-cam recording cases where there is no calibration file and if tomllib is not available
+            if tomllib is not None:
+                with open (data_paths.calibration_toml, "rb") as f:
+                    calibration_data = tomllib.load(f)
+                groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
+            elif toml is not None:
+                with open (data_paths.calibration_toml, "r", encoding="utf-8") as f:
+                    calibration_data = toml.load(f)
+                groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
 
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,

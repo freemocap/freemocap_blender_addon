@@ -13,6 +13,10 @@ from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
 from .export_video.export_video import export_video
+from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
+from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
+
+from .create_video.create_video import create_video
 from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
@@ -28,6 +32,8 @@ from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
+
+from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
 
 class MainController:
@@ -177,6 +183,35 @@ class MainController:
             )
         except Exception as e:
             print(f"Failed during `fix hand data`, error: `{e}`")
+            print(e)
+            raise e
+
+    def calculate_joint_angles(self):
+        try:
+            print("Calculating joint angles...")
+            # Get the combined marker names
+            marker_names = (
+                list(self.freemocap_data_handler.body_names) +
+                list(self.freemocap_data_handler.right_hand_names) +
+                list(self.freemocap_data_handler.left_hand_names)
+            )
+            marker_frame_xyz = np.concatenate(
+                [
+                    self.freemocap_data_handler.body_frame_name_xyz,
+                    self.freemocap_data_handler.right_hand_frame_name_xyz,
+                    self.freemocap_data_handler.left_hand_frame_name_xyz,
+                ],
+                axis=1,
+            )
+            calculate_joint_angles(
+                output_path=str(Path(self.recording_path) / "output_data" / "joint_angles.csv"),
+                marker_names=marker_names,
+                marker_frame_xyz=marker_frame_xyz,
+                joint_angles_definitions=joint_angles_definitions,
+            )
+            self.freemocap_data_handler.mark_processing_stage("calculate_joint_angles")
+        except Exception as e:
+            print(f"Failed to calculate joint angles: {e}")
             print(e)
             raise e
 
@@ -340,8 +375,9 @@ class MainController:
         self._data_parent_empty.hide_set(True)
 
         # remove default cube
-        if "Cube" in bpy.data.objects:
-            bpy.data.objects.remove(bpy.data.objects["Cube"])
+        cube_name = bpy.app.translations.pgettext_data("Cube")
+        if cube_name in bpy.data.objects:
+            bpy.data.objects.remove(bpy.data.objects[cube_name])
 
         # create_scene_objects(scene=bpy.context.scene)
 
@@ -379,6 +415,17 @@ class MainController:
         except Exception as e:
             print(f"Failed to export 3D model: {e}")
             raise e
+
+    def add_capture_cameras(self):
+        print("Adding capture cameras...")
+        try:
+            add_capture_cameras(
+                recording_folder=self.recording_path
+            )
+        except Exception as e:
+            print(f"Failed to add capture cameras: {e}")
+            raise e
+
     def load_data(self):
         import time
         print("Running all stages...")
@@ -411,6 +458,11 @@ class MainController:
         self.fix_hand_data()
         end_time = time.perf_counter_ns()
         stage_times['fix_hand_data'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.calculate_joint_angles()
+        end_time = time.perf_counter_ns()
+        stage_times['calculate_joint_angles'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.save_data_to_disk()
@@ -453,6 +505,11 @@ class MainController:
         self.add_videos()
         end_time = time.perf_counter_ns()
         stage_times['add_videos'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.add_capture_cameras()
+        end_time = time.perf_counter_ns()
+        stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()
