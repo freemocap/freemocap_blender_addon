@@ -19,6 +19,10 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.limit_marker
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_model_properties import (
     Export3DModelProperties
 )
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_video_properties import (
+    ExportVideoProperties
+)
+
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
     FootLockingProperties
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
@@ -340,6 +344,11 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     # Export 3D Model
     export_3d_model_properties: bpy.props.PointerProperty(
         type=Export3DModelProperties
+    ) # type: ignore
+
+    # Export Video
+    export_video_properties: bpy.props.PointerProperty(
+        type=ExportVideoProperties
     ) # type: ignore
     foot_locking_properties: bpy.props.PointerProperty(
         type=FootLockingProperties

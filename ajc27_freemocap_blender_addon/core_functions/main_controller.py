@@ -12,6 +12,7 @@ from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data im
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
+from .export_video.export_video import export_video
 from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
 from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
 
@@ -184,14 +185,14 @@ class MainController:
             print(f"Failed during `fix hand data`, error: `{e}`")
             print(e)
             raise e
-        
+
     def calculate_joint_angles(self):
         try:
             print("Calculating joint angles...")
             # Get the combined marker names
             marker_names = (
-                list(self.freemocap_data_handler.body_names) + 
-                list(self.freemocap_data_handler.right_hand_names) + 
+                list(self.freemocap_data_handler.body_names) +
+                list(self.freemocap_data_handler.right_hand_names) +
                 list(self.freemocap_data_handler.left_hand_names)
             )
             marker_frame_xyz = np.concatenate(
@@ -384,7 +385,7 @@ class MainController:
     def create_video(self):
         print("Creating export video...")
         import bpy
-        create_video(
+        export_video(
             scene=bpy.context.scene,
             recording_folder=self.recording_path,
             start_frame=bpy.context.scene.frame_start,
@@ -414,7 +415,7 @@ class MainController:
         except Exception as e:
             print(f"Failed to export 3D model: {e}")
             raise e
-        
+
     def add_capture_cameras(self):
         print("Adding capture cameras...")
         try:

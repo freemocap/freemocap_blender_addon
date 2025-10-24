@@ -9,13 +9,19 @@ from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config imp
 )
 
 def place_render_cameras(
-    scene: bpy.types.Scene=None,
-    export_profile: str='debug',
-) -> list:
+    scene: bpy.types.Scene,
+    export_profile: dict,
+) -> None:
 
-    # Delete existing cameras
-    while bpy.data.cameras:
-        bpy.data.cameras.remove(bpy.data.cameras[0])
+    # Delete existing cameras. Exclude cameras that start with Capture_ prefix
+    for camera in bpy.data.cameras:
+        if not camera.name.startswith('Capture_'):
+            bpy.data.cameras.remove(camera)
+
+    # Delete the collections that have "Render_Cameras" in their name
+    for collection in bpy.data.collections:
+        if "Render_Cameras" in collection.name:
+            bpy.data.collections.remove(collection)
 
     # Create a nested collection to store the cameras
     scene_collection = bpy.data.collections.new('Render_Cameras')
@@ -62,7 +68,8 @@ def place_render_cameras(
     scene.frame_set(scene.frame_start)
 
     # Create the cameras of the export profile
-    for camera in EXPORT_PROFILES[export_profile]['render_cameras']:
+    # for camera in EXPORT_PROFILES[export_profile]['render_cameras']:
+    for camera in export_profile['render_cameras']:
 
         # Create the camera
         camera_data = bpy.data.cameras.new(name='Camera_' + camera)
@@ -70,7 +77,8 @@ def place_render_cameras(
         scene_collection.objects.link(camera_object)
 
         # Get the camera view margin
-        view_margin = EXPORT_PROFILES[export_profile]['render_cameras'][camera]['view_margin']
+        # view_margin = EXPORT_PROFILES[export_profile]['render_cameras'][camera]['view_margin']
+        view_margin = export_profile['render_cameras'][camera]['view_margin']
 
         # Set the view leftmost, rightmost, lowest and highest points
         # depending on the camera
@@ -79,12 +87,12 @@ def place_render_cameras(
             rightmost_point = highest_x
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Right':
+        elif camera == 'Left':
             leftmost_point = lowest_y
             rightmost_point = highest_y
             lowest_point = lowest_z
             highest_point = highest_z
-        elif camera == 'Left':
+        elif camera == 'Right':
             leftmost_point = highest_y
             rightmost_point = lowest_y
             lowest_point = lowest_z
@@ -143,14 +151,14 @@ def place_render_cameras(
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, 0)
-        elif camera == 'Right':
+        elif camera == 'Left':
             camera_object.location = (
                 camera_distance_on_axis,
                 0,
                 highest_point[2] - (highest_point[2] - lowest_point[2]) / 2
             )
             camera_object.rotation_euler = (radians(90), 0, radians(90))
-        elif camera == 'Left':
+        elif camera == 'Right':
             camera_object.location = (
                 -camera_distance_on_axis,
                 0,

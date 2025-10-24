@@ -8,10 +8,11 @@ def rearrange_background_videos(
     # Create a list with the background videos
     background_videos = []
 
-    # Append the background videos to the list
-    for object in scene.objects:
-        if 'video_' in object.name:
-            background_videos.append(object)
+    # Search for the video_parent empty object and append its children
+    video_parent = scene.objects.get('videos_parent', None)
+    if video_parent is not None:
+        for child in video_parent.children:
+            background_videos.append(child)
 
     # Get the videos x dimension
     videos_x_dimension = background_videos[0].dimensions.x
