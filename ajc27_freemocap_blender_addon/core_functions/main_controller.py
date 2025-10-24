@@ -12,6 +12,9 @@ from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data im
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
+from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
+from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
+
 from .create_video.create_video import create_video
 from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
@@ -177,6 +180,35 @@ class MainController:
             )
         except Exception as e:
             print(f"Failed during `fix hand data`, error: `{e}`")
+            print(e)
+            raise e
+        
+    def calculate_joint_angles(self):
+        try:
+            print("Calculating joint angles...")
+            # Get the combined marker names
+            marker_names = (
+                list(self.freemocap_data_handler.body_names) + 
+                list(self.freemocap_data_handler.right_hand_names) + 
+                list(self.freemocap_data_handler.left_hand_names)
+            )
+            marker_frame_xyz = np.concatenate(
+                [
+                    self.freemocap_data_handler.body_frame_name_xyz,
+                    self.freemocap_data_handler.right_hand_frame_name_xyz,
+                    self.freemocap_data_handler.left_hand_frame_name_xyz,
+                ],
+                axis=1,
+            )
+            calculate_joint_angles(
+                output_path=str(Path(self.recording_path) / "output_data" / "joint_angles.csv"),
+                marker_names=marker_names,
+                marker_frame_xyz=marker_frame_xyz,
+                joint_angles_definitions=joint_angles_definitions,
+            )
+            self.freemocap_data_handler.mark_processing_stage("calculate_joint_angles")
+        except Exception as e:
+            print(f"Failed to calculate joint angles: {e}")
             print(e)
             raise e
 
@@ -412,6 +444,11 @@ class MainController:
         self.fix_hand_data()
         end_time = time.perf_counter_ns()
         stage_times['fix_hand_data'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.calculate_joint_angles()
+        end_time = time.perf_counter_ns()
+        stage_times['calculate_joint_angles'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.save_data_to_disk()
