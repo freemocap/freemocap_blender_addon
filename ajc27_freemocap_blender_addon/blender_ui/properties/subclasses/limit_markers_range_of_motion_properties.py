@@ -52,7 +52,22 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
             + ' Useful when calculating the initial hand axes.'
         ),
         items = [
+            ('hand_index_finger_mcp', 'hand_index_finger_mcp', ''),
             ('index', 'index', ''),
-            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),
+            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),            
         ]
     )  # type: ignore
+
+    hand_damped_track_marker: PropertyTypes.Enum(
+        name='',
+        description=(
+            'Hand damped track marker where the y axis points to.'
+            + ' Useful when calculating the initial hand axes.'
+        ),
+        items = [
+            ('hand_middle_finger_mcp', 'hand_middle_finger_mcp', ''),
+            ('hand_middle', 'hand_middle', ''),            
+        ]
+    )  # type: ignore
+
+
