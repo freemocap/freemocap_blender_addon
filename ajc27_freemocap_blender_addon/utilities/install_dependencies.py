@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-OPTIONAL_DEPENDENCIES = ["scipy", "shapely"]#, "opencv-contrib-python", "matplotlib"]
+OPTIONAL_DEPENDENCIES = ["scipy", "shapely", "tomllib"] #, "opencv-contrib-python", "matplotlib"]
 
 
 def check_and_install_dependencies():

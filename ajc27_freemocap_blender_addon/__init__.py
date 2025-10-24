@@ -83,6 +83,9 @@ def register():
     bpy.types.Scene.freemocap_properties = bpy.props.PointerProperty(type=FREEMOCAP_CORE_PROPERTIES)
     bpy.types.Scene.freemocap_ui_properties = bpy.props.PointerProperty(type=FREEMOCAP_UI_PROPERTIES)
 
+    from ajc27_freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_manager import OverlayManager
+    bpy.types.Scene.freemocap_overlay_manager = OverlayManager()
+
 
     print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Finished registering {__file__} as add-on!")
 

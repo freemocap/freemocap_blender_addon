@@ -21,6 +21,8 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_mo
 )
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
     FootLockingProperties
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
+    AddDataOverlaysProperties
 )
 # TODO: Group the rest of the properties as the Retarget Animation and Set Bone Rotation Limits Properties
 
@@ -341,6 +343,11 @@ class FREEMOCAP_UI_PROPERTIES(bpy.types.PropertyGroup):
     ) # type: ignore
     foot_locking_properties: bpy.props.PointerProperty(
         type=FootLockingProperties
+    ) # type: ignore
+
+    # Data Overlays
+    add_data_overlays_properties: bpy.props.PointerProperty(
+        type=AddDataOverlaysProperties
     ) # type: ignore
 
 

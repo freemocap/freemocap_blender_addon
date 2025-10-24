@@ -4,10 +4,10 @@ import math as m
 from mathutils import Vector, Matrix
 from copy import deepcopy
 from dataclasses import make_dataclass, field
+import re
 
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
-
 
 
 class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
@@ -42,6 +42,7 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         
         range_of_motion_scale = props.range_of_motion_scale
         hand_locked_track_marker_name = props.hand_locked_track_marker
+        hand_damped_track_marker_name = props.hand_damped_track_marker
 
         BONE_DEFINITIONS = deepcopy(_BONE_DEFINITIONS)
         
@@ -104,6 +105,16 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             bone.head = next((k for k in markers.keys() if k.startswith(bone.head)), None)
             # Set bone.tail as the best match of bone.tail in markers.keys()
             bone.tail = next((k for k in markers.keys() if k.startswith(bone.tail)), None)
+
+        # Change the hand bone tail marker with the one in hand_damped_track_marker
+        # Consider the current markers in the markers dictionary (strip possible .000 number at the end to compare)
+        for side in ['left', 'right']:
+            side_initial = side[0].upper()
+            target_marker = f"{side}_{hand_damped_track_marker_name}"
+            VirtualBones[f'hand.{side_initial}'].tail = next(
+                (k for k in markers.keys() if re.sub(r'\.\d{3}$', '', k) == target_marker),
+                None
+            )
 
         # Modify the keys and the children values in MEDIAPIPE_HIERARCHY
         # so they match the markers that are children of the data parent empty
@@ -172,10 +183,25 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                 # If the bone has the hands or fingers category then calculate its origin axes based on its parent bone's axes
                 if VirtualBones[bone].category in ['palm', 'proximal_phalanx', 'intermediate_phalanx', 'distal_phalanx']:
 
+                    bone_head_position = Vector(markers[VirtualBones[bone].head]['fcurves'][:, frame])
+                    bone_tail_position = Vector(markers[VirtualBones[bone].tail]['fcurves'][:, frame])
+
+                    # If the bone is an index, ring or pinky metacarpal then adjust its head marker position
+                    if bone in {'palm.01.L', 'palm.01.R', 'palm.03.L', 'palm.03.R', 'palm.04.L', 'palm.04.R'}:
+                    # if bone in {'palm.01.R', 'palm.03.R', 'palm.04.R'} and frame == 316:
+                        bone_head_position = compute_new_metacarpal_head(
+                            metacarpal_head=bone_head_position,
+                            metacarpal_tail=bone_tail_position,
+                            reference_head=Vector(markers[VirtualBones[VirtualBones[bone].parent_bone].head]['fcurves'][:, frame]),
+                            reference_tail=Vector(markers[VirtualBones[VirtualBones[bone].parent_bone].tail]['fcurves'][:, frame]),
+                            new_head_metacarpal_ratio=VirtualBones[bone].new_head_metacarpal_ratio,
+                            angle_offset=VirtualBones[bone].angle_offset,
+                        )
+
                     # Calculate the bone's y axis
                     bone_y_axis = (
-                        Vector(markers[VirtualBones[bone].tail]['fcurves'][:, frame])
-                        - Vector(markers[VirtualBones[bone].head]['fcurves'][:, frame])
+                        bone_tail_position
+                        - bone_head_position
                     )
 
                     # Get the bone axes from its parent
@@ -371,3 +397,31 @@ def rotate_marker_around_pivot(
             )
 
     return
+
+# Function to get the correct head position of the metacarpals
+def compute_new_metacarpal_head(
+    metacarpal_head: Vector,
+    metacarpal_tail: Vector,
+    reference_head: Vector,
+    reference_tail: Vector,
+    new_head_metacarpal_ratio: float,
+    angle_offset: float
+) -> Vector:
+
+    # Current and reference vectors
+    current_metacarpal_vector = (metacarpal_tail - metacarpal_head).normalized()
+    reference_vector = (reference_tail - reference_head).normalized()
+
+    # Plane normal between them
+    rotation_plane_normal = reference_vector.cross(current_metacarpal_vector).normalized()
+
+    # Vector scaled by ratio
+    rotating_vector = (metacarpal_tail - metacarpal_head) * new_head_metacarpal_ratio
+
+    # Rotate by angle_offset around the plane normal
+    angle_offset_rad = m.radians(angle_offset)
+    rotation_matrix = Matrix.Rotation(angle_offset_rad, 4, rotation_plane_normal)
+    rotated_vector = rotation_matrix @ rotating_vector
+
+    # New head position
+    return metacarpal_head + rotated_vector

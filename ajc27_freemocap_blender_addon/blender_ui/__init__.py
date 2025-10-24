@@ -22,6 +22,10 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_mo
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
     FootLockingProperties
 )
+from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
+    AddDataOverlaysProperties
+)
+
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.load_data_panel import VIEW3D_PT_load_data
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.video_export_panel import VIEW3D_PT_freemocap_video_export
 from ajc27_freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import VIEW3D_PT_data_view_panel
@@ -37,6 +41,7 @@ BLENDER_USER_INTERFACE_CLASSES = [FREEMOCAP_CORE_PROPERTIES,
                                   LimitMarkersRangeOfMotionProperties,
                                   Export3DModelProperties,
                                   FootLockingProperties,
+                                  AddDataOverlaysProperties,
                                   FREEMOCAP_UI_PROPERTIES,
                                   VIEW3D_PT_freemocap_main_panel,
                                   VIEW3D_PT_load_data,
