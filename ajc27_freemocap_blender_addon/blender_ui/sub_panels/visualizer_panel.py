@@ -231,3 +231,81 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
             split.column().label(text="Local Y Offset [cm]:")
             split.column().prop(ui_props.add_joint_angles_properties, ViewPanelPropNames.JOINT_ANGLE_TEXT_LOCAL_Y_OFFSET.value)
             box.operator('freemocap._add_joint_angles', text='Add Joint Angles')
+
+        # Data Overlays
+        row = layout.row(align=True)
+        row.prop(ui_props.add_data_overlays_properties, "show_add_data_overlays_options", text="",
+                 icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_add_data_overlays_options else 'TRIA_RIGHT', emboss=False)
+        row.label(text="Data Overlays")
+
+        if ui_props.add_data_overlays_properties.show_add_data_overlays_options:
+            box = layout.box()
+            # Common Overlay Properties
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Viewport Position:")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_viewport_position')
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Custom Position X (px):")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_custom_position_x')
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Custom Position Y (px):")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_custom_position_y')
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Overlay Margin (px):")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_overlay_margin')
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Overlay Width (px):")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_overlay_width')
+            split = box.column().row().split(factor=0.5)
+            split.column().label(text="Overlay Height (px):")
+            split.column().prop(ui_props.add_data_overlays_properties, 'common_overlay_height')
+            
+            # Time Series Plot Properties
+            box2 = box.box()
+            row = box2.row(align=True)
+            row.prop(ui_props.add_data_overlays_properties, "show_time_series_plot_options", text="",
+                     icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_time_series_plot_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="Time Series Plot", icon='GRAPH')
+            if ui_props.add_data_overlays_properties.show_time_series_plot_options:
+                split = box2.column().row().split(factor=0.3)
+                split.column().label(text="Parameter:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_plot_parameter')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Frame Window Size:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_window_size')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Time Series Color:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_line_color')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Current Frame Line Color:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_current_frame_line_color')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Background Color:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_background_color')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Line Width:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_line_width')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Current Frame Line Width:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_current_frame_line_width')
+                split = box2.column().row().split(factor=0.5)
+                split.column().label(text="Border Line Width:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'time_series_border_line_width')
+
+                box2.operator('freemocap._add_time_series_plot', text='Add Time Series Plot Overlay', icon='GRAPH')
+            
+            # ROM Gauge Properties
+            box3 = box.box()
+            row = box3.row(align=True)
+            row.prop(ui_props.add_data_overlays_properties, "show_rom_gauge_options", text="",
+                     icon='TRIA_DOWN' if ui_props.add_data_overlays_properties.show_rom_gauge_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="ROM Gauge", icon='DRIVER_ROTATIONAL_DIFFERENCE')
+            if ui_props.add_data_overlays_properties.show_rom_gauge_options:
+                split = box3.column().row().split(factor=0.3)
+                split.column().label(text="Parameter:")
+                split.column().prop(ui_props.add_data_overlays_properties, 'rom_gauge_parameter')
+
+                box3.operator('freemocap._add_rom_gauge', text='Add ROM Gauge Overlay', icon='DRIVER_ROTATIONAL_DIFFERENCE')
+                
+
+            box.operator('freemocap._clear_all_data_overlays', text='Clear All Data Overlays', icon='TRASH')
