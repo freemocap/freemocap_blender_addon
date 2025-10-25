@@ -161,14 +161,8 @@ def create_camera_nodes(
 
         # Create Translate node
         translate_node = tree.nodes.new(type="CompositorNodeTranslate")
-        # Set the options depending on Blender's version
-        if bpy.app.version >= (4, 5, 0):
-            translate_node.inputs[1].default_value = export_profile['resolution_x'] * render_camera['translate_x'] / 2
-            translate_node.inputs[2].default_value = export_profile['resolution_y'] * render_camera['translate_y'] / 2
-        else:
-            translate_node.use_relative = render_camera['translate_relative']
-            translate_node.inputs[1].default_value = render_camera['translate_x']
-            translate_node.inputs[2].default_value = render_camera['translate_y']
+        translate_node.inputs[1].default_value = export_profile['resolution_x'] * render_camera['translate_x']
+        translate_node.inputs[2].default_value = export_profile['resolution_y'] * render_camera['translate_y']
         
         translate_node.location = (-400, (render_cameras_count - index) * 300)
 
@@ -252,14 +246,8 @@ def create_overlay_nodes(
 
         # Create Translate node
         translate_node = tree.nodes.new(type="CompositorNodeTranslate")
-        # Set the options depending on Blender's version
-        if bpy.app.version >= (4, 5, 0):
-            translate_node.inputs[1].default_value = export_profile['resolution_x'] * overlay_dict['translate_x'] / 2
-            translate_node.inputs[2].default_value = export_profile['resolution_y'] * overlay_dict['translate_y'] / 2
-        else:
-            translate_node.use_relative = overlay_dict['translate_relative']
-            translate_node.inputs[1].default_value = overlay_dict['translate_x']
-            translate_node.inputs[2].default_value = overlay_dict['translate_y']
+        translate_node.inputs[1].default_value = export_profile['resolution_x'] * overlay_dict['translate_x']
+        translate_node.inputs[2].default_value = export_profile['resolution_y'] * overlay_dict['translate_y']
         
         translate_node.location = (
             -400,
