@@ -16,7 +16,7 @@ from .export_video.export_video import export_video
 from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
 from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
 
-from .create_video.create_video import create_video
+
 from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
@@ -380,18 +380,6 @@ class MainController:
             bpy.data.objects.remove(bpy.data.objects[cube_name])
 
         # create_scene_objects(scene=bpy.context.scene)
-
-
-    def create_video(self):
-        print("Creating export video...")
-        import bpy
-        export_video(
-            scene=bpy.context.scene,
-            recording_folder=self.recording_path,
-            start_frame=bpy.context.scene.frame_start,
-            end_frame=bpy.context.scene.frame_end,
-            export_profile="debug",
-        )
 
 
     def save_blender_file(self):

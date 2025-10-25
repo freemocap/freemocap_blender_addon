@@ -36,7 +36,6 @@ BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
     FREEMOCAP_OT_limit_markers_range_of_motion,
     FREEMOCAP_OT_export_3d_model,
     FREEMOCAP_OT_foot_locking,
-]
     FREEMOCAP_OT_add_time_series_plot,
     FREEMOCAP_OT_add_rom_gauge,
     FREEMOCAP_OT_clear_all_data_overlays,
