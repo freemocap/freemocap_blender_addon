@@ -76,15 +76,24 @@ class VIEW3D_PT_data_view_panel(bpy.types.Panel):
     bl_category = "💀FreeMoCap"
     bl_label = "Data View Settings"
     bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+        
+        # Check if there is loaded data, set a message if not
         try:
             scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
         except KeyError:
+            layout = self.layout
             layout.label(text="Load a recording session to view data settings.")
             return
         ui_props = context.scene.freemocap_ui_properties
+
+        # Create a row with one column blank for indentation
+        row = self.layout.row()
+        row.label(text="", icon='BLANK1')
+
+        layout = row.column(align=True)
 
         # Base Elements
         row = layout.row(align=True)

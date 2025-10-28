@@ -7,11 +7,18 @@ class VIEW3D_PT_export_video_panel(bpy.types.Panel):
     bl_category = "💀FreeMoCap"
     bl_label = "Export Video"
     bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+
         ui_props = context.scene.freemocap_ui_properties
         export_video_props = ui_props.export_video_properties
+
+        # Create a row with one column blank for indentation
+        row = self.layout.row()
+        row.label(text="", icon='BLANK1')
+
+        layout = row.column(align=True)
 
         box = layout.box()
         split = box.column().row().split(factor=0.6)

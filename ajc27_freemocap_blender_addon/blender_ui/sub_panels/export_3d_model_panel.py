@@ -1,16 +1,24 @@
 import bpy
 
+
 class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "Export 3D Model"
     bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+
         ui_props = context.scene.freemocap_ui_properties
         export_3d_model_props = ui_props.export_3d_model_properties
+
+        # Create a row with one column blank for indentation
+        row = self.layout.row()
+        row.label(text="", icon='BLANK1')
+
+        layout = row.column(align=True)
 
         row = layout.row(align=True)
         split = row.column().row().split(factor=0.6)

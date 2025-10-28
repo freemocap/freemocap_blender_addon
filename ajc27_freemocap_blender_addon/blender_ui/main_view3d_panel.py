@@ -3,8 +3,6 @@ import bpy
 
 logger = logging.getLogger(__name__)
 
-import bpy
-
 
 # Main Parent Panel
 class VIEW3D_PT_freemocap_main_panel(bpy.types.Panel):
@@ -16,7 +14,3 @@ class VIEW3D_PT_freemocap_main_panel(bpy.types.Panel):
 
     def draw(self, context):
         pass
-        # layout = self.layout
-        # layout.label(text="FreeMoCap Addon")
-
-
