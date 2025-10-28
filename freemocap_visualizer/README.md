@@ -6,19 +6,6 @@ Add-on to visualize the Freemocap Blender output. Some of its features:
 4. Add animated joint angles with mesh and text with angle value. Can set custom colors.
 5. Add animated Base of Support (BOS) polygon based on points of contact and a z threshold.
 
-# Requirements
-Make sure that the scipy and shapely python modules are installed in your Blender's python folder.
-If they are not installed you will get a "ModuleNotFoundError: No module named scipy/shapely" when installing the addon.
-To install the scipy and shapely packages run this commands inside your Blender python folder:
-`python -m pip install scipy`
-`python -m pip install shapely`
-
-For example:
-
-`C:\Program Files\Blender Foundation\Blender 3.6\3.6\python\bin> .\python.exe -m pip install scipy`.
-
-`C:\Program Files\Blender Foundation\Blender 3.6\3.6\python\bin> .\python.exe -m pip install shapely`.
-
 # Installation
 Install as a regular *.zip add-on in Edit->Preferences-Add-ons.
 
