@@ -6,7 +6,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "Animation"
-    bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_parent_id = "VIEW3D_PT_freemocap_main_panel"
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
@@ -82,7 +82,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             if retarget_animation_props.retarget_pairs:
 
                 box.template_list(
-                    "UL_RetargetPairs",
+                    "ANIMATION_UL_RetargetPairs",
                     "",
                     retarget_animation_props,
                     "retarget_pairs",

@@ -185,7 +185,7 @@ class RetargetAnimationProperties(bpy.types.PropertyGroup):
     active_pair_index: PropertyTypes.Int() # type: ignore
 
 # Custom UI list
-class UL_RetargetPairs(bpy.types.UIList):
+class ANIMATION_UL_RetargetPairs(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         row = layout.row(align=True)
         

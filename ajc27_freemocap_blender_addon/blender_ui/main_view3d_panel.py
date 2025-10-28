@@ -10,7 +10,7 @@ class VIEW3D_PT_freemocap_main_panel(bpy.types.Panel):
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "💀FreeMoCap Blender Addon"
-    bl_idname = "view3d.pt_freemocap_main_panel"
+    bl_idname = "VIEW3D_PT_freemocap_main_panel"
 
     def draw(self, context):
         pass

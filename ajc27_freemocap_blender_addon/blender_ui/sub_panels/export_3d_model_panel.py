@@ -6,7 +6,7 @@ class VIEW3D_PT_export_3d_model_panel(bpy.types.Panel):
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "Export 3D Model"
-    bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_parent_id = "VIEW3D_PT_freemocap_main_panel"
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):

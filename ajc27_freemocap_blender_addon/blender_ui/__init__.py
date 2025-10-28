@@ -8,7 +8,7 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_joint_an
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
     RetargetAnimationProperties,
     RetargetBonePair,
-    UL_RetargetPairs,
+    ANIMATION_UL_RetargetPairs,
 )
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.set_bone_rotation_limits_properties import (
     SetBoneRotationLimitsProperties
@@ -39,7 +39,7 @@ BLENDER_USER_INTERFACE_CLASSES = [FREEMOCAP_CORE_PROPERTIES,
                                   AddJointAnglesProperties,
                                   RetargetBonePair,
                                   RetargetAnimationProperties,
-                                  UL_RetargetPairs,
+                                  ANIMATION_UL_RetargetPairs,
                                   SetBoneRotationLimitsProperties,
                                   LimitMarkersRangeOfMotionProperties,
                                   Export3DModelProperties,
