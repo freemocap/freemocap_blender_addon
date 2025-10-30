@@ -61,8 +61,8 @@ EXPORT_PROFILES = {
                 'scale_space': 'RELATIVE',
                 'scale_x': 0.1,
                 'scale_y': 0.1,
-                'translate_x': 0.4,
-                'translate_y': 0.45,
+                'translate_x': 0.42,
+                'translate_y': 0.42,
             },
         },
         'render_elements': [
