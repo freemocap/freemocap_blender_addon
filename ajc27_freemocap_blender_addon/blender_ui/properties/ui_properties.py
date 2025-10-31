@@ -25,6 +25,7 @@ from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.export_video
 
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
     FootLockingProperties
+)
 from ajc27_freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
     AddDataOverlaysProperties
 )

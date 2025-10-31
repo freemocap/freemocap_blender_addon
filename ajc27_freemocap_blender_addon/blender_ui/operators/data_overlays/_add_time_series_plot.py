@@ -34,6 +34,10 @@ class FREEMOCAP_OT_add_time_series_plot(bpy.types.Operator):
         # and capitalizing each word
         parameter_title = parameter_name.replace('_', ' ').title()
 
+        # Get the recording path, add a \ if not present at the end
+        if not core_props.recording_path.endswith('\\'):
+            core_props.recording_path += '\\'
+
         # Get the data path and column index based on the selected parameter
         if parameter_type == 'angle':
             data_path = core_props.recording_path + "output_data\\joint_angles.npy"

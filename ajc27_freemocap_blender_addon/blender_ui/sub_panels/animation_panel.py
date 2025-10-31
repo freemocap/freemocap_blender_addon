@@ -1,19 +1,27 @@
 import bpy
 
+
 class VIEW3D_PT_animation_panel(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "Animation"
-    bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_parent_id = "VIEW3D_PT_freemocap_main_panel"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+
         ui_props = context.scene.freemocap_ui_properties
         retarget_animation_props = ui_props.retarget_animation_properties
         set_bone_rotation_limits_props = ui_props.set_bone_rotation_limits_properties
         limit_markers_range_of_motion_props = ui_props.limit_markers_range_of_motion_properties
         foot_locking_props = ui_props.foot_locking_properties
+
+        # Create a row with one column blank for indentation
+        row = self.layout.row()
+        row.label(text="", icon='BLANK1')
+
+        layout = row.column(align=True)
 
         # Retarget
         row = layout.row(align=True)
@@ -74,7 +82,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             if retarget_animation_props.retarget_pairs:
 
                 box.template_list(
-                    "UL_RetargetPairs",
+                    "ANIMATION_UL_RetargetPairs",
                     "",
                     retarget_animation_props,
                     "retarget_pairs",

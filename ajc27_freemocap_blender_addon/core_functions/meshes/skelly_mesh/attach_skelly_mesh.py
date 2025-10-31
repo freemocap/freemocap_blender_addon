@@ -1,6 +1,4 @@
 from enum import Enum
-import traceback
-from pathlib import Path
 from typing import Dict
 
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_FULL_MESH_PATH
@@ -10,43 +8,10 @@ from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.
     attach_skelly_complete_mesh
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import \
     attach_skelly_by_vertex_group
-from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
-from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
+
 import bpy
-from mathutils import Vector, Matrix, Euler
 from copy import deepcopy
 
-from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
-from ajc27_freemocap_blender_addon.system.constants import (
-    FREEMOCAP_ARMATURE,
-    UE_METAHUMAN_SIMPLE_ARMATURE,
-)
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
-from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import (
-    bone_name_map,
-)
-from ajc27_freemocap_blender_addon.data_models.meshes.skelly_bones import (
-    get_skelly_bones,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import (
-    get_bone_info,
-    align_markers_to_armature,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import (
-    translate_vertex_groups,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.scale_vertex_groups import (
-    scale_vertex_groups,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.rotate_vertex_groups import (
-    rotate_vertex_groups,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.parent_vertex_groups_to_armature import (
-    parent_vertex_groups_to_armature,
-)
-from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.empty_markers_for_rest_pose import (
-    _EMPTY_MARKERS,
-)
 from ajc27_freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
     _SKELLY_VERTEX_GROUPS,
 )

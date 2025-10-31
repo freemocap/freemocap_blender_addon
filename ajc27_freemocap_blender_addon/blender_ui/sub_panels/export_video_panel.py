@@ -6,26 +6,34 @@ class VIEW3D_PT_export_video_panel(bpy.types.Panel):
     bl_region_type = "UI"
     bl_category = "💀FreeMoCap"
     bl_label = "Export Video"
-    bl_parent_id = "view3d.pt_freemocap_main_panel"
+    bl_parent_id = "VIEW3D_PT_freemocap_main_panel"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+
         ui_props = context.scene.freemocap_ui_properties
         export_video_props = ui_props.export_video_properties
 
-        box = layout.box()
-        split = box.column().row().split(factor=0.6)
+        # Create a row with one column blank for indentation
+        row = self.layout.row()
+        row.label(text="", icon='BLANK1')
+
+        layout = row.column(align=True)
+
+        row = layout.row(align=True)
+        split = row.column().row().split(factor=0.6)
         split.column().label(text='Video Profile')
         split.column().prop(export_video_props, 'export_profile')
 
         # Custom Profile Options
-        row = box.row(align=True)
+        row = layout.row(align=True)
         row.prop(export_video_props, "show_custom_profile_options", text="",
                  icon='TRIA_DOWN' if export_video_props.show_custom_profile_options else 'TRIA_RIGHT', emboss=False)
         row.label(text="Custom Profile Options")
 
+        # box = layout.box()
         if export_video_props.show_custom_profile_options:
-            box2 = box.box()
+            box2 = layout.box()
 
             split = box2.column().row().split(factor=0.25)
             split.column().label(text='Width (px):')
@@ -110,4 +118,4 @@ class VIEW3D_PT_export_video_panel(bpy.types.Panel):
                 row.prop(export_video_props, 'custom_overlays_freemocap_logo_position_y')
 
 
-        box.operator('freemocap._export_video', text='Export Video')
+        layout.operator('freemocap._export_video', text='Export Video')
