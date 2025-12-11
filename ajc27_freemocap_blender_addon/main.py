@@ -11,6 +11,8 @@ def ajc27_run_as_main_function(recording_path: str,
                                blend_file_path: str,
                                config: Config = load_default_parameters_config()):
     from ajc27_freemocap_blender_addon.core_functions.main_controller import MainController
+    import ajc27_freemocap_blender_addon
+    ajc27_freemocap_blender_addon.register()
 
     controller = MainController(recording_path=recording_path,
                                 blend_file_path=blend_file_path,
