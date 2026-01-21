@@ -1,7 +1,7 @@
 from ajc27_freemocap_blender_addon.core_functions.create_rig.add_rig_bone_method import add_rig_by_bone
 from ajc27_freemocap_blender_addon.core_functions.create_rig.add_rig_method_enum import AddRigMethods
 from ajc27_freemocap_blender_addon.core_functions.create_rig.add_rig_rigify_method import add_rig_rigify
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
+from ajc27_freemocap_blender_addon.skeleton_models.data_references import ArmatureType, PoseType
 
 
 def add_rig_by_method(add_rig_method, bone_data, keep_symmetry, parent_object, rig_name):

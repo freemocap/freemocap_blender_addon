@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import bpy
 
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import get_bone_constraint_definitions
+from ajc27_freemocap_blender_addon.skeleton_models.bones.bone_constraints import get_bone_constraint_definitions
 
 
 def save_bone_and_joint_angles_from_rig(rig: bpy.types.Object,

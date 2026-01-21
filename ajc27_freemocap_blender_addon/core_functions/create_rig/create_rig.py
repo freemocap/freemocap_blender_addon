@@ -5,8 +5,8 @@ import bpy
 from ajc27_freemocap_blender_addon.core_functions.create_rig.add_rig_by_method import add_rig_by_method
 from ajc27_freemocap_blender_addon.core_functions.create_rig.add_rig_method_enum import AddRigMethods
 from ajc27_freemocap_blender_addon.core_functions.create_rig.apply_bone_constraints import apply_bone_constraints
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import Constraint
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
+from ajc27_freemocap_blender_addon.skeleton_models.bones.bone_constraints import Constraint
+from ajc27_freemocap_blender_addon.skeleton_models.data_references import ArmatureType, PoseType
 
 
 def create_rig(

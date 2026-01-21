@@ -2,7 +2,7 @@ import bpy
 import numpy as np
 
 from ajc27_freemocap_blender_addon.core_functions.joint_angles.add_joint_angles import add_joint_angles
-from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ajc27_freemocap_blender_addon.skeleton_models.joint_angles.joint_angles import joint_angles
 
 
 class FREEMOCAP_OT_add_joint_angles(bpy.types.Operator):

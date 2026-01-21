@@ -1,6 +1,6 @@
 import bpy
 from ajc27_freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
-from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ajc27_freemocap_blender_addon.skeleton_models.joint_angles.joint_angles import joint_angles
 
 def get_joint_angle_items():
     joint_angle_items = []

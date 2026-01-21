@@ -1,5 +1,5 @@
 import bpy
-from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ajc27_freemocap_blender_addon.skeleton_models.joint_angles.joint_angles import joint_angles
 
 def create_angle_geometry_nodes(
     meshes: dict,

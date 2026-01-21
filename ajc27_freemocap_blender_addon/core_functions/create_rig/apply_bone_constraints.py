@@ -3,13 +3,13 @@ from typing import Dict
 
 import bpy
 
-from ajc27_freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
-from ajc27_freemocap_blender_addon.data_models.armatures.bone_name_map import bone_name_map
-from ajc27_freemocap_blender_addon.data_models.bones.bone_constraints import ConstraintType, \
+from ajc27_freemocap_blender_addon.skeleton_models.armatures.armature_bone_info import ArmatureBoneInfo
+from ajc27_freemocap_blender_addon.skeleton_models.armatures.bone_name_map import bone_name_map
+from ajc27_freemocap_blender_addon.skeleton_models.bones.bone_constraints import ConstraintType, \
     LimitRotationConstraint, CopyLocationConstraint, LockedTrackConstraint, DampedTrackConstraint, IKConstraint, \
     Constraint
-from ajc27_freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
-from ajc27_freemocap_blender_addon.data_models.poses.pose_element import PoseElement
+from ajc27_freemocap_blender_addon.skeleton_models.data_references import ArmatureType, PoseType
+from ajc27_freemocap_blender_addon.skeleton_models.poses.pose_element import PoseElement
 from ajc27_freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE, FREEMOCAP_TPOSE, \
     FREEMOCAP_APOSE, UE_METAHUMAN_DEFAULT, UE_METAHUMAN_TPOSE
 

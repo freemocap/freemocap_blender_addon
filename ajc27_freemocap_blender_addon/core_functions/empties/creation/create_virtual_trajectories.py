@@ -2,7 +2,7 @@ from typing import List, Dict
 
 import numpy as np
 
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.virtual_trajectories import \
+from ajc27_freemocap_blender_addon.skeleton_models.mediapipe_names.virtual_trajectories import \
     get_media_pipe_virtual_trajectory_definition
 
 

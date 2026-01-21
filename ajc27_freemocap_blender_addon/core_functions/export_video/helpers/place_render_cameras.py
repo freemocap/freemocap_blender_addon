@@ -1,10 +1,10 @@
 import bpy
 from mathutils import Vector
 from math import radians, atan
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.video_config import (
     LENS_FOVS,
 )
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
 

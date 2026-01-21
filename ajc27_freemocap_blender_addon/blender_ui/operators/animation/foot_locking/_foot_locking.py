@@ -2,8 +2,8 @@ import bpy
 import numpy as np
 import math
 
-from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import get_bone_definitions
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from ajc27_freemocap_blender_addon.skeleton_models.bones.bone_definitions import get_bone_definitions
+from ajc27_freemocap_blender_addon.skeleton_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.foot_locking_markers import foot_locking_markers
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import translate_marker, quadratic_function, error_function

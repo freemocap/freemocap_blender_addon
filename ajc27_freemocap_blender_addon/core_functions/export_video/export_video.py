@@ -11,7 +11,7 @@ from ajc27_freemocap_blender_addon.core_functions.export_video.helpers.render_ca
 from ajc27_freemocap_blender_addon.core_functions.export_video.helpers.composite_video import composite_video
 from ajc27_freemocap_blender_addon.core_functions.export_video.helpers.reset_scene_defaults import reset_scene_defaults
 
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
 

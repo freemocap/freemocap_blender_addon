@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 
-from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ajc27_freemocap_blender_addon.skeleton_models.joint_angles.joint_angles import joint_angles
 from ajc27_freemocap_blender_addon.core_functions.joint_angles.calculate_joint_angle_info import calculate_joint_angle_info
 from ajc27_freemocap_blender_addon.core_functions.joint_angles.add_angle_meshes import add_angle_meshes
 from ajc27_freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import parent_meshes

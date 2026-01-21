@@ -1,6 +1,6 @@
 import bpy
 from pathlib import Path
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
 

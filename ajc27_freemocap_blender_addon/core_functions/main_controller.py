@@ -5,14 +5,10 @@ from typing import List
 import numpy as np
 from ajc27_freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos_as_planes
 from ajc27_freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
-    get_or_create_freemocap_data_handler,
-)
-from ajc27_freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from ajc27_freemocap_blender_addon.data_handlers.freemocap_data_handler.utilities.load_data import load_freemocap_data
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
-from .export_video.export_video import export_video
 from .calculate_joint_angles.calculate_joint_angles import calculate_joint_angles
 from .calculate_joint_angles.joint_angle_definitions import joint_angles_definitions
 
@@ -25,13 +21,13 @@ from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.set_start_end_frame import set_start_end_frame
-from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
-from ..data_models.bones.bone_definitions import get_bone_definitions
-from ..data_models.parameter_models.parameter_models import Config
-from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
-from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
-from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
-from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
+from ..data_handlers.freemocap_data_handler.freemocap_data_handler import FreemocapDataHandler
+from ..data_handlers.freemocap_data_handler.helpers.saver import FreemocapDataSaver
+from ..skeleton_models.bones.bone_constraints import get_bone_constraint_definitions
+from ..skeleton_models.parameter_models.parameter_models import Config
+from ajc27_freemocap_blender_addon.data_handlers.freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
+from ajc27_freemocap_blender_addon.data_handlers.freemocap_data_handler.operations.fix_hand_data import fix_hand_data
+from ajc27_freemocap_blender_addon.data_handlers.freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
 from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
@@ -64,9 +60,7 @@ class MainController:
         self.rig_name = f"{self.recording_name}_rig"
         self.bone_constraint_definitions = get_bone_constraint_definitions()
         self._create_parent_empties()
-        self.freemocap_data_handler = get_or_create_freemocap_data_handler(
-            recording_path=self.recording_path
-        )
+        self.freemocap_data_handler = FreemocapDataHandler.from_recording_path(recording_path=recording_path)
         self.empties = None
 
     @property

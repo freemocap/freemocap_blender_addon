@@ -1,6 +1,6 @@
 import bpy
 
-from ajc27_freemocap_blender_addon.freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
+from ajc27_freemocap_blender_addon.data_handlers.freemocap_data_handler.operations import \
     empties_from_parent_object
 
 
@@ -11,7 +11,7 @@ class FREEMOCAP_save_data_to_disk(bpy.types.Operator):
 
     def execute(self, context):
         from ...core_functions.main_controller import MainController
-        from ...data_models.parameter_models.load_parameters_config import load_default_parameters_config
+        from ...skeleton_models.parameter_models.load_parameters_config import load_default_parameters_config
 
         recording_path = context.scene.freemocap_properties.recording_path
         if recording_path == "":

@@ -1,5 +1,5 @@
 import bpy
-from ajc27_freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.video_config import (
     RENDER_PARAMETERS
 )
 

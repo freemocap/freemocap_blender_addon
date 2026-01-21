@@ -4,7 +4,7 @@ from mathutils import Vector
 from ajc27_freemocap_blender_addon.core_functions.com_bos.animate_bos_mesh import animate_base_of_support
 from ajc27_freemocap_blender_addon.core_functions.com_bos.create_bos_geometry_nodes import \
     create_base_of_support_geometry_nodes
-from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_biomechanics import ground_contact_points
+from ajc27_freemocap_blender_addon.skeleton_models.mediapipe_names.mediapipe_biomechanics import ground_contact_points
 
 
 def add_base_of_support(

@@ -2,10 +2,12 @@ import sys
 from pathlib import Path
 
 from ajc27_freemocap_blender_addon.core_functions.setup_scene.clear_scene import clear_scene
-from ajc27_freemocap_blender_addon.data_models.parameter_models.load_parameters_config import \
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.load_parameters_config import \
     load_default_parameters_config
-from ajc27_freemocap_blender_addon.data_models.parameter_models.parameter_models import Config
+from ajc27_freemocap_blender_addon.skeleton_models.parameter_models.parameter_models import Config
 
+TRY_ALT_DATA = True
+ALT_DATA_PATH = r"D:\bs\ferret_recordings\2025-07-11_ferret_757_EyeCameras_P43_E15__1\clips\0m_37s-1m_37s"
 
 def ajc27_run_as_main_function(recording_path: str,
                                blend_file_path: str,
@@ -25,6 +27,10 @@ def ajc27_run_as_main_function(recording_path: str,
 
 if __name__ == "__main__" or __name__ == "<run_path>":
     print("LoadING FREEMOCAP BLENDER ADDON...")
+
+
+    if TRY_ALT_DATA:
+        recording_path_input = Path(ALT_DATA_PATH)
     try:
         argv = sys.argv
         print(f"Received command line arguments: {argv}")
@@ -46,12 +52,14 @@ if __name__ == "__main__" or __name__ == "<run_path>":
             print(f"Recording path {recording_path_input} does not exist!")
             raise ValueError(f"Recording path {recording_path_input} does not exist!")
 
-        if not blender_file_save_path_input:
-            blender_file_save_path_input = recording_path_input / (recording_path_input.stem + ".blend")
-
-        print(f"Running {__file__} with recording_path={recording_path_input}")
-        ajc27_run_as_main_function(recording_path=str(recording_path_input),
-                                   blend_file_path=str(blender_file_save_path_input))
     except Exception as e:
         print(f"ERROR RUNNING {__file__}: \n\n GOT ERROR \n\n {str(e)}")
+        raise e
+    if not blender_file_save_path_input:
+        blender_file_save_path_input = recording_path_input / (recording_path_input.stem + ".blend")
+
+    print(f"Running {__file__} with recording_path={recording_path_input}")
+    ajc27_run_as_main_function(recording_path=str(recording_path_input),
+                                blend_file_path=str(blender_file_save_path_input))
+
 

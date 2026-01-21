@@ -3,7 +3,7 @@ import numpy as np
 import math as m
 from mathutils import Vector
 
-from ajc27_freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ajc27_freemocap_blender_addon.skeleton_models.joint_angles.joint_angles import joint_angles
 
 # TODO: Add multicapture support. Change the joint_angles dict to have the correct scope marker names (left_elbow.001, etc.)
 def calculate_joint_angle_info(
