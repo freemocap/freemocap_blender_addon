@@ -34,6 +34,9 @@ from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
 from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
+from ajc27_freemocap_blender_addon.core_functions.create_yolo_object_markers.create_yolo_object_markers import create_yolo_object_markers
+
+
 
 
 class MainController:
@@ -413,6 +416,17 @@ class MainController:
         except Exception as e:
             print(f"Failed to add capture cameras: {e}")
             raise e
+        
+    def create_yolo_object_markers(self):
+        print("Creating YOLO object markers...")
+        try:
+            create_yolo_object_markers(
+                recording_folder=self.recording_path,
+                data_parent_empty=self.data_parent_empty,
+            )
+        except Exception as e:
+            print(f"Failed to create YOLO object markers: {e}")
+            raise e
 
     def load_data(self):
         import time
@@ -498,6 +512,11 @@ class MainController:
         self.add_capture_cameras()
         end_time = time.perf_counter_ns()
         stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.create_yolo_object_markers()
+        end_time = time.perf_counter_ns()
+        stage_times['create_yolo_object_markers'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()
