@@ -118,3 +118,41 @@ def minimize_custom(func, x0, args=(), tol=1e-6, max_iter=100):
                 fv = fu
     
     return x
+
+def gradient_descent_3d(error_func, initial_pos_3d, args, learning_rate=0.0001, tolerance=1e-7, max_iterations=5000):
+    """
+    Optimizes a 3D position vector `pos = (x, y, z)` to minimize `error_func(pos, *args)`.
+    Uses a 3D central difference gradient approximation.
+    """
+    import numpy as np
+    
+    pos = np.array(initial_pos_3d, dtype=float)
+    
+    for _ in range(max_iterations):
+        # Calculate central difference partial derivatives for x, y, and z
+        # df/dx
+        pos_plus_x = pos.copy(); pos_plus_x[0] += tolerance
+        pos_minus_x = pos.copy(); pos_minus_x[0] -= tolerance
+        grad_x = (error_func(pos_plus_x, *args) - error_func(pos_minus_x, *args)) / (2 * tolerance)
+        
+        # df/dy
+        pos_plus_y = pos.copy(); pos_plus_y[1] += tolerance
+        pos_minus_y = pos.copy(); pos_minus_y[1] -= tolerance
+        grad_y = (error_func(pos_plus_y, *args) - error_func(pos_minus_y, *args)) / (2 * tolerance)
+        
+        # df/dz
+        pos_plus_z = pos.copy(); pos_plus_z[2] += tolerance
+        pos_minus_z = pos.copy(); pos_minus_z[2] -= tolerance
+        grad_z = (error_func(pos_plus_z, *args) - error_func(pos_minus_z, *args)) / (2 * tolerance)
+        
+        gradient = np.array([grad_x, grad_y, grad_z])
+        
+        next_pos = pos - learning_rate * gradient
+
+        # If the change vector magnitude is smaller than the tolerance, optimization is complete
+        if np.linalg.norm(next_pos - pos) < tolerance:
+            break
+
+        pos = next_pos
+
+    return pos

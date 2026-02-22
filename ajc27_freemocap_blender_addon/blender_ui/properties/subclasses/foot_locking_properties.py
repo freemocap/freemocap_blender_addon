@@ -9,6 +9,7 @@ class FootLockingProperties(bpy.types.PropertyGroup):
     foot_locking_method: PropertyTypes.Enum(
         description = 'Foot locking method',
         items = [('individual_marker_height', 'Individual Marker Height', ''),
+                 ('window_3d_compensation', 'Window 3D Compensation', '')
         ]
     ) # type: ignore
     show_individual_marker_height_options: PropertyTypes.Bool(
