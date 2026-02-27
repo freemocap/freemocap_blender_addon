@@ -9,7 +9,8 @@ class FootLockingProperties(bpy.types.PropertyGroup):
     foot_locking_method: PropertyTypes.Enum(
         description = 'Foot locking method',
         items = [('individual_marker_height', 'Individual Marker Height', ''),
-                 ('window_3d_compensation', 'Window 3D Compensation', '')
+                 ('window_3d_compensation', 'Window 3D Compensation', ''),
+                 ('foot_group_movement', 'Foot Group Movement', '')
         ]
     ) # type: ignore
     show_individual_marker_height_options: PropertyTypes.Bool(
@@ -41,6 +42,11 @@ class FootLockingProperties(bpy.types.PropertyGroup):
                       'z global coordinate lower than this value will be '
                       'fixed to this level. It must be lower than the '
                       'z threshold'
+    ) # type: ignore
+    negative_height_limit: PropertyTypes.Float(
+        default = 0.02,
+        precision = 3,
+        description = 'Maximum vertical compensation for lower body markers when a foot marker dips strongly below zero. It restricts total body lifting.'
     ) # type: ignore
     frame_window_min_size: PropertyTypes.Int(
         default = 10,
@@ -94,4 +100,14 @@ class FootLockingProperties(bpy.types.PropertyGroup):
                       'z coordinate of left and right hips markers.'
                       'Then propagate the new z delta to the upper body '
                       'markers starting from the trunk_center.'
+    ) # type: ignore
+    xy_radius: PropertyTypes.Float(
+        default = 0.05,
+        precision = 3,
+        description = 'XY radius threshold for Foot Group Movement method'
+    ) # type: ignore
+    moving_average_window: PropertyTypes.Int(
+        default = 5,
+        min = 1,
+        description = 'Frame window size for calculating moving average in Foot Group Movement method'
     ) # type: ignore

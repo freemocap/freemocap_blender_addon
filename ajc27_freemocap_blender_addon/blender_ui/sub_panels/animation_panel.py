@@ -208,6 +208,13 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                 )
 
                 split = box.column().row().split(factor=0.6)
+                split.column().label(text='Negative Height Limit (m)')
+                split.split().column().prop(
+                    foot_locking_props,
+                    'negative_height_limit'
+                )
+
+                split = box.column().row().split(factor=0.6)
                 split.column().label(text='Frame Window Minimum Size')
                 split.split().column().prop(
                     foot_locking_props,

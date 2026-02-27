@@ -47,6 +47,7 @@ def run_individual_marker_height(context):
         if child.type == 'EMPTY' and 'empties_parent' in child.name:
             for marker in child.children:
                 if marker.type == 'EMPTY':
+                    print(marker.name)
                     # Get the position fcurves
                     fcurve_x = marker.animation_data.action.fcurves.find("location", index=0)
                     fcurve_y = marker.animation_data.action.fcurves.find("location", index=1)
