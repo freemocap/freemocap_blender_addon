@@ -19,25 +19,25 @@ def run_window_3d_compensation(context):
     BONE_DEFINITIONS = get_bone_definitions()
 
     # Prepare the target foot list
-    if props.target_foot == 'both_feet':
+    if props.w3d_target_foot == 'both_feet':
         target_foot_list = ['left_foot', 'right_foot']
     else:
-        target_foot_list = [props.target_foot]
+        target_foot_list = [props.w3d_target_foot]
 
     # Prepare the target base markers
-    if props.target_base_markers == 'foot_index_and_heel':
+    if props.w3d_target_base_markers == 'foot_index_and_heel':
         target_base_markers_list = ['foot_index', 'heel']
     else:
-        target_base_markers_list = [props.target_base_markers]
+        target_base_markers_list = [props.w3d_target_base_markers]
 
-    z_threshold = props.z_threshold
-    ground_level = props.ground_level
-    frame_window_min_size = props.frame_window_min_size
-    initial_attenuation_count = props.initial_attenuation_count
-    final_attenuation_count = props.final_attenuation_count
-    lock_xy_at_ground_level = props.lock_xy_at_ground_level
-    knee_hip_compensation_coefficient = props.knee_hip_compensation_coefficient
-    compensate_upper_body = props.compensate_upper_body
+    z_threshold = props.w3d_z_threshold
+    ground_level = props.w3d_ground_level
+    frame_window_min_size = props.w3d_frame_window_min_size
+    initial_attenuation_count = props.w3d_initial_attenuation_count
+    final_attenuation_count = props.w3d_final_attenuation_count
+    lock_xy_at_ground_level = props.w3d_lock_xy_at_ground_level
+    knee_hip_compensation_coefficient = props.w3d_knee_hip_compensation_coefficient
+    compensate_upper_body = props.w3d_compensate_upper_body
 
     data_parent_empty = bpy.data.objects[scene.freemocap_properties.scope_data_parent]
 
@@ -253,9 +253,14 @@ def run_window_3d_compensation(context):
 
             markers[ankle_m]['fcurves'][:, changed_frame] = optimized_pos
 
-            if knee_hip_compensation_coefficient != 0:
-                # Get the XYZ compensation delta
-                compensation_delta = (optimized_pos - orig_ankle_pos) * knee_hip_compensation_coefficient
+            if any(c != 0 for c in knee_hip_compensation_coefficient):
+                # Get the XYZ compensation delta, apply per-axis coefficients
+                raw_delta = optimized_pos - orig_ankle_pos
+                compensation_delta = np.array([
+                    raw_delta[0] * knee_hip_compensation_coefficient[0],
+                    raw_delta[1] * knee_hip_compensation_coefficient[1],
+                    raw_delta[2] * knee_hip_compensation_coefficient[2],
+                ])
 
                 # Change the compensation markers' position directly without propagating to children
                 for compensation_marker in foot_locking_markers[foot]['compensation_markers']:

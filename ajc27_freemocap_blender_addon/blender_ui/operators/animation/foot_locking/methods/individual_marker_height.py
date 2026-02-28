@@ -19,25 +19,25 @@ def run_individual_marker_height(context):
     BONE_DEFINITIONS = get_bone_definitions()
 
     # Prepare the target foot list
-    if props.target_foot == 'both_feet':
+    if props.imh_target_foot == 'both_feet':
         target_foot_list = ['left_foot', 'right_foot']
     else:
-        target_foot_list = [props.target_foot]
+        target_foot_list = [props.imh_target_foot]
 
     # Prepare the target base markers
-    if props.target_base_markers == 'foot_index_and_heel':
+    if props.imh_target_base_markers == 'foot_index_and_heel':
         target_base_markers_list = ['foot_index', 'heel']
     else:
-        target_base_markers_list = [props.target_base_markers]
+        target_base_markers_list = [props.imh_target_base_markers]
 
-    z_threshold = props.z_threshold
-    ground_level = props.ground_level
-    frame_window_min_size = props.frame_window_min_size
-    initial_attenuation_count = props.initial_attenuation_count
-    final_attenuation_count = props.final_attenuation_count
-    lock_xy_at_ground_level = props.lock_xy_at_ground_level
-    knee_hip_compensation_coefficient = props.knee_hip_compensation_coefficient
-    compensate_upper_body = props.compensate_upper_body
+    z_threshold = props.imh_z_threshold
+    ground_level = props.imh_ground_level
+    frame_window_min_size = props.imh_frame_window_min_size
+    initial_attenuation_count = props.imh_initial_attenuation_count
+    final_attenuation_count = props.imh_final_attenuation_count
+    lock_xy_at_ground_level = props.imh_lock_xy_at_ground_level
+    knee_hip_compensation_coefficient = props.imh_knee_hip_compensation_coefficient
+    compensate_upper_body = props.imh_compensate_upper_body
 
     data_parent_empty = bpy.data.objects[scene.freemocap_properties.scope_data_parent]
 
@@ -239,13 +239,13 @@ def run_individual_marker_height(context):
             # Set the new ankle z position
             markers[foot_locking_markers[foot]['ankle'][0]]['fcurves'][2, changed_frame] = optimized_ankle_z
 
-            if knee_hip_compensation_coefficient != 0:
+            if knee_hip_compensation_coefficient[2] != 0:
                 compensation_z = optimized_ankle_z - current_ankle_pos
 
                 # Change the compensation markers' z position
                 for compensation_marker in foot_locking_markers[foot]['compensation_markers']:
                     marker_z_position = markers[compensation_marker]['fcurves'][2, changed_frame]
-                    markers[compensation_marker]['fcurves'][2, changed_frame] = marker_z_position + compensation_z * knee_hip_compensation_coefficient
+                    markers[compensation_marker]['fcurves'][2, changed_frame] = marker_z_position + compensation_z * knee_hip_compensation_coefficient[2]
 
         # Update the overall_changed_frames list
         overall_changed_frames += list(set(changed_frames))
