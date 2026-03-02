@@ -34,6 +34,8 @@ from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
 from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
+from ajc27_freemocap_blender_addon.core_functions.add_arkit_face_blendshapes.add_arkit_face_blendshapes import add_arkit_face_blendshapes
+from ajc27_freemocap_blender_addon.core_functions.add_arkit_face_blendshapes.add_gaze_vectors import add_gaze_vectors
 
 
 class MainController:
@@ -414,6 +416,27 @@ class MainController:
             print(f"Failed to add capture cameras: {e}")
             raise e
 
+    def add_arkit_face_blendshapes(self):
+        print("Adding ARKit face blendshapes...")
+        try:
+            add_arkit_face_blendshapes(
+                recording_folder=self.recording_path,
+                data_parent_name=self.data_parent_empty.name,
+            )
+        except Exception as e:
+            print(f"Failed to add ARKit face blendshapes: {e}")
+            raise e
+
+    def add_gaze_vectors(self):
+        print("Adding Gaze Vectors...")
+        try:
+            add_gaze_vectors(
+                data_parent_name=self.data_parent_empty.name,
+            )
+        except Exception as e:
+            print(f"Failed to add Gaze Vectors: {e}")
+            raise e
+
     def load_data(self):
         import time
         print("Running all stages...")
@@ -498,6 +521,16 @@ class MainController:
         self.add_capture_cameras()
         end_time = time.perf_counter_ns()
         stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.add_arkit_face_blendshapes()
+        end_time = time.perf_counter_ns()
+        stage_times['add_arkit_face_blendshapes'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.add_gaze_vectors()
+        end_time = time.perf_counter_ns()
+        stage_times['add_gaze_vectors'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()
