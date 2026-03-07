@@ -99,6 +99,17 @@ def export_3d_model(
         bpy.ops.object.mode_set(mode="OBJECT")
         armature.select_set(False)
 
+    # ── Temporarily hide FOV_ meshes ─────────────────────────────────────────
+    # FOV_Gaze / FOV_Limit objects carry a Boolean (Exact) modifier whose
+    # depsgraph evaluation is expensive and runs every baked frame during export,
+    # even though these objects are never included in the exported file.
+    # Hiding them in the viewport suppresses modifier evaluation for the duration.
+    fov_objects_visibility: dict = {}
+    for obj in bpy.data.objects:
+        if obj.name.startswith("FOV_"):
+            fov_objects_visibility[obj] = obj.hide_viewport
+            obj.hide_viewport = True
+
     # Export the file formats
     for format in formats:
         
@@ -163,6 +174,10 @@ def export_3d_model(
             raise
 
     bpy.ops.object.select_all(action='DESELECT')
+
+    # ── Restore FOV_ mesh visibility ──────────────────────────────────────────
+    for obj, original_visibility in fov_objects_visibility.items():
+        obj.hide_viewport = original_visibility
 
     # Restore (keyframe insert) the position of the markers in the start frame
     for marker in empties_parent.children:

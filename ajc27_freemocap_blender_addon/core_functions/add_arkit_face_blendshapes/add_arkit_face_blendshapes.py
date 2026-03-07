@@ -64,16 +64,22 @@ def add_arkit_face_blendshapes(recording_folder: str, data_parent_name: str):
 
         # Skip the first column (frame index / timestamp) and the constant
         # "BlendShapeCount" column (always 52, not useful as a custom property).
-        blendshape_columns = [c for c in header_row[1:] if c != "BlendShapeCount"]
+        # We iterate with the ORIGINAL index so that row[orig_idx + 1] always
+        # reads the correct CSV column, regardless of how many columns were skipped.
+        SKIP_COLUMNS = {"BlendShapeCount"}
 
-        for i, column_name in enumerate(blendshape_columns):
+        for orig_idx, column_name in enumerate(header_row[1:]):
+
+            if column_name in SKIP_COLUMNS:
+                continue
 
             # Ensure the custom property exists
             if column_name not in empty.keys():
                 empty[column_name] = 0.0
 
-            # Collect values for this column as a float32 array
-            values = np.array([float(row[i + 1]) for row in rows], dtype=np.float32)
+            # Collect values for this column as a float32 array.
+            # Use orig_idx + 1 to address the correct position in the raw row.
+            values = np.array([float(row[orig_idx + 1]) for row in rows], dtype=np.float32)
 
             # Build the data path Blender uses for custom-property fcurves
             data_path = f'["{column_name}"]'

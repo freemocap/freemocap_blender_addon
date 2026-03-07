@@ -184,33 +184,28 @@ def add_gaze_visuals(
                     )
 
             # ── Boolean modifier (FOV_Gaze only) ─────────────────────────────
-            # NOTE: We disable show_viewport / show_render BEFORE assigning
-            # bool_mod.object to prevent Blender from immediately triggering a
-            # depsgraph evaluation.  At setup time both meshes share identical
-            # world transforms (both copy the same eye empty), which makes the
-            # Exact solver's intersection degenerate and causes an infinite hang.
-            # The flags are restored to True after all objects are fully built.
-            # if use_drivers:  # use_drivers == True means this is an FOV_Gaze mesh
-            #     limit_key = blend_key.replace("FOV_Gaze", "FOV_Limit")  # e.g. "FOV_Limit_Right"
-            #     limit_obj = appended_objects.get(limit_key)
-            #     if limit_obj is not None:
-            #         bool_mod = appended_obj.modifiers.new(
-            #             name="Boolean_FOV_Limit", type='BOOLEAN'
-            #         )
-            #         bool_mod.operation    = 'INTERSECT'
-            #         bool_mod.solver       = 'EXACT'
-            #         # Disable before assigning object to suppress eager DG eval
-            #         bool_mod.show_viewport = False
-            #         bool_mod.show_render   = False
-            #         bool_mod.object        = limit_obj
-            #         # Re-enable immediately; DG won't re-evaluate until next update
-            #         bool_mod.show_viewport = True
-            #         bool_mod.show_render   = True
-            #     else:
-            #         print(
-            #             f"Warning: Could not find '{limit_key}' to use as "
-            #             f"Boolean target for '{blend_key}'."
-            #         )
+            if use_drivers:  # use_drivers == True means this is an FOV_Gaze mesh
+                limit_key = blend_key.replace("FOV_Gaze", "FOV_Limit")  # e.g. "FOV_Limit_Right"
+                limit_obj = appended_objects.get(limit_key)
+                if limit_obj is not None:
+                    bool_mod = appended_obj.modifiers.new(
+                        name="Boolean_FOV_Limit", type='BOOLEAN'
+                    )
+                    bool_mod.operation = 'INTERSECT'
+                    bool_mod.solver    = 'EXACT'
+                    bool_mod.object    = limit_obj
+                else:
+                    print(
+                        f"Warning: Could not find '{limit_key}' to use as "
+                        f"Boolean target for '{blend_key}'."
+                    )
 
             # ── Store reference for later use (e.g. Boolean target) ───────────
             appended_objects[blend_key] = appended_obj
+
+    # ── Hide FOV_Limit meshes ────────────────────────────────────────────────
+    # FOV_Limit objects are only needed as Boolean targets; they should not
+    # be visible in the viewport.
+    for key, obj in appended_objects.items():
+        if key.startswith("FOV_Limit"):
+            obj.hide_set(True)
