@@ -5,7 +5,7 @@ from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
 
 def add_gaze_visuals(
     data_parent_name: str,
-    driver_multiplier: float = 0.5
+    driver_multiplier: float = 1.0,
 ):
     """
     Appends pre-built gaze visual meshes from .blend files and applies the
@@ -18,8 +18,8 @@ def add_gaze_visuals(
                            + eye-rotation drivers, representing the live gaze direction.
 
     Blend file paths (assets/gaze_visuals/):
-      FOV_Gaze_Left.blend
-      FOV_Gaze_Right.blend
+      FOV_Gaze_Left_HD.blend
+      FOV_Gaze_Right_HD.blend
       FOV_Limit_Left.blend
       FOV_Limit_Right.blend
     """
@@ -29,7 +29,7 @@ def add_gaze_visuals(
 
     data_parent = bpy.data.objects[data_parent_name]
 
-    # ── 1. Find required scene objects ───────────────────────────────────────
+    # Find required scene objects
     right_eye_empty = None
     left_eye_empty = None
     armature = None
@@ -49,7 +49,7 @@ def add_gaze_visuals(
         print("Warning: Missing required objects (right_eye, left_eye, or armature).")
         return
 
-    # ── 2. Create gaze_visuals empty parent ───────────────────────
+    # Create gaze_visuals empty parent
     bpy.ops.object.select_all(action='DESELECT')
 
     bpy.ops.object.empty_add(type='PLAIN_AXES', location=(0, 0, 0))
@@ -58,17 +58,17 @@ def add_gaze_visuals(
     gaze_visuals_empty.parent = data_parent
     gaze_visuals_empty.hide_set(True)
 
-    # ── 3. Asset paths ────────────────────────────────────────────────────────
+    # Asset paths
     gaze_visuals_dir = Path(PACKAGE_ROOT_PATH) / "assets" / "gaze_visuals"
 
     asset_paths = {
-        "FOV_Gaze_Left":   str(gaze_visuals_dir / "FOV_Gaze_Left.blend"),
-        "FOV_Gaze_Right":  str(gaze_visuals_dir / "FOV_Gaze_Right.blend"),
+        "FOV_Gaze_Left":   str(gaze_visuals_dir / "FOV_Gaze_Left_HD.blend"),
+        "FOV_Gaze_Right":  str(gaze_visuals_dir / "FOV_Gaze_Right_HD.blend"),
         "FOV_Limit_Left":  str(gaze_visuals_dir / "FOV_Limit_Left.blend"),
         "FOV_Limit_Right": str(gaze_visuals_dir / "FOV_Limit_Right.blend"),
     }
 
-    # ── 4. Per-eye info ───────────────────────────────────────────────────────
+    # Per-eye info
     eyes_info = [
         {
             "side": "Right",
@@ -88,9 +88,9 @@ def add_gaze_visuals(
         },
     ]
 
-    # ── 5. Process each mesh ──────────────────────────────────────────────────
+    # Process each mesh
     # Keeps track of appended objects by blend_key so FOV_Gaze can reference
-    # the already-appended FOV_Limit object for the Boolean modifier.
+    # the already-appended FOV_Limit object for the Geometry Nodes modifier.
     appended_objects: dict = {}
     for info in eyes_info:
         side   = info["side"]
@@ -101,10 +101,10 @@ def add_gaze_visuals(
             blend_path = asset_paths[blend_key]
             use_drivers = obj_info["use_drivers"]
 
-            # ── Append from .blend ────────────────────────────────────────
-            # We always append a fresh copy; Blender will auto-suffix the name
+            # Append from .blend
+            # Always append a fresh copy; Blender will auto-suffix the name
             # (e.g. FOV_Gaze_Right.001) when multiple captures are loaded in the
-            # same session – that's fine, we grab whichever object was just linked.
+            # same session.
             appended_obj = None
             with bpy.data.libraries.load(blend_path, link=False) as (data_from, data_to):
                 if blend_key in data_from.objects:
@@ -121,15 +121,15 @@ def add_gaze_visuals(
                 print(f"Warning: Could not append '{blend_key}' from {blend_path}")
                 continue
 
-            # ── Parent to gaze_visuals empty ──────────────────────────────
+            # Parent to gaze_visuals empty
             appended_obj.parent = gaze_visuals_empty
             appended_obj.rotation_mode = 'XYZ'
 
-            # ── Constraint 1: Copy Location → eye empty ───────────────────
+            # Constraint 1: Copy Location → eye empty
             loc_con = appended_obj.constraints.new(type='COPY_LOCATION')
             loc_con.target = target
 
-            # ── Constraint 2: Copy Rotation → face bone ───────────────────
+            # Constraint 2: Copy Rotation → face bone
             rot_con = appended_obj.constraints.new(type='COPY_ROTATION')
             rot_con.target      = armature
             rot_con.subtarget   = "face"
@@ -137,7 +137,7 @@ def add_gaze_visuals(
             rot_con.target_space = 'WORLD'
             rot_con.owner_space  = 'WORLD'
 
-            # ── Drivers (FOV_Gaze only) ───────────────────────────────────
+            # Drivers (FOV_Gaze only)
             if use_drivers and arkit_blendshapes:
 
                 # Driver X – Eye Pitch (look up / down)
@@ -183,29 +183,90 @@ def add_gaze_visuals(
                         f"(look_out - look_in) * {driver_multiplier}"
                     )
 
-            # ── Boolean modifier (FOV_Gaze only) ─────────────────────────────
+            # Geometry Nodes modifier (FOV_Gaze only)
             if use_drivers:  # use_drivers == True means this is an FOV_Gaze mesh
                 limit_key = blend_key.replace("FOV_Gaze", "FOV_Limit")  # e.g. "FOV_Limit_Right"
                 limit_obj = appended_objects.get(limit_key)
+                
                 if limit_obj is not None:
-                    bool_mod = appended_obj.modifiers.new(
-                        name="Boolean_FOV_Limit", type='BOOLEAN'
+                    # Geometry Nodes Clipping
+                    gn_mod = appended_obj.modifiers.new(
+                        name="GeoNodes_Clipping", type='NODES'
                     )
-                    bool_mod.operation = 'INTERSECT'
-                    bool_mod.solver    = 'EXACT'
-                    bool_mod.object    = limit_obj
+                    
+                    # Create a new node group for this mesh
+                    node_group = bpy.data.node_groups.new(
+                        name=f"GN_Clipping_{blend_key}", type='GeometryNodeTree'
+                    )
+                    gn_mod.node_group = node_group
+                    
+                    # Create group input/output interfaces (Blender 4.0+ uses interface, older uses inputs/outputs)
+                    if hasattr(node_group, "interface"):
+                        node_group.interface.new_socket(name="Geometry", in_out='INPUT', socket_type='NodeSocketGeometry')
+                        node_group.interface.new_socket(name="Geometry", in_out='OUTPUT', socket_type='NodeSocketGeometry')
+                    else:
+                        node_group.inputs.new('NodeSocketGeometry', "Geometry")
+                        node_group.outputs.new('NodeSocketGeometry', "Geometry")
+                        
+                    nodes = node_group.nodes
+                    links = node_group.links
+                    
+                    input_node = nodes.new("NodeGroupInput")
+                    input_node.location = (-400, 0)
+                    
+                    output_node = nodes.new("NodeGroupOutput")
+                    output_node.location = (400, 0)
+                    
+                    # Object Info
+                    obj_info = nodes.new("GeometryNodeObjectInfo")
+                    obj_info.location = (-400, -200)
+                    obj_info.transform_space = 'RELATIVE'
+                    obj_info.inputs['Object'].default_value = limit_obj
+                    
+                    # Position
+                    pos_node = nodes.new("GeometryNodeInputPosition")
+                    pos_node.location = (-400, -400)
+                    
+                    # Normalize (Vector Math)
+                    norm_node = nodes.new("ShaderNodeVectorMath")
+                    norm_node.location = (-200, -400)
+                    norm_node.operation = 'NORMALIZE'
+                    
+                    # Raycast
+                    raycast = nodes.new("GeometryNodeRaycast")
+                    raycast.location = (0, -200)
+                    raycast.mapping = 'INTERPOLATED'
+                    
+                    # Not (Boolean Math)
+                    bool_not = nodes.new("FunctionNodeBooleanMath")
+                    bool_not.location = (200, -100)
+                    bool_not.operation = 'NOT'
+                    
+                    # Delete Geometry
+                    del_geom = nodes.new("GeometryNodeDeleteGeometry")
+                    del_geom.location = (200, 0)
+                    
+                    # Link them up
+                    links.new(input_node.outputs['Geometry'], del_geom.inputs['Geometry'])
+                    links.new(obj_info.outputs['Geometry'], raycast.inputs['Target Geometry'])
+                    links.new(pos_node.outputs['Position'], norm_node.inputs[0])
+                    links.new(norm_node.outputs['Vector'], raycast.inputs['Ray Direction'])
+                    
+                    links.new(raycast.outputs['Is Hit'], bool_not.inputs[0])
+                    links.new(bool_not.outputs['Boolean'], del_geom.inputs['Selection'])
+                    
+                    links.new(del_geom.outputs['Geometry'], output_node.inputs['Geometry'])
+
                 else:
                     print(
                         f"Warning: Could not find '{limit_key}' to use as "
-                        f"Boolean target for '{blend_key}'."
+                        f"Geometry Nodes target for '{blend_key}'."
                     )
 
-            # ── Store reference for later use (e.g. Boolean target) ───────────
+            # Store reference for later use (e.g. Geometry Nodes target)
             appended_objects[blend_key] = appended_obj
 
-    # ── Hide FOV_Limit meshes ────────────────────────────────────────────────
-    # FOV_Limit objects are only needed as Boolean targets; they should not
-    # be visible in the viewport.
+    # Hide FOV_Limit meshes
     for key, obj in appended_objects.items():
         if key.startswith("FOV_Limit"):
             obj.hide_set(True)
