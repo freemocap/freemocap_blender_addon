@@ -6,6 +6,9 @@ from ajc27_freemocap_blender_addon import PACKAGE_ROOT_PATH
 def add_gaze_visuals(
     data_parent_name: str,
     driver_multiplier: float = 1.0,
+    foveal_radius: float = 0.01, # In meters
+    foveal_depth: float = 1.0, # In meters
+    fov_depth: float = 1.0 # In meters
 ):
     """
     Appends pre-built gaze visual meshes from .blend files and applies the
@@ -14,12 +17,12 @@ def add_gaze_visuals(
     For each eye it appends:
       - FOV_Limit_{side}:  copy location (eye empty) + copy rotation (face bone).
                            No drivers – represents the anatomical field-of-view limit.
-      - FOV_Gaze_{side}:   copy location (eye empty) + copy rotation (face bone)
+      - FOV_Peripheral_{side}: copy location (eye empty) + copy rotation (face bone)
                            + eye-rotation drivers, representing the live gaze direction.
 
     Blend file paths (assets/gaze_visuals/):
-      FOV_Gaze_Left_HD.blend
-      FOV_Gaze_Right_HD.blend
+      FOV_Peripheral_Left_HD.blend
+      FOV_Peripheral_Right_HD.blend
       FOV_Limit_Left.blend
       FOV_Limit_Right.blend
     """
@@ -62,8 +65,8 @@ def add_gaze_visuals(
     gaze_visuals_dir = Path(PACKAGE_ROOT_PATH) / "assets" / "gaze_visuals"
 
     asset_paths = {
-        "FOV_Gaze_Left":   str(gaze_visuals_dir / "FOV_Gaze_Left_HD.blend"),
-        "FOV_Gaze_Right":  str(gaze_visuals_dir / "FOV_Gaze_Right_HD.blend"),
+        "FOV_Peripheral_Left":   str(gaze_visuals_dir / "FOV_Peripheral_Left_HD.blend"),
+        "FOV_Peripheral_Right":  str(gaze_visuals_dir / "FOV_Peripheral_Right_HD.blend"),
         "FOV_Limit_Left":  str(gaze_visuals_dir / "FOV_Limit_Left.blend"),
         "FOV_Limit_Right": str(gaze_visuals_dir / "FOV_Limit_Right.blend"),
     }
@@ -74,22 +77,24 @@ def add_gaze_visuals(
             "side": "Right",
             "target": right_eye_empty,
             "objects": [
-                {"blend_key": "FOV_Limit_Right", "use_drivers": False},
-                {"blend_key": "FOV_Gaze_Right",  "use_drivers": True},
+                {"blend_key": "FOV_Limit_Right", "use_drivers": False, "type": "append"},
+                {"blend_key": "FOV_Peripheral_Right", "use_drivers": True,  "type": "append"},
+                {"blend_key": "FOV_Foveal_Right", "use_drivers": True,  "type": "cylinder"},
             ],
         },
         {
             "side": "Left",
             "target": left_eye_empty,
             "objects": [
-                {"blend_key": "FOV_Limit_Left", "use_drivers": False},
-                {"blend_key": "FOV_Gaze_Left",  "use_drivers": True},
+                {"blend_key": "FOV_Limit_Left", "use_drivers": False, "type": "append"},
+                {"blend_key": "FOV_Peripheral_Left", "use_drivers": True,  "type": "append"},
+                {"blend_key": "FOV_Foveal_Left", "use_drivers": True,  "type": "cylinder"},
             ],
         },
     ]
 
     # Process each mesh
-    # Keeps track of appended objects by blend_key so FOV_Gaze can reference
+    # Keeps track of appended objects by blend_key so FOV_Peripheral can reference
     # the already-appended FOV_Limit object for the Geometry Nodes modifier.
     appended_objects: dict = {}
     for info in eyes_info:
@@ -97,29 +102,50 @@ def add_gaze_visuals(
         target = info["target"]
 
         for obj_info in info["objects"]:
-            blend_key  = obj_info["blend_key"]   # e.g. "FOV_Gaze_Right"
-            blend_path = asset_paths[blend_key]
+            blend_key   = obj_info["blend_key"]
             use_drivers = obj_info["use_drivers"]
+            obj_type    = obj_info["type"]
 
-            # Append from .blend
-            # Always append a fresh copy; Blender will auto-suffix the name
-            # (e.g. FOV_Gaze_Right.001) when multiple captures are loaded in the
-            # same session.
             appended_obj = None
-            with bpy.data.libraries.load(blend_path, link=False) as (data_from, data_to):
-                if blend_key in data_from.objects:
-                    data_to.objects.append(blend_key)
 
-            # Link the freshly appended object (parent is None = not yet in any scene)
-            for obj in bpy.data.objects:
-                if blend_key in obj.name and obj.parent is None:
-                    bpy.context.collection.objects.link(obj)
-                    appended_obj = obj
-                    break
+            if obj_type == "append":
+                blend_path = asset_paths[blend_key]
+                # Append from .blend
+                # Always append a fresh copy; Blender will auto-suffix the name
+                # (e.g. FOV_Peripheral_Right.001) when multiple captures are loaded in the
+                # same session.
+                with bpy.data.libraries.load(blend_path, link=False) as (data_from, data_to):
+                    if blend_key in data_from.objects:
+                        data_to.objects.append(blend_key)
 
-            if appended_obj is None:
-                print(f"Warning: Could not append '{blend_key}' from {blend_path}")
-                continue
+                # Link the freshly appended object (parent is None = not yet in any scene)
+                for obj in bpy.data.objects:
+                    if blend_key in obj.name and obj.parent is None:
+                        bpy.context.collection.objects.link(obj)
+                        appended_obj = obj
+                        break
+
+                if appended_obj is None:
+                    print(f"Warning: Could not append '{blend_key}' from {blend_path}")
+                    continue
+                    
+                # Scale the appended mesh along all axes by the fov_depth parameter,
+                # since the pre-built meshes are designed to be 1 meter in depth.
+                appended_obj.scale = (fov_depth, fov_depth, fov_depth)
+
+            elif obj_type == "cylinder":
+                # Procedurally generate fovea cylinder
+                bpy.ops.mesh.primitive_cylinder_add(radius=foveal_radius, depth=foveal_depth, location=(0, 0, 0))
+                appended_obj = bpy.context.active_object
+                appended_obj.name = blend_key
+                
+                mesh = appended_obj.data
+                for vertex in mesh.vertices:
+                    y = vertex.co.y
+                    z = vertex.co.z
+                    vertex.co.y = -z
+                    vertex.co.z = y
+                    vertex.co.y += foveal_depth / 2.0
 
             # Parent to gaze_visuals empty
             appended_obj.parent = gaze_visuals_empty
@@ -137,7 +163,7 @@ def add_gaze_visuals(
             rot_con.target_space = 'WORLD'
             rot_con.owner_space  = 'WORLD'
 
-            # Drivers (FOV_Gaze only)
+            # Drivers (FOV_Peripheral only)
             if use_drivers and arkit_blendshapes:
 
                 # Driver X – Eye Pitch (look up / down)
@@ -183,9 +209,9 @@ def add_gaze_visuals(
                         f"(look_out - look_in) * {driver_multiplier}"
                     )
 
-            # Geometry Nodes modifier (FOV_Gaze only)
-            if use_drivers:  # use_drivers == True means this is an FOV_Gaze mesh
-                limit_key = blend_key.replace("FOV_Gaze", "FOV_Limit")  # e.g. "FOV_Limit_Right"
+            # Geometry Nodes modifier (FOV_Peripheral only)
+            if use_drivers and "FOV_Peripheral" in blend_key:  # GN clipping is just for the Peripheral meshes, not Foveal
+                limit_key = blend_key.replace("FOV_Peripheral", "FOV_Limit")  # e.g. "FOV_Limit_Right"
                 limit_obj = appended_objects.get(limit_key)
                 
                 if limit_obj is not None:

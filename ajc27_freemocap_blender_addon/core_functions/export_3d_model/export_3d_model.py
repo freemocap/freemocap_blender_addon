@@ -100,7 +100,7 @@ def export_3d_model(
         armature.select_set(False)
 
     # ── Temporarily hide FOV_ meshes ─────────────────────────────────────────
-    # FOV_Gaze / FOV_Limit objects carry a Boolean (Exact) modifier whose
+    # FOV_Peripheral / FOV_Limit objects carry a Geometry Nodes modifier whose
     # depsgraph evaluation is expensive and runs every baked frame during export,
     # even though these objects are never included in the exported file.
     # Hiding them in the viewport suppresses modifier evaluation for the duration.
