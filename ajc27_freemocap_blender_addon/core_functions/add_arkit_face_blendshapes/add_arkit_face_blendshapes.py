@@ -45,7 +45,7 @@ def add_arkit_face_blendshapes(recording_folder: str, data_parent_name: str):
         else:
             print(f"Warning: Parent object '{data_parent_name}' not found!")
         
-        # ── Bulk-keyframe all blendshape custom properties ────────────────────
+        # Bulk-keyframe all blendshape custom properties
         num_frames = len(rows)
         start_frame = bpy.context.scene.frame_start
         frames = np.arange(start_frame, start_frame + num_frames, dtype=np.float32)

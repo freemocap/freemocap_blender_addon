@@ -147,6 +147,24 @@ def add_gaze_visuals(
                     vertex.co.z = y
                     vertex.co.y += foveal_depth / 2.0
 
+                # Add Material
+                material_name = "FOV_Foveal_Right" if info["side"] == "Right" else "FOV_Foveal_Left"
+                material = bpy.data.materials.get(material_name)
+                if material is None:
+                    material = bpy.data.materials.new(name=material_name)
+                    material.use_nodes = True
+                    bsdf = material.node_tree.nodes.get("Principled BSDF")
+                    if bsdf:
+                        if info["side"] == "Right":
+                            bsdf.inputs['Base Color'].default_value = (1.0, 0.0, 0.0, 1.0)
+                        else:
+                            bsdf.inputs['Base Color'].default_value = (0.0, 0.0, 1.0, 1.0)
+                
+                if appended_obj.data.materials:
+                    appended_obj.data.materials[0] = material
+                else:
+                    appended_obj.data.materials.append(material)
+
             # Parent to gaze_visuals empty
             appended_obj.parent = gaze_visuals_empty
             appended_obj.rotation_mode = 'XYZ'
