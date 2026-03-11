@@ -35,8 +35,9 @@ from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skele
 
 from ajc27_freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 from ajc27_freemocap_blender_addon.core_functions.add_arkit_face_blendshapes.add_arkit_face_blendshapes import add_arkit_face_blendshapes
-from ajc27_freemocap_blender_addon.core_functions.add_arkit_face_blendshapes.add_gaze_visuals import add_gaze_visuals
+from ajc27_freemocap_blender_addon.core_functions.add_gaze_visuals.add_gaze_visuals import add_gaze_visuals
 from ajc27_freemocap_blender_addon.core_functions.load_face_video import load_face_video
+from ajc27_freemocap_blender_addon.core_functions.animate_skelly_blendshapes.animate_skelly_blendshapes import animate_skelly_blendshapes
 
 
 class MainController:
@@ -449,6 +450,16 @@ class MainController:
             print(f"Failed to add Gaze Visuals: {e}")
             raise e
 
+    def animate_skelly_blendshapes(self):
+        print("Animating Skelly Blendshapes...")
+        try:
+            animate_skelly_blendshapes(
+                data_parent_name=self.data_parent_empty.name,
+            )
+        except Exception as e:
+            print(f"Failed to animate skelly blendshapes: {e}")
+            raise e
+
     def load_data(self):
         import time
         print("Running all stages...")
@@ -548,6 +559,11 @@ class MainController:
         self.add_gaze_visuals()
         end_time = time.perf_counter_ns()
         stage_times['add_gaze_visuals'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.animate_skelly_blendshapes()
+        end_time = time.perf_counter_ns()
+        stage_times['animate_skelly_blendshapes'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()

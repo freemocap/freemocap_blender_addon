@@ -51,8 +51,10 @@ def align_and_parent_vertex_groups_to_armature(
     bone_info = get_bone_info(armature)
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
-    # Remove the modifiers from the mesh
-    mesh_object.modifiers.clear()
+    # Remove the modifiers from the mesh except 'Eyes_Mask'
+    for modifier in list(mesh_object.modifiers):
+        if modifier.name != 'Eyes_Mask':
+            mesh_object.modifiers.remove(modifier)
     # Select and activate the mesh object
     mesh_object.select_set(True)
     bpy.context.view_layer.objects.active = mesh_object
