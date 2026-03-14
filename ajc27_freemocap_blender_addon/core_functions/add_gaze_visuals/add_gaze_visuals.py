@@ -48,8 +48,8 @@ def add_gaze_visuals(
         elif child.type == 'ARMATURE':
             armature = child
 
-    if not right_eye_empty or not left_eye_empty or not armature:
-        print("Warning: Missing required objects (right_eye, left_eye, or armature).")
+    if not right_eye_empty or not left_eye_empty or not arkit_blendshapes or not armature:
+        print("Warning: Missing required objects (right_eye, left_eye, arkit_blendshapes, or armature).")
         return
 
     # Create gaze_visuals empty parent
