@@ -1,0 +1,42 @@
+from freemocap_blender_addon.blender_ui.operators._add_base_of_support import FREEMOCAP_OT_add_base_of_support
+from freemocap_blender_addon.blender_ui.operators._add_com_vertical_projection import \
+    FREEMOCAP_OT_add_com_vertical_projection
+from freemocap_blender_addon.blender_ui.operators._add_joint_angles import FREEMOCAP_OT_add_joint_angles
+from freemocap_blender_addon.blender_ui.operators._clear_scene import FREEMOCAP_OT_clear_scene
+from freemocap_blender_addon.blender_ui.operators._export_video import FREEMOCAP_OT_export_video
+from freemocap_blender_addon.blender_ui.operators._load_data import FREEMOCAP_OT_load_data
+from freemocap_blender_addon.blender_ui.operators._add_motion_path import FREEMOCAP_OT_add_motion_path
+from freemocap_blender_addon.blender_ui.operators._clear_motion_path import FREEMOCAP_OT_clear_motion_path
+from freemocap_blender_addon.blender_ui.operators._clear_all_motion_paths import FREEMOCAP_OT_clear_all_motion_paths
+from freemocap_blender_addon.blender_ui.operators.animation.retarget._detect_bone_mapping import FREEMOCAP_OT_detect_bone_mapping
+from freemocap_blender_addon.blender_ui.operators.animation.retarget._retarget_animation import FREEMOCAP_OT_retarget_animation
+from freemocap_blender_addon.blender_ui.operators.animation.set_bone_rotation_limits._set_bone_rotation_limits import FREEMOCAP_OT_set_bone_rotation_limits
+from freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion._limit_markers_range_of_motion import FREEMOCAP_OT_limit_markers_range_of_motion
+from freemocap_blender_addon.blender_ui.operators._export_3d_model import FREEMOCAP_OT_export_3d_model
+from freemocap_blender_addon.blender_ui.operators.animation.foot_locking._foot_locking import FREEMOCAP_OT_foot_locking
+from freemocap_blender_addon.blender_ui.operators.data_overlays._add_time_series_plot import FREEMOCAP_OT_add_time_series_plot
+from freemocap_blender_addon.blender_ui.operators.data_overlays._add_rom_gauge import FREEMOCAP_OT_add_rom_gauge
+from freemocap_blender_addon.blender_ui.operators.data_overlays._clear_all_data_overlays import FREEMOCAP_OT_clear_all_data_overlays
+
+
+
+BLENDER_OPERATORS = [  # FREEMOCAP_download_sample_data,
+    FREEMOCAP_OT_clear_scene,
+    FREEMOCAP_OT_load_data,
+    FREEMOCAP_OT_add_com_vertical_projection,
+    FREEMOCAP_OT_add_joint_angles,
+    FREEMOCAP_OT_add_base_of_support,
+    FREEMOCAP_OT_export_video,
+    FREEMOCAP_OT_add_motion_path,
+    FREEMOCAP_OT_clear_motion_path,
+    FREEMOCAP_OT_clear_all_motion_paths,
+    FREEMOCAP_OT_detect_bone_mapping,
+    FREEMOCAP_OT_retarget_animation,
+    FREEMOCAP_OT_set_bone_rotation_limits,
+    FREEMOCAP_OT_limit_markers_range_of_motion,
+    FREEMOCAP_OT_export_3d_model,
+    FREEMOCAP_OT_foot_locking,
+    FREEMOCAP_OT_add_time_series_plot,
+    FREEMOCAP_OT_add_rom_gauge,
+    FREEMOCAP_OT_clear_all_data_overlays,
+]
