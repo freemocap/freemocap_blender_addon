@@ -21,9 +21,8 @@ class FreemocapDataPaths:
 
         # TODO: we may want a better form of backwards compatibility than this
         # backwards compatibility:
-        center_of_mass_path = output_data_path / "mediapipe_total_body_center_of_mass.npy"
-        if not center_of_mass_path.exists():
-            center_of_mass_path = output_data_path / "total_body_center_of_mass.npy"
+        center_of_mass_path = output_data_path / "mediapipe_body_total_body_center_of_mass.npy"
+
 
         segment_centers_of_mass_path = output_data_path / "mediapipe_body_segment_center_of_mass.npy"
 
