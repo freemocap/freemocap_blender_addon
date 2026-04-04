@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-NUMBER_OF_MEDIAPIPE_BODY_MARKERS = 33
+NUMBER_OF_MEDIAPIPE_BODY_MARKERS = 37
 NUMBER_OF_MEDIAPIPE_HAND_MARKERS = 21
 NUMBER_OF_MEDIAPIPE_FACE_MARKERS = 478
 
@@ -56,6 +56,11 @@ class MediapipeTrajectoryNames(HumanTrajectoryNames):
             "right_heel",
             "left_foot_index",
             "right_foot_index",
+            #virtual markers
+            "head_center",
+            "neck_center",
+            "trunk_center",
+            "hips_center"
         ]
         hand_names = ["wrist",
                       "thumb_cmc",

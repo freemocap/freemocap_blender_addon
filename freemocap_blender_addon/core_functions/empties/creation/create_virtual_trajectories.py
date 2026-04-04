@@ -69,8 +69,7 @@ def calculate_virtual_trajectories(body_frame_name_xyz: np.ndarray,
         )
 
         if virtual_trajectory_name in body_names:
-            raise ValueError(
-                f"Virtual marker name {virtual_trajectory_name} is already in the trajectory names list. This will cause problems later. Please choose a different name for your virtual marker.")
+            continue
 
         if virtual_trajectory_frame_xyz.shape[0] != body_frame_name_xyz.shape[0] or virtual_trajectory_frame_xyz.shape[
             1] != body_frame_name_xyz.shape[2]:

@@ -38,7 +38,7 @@ class FreemocapData:
                   right_hand_frame_name_xyz: np.ndarray,
                   left_hand_frame_name_xyz: np.ndarray,
                   face_frame_name_xyz: np.ndarray,
-                  error: np.ndarray,
+                  # error: np.ndarray,
                   data_source: str = "mediapipe",
                   error_type: str = "mean_reprojection_error",
                   groundplane_calibration: bool = False,
@@ -58,37 +58,37 @@ class FreemocapData:
 
         cls._convert_to_component(other=other)
 
-        (body_error,
-         face_error,
-         left_hand_error,
-         right_hand_error) = cls._split_up_reprojection_error(error=error,
-                                                              trajectory_names=trajectory_names)
+        # (body_error,
+        #  face_error,
+        #  left_hand_error,
+        #  right_hand_error) = cls._split_up_reprojection_error(error=error,
+        #                                                       trajectory_names=trajectory_names)
 
         return cls(
             body=FreemocapComponentData(name="body",
                                         data=body_frame_name_xyz,
                                         data_source=data_source,
                                         trajectory_names=trajectory_names.body,
-                                        error=body_error,
+                                        # error=body_error,
                                         error_type=error_type),
 
             hands={"right": FreemocapComponentData(name="right_hand",
                                                    data=right_hand_frame_name_xyz,
                                                    data_source=data_source,
                                                    trajectory_names=trajectory_names.right_hand,
-                                                   error=right_hand_error,
+                                                   # error=right_hand_error,
                                                    error_type=error_type),
                    "left": FreemocapComponentData(name="left_hand",
                                                   data=left_hand_frame_name_xyz,
                                                   data_source=data_source,
                                                   trajectory_names=trajectory_names.left_hand,
-                                                  error=left_hand_error,
+                                                  # error=left_hand_error,
                                                   error_type=error_type)},
             face=FreemocapComponentData(name="face",
                                         data=face_frame_name_xyz,
                                         data_source=data_source,
                                         trajectory_names=trajectory_names.face,
-                                        error=face_error,
+                                        # error=face_error,
                                         error_type=error_type),
             other=other,
             groundplane_calibration=groundplane_calibration,
@@ -196,7 +196,7 @@ class FreemocapData:
             right_hand_frame_name_xyz=np.load(data_paths.right_hand_npy) / scale,
             left_hand_frame_name_xyz=np.load(data_paths.left_hand_npy) / scale,
             face_frame_name_xyz=np.load(data_paths.face_npy) / scale,
-            error=np.load(data_paths.reprojection_error_npy),
+            # error=np.load(data_paths.reprojection_error_npy),
 
             other={"center_of_mass": FreemocapComponentData(name="center_of_mass",
                                                             data=np.load(

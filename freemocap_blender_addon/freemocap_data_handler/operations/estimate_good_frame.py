@@ -10,16 +10,16 @@ def estimate_good_frame(trajectories_with_error: Dict[str, np.ndarray],
     trajectory_names = list(trajectories_with_error.keys())
     all_good_frames = None
     all_velocities = {}
-    all_errors = {}
+    # all_errors = {}
 
     for trajectory_name in trajectory_names:
-        trajectory_velocity_frame_xyz = np.diff(trajectories_with_error[trajectory_name]['trajectory'], axis=0)
+        trajectory_velocity_frame_xyz = np.diff(trajectories_with_error[trajectory_name], axis=0)
         trajectory_velocity_frame_xyz = np.insert(trajectory_velocity_frame_xyz, 0, np.nan, axis=0)
         trajectory_velocity_frame_magnitude = np.sqrt(np.sum(trajectory_velocity_frame_xyz ** 2, axis=1))
         all_velocities[trajectory_name] = trajectory_velocity_frame_magnitude
 
-        trajectory_reprojection_error = trajectories_with_error[trajectory_name]['error']
-        all_errors[trajectory_name] = trajectory_reprojection_error
+        # trajectory_reprojection_error = trajectories_with_error[trajectory_name]['error']
+        # all_errors[trajectory_name] = trajectory_reprojection_error
 
         # define threshold for 'standing still'
         velocity_threshold = np.nanpercentile(trajectory_velocity_frame_magnitude,
@@ -28,8 +28,8 @@ def estimate_good_frame(trajectories_with_error: Dict[str, np.ndarray],
         # Get the indices of the good frames
         velocity_above_threshold = [index for index, velocity in enumerate(trajectory_velocity_frame_magnitude) if
                                     velocity > velocity_threshold]
-        reprojection_error_not_nan = [index for index, error in enumerate(trajectory_reprojection_error) if
-                                      not math.isnan(error)]
+        # reprojection_error_not_nan = [index for index, error in enumerate(trajectory_reprojection_error) if
+        #                               not math.isnan(error)]
         floating_point_error = math.ulp(
             1.0) * 10  # 10 times the floating point error, any velocity below this is considered zero
         velocity_not_zero = [index for index, velocity in enumerate(trajectory_velocity_frame_magnitude) if
@@ -37,7 +37,7 @@ def estimate_good_frame(trajectories_with_error: Dict[str, np.ndarray],
 
         # To get the good_frames_indices, we need the intersection of the other three lists:
         good_frames_indices = list(
-            set(velocity_above_threshold) & set(reprojection_error_not_nan) & set(velocity_not_zero))
+            set(velocity_above_threshold) & set(velocity_not_zero))#& set(reprojection_error_not_nan) )
 
         # If no good frames found, skip this trajectory
         if len(good_frames_indices) == 0:
