@@ -114,9 +114,9 @@ class MainController:
         )
         self._video_parent_object = create_parent_empty(
             name="videos_parent",
-            parent_object=self._data_parent_empty,
+            # parent_object=self._data_parent_empty,
             type="IMAGE",
-            display_scale=0.1,
+            display_scale=0.3,
         )
         # self._data_parent_empty = create_parent_empty(
         #     name="center_of_mass_data_parent",
@@ -371,8 +371,8 @@ class MainController:
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)
         self.center_of_mass_empty.hide_set(True)
-        self._video_parent_object.hide_set(True)
-        self._data_parent_empty.hide_set(True)
+        # self._video_parent_object.hide_set(True)
+        # self._data_parent_empty.hide_set(True)
 
         # remove default cube
         cube_name = bpy.app.translations.pgettext_data("Cube")

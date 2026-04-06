@@ -4,7 +4,7 @@ from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapData
 from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import \
     create_freemocap_data_handler
 
-_BASE_FREEMOCAP_RECORDINGS_PATH = Path().home() / "freemocap_data" / "recording_sessions"
+_BASE_FREEMOCAP_RECORDINGS_PATH = Path().home() / "freemocap_data" / "recordings"
 _FREEMOCAP_TEST_DATA_PATH = _BASE_FREEMOCAP_RECORDINGS_PATH / "freemocap_test_data"
 _FREEMOCAP_SAMPLE_DATA_PATH = _BASE_FREEMOCAP_RECORDINGS_PATH / "freemocap_sample_data"
 
