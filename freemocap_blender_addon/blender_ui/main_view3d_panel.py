@@ -1,7 +1,6 @@
 import logging
 import bpy
 
-logger = logging.getLogger(__name__)
 
 
 # Main Parent Panel

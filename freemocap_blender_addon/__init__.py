@@ -18,13 +18,13 @@ from freemocap_blender_addon.utilities.install_dependencies import check_and_ins
 
 PACKAGE_ROOT_PATH = str(Path(__file__).parent)
 
-root = logging.getLogger()
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-root.addHandler(handler)
-logger = logging.getLogger(__name__)
+# root = logging.getLogger()
+# handler = logging.StreamHandler(sys.stdout)
+# handler.setLevel(logging.INFO)
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# handler.setFormatter(formatter)
+# root.addHandler(handler)
+# logger = logging.getLogger(__name__)
 
 bl_info = {
     'name': 'freemocap_blender_addon',
