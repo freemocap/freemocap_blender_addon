@@ -21,6 +21,7 @@ from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
+from .materials.create_checkerboard_material import create_checkerboard_material
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
@@ -344,6 +345,68 @@ class MainController:
             print(e)
             raise e
 
+    def create_ground_plane(self):
+        """
+        Create a ground plane at Z=0 with a checkerboard texture.
+        The plane covers double the x/y extent of the center of mass data.
+        Checkerboard squares are 20cm on each side with deep dark blue colors.
+        """
+        import bpy
+        try:
+            print("Creating ground plane...")
+            
+            # Get center of mass trajectory data
+            com_trajectory = np.squeeze(self.freemocap_data_handler.center_of_mass_trajectory)
+            
+            # Calculate extent of center of mass data
+            x_extent = np.max(com_trajectory[:, 0]) - np.min(com_trajectory[:, 0])
+            y_extent = np.max(com_trajectory[:, 1]) - np.min(com_trajectory[:, 1])
+            
+            # Double the extent for the ground plane size
+            plane_size = max(max(x_extent, y_extent) * 2.0, 10.0) # Minimum size of 3 meters to ensure it's visible even for small movements
+            
+            # Create the ground plane
+            bpy.ops.mesh.primitive_plane_add(size=plane_size, location=(0, 0, 0))
+            ground_plane = bpy.context.active_object
+            ground_plane.name = "ground_plane"
+            
+            # Calculate checker scale: 20cm squares (0.2 meters)
+            # The checker scale is relative to UV coordinates
+            square_size_meters = 0.50  # 20cm
+            checker_scale = plane_size / square_size_meters
+            
+            # Create deep dark blue checkerboard material
+            # Deep dark blue: RGB (0.02, 0.02, 0.15) - very dark navy
+            # Slightly deeper darker blue: RGB (0.01, 0.01, 0.08) - almost black navy
+            color1 = (0.02, 0.02, 0.15, 1.0)  # Deep dark blue
+            color2 = (0.01, 0.01, 0.08, 1.0)  # Slightly deeper darker blue
+            
+            material = create_checkerboard_material(
+                name="ground_checkerboard",
+                color1=color1,
+                color2=color2,
+                square_scale=checker_scale,
+                roughness=1.0,
+                metallic=1.0
+            )
+            
+            # Assign material to the ground plane
+            if ground_plane.data.materials:
+                ground_plane.data.materials[0] = material
+            else:
+                ground_plane.data.materials.append(material)
+            
+            # Parent to the data parent empty
+            ground_plane.parent = self._data_parent_empty
+            
+            print(f"Created ground plane with size {plane_size:.2f}m and {checker_scale:.1f} checker squares (20cm each)")
+            
+        except Exception as e:
+            print(f"Failed to create ground plane: {e}")
+            import traceback
+            print(traceback.format_exc())
+            raise e
+
     def add_videos(self):
         try:
             print("Loading videos as planes...")
@@ -372,13 +435,13 @@ class MainController:
         self._rigid_body_meshes_parent_object.hide_set(True)
         self.center_of_mass_empty.hide_set(True)
         # self._video_parent_object.hide_set(True)
-        # self._data_parent_empty.hide_set(True)
+        # self._data_parent_em pty.hide_set(True)
 
         # remove default cube
         cube_name = bpy.app.translations.pgettext_data("Cube")
         if cube_name in bpy.data.objects:
             bpy.data.objects.remove(bpy.data.objects[cube_name])
-
+        self.create_ground_plane()
         # create_scene_objects(scene=bpy.context.scene)
 
 

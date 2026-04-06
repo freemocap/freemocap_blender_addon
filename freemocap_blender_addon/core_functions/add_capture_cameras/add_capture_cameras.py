@@ -15,6 +15,55 @@ except ModuleNotFoundError:
 # Assumed fixed sensor width in mm becuase the variable is the focal length
 DEFAULT_SENSOR_WIDTH = 36.0 # Same as Blender default
 
+
+def _extract_camera_index(key: str) -> int:
+    """Extract the camera index from various key formats.
+    
+    Handles:
+    - 'cam_0', 'cam_1', etc. -> 0, 1, ...
+    - '0', '1', '2', etc. -> 0, 1, 2, ...
+    - 'camera_0', 'camera_1', etc. -> 0, 1, ...
+    """
+    if key.isdigit():
+        # Keys like '1', '2', '3' - use the number directly, but convert to 0-indexed
+        # Assume these are 1-indexed in the file
+        return int(key) - 1 if int(key) > 0 else 0
+    else:
+        # Keys like 'cam_0', 'camera_1', etc.
+        parts = key.split('_')
+        if len(parts) >= 2 and parts[-1].isdigit():
+            return int(parts[-1])
+        elif parts[0].isdigit():
+            return int(parts[0]) - 1 if int(parts[0]) > 0 else 0
+        else:
+            # Fallback: try to extract any number from the key
+            import re
+            numbers = re.findall(r'\d+', key)
+            if numbers:
+                idx = int(numbers[0])
+                # If the number is > 0, assume 1-indexed
+                return idx - 1 if idx > 0 else 0
+            return 0
+
+
+def _is_camera_entry(key: str, value: dict) -> bool:
+    """Check if a dictionary entry represents a camera.
+    
+    Camera entries must have camera-specific fields like 'matrix', 'size', 'world_position'.
+    This is more robust than checking for key prefixes.
+    """
+    # Skip known non-camera sections
+    if key in ('metadata',):
+        return False
+    
+    # Check for camera-specific fields
+    if not isinstance(value, dict):
+        return False
+    
+    required_fields = {'matrix', 'size', 'world_position', 'world_orientation'}
+    return required_fields.issubset(value.keys())
+
+
 def add_capture_cameras(
     recording_folder: str='',
 ) -> None:
@@ -48,12 +97,25 @@ def add_capture_cameras(
         return
 
     # Extract camera information into a dictionary
+    # Use robust detection instead of fragile string prefix matching
     cameras_dict = {}
+    camera_keys = []
     for key, value in data.items():
-        if key.startswith('cam_'):
+        if _is_camera_entry(key, value):
             cameras_dict[key] = value
+            camera_keys.append(key)
+    
+    # Sort camera keys by their extracted index for consistent ordering
+    camera_keys.sort(key=_extract_camera_index)
+    
+    if not camera_keys:
+        print('No cameras found in calibration file')
+        return
+    
+    print(f"Found {len(camera_keys)} cameras: {camera_keys}")
 
     # Find the data origin empty object to parent the cameras
+    data_origin = None
     for obj in bpy.data.objects:
         # If the object name end with '_origin', it is the data origin
         if obj.name.endswith('_origin'):
@@ -69,13 +131,15 @@ def add_capture_cameras(
     )
     cameras_parent = bpy.context.active_object
     cameras_parent.name = 'capture_cameras_parent'
-    cameras_parent.parent = data_origin
+    if data_origin is not None:
+        cameras_parent.parent = data_origin
     # Hide the camera parent in viewport
     cameras_parent.hide_set(True)
 
-    # Set the scene resolution equal to cam_0 resolution
-    bpy.context.scene.render.resolution_x = cameras_dict['cam_0']['size'][0]
-    bpy.context.scene.render.resolution_y = cameras_dict['cam_0']['size'][1]
+    # Set the scene resolution equal to the first camera's resolution
+    first_camera_key = camera_keys[0]
+    bpy.context.scene.render.resolution_x = cameras_dict[first_camera_key]['size'][0]
+    bpy.context.scene.render.resolution_y = cameras_dict[first_camera_key]['size'][1]
 
     # TODO: Change the synchronized videos for annotated videos when those
     # they are not being used elsewhere to avoid EXCEPTION_ACCESS_VIOLATION
@@ -86,9 +150,14 @@ def add_capture_cameras(
     # and the final capture videos
     synchronized_videos_folder = os.path.join(recording_folder, 'synchronized_videos')
     synchronized_videos = [f for f in os.listdir(synchronized_videos_folder) if f.endswith('.mp4')]
+    
+    # Sort videos to ensure consistent ordering (they should be named like cam_01.mp4, cam_02.mp4, etc.)
+    synchronized_videos.sort()
 
     # Add the cameras to the scene
-    for key, camera_data in cameras_dict.items():
+    for key in camera_keys:
+        camera_data = cameras_dict[key]
+        camera_index = _extract_camera_index(key)
 
         bpy.ops.object.camera_add(
             location=[coord / 1000 for coord in camera_data['world_position']]
@@ -133,26 +202,29 @@ def add_capture_cameras(
         camera_object.parent = cameras_parent
 
         # Add the correspondent capture video to the background of each camera
-        # Get the path of the capture video
-        capture_video_path = (
-            recording_folder
-            + '/synchronized_videos/'
-            + synchronized_videos[int(key.split('_')[1])]
-        )
+        # Get the path of the capture video using the extracted index
+        if camera_index < len(synchronized_videos):
+            capture_video_path = os.path.join(
+                recording_folder,
+                'synchronized_videos',
+                synchronized_videos[camera_index]
+            )
 
-        # Normalize the path
-        capture_video_path = os.path.normpath(capture_video_path)
+            # Normalize the path
+            capture_video_path = os.path.normpath(capture_video_path)
 
-        # Load the capture video
-        capture_video = bpy.data.movieclips.load(capture_video_path)
+            # Load the capture video
+            capture_video = bpy.data.movieclips.load(capture_video_path)
 
-        # Add the capture video as a background image
-        camera_data = camera_object.data
-        camera_background = camera_data.background_images.new()
-        camera_background.source = 'MOVIE_CLIP'
-        camera_background.clip = capture_video
-        camera_background.alpha = 1
-        camera_background.clip.frame_offset = 1
-        camera_data.show_background_images = True
+            # Add the capture video as a background image
+            cam_data = camera_object.data
+            camera_background = cam_data.background_images.new()
+            camera_background.source = 'MOVIE_CLIP'
+            camera_background.clip = capture_video
+            camera_background.alpha = 1
+            camera_background.clip.frame_offset = 1
+            cam_data.show_background_images = True
+        else:
+            print(f"Warning: No synchronized video found for camera {key} (index {camera_index})")
 
     return
