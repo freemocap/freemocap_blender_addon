@@ -170,84 +170,152 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
             split.column().label(text='Foot Locking Method')
             split.column().prop(foot_locking_props, 'foot_locking_method')
 
+            # ── Individual Marker Height Options ──
             row = layout.row(align=True)
-            row.prop(foot_locking_props, "show_individual_marker_height_options", text="",
-                icon='TRIA_DOWN' if foot_locking_props.show_individual_marker_height_options else 'TRIA_RIGHT', emboss=False)
+            row.prop(foot_locking_props, "show_imh_options", text="",
+                icon='TRIA_DOWN' if foot_locking_props.show_imh_options else 'TRIA_RIGHT', emboss=False)
             row.label(text="Individual Marker Height Options")
 
-            if foot_locking_props.show_individual_marker_height_options:
-
+            if foot_locking_props.show_imh_options:
                 box = layout.box()
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Target Foot')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'target_foot'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_target_foot')
 
                 split = box.column().row().split(factor=0.6)
-                split.column().label(text='Target foot base markers')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'target_base_markers'
-                )
+                split.column().label(text='Target Base Markers')
+                split.split().column().prop(foot_locking_props, 'imh_target_base_markers')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Z Threshold (m)')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'z_threshold'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_z_threshold')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Ground Level (m)')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'ground_level'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_ground_level')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Frame Window Minimum Size')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'frame_window_min_size'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_frame_window_min_size')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Initial Attenuation Count')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'initial_attenuation_count'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_initial_attenuation_count')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Final Attenuation Count')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'final_attenuation_count'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_final_attenuation_count')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Lock XY at Ground Level')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'lock_xy_at_ground_level'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_lock_xy_at_ground_level')
 
                 split = box.column().row().split(factor=0.6)
-                split.column().label(text='Knee Hip Compensation Coefficient')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'knee_hip_compensation_coefficient'
-                )
+                split.column().label(text='Knee Hip Comp. Coeff. (X,Y,Z)')
+                split.split().column().prop(foot_locking_props, 'imh_knee_hip_compensation_coefficient', text='')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Compensate Upper Body Markers')
-                split.split().column().prop(
-                    foot_locking_props,
-                    'compensate_upper_body'
-                )
+                split.split().column().prop(foot_locking_props, 'imh_compensate_upper_body')
+
+            # ── Window 3D Compensation Options ──
+            row = layout.row(align=True)
+            row.prop(foot_locking_props, "show_w3d_options", text="",
+                icon='TRIA_DOWN' if foot_locking_props.show_w3d_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="Window 3D Compensation Options")
+
+            if foot_locking_props.show_w3d_options:
+                box = layout.box()
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target Foot')
+                split.split().column().prop(foot_locking_props, 'w3d_target_foot')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target Base Markers')
+                split.split().column().prop(foot_locking_props, 'w3d_target_base_markers')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Z Threshold (m)')
+                split.split().column().prop(foot_locking_props, 'w3d_z_threshold')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Ground Level (m)')
+                split.split().column().prop(foot_locking_props, 'w3d_ground_level')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Frame Window Minimum Size')
+                split.split().column().prop(foot_locking_props, 'w3d_frame_window_min_size')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Initial Attenuation Count')
+                split.split().column().prop(foot_locking_props, 'w3d_initial_attenuation_count')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Final Attenuation Count')
+                split.split().column().prop(foot_locking_props, 'w3d_final_attenuation_count')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Lock XY at Ground Level')
+                split.split().column().prop(foot_locking_props, 'w3d_lock_xy_at_ground_level')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Knee Hip Comp. Coeff. (X,Y,Z)')
+                split.split().column().prop(foot_locking_props, 'w3d_knee_hip_compensation_coefficient', text='')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Compensate Upper Body Markers')
+                split.split().column().prop(foot_locking_props, 'w3d_compensate_upper_body')
+
+            # ── Foot Group Movement Options ──
+            row = layout.row(align=True)
+            row.prop(foot_locking_props, "show_fgm_options", text="",
+                icon='TRIA_DOWN' if foot_locking_props.show_fgm_options else 'TRIA_RIGHT', emboss=False)
+            row.label(text="Foot Group Movement Options")
+
+            if foot_locking_props.show_fgm_options:
+                box = layout.box()
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Target Foot')
+                split.split().column().prop(foot_locking_props, 'fgm_target_foot')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Z Threshold (m)')
+                split.split().column().prop(foot_locking_props, 'fgm_z_threshold')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Ground Level (m)')
+                split.split().column().prop(foot_locking_props, 'fgm_ground_level')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Negative Height Limit (m)')
+                split.split().column().prop(foot_locking_props, 'fgm_negative_height_limit')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Frame Window Minimum Size')
+                split.split().column().prop(foot_locking_props, 'fgm_frame_window_min_size')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Initial Attenuation Count')
+                split.split().column().prop(foot_locking_props, 'fgm_initial_attenuation_count')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='XY Radius (m)')
+                split.split().column().prop(foot_locking_props, 'fgm_xy_radius')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Moving Average Window')
+                split.split().column().prop(foot_locking_props, 'fgm_moving_average_window')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Knee Hip Comp. Coeff. (X,Y,Z)')
+                split.split().column().prop(foot_locking_props, 'fgm_knee_hip_compensation_coefficient', text='')
+
+                split = box.column().row().split(factor=0.6)
+                split.column().label(text='Compensate Upper Body Markers')
+                split.split().column().prop(foot_locking_props, 'fgm_compensate_upper_body')
 
             row = layout.row(align=True)
             row.operator(
