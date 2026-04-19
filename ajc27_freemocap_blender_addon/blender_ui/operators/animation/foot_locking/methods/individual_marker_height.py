@@ -35,7 +35,6 @@ def run_individual_marker_height(context):
     frame_window_min_size = props.imh_frame_window_min_size
     initial_attenuation_count = props.imh_initial_attenuation_count
     final_attenuation_count = props.imh_final_attenuation_count
-    lock_xy_at_ground_level = props.imh_lock_xy_at_ground_level
     knee_hip_compensation_coefficient = props.imh_knee_hip_compensation_coefficient
     compensate_upper_body = props.imh_compensate_upper_body
 

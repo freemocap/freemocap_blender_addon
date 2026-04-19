@@ -21,9 +21,6 @@ import math
 import mathutils
 from mathutils import Vector
 
-from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import (
-    get_bone_definitions,
-)
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import (
     get_mediapipe_hierarchy,
 )
@@ -44,13 +41,6 @@ def run_foot_group_movement(context):
     Called by the foot locking operator when this method is selected.
     """
     print("Applying Foot Locking (Method: Foot Group Movement).......")
-
-    # ── Debug Configuration ──────────────────────────────────────────
-    # Set debug_foot_locking to True to print detailed per-frame info
-    # for the right foot within a window around debug_target_frame.
-    debug_foot_locking = True
-    debug_target_frame = 165
-    debug_frame_window = 15  # Print debug info for frames ±15 around target
 
     # ── Read UI Properties ───────────────────────────────────────────
     scene = context.scene
@@ -247,29 +237,8 @@ def run_foot_group_movement(context):
                     for candidate_frame in candidate_frames:
                         lock_states[marker_name][candidate_frame] = True
 
-                # Debug output for right foot frames near the target
-                if (
-                    debug_foot_locking
-                    and 'right' in marker_name
-                    and abs(frame - debug_target_frame) <= debug_frame_window
-                ):
-                    z_status = 'OK' if is_below_z_threshold else 'FAIL'
-                    xy_status = 'OK' if is_within_xy_radius else 'FAIL'
-                    is_locked = lock_states.get(
-                        marker_name, {}
-                    ).get(frame, False)
-                    print(
-                        f"[DEBUG CANDIDATE F{frame}] {marker_name}: "
-                        f"pos.z={position.z:.5f} "
-                        f"(th={z_threshold:.5f})[{z_status}], "
-                        f"xy_dist={xy_distance:.5f} "
-                        f"(th={xy_radius:.5f})[{xy_status}], "
-                        f"accum_candidates={len(candidate_frames)}, "
-                        f"locked={is_locked}"
-                    )
 
         # ── Phase 2: Group Locked Frames into Contiguous Blocks ──────
-
         def get_contiguous_blocks(marker_name):
             """
             Given a marker's lock_states dictionary, return a list of
@@ -302,18 +271,8 @@ def run_foot_group_movement(context):
         heel_blocks = get_contiguous_blocks(heel_name)
         toe_blocks = get_contiguous_blocks(toe_name)
 
-        # Debug: print discovered blocks for the right foot
-        if debug_foot_locking and 'right' in heel_name:
-            print(f"\n[DEBUG] Heel blocks:")
-            for block in heel_blocks:
-                print(f"  {block}")
-            print(f"[DEBUG] Toe blocks:")
-            for block in toe_blocks:
-                print(f"  {block}")
-            print()
 
         # ── Phase 3: Calculate Blend Weights ─────────────────────────
-
         def get_blend_weight(frame, blocks):
             """
             Calculate the blend weight for a frame given its lock blocks.
@@ -655,31 +614,6 @@ def run_foot_group_movement(context):
                                 + best_rotation @ ankle_to_toe
                             )
 
-            # ── Debug Output ─────────────────────────────────────────
-            is_debug_frame = (
-                debug_foot_locking
-                and 'right' in heel_name
-                and abs(frame - debug_target_frame) <= debug_frame_window
-            )
-            if is_debug_frame:
-                print(
-                    f"[DEBUG BLEND F{frame}] "
-                    f"heel_w={heel_weight:.4f}, "
-                    f"toe_w={toe_weight:.4f}, "
-                    f"pivot_w={pivot_weight:.4f}"
-                )
-                print(
-                    f"[DEBUG BLEND F{frame}]   "
-                    f"orig_h.z={original_heel.z:.5f}, "
-                    f"target_h.z={target_heel.z:.5f}, "
-                    f"final_h.z={final_heel.z:.5f}"
-                )
-                print(
-                    f"[DEBUG BLEND F{frame}]   "
-                    f"orig_t.z={original_toe.z:.5f}, "
-                    f"target_t.z={target_toe.z:.5f}, "
-                    f"final_t.z={final_toe.z:.5f}"
-                )
 
             # ── Write Final Positions ────────────────────────────────
             set_position(heel_name, frame, final_heel)
