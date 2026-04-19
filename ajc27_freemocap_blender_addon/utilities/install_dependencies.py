@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-OPTIONAL_DEPENDENCIES = ["tomllib"] #, "opencv-contrib-python", "matplotlib"]
+OPTIONAL_DEPENDENCIES = []
 
 
 def check_and_install_dependencies():

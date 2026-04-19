@@ -19,9 +19,14 @@ def get_video_paths(path_to_video_folder: str) -> list[str]:
 def add_videos_to_scene(videos_directory: str,
                         parent_object: bpy.types.Object,
                         video_scale: float = 3,
+                        frame_offset: int = 1,
                         ):
     print(f"Adding videos to scene...")
     video_paths = get_video_paths(videos_directory)
+
+    # Sort video paths by filename to ensure consistent ordering
+    video_paths.sort(key=lambda x: Path(x).stem)
+    print(f"Sorted video paths: {[Path(path).stem for path in video_paths]}")
 
     bpy.ops.image.import_as_mesh_planes(use_backface_culling=False,
                                         files=[{"name":path} for path in video_paths],
@@ -44,7 +49,14 @@ def add_videos_to_scene(videos_directory: str,
         obj.location.y += video_scale/2
         obj.location.z = video_scale/2 + 0.5
 
-
+        # Apply frame offset to the video texture
+        for material_slot in obj.material_slots:
+            if material_slot.material and material_slot.material.use_nodes:
+                nodes = material_slot.material.node_tree.nodes
+                for node in nodes:
+                    if node.type == 'TEX_IMAGE' and node.image:
+                        # Offset the video playback by adjusting the frame
+                        node.image_user.frame_offset = frame_offset
 
 
     #add to videos collection
