@@ -49,7 +49,8 @@ class FreemocapData:
             raise NotImplementedError(
                 f"Data source `{data_source}` not recognized - create the equivalent of `MediapipeTrajectoryNames` for this data source")
         else:
-            trajectory_names = MediapipeTrajectoryNames()
+            num_face_markers = face_frame_name_xyz.shape[1] if face_frame_name_xyz.ndim == 3 else 0
+            trajectory_names = MediapipeTrajectoryNames(num_face_markers=num_face_markers)
         if metadata is None:
             metadata = {}
 

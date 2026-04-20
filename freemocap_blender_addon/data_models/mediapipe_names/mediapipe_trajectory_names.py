@@ -3,7 +3,12 @@ from typing import List
 
 NUMBER_OF_MEDIAPIPE_BODY_MARKERS = 37
 NUMBER_OF_MEDIAPIPE_HAND_MARKERS = 21
-NUMBER_OF_MEDIAPIPE_FACE_MARKERS = 478
+# MediaPipe ships multiple face models; we accept any of them and size the name
+# list to whatever the loaded data actually contains.
+NUMBER_OF_MEDIAPIPE_FACE_MARKERS_TESSELLATED = 478
+NUMBER_OF_MEDIAPIPE_FACE_MARKERS_CONTOUR = 136
+# Back-compat alias; treated as the default when no marker count is supplied.
+NUMBER_OF_MEDIAPIPE_FACE_MARKERS = NUMBER_OF_MEDIAPIPE_FACE_MARKERS_TESSELLATED
 
 
 @dataclass
@@ -20,6 +25,7 @@ class MediapipeTrajectoryNames(HumanTrajectoryNames):
     face: List[str] = field(default_factory=list)
     right_hand: List[str] = field(default_factory=list)
     left_hand: List[str] = field(default_factory=list)
+    num_face_markers: int = NUMBER_OF_MEDIAPIPE_FACE_MARKERS
 
     def __post_init__(self):
         self.body = [
@@ -95,7 +101,7 @@ class MediapipeTrajectoryNames(HumanTrajectoryNames):
                              "right_ear_tragion",
                              "left_ear_tragion"]
         mediapipe_face_names = []
-        for index in range(NUMBER_OF_MEDIAPIPE_FACE_MARKERS):
+        for index in range(self.num_face_markers):
             if index < len(face_named_points):
                 mediapipe_face_names.append(face_named_points[index])
             else:
@@ -108,9 +114,18 @@ class MediapipeTrajectoryNames(HumanTrajectoryNames):
         if not len(self.body) == NUMBER_OF_MEDIAPIPE_BODY_MARKERS:
             raise ValueError(
                 f"Number of mediapipe body markers {len(self.body)} does not match expected {NUMBER_OF_MEDIAPIPE_BODY_MARKERS}")
-        if not len(self.face) == NUMBER_OF_MEDIAPIPE_FACE_MARKERS:
-            raise ValueError(
-                f"Number of mediapipe face markers {len(self.face)} does not match expected {NUMBER_OF_MEDIAPIPE_FACE_MARKERS}")
+        # Face length is intentionally not strictly validated — MediaPipe has
+        # multiple face models (tessellated 478, contour 136, etc.) and we
+        # size the name list dynamically from the incoming data.
+        if self.num_face_markers not in (
+            NUMBER_OF_MEDIAPIPE_FACE_MARKERS_TESSELLATED,
+            NUMBER_OF_MEDIAPIPE_FACE_MARKERS_CONTOUR,
+        ):
+            print(
+                f"WARNING - unexpected number of mediapipe face markers: {self.num_face_markers} "
+                f"(known values: {NUMBER_OF_MEDIAPIPE_FACE_MARKERS_TESSELLATED} tessellated, "
+                f"{NUMBER_OF_MEDIAPIPE_FACE_MARKERS_CONTOUR} contour) — proceeding anyway."
+            )
         if not len(self.right_hand) == NUMBER_OF_MEDIAPIPE_HAND_MARKERS:
             raise ValueError(
                 f"Number of mediapipe right hand markers {len(self.right_hand)} does not match expected {NUMBER_OF_MEDIAPIPE_HAND_MARKERS}")
