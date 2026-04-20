@@ -24,6 +24,8 @@ from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_t
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
+from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
+from .setup_scene.scene_objects.ground_plane.create_ground_plane import create_ground_plane
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -379,7 +381,7 @@ class MainController:
         if cube_name in bpy.data.objects:
             bpy.data.objects.remove(bpy.data.objects[cube_name])
 
-        # create_scene_objects(scene=bpy.context.scene)
+        create_scene_objects(scene=bpy.context.scene)
 
 
     def save_blender_file(self):
