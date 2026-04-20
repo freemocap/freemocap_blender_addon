@@ -5,13 +5,17 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Extract version from __init__.py
         id: get_version
@@ -19,6 +23,7 @@ jobs:
           version=$(grep -Po '(?<=^__version__ = ")[^"]*' ajc27_freemocap_blender_addon/__init__.py)
           version=${version#v}
           echo "version=$version" >> $GITHUB_OUTPUT
+
       - name: Create zip file
         run: |
           version=${{ steps.get_version.outputs.version }}
@@ -31,7 +36,6 @@ jobs:
           path: freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
 
       - name: Create release notes
-        id: create_release_notes
         run: |
           version=${{ steps.get_version.outputs.version }}
           echo "You can install the attached .zip as a Blender Add-on. See README.md for basic installation and usage instructions" > release_notes.md
@@ -47,24 +51,12 @@ jobs:
           echo "- The add-on should now be available in Blender under the 'FreeMoCap' tab in the 3d Viewport (press 'n' if its not visible)" >> release_notes.md
           echo "(See README.md for more detailed instructions and usage information)" >> release_notes.md
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release and upload asset
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body_path: ./release_notes.md
           draft: false
           prerelease: false
-          body_path: ./release_notes.md
-
-      - name: Upload to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
-          asset_name: freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
-          asset_content_type: application/zip
+          files: freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
