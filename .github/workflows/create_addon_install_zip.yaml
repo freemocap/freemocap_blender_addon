@@ -52,7 +52,7 @@ jobs:
           echo "(See README.md for more detailed instructions and usage information)" >> release_notes.md
 
       - name: Create GitHub Release and upload asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release ${{ steps.get_version.outputs.version }}
