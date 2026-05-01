@@ -92,7 +92,7 @@ rest_pose_type_rotations = {
         },
         'spine': {
             'rotation' : (
-                m.radians(6),
+                m.radians(10.950077),
                 0,
                 0
             ),
@@ -100,7 +100,7 @@ rest_pose_type_rotations = {
         },
         'spine.001': {
             'rotation' : (
-                m.radians(-9.86320126530132),
+                m.radians(-8.532878),
                 0,
                 0
             ),

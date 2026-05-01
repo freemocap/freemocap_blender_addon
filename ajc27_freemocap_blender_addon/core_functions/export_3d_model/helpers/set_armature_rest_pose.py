@@ -110,6 +110,10 @@ def set_armature_rest_pose(
                 if 'thumb.carpal.' + thumb_side[0].upper() in armature.data.edit_bones:
                     armature.data.edit_bones.remove(armature.data.edit_bones['thumb.carpal.' + thumb_side[0].upper()])
 
+            # Disconnect the shoulder and neck bones from parent so spine.001 can have custom rotation
+            if 'shoulder' in bone.name or 'neck' in bone.name:
+                bone.use_connect = False
+
         # Change the targets of the hand constraints
         # TODO: Delete this code if the default target markers change to these ones in the future
         for side in ['left', 'right']:
@@ -129,6 +133,78 @@ def set_armature_rest_pose(
 
             hand_bone.constraints['Damped Track'].target = hand_middle_finger_mcp
             hand_bone.constraints['Locked Track'].target = hand_index_finger_mcp
+
+        # Get the trunk_center marker
+        trunk_center_marker = [
+            marker for marker in data_parent_empty.children_recursive
+            if 'trunk_center' in marker.name
+        ][0]
+
+        # Create a new damped_tracked constraint for the spine (spine_01) and set it to the -z-axis
+        new_constraint = armature.pose.bones["spine"].constraints.new('DAMPED_TRACK')
+        new_constraint.name = "Metahuman_Spine_01_Correction"
+        
+        # Configure the constraint
+        new_constraint.target = trunk_center_marker
+        new_constraint.track_axis = 'TRACK_NEGATIVE_Z'
+        new_constraint.influence = 0.055
+
+        # Change the length of Spine.001 (spine_04) to compensate for the new parent position
+        spine_rotation = rest_pose_rotations['spine']['rotation'][0]
+        spine_length = bone_info['spine']['length']
+        spine_001_length = bone_info['spine.001']['length']
+        spine_001_new_length = m.sqrt(spine_length**2 + (spine_length+spine_001_length)**2 - 2*spine_length*(spine_length+spine_001_length)*m.cos(spine_rotation))
+
+        armature.data.edit_bones['spine.001'].length = spine_001_new_length
+
+        # Get the neck_center marker
+        neck_center_marker = [
+            marker for marker in data_parent_empty.children_recursive
+            if 'neck_center' in marker.name
+        ][0]
+
+        # Create a new damped_tracked constraint for the spine_04 (spine.001)
+        new_constraint = armature.pose.bones["spine.001"].constraints.new('DAMPED_TRACK')
+        new_constraint.name = "Metahuman_Spine_04_Correction"
+        new_constraint.target = neck_center_marker
+        new_constraint.track_axis = 'TRACK_Z'
+        new_constraint.influence = 0.035
+
+        # Create a new copy_location constraint to the neck bone to set its location to the neck_center marker
+        new_constraint = armature.pose.bones["neck"].constraints.new('COPY_LOCATION')
+        new_constraint.name = "Metahuman_Neck_Location_Correction"
+        new_constraint.target = neck_center_marker
+
+        # Move the new constraint to the top of the stack
+        neck_constraints = armature.pose.bones["neck"].constraints
+        neck_constraints.move(len(neck_constraints) - 1, 0)
+
+        # Get the head_center marker
+        head_center_marker = [
+            marker for marker in data_parent_empty.children_recursive
+            if 'head_center' in marker.name
+        ][0]
+
+        # Create a new damped_tracked constraint for the neck bone and set it to the -z-axis with 0.1 influence
+        new_constraint = armature.pose.bones["neck"].constraints.new('DAMPED_TRACK')
+        new_constraint.name = "Metahuman_Neck_Correction"
+        new_constraint.target = head_center_marker
+        new_constraint.track_axis = 'TRACK_Z'
+        new_constraint.influence = 0.11
+
+        # Get the nose marker
+        nose_marker = [
+            marker for marker in data_parent_empty.children_recursive
+            if 'nose' in marker.name
+        ][0]
+
+        # Create a new damped_tracked constraint for the head (face) bone and set it to the -z-axis with 0.1 influence
+        new_constraint = armature.pose.bones["face"].constraints.new('DAMPED_TRACK')
+        new_constraint.name = "Metahuman_Head_Correction"
+        new_constraint.target = nose_marker
+        new_constraint.track_axis = 'TRACK_Z'
+        new_constraint.influence = 0.1
+
 
     if rest_pose_type == 'daz_g8.1':
         # Parent the thigh bones to the pelvis

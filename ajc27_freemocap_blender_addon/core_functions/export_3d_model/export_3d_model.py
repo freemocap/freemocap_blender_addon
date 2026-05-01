@@ -168,7 +168,7 @@ def export_3d_model(
     for marker in empties_parent.children:
         marker.matrix_world.translation = current_markers_position[marker.name]
         # Insert keyframe in the start frame
-        marker.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_start)
+        # marker.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_start)
 
 
     if restore_defaults_after_export:
@@ -234,6 +234,9 @@ def export_3d_model(
                         bone.parent = armature.data.edit_bones['pelvis.L']
                     bone.use_connect = True
 
+                if 'shoulder' in bone.name or 'neck' in bone.name:
+                    bone.use_connect = True
+
             # Set Object Mode
             bpy.ops.object.mode_set(mode='OBJECT')
             armature.select_set(False)
@@ -260,7 +263,7 @@ def export_3d_model(
             armature.select_set(False)
 
         if rest_pose_type == 'metahuman':
-            # Restore the hand bone connstraints target markers
+            # Restore the hand bone constraints target markers
             # TODO: Delete this code if the default target markers are not hand_middle and hand_thumb_cmc
             for side in ['left', 'right']:
                 hand_bone = armature.pose.bones['hand' + '.' + side[0].upper()]
@@ -279,6 +282,32 @@ def export_3d_model(
 
                 hand_bone.constraints['Damped Track'].target = hand_middle
                 hand_bone.constraints['Locked Track'].target = hand_thumb_cmc
+
+
+            # Remove the Metahuman_Spine_01_Correction constraint if it exists
+            if "Metahuman_Spine_01_Correction" in armature.pose.bones["spine"].constraints:
+                constraint = armature.pose.bones["spine"].constraints["Metahuman_Spine_01_Correction"]
+                armature.pose.bones["spine"].constraints.remove(constraint)
+
+            # Remove the Metahuman_Spine_04_Correction constraint if it exists
+            if "Metahuman_Spine_04_Correction" in armature.pose.bones["spine.001"].constraints:
+                constraint = armature.pose.bones["spine.001"].constraints["Metahuman_Spine_04_Correction"]
+                armature.pose.bones["spine.001"].constraints.remove(constraint)
+
+            # Remove the Metahuman_Neck_Location_Correction constraint if it exists
+            if "Metahuman_Neck_Location_Correction" in armature.pose.bones["neck"].constraints:
+                constraint = armature.pose.bones["neck"].constraints["Metahuman_Neck_Location_Correction"]
+                armature.pose.bones["neck"].constraints.remove(constraint)
+
+            # Remove the Metahuman_Neck_Correction constraint if it exists
+            if "Metahuman_Neck_Correction" in armature.pose.bones["neck"].constraints:
+                constraint = armature.pose.bones["neck"].constraints["Metahuman_Neck_Correction"]
+                armature.pose.bones["neck"].constraints.remove(constraint)
+
+            # Remove the Metahuman_Head_Correction constraint if it exists
+            if "Metahuman_Head_Correction" in armature.pose.bones["face"].constraints:
+                constraint = armature.pose.bones["face"].constraints["Metahuman_Head_Correction"]
+                armature.pose.bones["face"].constraints.remove(constraint)            
 
         if rest_pose_type == 'daz_g8.1':
             # Remove the DazG8.1_Face_Correction constraint if it exists
