@@ -395,10 +395,7 @@ class MainController:
                 ground_plane.data.materials[0] = material
             else:
                 ground_plane.data.materials.append(material)
-            
-            # Parent to the data parent empty
-            ground_plane.parent = self._data_parent_empty
-            
+
             print(f"Created ground plane with size {plane_size:.2f}m and {checker_scale:.1f} checker squares (20cm each)")
             
         except Exception as e:
