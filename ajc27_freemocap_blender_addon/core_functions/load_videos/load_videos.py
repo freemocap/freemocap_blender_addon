@@ -19,6 +19,7 @@ def get_video_paths(path_to_video_folder: str) -> list[str]:
 def add_videos_to_scene(videos_directory: str,
                         parent_object: bpy.types.Object,
                         video_scale: float = 3,
+                        frame_offset: int = 1,
                         ):
     """Load videos for Blender 4.2 - 4.x using import_as_mesh_planes operator."""
     print(f"Adding videos to scene...")
@@ -31,7 +32,7 @@ def add_videos_to_scene(videos_directory: str,
                                         size_mode='ABSOLUTE',
                                         height=video_scale,
                                         offset_amount=video_scale * .1,
-                                        align_axis='+Y')
+                                        align_axis='-Y')
     # gather all the imported objects
     imported_objects = bpy.context.selected_objects
 
@@ -52,10 +53,20 @@ def add_videos_to_scene(videos_directory: str,
         videos_collection.objects.link(obj)
         obj.parent = parent_object
 
+        # Apply frame offset to the video texture
+        for material_slot in obj.material_slots:
+            if material_slot.material and material_slot.material.use_nodes:
+                nodes = material_slot.material.node_tree.nodes
+                for node in nodes:
+                    if node.type == 'TEX_IMAGE' and node.image:
+                        # Offset the video playback by adjusting the frame
+                        node.image_user.frame_offset = frame_offset
+
 
 def add_videos_to_scene_blender_5(videos_directory: str,
                                   parent_object: bpy.types.Object,
                                   video_scale: float = 3,
+                                  frame_offset: int = 1,
                                   ):
     """
     Load videos into scene using Blender 5+ Mesh Plane operator.
@@ -115,7 +126,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                     files=[{"name": video_name}],
                     directory=str(Path(video_path).parent),
                     shader='EMISSION',
-                    align_axis='+Y',
+                    align_axis='-Y',
                     size_mode='ABSOLUTE',
                     height=video_scale,
                 )
@@ -188,7 +199,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                 print(f"  Fallback method failed: {fallback_e}")
 
     # Offset the videos horizontally
-    # Note: import_as_mesh_planes with align_axis='+Y' handles rotation automatically
+    # Note: import_as_mesh_planes with align_axis='-Y' handles rotation automatically
     if imported_objects:
         buffer = video_scale * 1.1
         for i, obj in enumerate(imported_objects):
@@ -207,6 +218,15 @@ def add_videos_to_scene_blender_5(videos_directory: str,
         videos_collection.objects.link(obj)
         obj.parent = parent_object
 
+        # Apply frame offset to the video texture
+        for material_slot in obj.material_slots:
+            if material_slot.material and material_slot.material.use_nodes:
+                nodes = material_slot.material.node_tree.nodes
+                for node in nodes:
+                    if node.type == 'TEX_IMAGE' and node.image:
+                        # Offset the video playback by adjusting the frame
+                        node.image_user.frame_offset = frame_offset
+
     print(f"Successfully imported {len(imported_objects)} videos using Blender 5+ method")
 
 
@@ -214,6 +234,7 @@ def add_videos_to_scene_pre_4_2(videos_path: Union[Path, str],
                                 parent_object: bpy.types.Object,
                                 video_location_scale: float = 4,
                                 video_size_scale: float = 5,
+                                frame_offset: int = 1,
                                 ):
     """Load videos for Blender versions before 4.2 using the old import_image.to_plane operator."""
     print(f"Adding videos to scene...")
@@ -248,9 +269,20 @@ def add_videos_to_scene_pre_4_2(videos_path: Union[Path, str],
         video_as_plane.scale = [video_size_scale] * 3
         video_as_plane.parent = parent_object
 
+        # Apply frame offset to the video texture
+        for material_slot in video_as_plane.material_slots:
+            if material_slot.material and material_slot.material.use_nodes:
+                nodes = material_slot.material.node_tree.nodes
+                for node in nodes:
+                    if node.type == 'TEX_IMAGE' and node.image:
+                        # Offset the video playback by adjusting the frame
+                        node.image_user.frame_offset = frame_offset
+
 
 def load_videos_as_planes(recording_path: str,
-                          parent_object: bpy.types.Object = None, ):
+                          parent_object: bpy.types.Object = None,
+                          frame_offset: int = 1,
+                          ):
     """
     ############################
     Load videos into scene using appropriate method based on Blender version.
@@ -280,7 +312,8 @@ def load_videos_as_planes(recording_path: str,
                 print("Using Blender 5+ Mesh Plane import method")
                 add_videos_to_scene_blender_5(
                     videos_directory=str(videos_path),
-                    parent_object=parent_object
+                    parent_object=parent_object,
+                    frame_offset=frame_offset
                 )
             # Blender 4.2 - 4.x uses import_as_mesh_planes from addon
             elif blender_version[0] >= 4 and blender_version[1] >= 2:
@@ -292,7 +325,8 @@ def load_videos_as_planes(recording_path: str,
                     print(e)
                 add_videos_to_scene(
                     videos_directory=str(videos_path),
-                    parent_object=parent_object
+                    parent_object=parent_object,
+                    frame_offset=frame_offset
                 )
             # Blender < 4.2 uses old import_image.to_plane
             else:
@@ -304,7 +338,8 @@ def load_videos_as_planes(recording_path: str,
                     print(e)
                 add_videos_to_scene_pre_4_2(
                     videos_path=str(videos_path),
-                    parent_object=parent_object
+                    parent_object=parent_object,
+                    frame_offset=frame_offset
                 )
 
         except Exception as e:
