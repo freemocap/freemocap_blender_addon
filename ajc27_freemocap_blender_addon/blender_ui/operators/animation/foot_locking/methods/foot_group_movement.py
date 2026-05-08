@@ -30,6 +30,9 @@ from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.f
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import (
     translate_marker,
 )
+from ajc27_freemocap_blender_addon.core_functions.animation_utils import (
+    get_fcurves_from_object_action,
+)
 
 # Load the mediapipe hierarchy once at module level
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
@@ -79,15 +82,13 @@ def run_foot_group_movement(context):
             for marker in child.children:
                 if marker.type == 'EMPTY':
                     # Find the location fcurves for X, Y, Z axes
-                    fcurve_x = marker.animation_data.action.fcurves.find(
-                        "location", index=0
-                    )
-                    fcurve_y = marker.animation_data.action.fcurves.find(
-                        "location", index=1
-                    )
-                    fcurve_z = marker.animation_data.action.fcurves.find(
-                        "location", index=2
-                    )
+                    fcurves = get_fcurves_from_object_action(marker)
+                    if fcurves is None:
+                        continue
+
+                    fcurve_x = fcurves.find("location", index=0)
+                    fcurve_y = fcurves.find("location", index=1)
+                    fcurve_z = fcurves.find("location", index=2)
 
                     # Skip markers without complete location fcurves
                     if fcurve_x is None or fcurve_y is None or fcurve_z is None:
@@ -728,10 +729,13 @@ def run_foot_group_movement(context):
     # Transfer the modified numpy arrays back into the Blender
     # fcurve keyframe points using the efficient foreach_set method.
     for marker_name, marker_data in markers.items():
+        marker_obj = marker_data['object']
+        fcurves = get_fcurves_from_object_action(marker_obj)
+        if fcurves is None:
+            continue
+
         for axis_idx in range(3):
-            fcurve = marker_data['object'].animation_data.action.fcurves.find(
-                "location", index=axis_idx
-            )
+            fcurve = fcurves.find("location", index=axis_idx)
             if fcurve is not None:
                 # Build a flat array of [frame0, val0, frame1, val1, ...]
                 num_keyframes = len(marker_data['fcurves'][axis_idx])

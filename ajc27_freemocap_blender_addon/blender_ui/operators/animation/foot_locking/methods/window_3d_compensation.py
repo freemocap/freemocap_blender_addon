@@ -7,6 +7,9 @@ from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarc
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.foot_locking_markers import foot_locking_markers
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import translate_marker_3d, translate_marker, quadratic_function, error_function_3d
 from ajc27_freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.minimize_functions import gradient_descent_3d
+from ajc27_freemocap_blender_addon.core_functions.animation_utils import (
+    get_fcurves_from_object_action,
+)
 
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
 
@@ -48,9 +51,13 @@ def run_window_3d_compensation(context):
             for marker in child.children:
                 if marker.type == 'EMPTY':
                     # Get the position fcurves
-                    fcurve_x = marker.animation_data.action.fcurves.find("location", index=0)
-                    fcurve_y = marker.animation_data.action.fcurves.find("location", index=1)
-                    fcurve_z = marker.animation_data.action.fcurves.find("location", index=2)
+                    fcurves = get_fcurves_from_object_action(marker)
+                    if fcurves is None:
+                        continue
+
+                    fcurve_x = fcurves.find("location", index=0)
+                    fcurve_y = fcurves.find("location", index=1)
+                    fcurve_z = fcurves.find("location", index=2)
 
                     # Get the fcurve data as numpy arrays
                     fcurve_data = np.array([
@@ -297,8 +304,13 @@ def run_window_3d_compensation(context):
 
     # Output back to blender actions
     for marker_name, marker_data in markers.items():
+        marker_obj = marker_data['object']
+        fcurves = get_fcurves_from_object_action(marker_obj)
+        if fcurves is None:
+            continue
+
         for axis_idx in range(3):
-            fcurve = marker_data['object'].animation_data.action.fcurves.find("location", index=axis_idx)
+            fcurve = fcurves.find("location", index=axis_idx)
             co = np.empty(2 * len(marker_data['fcurves'][axis_idx]), dtype=np.float32)
             co[0::2] = np.arange(len(marker_data['fcurves'][axis_idx]))  
             co[1::2] = marker_data['fcurves'][axis_idx]  
