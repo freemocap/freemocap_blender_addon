@@ -14,14 +14,16 @@ def create_yolo_object_markers(
     # Get the yolo_object_markers_3d.npy filepath
     yolo_marker_3d_filepath = os.path.join(recording_folder, "output_data", "yolo_object_tracking", "yolo_object_markers_3d.npy")
 
-    # If the file does not exist, raise an error
+    # If the file does not exist, print a warning and return early
     if not os.path.exists(yolo_marker_3d_filepath):
-        raise FileNotFoundError(f"YOLO marker file {yolo_marker_3d_filepath} not found.")
+        print(f"YOLO marker file {yolo_marker_3d_filepath} not found. Skipping YOLO marker creation.")
+        return
     
     # Get the model info json to retrieve marker names
     yolo_model_info_filepath = os.path.join(recording_folder, "output_data", "yolo_object_tracking", "yolo_object_model_info.json")
     if not os.path.exists(yolo_model_info_filepath):
-        raise FileNotFoundError(f"YOLO model info file {yolo_model_info_filepath} not found.")
+        print(f"YOLO model info file {yolo_model_info_filepath} not found. Skipping YOLO marker creation.")
+        return
     
     with open(yolo_model_info_filepath, "r") as f:
         yolo_model_info = json.load(f)
