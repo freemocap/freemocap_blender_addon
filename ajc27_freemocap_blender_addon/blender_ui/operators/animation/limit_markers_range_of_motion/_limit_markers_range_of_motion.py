@@ -6,6 +6,10 @@ from copy import deepcopy
 from dataclasses import make_dataclass, field
 import re
 
+from ajc27_freemocap_blender_addon.core_functions.animation_utils import (
+    get_fcurves_from_object_action,
+)
+
 from ajc27_freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
 from ajc27_freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
@@ -80,10 +84,17 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             if child.type == 'EMPTY' and 'empties_parent' in child.name:
                 for marker in child.children:
                     if marker.type == 'EMPTY':
+                        fcurves = get_fcurves_from_object_action(marker)
+                        if fcurves is None:
+                            continue
+
                         # Get the position fcurves
-                        fcurve_x = marker.animation_data.action.fcurves.find("location", index=0)
-                        fcurve_y = marker.animation_data.action.fcurves.find("location", index=1)
-                        fcurve_z = marker.animation_data.action.fcurves.find("location", index=2)
+                        fcurve_x = fcurves.find("location", index=0)
+                        fcurve_y = fcurves.find("location", index=1)
+                        fcurve_z = fcurves.find("location", index=2)
+
+                        if fcurve_x is None or fcurve_y is None or fcurve_z is None:
+                            continue
 
                         # Get the fcurve data as numpy arrays
                         fcurve_data = np.array([
@@ -282,17 +293,22 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         # Write the markers dictionary fcurve data to the objects fcurves
         for marker_name, marker_data in markers.items():
+            marker_obj = marker_data['object']
+            fcurves = get_fcurves_from_object_action(marker_obj)
+            if fcurves is None:
+                continue
+
             for axis_idx in range(3):
-                fcurve = marker_data['object'].animation_data.action.fcurves.find("location", index=axis_idx)
-
-                # Create a flattened array of [frame0, value0, frame1, value1, ...]
-                co = np.empty(2 * len(marker_data['fcurves'][axis_idx]), dtype=np.float32)
-                co[0::2] = np.arange(len(marker_data['fcurves'][axis_idx]))  # Frame numbers
-                co[1::2] = marker_data['fcurves'][axis_idx]  # Axis values
-
-                # Assign all keyframes at once
-                fcurve.keyframe_points.foreach_set("co", co)
-                fcurve.update()  # Finalize changes
+                fcurve = fcurves.find("location", index=axis_idx)
+                if fcurve is not None:
+                    # Create a flattened array of [frame0, value0, frame1, value1, ...]
+                    co = np.empty(2 * len(marker_data['fcurves'][axis_idx]), dtype=np.float32)
+                    co[0::2] = np.arange(len(marker_data['fcurves'][axis_idx]))  # Frame numbers
+                    co[1::2] = marker_data['fcurves'][axis_idx]  # Axis values
+    
+                    # Assign all keyframes at once
+                    fcurve.keyframe_points.foreach_set("co", co)
+                    fcurve.update()  # Finalize changes
 
         return {'FINISHED'}
     
