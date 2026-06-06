@@ -295,20 +295,33 @@ def run_foot_group_movement(context):
                         blend_frames,
                         (block_end - block_start) // 2,
                     )
-                    # Distance from the nearest block edge
-                    distance_from_edge = min(
-                        frame - block_start,
-                        block_end - frame,
-                    )
-                    if distance_from_edge <= max_blend and max_blend > 0:
-                        # Quadratic ease-in from the edge
-                        linear_t = (distance_from_edge + 1) / (max_blend + 1)
-                        quadratic_weight = linear_t * linear_t
-                        if quadratic_weight > best_weight:
-                            best_weight = quadratic_weight
+                    # Determine if the frame is closer to the start or to the end of the block
+                    is_closer_to_start = (frame - block_start) < (block_end - frame)
+
+                    if is_closer_to_start:
+                        distance_from_edge = frame - block_start
+                        if distance_from_edge <= max_blend and max_blend > 0:
+                            # Quadratic ease-out (inversed ease-in) at the start of the block
+                            # to smoothly approach 1.0 at the interior boundary
+                            linear_t = (distance_from_edge + 1) / (max_blend + 1)
+                            quadratic_weight = 1.0 - (1.0 - linear_t) * (1.0 - linear_t)
+                            if quadratic_weight > best_weight:
+                                best_weight = quadratic_weight
+                        else:
+                            # Fully inside the block interior
+                            best_weight = 1.0
                     else:
-                        # Fully inside the block interior
-                        best_weight = 1.0
+                        distance_from_edge = block_end - frame
+                        if distance_from_edge <= max_blend and max_blend > 0:
+                            # Quadratic ease-in at the end of the block
+                            # to smoothly approach 0.0 at the edge boundary
+                            linear_t = (distance_from_edge + 1) / (max_blend + 1)
+                            quadratic_weight = linear_t * linear_t
+                            if quadratic_weight > best_weight:
+                                best_weight = quadratic_weight
+                        else:
+                            # Fully inside the block interior
+                            best_weight = 1.0
             return best_weight
 
         # ── Phase 4: Build the Set of Frames to Process ──────────────
