@@ -6,9 +6,13 @@ from typing import Union
 #   - a plain string: pip package name (e.g. "tomllib")
 #   - a dict for git sources:
 #       { "git": "https://github.com/user/repo", "branch": "main" }
-#       Optionally include "name" to specify the installed package name
-#       used for checking if already installed:
-#       { "git": "https://github.com/user/repo", "branch": "dev", "name": "my-package" }
+#   - a dict for local paths:
+#       { "path": "/home/user/path/to/repo" }
+#       { "path": "/home/user/path/to/repo", "branch": "development" }
+#   - Optionally include "name" to specify the installed package name
+#     used for checking if already installed:
+#       { "git": "...", "branch": "dev", "name": "my-package" }
+#       { "path": "/some/repo", "name": "my-package" }
 OPTIONAL_DEPENDENCIES = ["tomllib"] #, "opencv-contrib-python", "matplotlib"]
 
 DependencySpec = Union[str, dict]
@@ -27,25 +31,41 @@ def _is_installed(python_executable: str, package_name: str) -> bool:
 
 
 def _build_pip_arg(dep: dict) -> str:
-    """Build a pip-installable string from a git dependency dict.
+    """Build a pip-installable string from a dependency dict.
 
-    Returns something like: git+https://github.com/user/repo@development
+    - Git remote: "git+https://github.com/user/repo@development"
+    - Local path: "/home/user/path/to/repo"
+    - Local path + branch: "git+file:///home/user/path/to/repo@development"
     """
-    git_url = dep["git"]
-    branch = dep.get("branch", "main")
-    return f"git+{git_url}@{branch}"
+    if "git" in dep:
+        git_url = dep["git"]
+        branch = dep.get("branch", "main")
+        return f"git+{git_url}@{branch}"
+    elif "path" in dep:
+        path = dep["path"]
+        branch = dep.get("branch")
+        if branch:
+            return f"git+file://{path}@{branch}"
+        return path
+    else:
+        raise ValueError(f"Dependency dict must contain 'git' or 'path' key: {dep}")
 
 
 def _resolve_package_name(dep: str | dict) -> str:
     """Get the human-readable package name for a dependency, used for
     progress messages and the already-installed check."""
     if isinstance(dep, dict):
-        # Use explicit name if provided, otherwise guess from the URL
+        # Use explicit name if provided
         if "name" in dep:
             return dep["name"]
-        # Derive from git URL: strip trailing slash, take last segment, drop .git
-        git_url = dep["git"].rstrip("/")
-        return git_url.split("/")[-1].replace(".git", "")
+        # Derive from git URL
+        if "git" in dep:
+            git_url = dep["git"].rstrip("/")
+            return git_url.split("/")[-1].replace(".git", "")
+        # Derive from local path — use the directory name
+        if "path" in dep:
+            from pathlib import Path
+            return Path(dep["path"]).name
     return dep
 
 
@@ -88,7 +108,7 @@ def check_and_install_dependencies(dependencies: list[DependencySpec] | None = N
 
             if isinstance(dep, dict):
                 pip_arg = _build_pip_arg(dep)
-                print(f"Installing {dep_name} from git ({pip_arg})...")
+                print(f"Installing {dep_name} from source ({pip_arg})...")
             else:
                 pip_arg = dep
                 print(f"Installing {dep_name}...")
