@@ -1,7 +1,7 @@
 version = 1
+revision = 3
 requires-python = ">=3.10, <3.13"
 
 [[package]]
-name = "ajc27-freemocap-blender-addon"
-version = "2024.12.1033"
+name = "freemocap-blender-addon"
 source = { editable = "." }

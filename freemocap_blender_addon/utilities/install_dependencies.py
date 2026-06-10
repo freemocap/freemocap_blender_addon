@@ -1,3 +1,4 @@
+import importlib.util
 import subprocess
 import sys
 from typing import Union
@@ -18,25 +19,21 @@ OPTIONAL_DEPENDENCIES = []#["tomllib"] #, "opencv-contrib-python", "matplotlib"]
 DependencySpec = Union[str, dict]
 
 
-def _is_installed(python_executable: str, package_name: str) -> bool:
-    """Check if a package is already installed using `pip show`."""
-    try:
-        subprocess.check_output(
-            [python_executable, '-m', 'pip', 'show', package_name],
-            stderr=subprocess.DEVNULL
-        )
-        return True
-    except subprocess.CalledProcessError:
-        return False
+# Pip package name -> import name for packages where they differ
+_PIP_TO_IMPORT: dict[str, str] = {
+    "opencv-contrib-python": "cv2",
+    "pyyaml": "yaml",
+}
+
+def _is_installed(dep: str | dict) -> bool:
+    """Check if a package is importable (zero subprocesses, instant)."""
+    pkg_name = _resolve_package_name(dep)
+    import_name = _PIP_TO_IMPORT.get(pkg_name, pkg_name)
+    return importlib.util.find_spec(import_name) is not None
 
 
 def _build_pip_arg(dep: dict) -> str:
-    """Build a pip-installable string from a dependency dict.
-
-    - Git remote: "git+https://github.com/user/repo@development"
-    - Local path: "/home/user/path/to/repo"
-    - Local path + branch: "git+file:///home/user/path/to/repo@development"
-    """
+    """Build a pip-installable string from a dependency dict."""
     if "git" in dep:
         git_url = dep["git"]
         branch = dep.get("branch", "main")
@@ -52,17 +49,13 @@ def _build_pip_arg(dep: dict) -> str:
 
 
 def _resolve_package_name(dep: str | dict) -> str:
-    """Get the human-readable package name for a dependency, used for
-    progress messages and the already-installed check."""
+    """Get the human-readable package name for a dependency."""
     if isinstance(dep, dict):
-        # Use explicit name if provided
         if "name" in dep:
             return dep["name"]
-        # Derive from git URL
         if "git" in dep:
             git_url = dep["git"].rstrip("/")
             return git_url.split("/")[-1].replace(".git", "")
-        # Derive from local path — use the directory name
         if "path" in dep:
             from pathlib import Path
             return Path(dep["path"]).name
@@ -83,12 +76,11 @@ def check_and_install_dependencies(dependencies: list[DependencySpec] | None = N
         except subprocess.CalledProcessError:
             subprocess.call([python_executable, "-m", "ensurepip", "--user"])
 
-        # ------ figure out what's missing ------
+        # ------ figure out what's missing (zero subprocesses) ------
         packages_to_install: list[str | dict] = []
         for dep in dependencies:
             dep_name = _resolve_package_name(dep)
-
-            if _is_installed(python_executable, dep_name):
+            if _is_installed(dep):
                 print(f"{dep_name} already installed!")
             else:
                 print(f"{dep_name} not installed, will install...")
