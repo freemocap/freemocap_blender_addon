@@ -13,7 +13,7 @@ from typing import Union
 #     used for checking if already installed:
 #       { "git": "...", "branch": "dev", "name": "my-package" }
 #       { "path": "/some/repo", "name": "my-package" }
-OPTIONAL_DEPENDENCIES = ["tomllib"] #, "opencv-contrib-python", "matplotlib"]
+OPTIONAL_DEPENDENCIES = []#["tomllib"] #, "opencv-contrib-python", "matplotlib"]
 
 DependencySpec = Union[str, dict]
 
