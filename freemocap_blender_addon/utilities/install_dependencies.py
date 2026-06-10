@@ -1,47 +1,100 @@
 import subprocess
 import sys
+from typing import Union
 
+# Dependencies can be:
+#   - a plain string: pip package name (e.g. "tomllib")
+#   - a dict for git sources:
+#       { "git": "https://github.com/user/repo", "branch": "main" }
+#       Optionally include "name" to specify the installed package name
+#       used for checking if already installed:
+#       { "git": "https://github.com/user/repo", "branch": "dev", "name": "my-package" }
 OPTIONAL_DEPENDENCIES = ["tomllib"] #, "opencv-contrib-python", "matplotlib"]
 
+DependencySpec = Union[str, dict]
 
-def check_and_install_dependencies(dependencies:list[str]|None=None):
+
+def _is_installed(python_executable: str, package_name: str) -> bool:
+    """Check if a package is already installed using `pip show`."""
+    try:
+        subprocess.check_output(
+            [python_executable, '-m', 'pip', 'show', package_name],
+            stderr=subprocess.DEVNULL
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+def _build_pip_arg(dep: dict) -> str:
+    """Build a pip-installable string from a git dependency dict.
+
+    Returns something like: git+https://github.com/user/repo@development
+    """
+    git_url = dep["git"]
+    branch = dep.get("branch", "main")
+    return f"git+{git_url}@{branch}"
+
+
+def _resolve_package_name(dep: str | dict) -> str:
+    """Get the human-readable package name for a dependency, used for
+    progress messages and the already-installed check."""
+    if isinstance(dep, dict):
+        # Use explicit name if provided, otherwise guess from the URL
+        if "name" in dep:
+            return dep["name"]
+        # Derive from git URL: strip trailing slash, take last segment, drop .git
+        git_url = dep["git"].rstrip("/")
+        return git_url.split("/")[-1].replace(".git", "")
+    return dep
+
+
+def check_and_install_dependencies(dependencies: list[DependencySpec] | None = None):
     if dependencies is None:
         dependencies = OPTIONAL_DEPENDENCIES
     print("Checking if required packages are installed...")
     # get path of blender internal python executable
     python_executable = str(sys.executable)
 
-
-
     try:
+        # ------ ensure pip is available ------
         try:
-            reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
+            subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
         except subprocess.CalledProcessError:
             subprocess.call([python_executable, "-m", "ensurepip", "--user"])
-            reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
 
-        installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
+        # ------ figure out what's missing ------
+        packages_to_install: list[str | dict] = []
+        for dep in dependencies:
+            dep_name = _resolve_package_name(dep)
 
-        print("\nInstalled packages:", installed_packages, "\n")
-
-        packages_to_install = []
-        for package_name in dependencies:
-            if package_name in installed_packages:
-                print(f"{package_name} already installed!")
+            if _is_installed(python_executable, dep_name):
+                print(f"{dep_name} already installed!")
             else:
-                print(f"{package_name} not installed, will install...")
-                packages_to_install.append(package_name)
+                print(f"{dep_name} not installed, will install...")
+                packages_to_install.append(dep)
 
-        if len(packages_to_install) > 0:
-            subprocess.call([python_executable, "-m", "ensurepip", "--user"])
-            # update pip
-            subprocess.call([python_executable, "-m", "pip", "install", "--upgrade", "pip"])
+        if not packages_to_install:
+            print("All required packages already installed! Done!")
+            return
 
-        for package_name in packages_to_install:
-            print(f"Installing {package_name}...")
-            subprocess.call([python_executable, "-m", "pip", "install", package_name])
+        # ------ prepare pip ------
+        subprocess.call([python_executable, "-m", "ensurepip", "--user"])
+        subprocess.call([python_executable, "-m", "pip", "install", "--upgrade", "pip"])
 
-            print(f"{package_name} installed successfully!")
+        # ------ install ------
+        for dep in packages_to_install:
+            dep_name = _resolve_package_name(dep)
+
+            if isinstance(dep, dict):
+                pip_arg = _build_pip_arg(dep)
+                print(f"Installing {dep_name} from git ({pip_arg})...")
+            else:
+                pip_arg = dep
+                print(f"Installing {dep_name}...")
+
+            subprocess.call([python_executable, "-m", "pip", "install", pip_arg])
+            print(f"{dep_name} installed successfully!")
 
         print("All required packages installed! Done!")
     except Exception as e:
