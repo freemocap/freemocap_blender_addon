@@ -34,7 +34,7 @@ def create_empties(
 def create_keyframed_empty_from_3d_trajectory_data(
     trajectory_fr_xyz: np.ndarray,
     trajectory_name: str,
-    parent_object: bpy.types.Object,
+    parent_object: bpy.types.Object|None=None,
     empty_scale: float = 0.1,
     empty_type: str = "PLAIN_AXES",
 ) -> bpy.types.Object:
@@ -43,7 +43,7 @@ def create_keyframed_empty_from_3d_trajectory_data(
     empty_object = bpy.data.objects.new(trajectory_name, None)
     empty_object.empty_display_type = empty_type
     empty_object.empty_display_size = empty_scale
-    empty_object.parent = parent_object
+    empty_object.parent = parent_object if parent_object else None
     bpy.context.collection.objects.link(empty_object)
 
     # Create an action and fcurves

@@ -17,7 +17,7 @@ def get_video_paths(path_to_video_folder: str) -> list[str]:
 
 
 def add_videos_to_scene(videos_directory: str,
-                        parent_object: bpy.types.Object,
+                        parent_object: bpy.types.Object|None=None,
                         video_scale: float = 3,
                         ):
     """Load videos for Blender 4.2 - 4.x using import_as_mesh_planes operator."""
@@ -50,11 +50,11 @@ def add_videos_to_scene(videos_directory: str,
     bpy.context.scene.collection.children.link(videos_collection)
     for obj in imported_objects:
         videos_collection.objects.link(obj)
-        obj.parent = parent_object
+        obj.parent = parent_object if parent_object else None
 
 
 def add_videos_to_scene_blender_5(videos_directory: str,
-                                   parent_object: bpy.types.Object,
+                                   parent_object: bpy.types.Object|None=None,
                                    video_scale: float = 3,
                                    ):
     """
@@ -204,7 +204,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
         for coll in obj.users_collection:
             coll.objects.unlink(obj)
         videos_collection.objects.link(obj)
-        obj.parent = parent_object
+        obj.parent = parent_object if parent_object else None
     
     print(f"Successfully imported {len(imported_objects)} videos using Blender 5+ method")
 
