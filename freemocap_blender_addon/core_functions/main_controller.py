@@ -26,6 +26,7 @@ from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.set_start_end_frame import set_start_end_frame
+from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
 from ..data_models.parameter_models.parameter_models import Config
@@ -419,14 +420,7 @@ class MainController:
     def setup_scene(self):
         import bpy
 
-        for window in bpy.context.window_manager.windows:
-            for area in window.screen.areas:  # iterate through areas in current screen
-                if area.type == "VIEW_3D":
-                    for (
-                            space
-                    ) in area.spaces:  # iterate through spaces in current VIEW_3D area
-                        if space.type == "VIEW_3D":  # check if space is a 3D view
-                            space.shading.type = "MATERIAL"
+        set_viewport_to_material_preview()
 
         self._empty_parent_object.hide_set(True)
         self._rigid_body_meshes_parent_object.hide_set(True)

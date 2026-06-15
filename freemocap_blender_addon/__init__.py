@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 from freemocap_blender_addon.utilities.install_dependencies import check_and_install_dependencies
+from freemocap_blender_addon.utilities.git_source_manager import resolve_git_sources
 
 PACKAGE_ROOT_PATH = str(Path(__file__).parent)
 
