@@ -25,6 +25,8 @@ from .materials.create_checkerboard_material import create_checkerboard_material
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
+from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
+from .setup_scene.scene_objects.ground_plane.create_ground_plane import create_ground_plane
 from .setup_scene.set_start_end_frame import set_start_end_frame
 from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions

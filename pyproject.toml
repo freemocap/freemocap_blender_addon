@@ -13,7 +13,7 @@ authors = [
 license = { file = "LICENSE" }
 dynamic = ["version"]
 
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 
 dependencies = []
 
@@ -24,7 +24,7 @@ Github = "https://github.com/freemocap/freemocap_blender_addon"
 
 
 [tool.bumpver]
-current_version = "v2025.11.1038"
+current_version = "v2026.04.1041"
 
 version_pattern = "vYYYY.0M.BUILD[-TAG]"
 commit_message  = "Bump version {old_version} -> {new_version}"
