@@ -17,7 +17,7 @@ class FreemocapDataPaths:
     @classmethod
     def from_recording_folder(cls, path: str):
         recording_path = Path(path)
-        output_data_path = recording_path / "output_data"
+        output_data_path = recording_path / "output_data"/"mediapipe"
 
         # TODO: we may want a better form of backwards compatibility than this
         # backwards compatibility:
