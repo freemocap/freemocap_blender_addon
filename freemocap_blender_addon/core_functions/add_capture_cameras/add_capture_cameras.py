@@ -87,13 +87,15 @@ def add_capture_cameras(
         with open(calibration_file_path, 'r') as file:
             data = toml.load(file)
 
-    # Check if the groundplane_calibration variable exists and is true
-    if 'groundplane_calibration' not in data['metadata'].keys():
-        print('Groundplane calibration is not enabled')
-        return
-    
-    if not data['metadata']['groundplane_calibration']:
-        print('Groundplane calibration is not enabled')
+    metadata = data.get("metadata", {})
+
+    groundplane_applied = metadata.get(
+        "groundplane_applied",
+        metadata.get("groundplane_calibration", False),
+    )
+
+    if not groundplane_applied:
+        print("Groundplane calibration has not been applied")
         return
 
     # Extract camera information into a dictionary
