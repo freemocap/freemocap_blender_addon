@@ -181,17 +181,27 @@ class FreemocapData:
         else:
             metadata = {}
 
-        groundplane_calibration:bool = False #set default value
-        if data_paths.calibration_toml is not None: #for single-cam recording cases where there is no calibration file and if tomllib is not available
-            if tomllib is not None:
-                with open (data_paths.calibration_toml, "rb") as f:
-                    calibration_data = tomllib.load(f)
-                groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
-            elif toml is not None:
-                with open (data_paths.calibration_toml, "r", encoding="utf-8") as f:
-                    calibration_data = toml.load(f)
-                groundplane_calibration = calibration_data.get('metadata', {}).get('groundplane_calibration', False) #for backwards compatibility with files that do not have this key
+        groundplane_calibration: bool = False
 
+        if data_paths.calibration_toml is not None:
+            if tomllib is not None:
+                with open(data_paths.calibration_toml, "rb") as f:
+                    calibration_data = tomllib.load(f)
+            elif toml is not None:
+                with open(data_paths.calibration_toml, "r", encoding="utf-8") as f:
+                    calibration_data = toml.load(f)
+            else:
+                raise ImportError(
+                    "Could not load calibration TOML: neither tomllib nor toml is available."
+                )
+
+            calibration_metadata = calibration_data.get("metadata", {})
+
+            groundplane_calibration = calibration_metadata.get(
+                "groundplane_applied",
+                calibration_metadata.get("groundplane_calibration", False),
+            )
+            
         return cls.from_data(
             body_frame_name_xyz=np.load(data_paths.body_npy) / scale,
             right_hand_frame_name_xyz=np.load(data_paths.right_hand_npy) / scale,
