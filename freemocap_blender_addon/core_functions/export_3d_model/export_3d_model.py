@@ -24,7 +24,22 @@ def export_3d_model(
         fbx_add_leaf_bones: bool = True,
         fbx_primary_bone_axis: str = 'Y',
         fbx_secondary_bone_axis: str = 'X',
+        name_suffix: str = '',
 ) -> None:
+    """
+    name_suffix: appended to the exported filename, before the extension. Used to tag the
+    solve method (e.g. "_rtmpose"), so re-exporting a recording with a different detector
+    does not silently overwrite the previous result - which makes the two impossible to
+    compare.
+    """
+    # An unknown convention would KeyError deep inside the rename loop and lose the whole
+    # export. Warn and fall back instead - a rig with the wrong bone names is still useful,
+    # no rig at all is not.
+    if bones_naming_convention != 'default' and bones_naming_convention not in bone_naming_mapping:
+        print(f"Unknown bones_naming_convention '{bones_naming_convention}' - "
+              f"known: {sorted(bone_naming_mapping)}. Falling back to 'default'.")
+        bones_naming_convention = 'default'
+
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -102,8 +117,11 @@ def export_3d_model(
     # Export the file formats
     for format in formats:
         
-        # Set the export file name based on the recording folder name
-        export_file_name = data_parent_empty.name.removesuffix("_origin") + f".{format}"
+        # Set the export file name based on the recording folder name, tagged with the
+        # solve method so different detectors do not overwrite each other.
+        export_file_name = (
+            data_parent_empty.name.removesuffix("_origin") + name_suffix + f".{format}"
+        )
         export_path = os.path.join(export_folder, export_file_name)
         try:
             if format == "fbx":
