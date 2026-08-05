@@ -36,8 +36,8 @@ class FreemocapDataPaths:
 
         return cls(
             body_npy=str(output_data_path / "mediapipe_body_3d_xyz.npy"),
-            right_hand_npy=str(output_data_path / "mediapipe_right_hand_right_hand.npy"),
-            left_hand_npy=str(output_data_path / "mediapipe_left_hand_left_hand.npy"),
+            right_hand_npy=str(output_data_path / "mediapipe_right_hand_3d_xyz.npy"),
+            left_hand_npy=str(output_data_path / "mediapipe_left_hand_3d_xyz.npy"),
             face_npy=str(output_data_path / "mediapipe_face_3d_xyz.npy"),
 
             center_of_mass_npy=str(center_of_mass_path),
