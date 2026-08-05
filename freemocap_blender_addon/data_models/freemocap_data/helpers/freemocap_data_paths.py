@@ -3,6 +3,25 @@ from pathlib import Path
 from typing import Union
 
 
+def get_hand_file_with_fallback(
+        folder: Path,
+        filename: str,
+        legacy_filename: str,
+) -> Path:
+
+    filepath = folder / filename
+
+    if filepath.exists():
+        return filepath
+
+    legacy_filepath = folder / legacy_filename
+    if legacy_filepath.exists():
+        return legacy_filepath
+
+    raise FileNotFoundError(f"Neither {filepath} nor {legacy_filepath} exist")
+
+
+
 @dataclass
 class FreemocapDataPaths:
     body_npy: str
@@ -26,6 +45,17 @@ class FreemocapDataPaths:
 
         segment_centers_of_mass_path = output_data_path / "mediapipe_body_segment_center_of_mass.npy"
 
+        right_hand_npy = get_hand_file_with_fallback(
+            output_data_path,
+            "mediapipe_right_hand_3d_xyz.npy",
+            "mediapipe_right_hand_right_hand.npy",
+        )
+
+        left_hand_npy = get_hand_file_with_fallback(
+            output_data_path,
+            "mediapipe_left_hand_3d_xyz.npy",
+            "mediapipe_left_hand_left_hand.npy",
+        )
         
         # reprojection_error_path = output_data_path / "raw_data" / "mediapipe_3dData_numFrames_numTrackedPoints_reprojectionError.npy"
         # if not reprojection_error_path.exists():
@@ -34,10 +64,11 @@ class FreemocapDataPaths:
         possible_calibration_files = list(recording_path.glob("*calibration.toml"))
         calibration_toml_path = str(possible_calibration_files[0]) if possible_calibration_files else None #for single-cam recording cases where there is no calibration file
 
+    
         return cls(
             body_npy=str(output_data_path / "mediapipe_body_3d_xyz.npy"),
-            right_hand_npy=str(output_data_path / "mediapipe_right_hand_3d_xyz.npy"),
-            left_hand_npy=str(output_data_path / "mediapipe_left_hand_3d_xyz.npy"),
+            right_hand_npy=str(right_hand_npy),
+            left_hand_npy=str(left_hand_npy),
             face_npy=str(output_data_path / "mediapipe_face_3d_xyz.npy"),
 
             center_of_mass_npy=str(center_of_mass_path),
