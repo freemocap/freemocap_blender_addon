@@ -1,6 +1,12 @@
+import math
+
 import bpy
 import bmesh
 from mathutils import Matrix
+
+
+def _is_invalid_vector(vector) -> bool:
+    return vector.length == 0 or any(math.isnan(c) for c in vector)
 
 
 def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
@@ -40,9 +46,9 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
             # Get the bone vector
             bone_vector = bone_info[info['armature_bone']]['tail_position'] - bone_info[info['armature_bone']]['head_position']
 
-            if bone_vector.length == 0 or vertex_group_vector.length == 0:
+            if _is_invalid_vector(bone_vector) or _is_invalid_vector(vertex_group_vector):
                 print(f"Skipping rotation for vertex group '{vertex_group}': "
-                      f"zero-length bone vector (no valid mocap data for '{info['armature_bone']}') — leaving unrotated.")
+                      f"invalid bone vector (zero-length or NaN) for '{info['armature_bone']}' — leaving unrotated.")
                 continue
 
             # Normalize the vectors

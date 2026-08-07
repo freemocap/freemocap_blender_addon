@@ -1,3 +1,5 @@
+import math
+
 import bpy
 import bmesh
 from mathutils import Vector, Matrix
@@ -49,6 +51,12 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
                 bone_length = bone_info['pelvis.L']['length'] + bone_info['pelvis.R']['length']
             else:
                 bone_length = bone_info[info['armature_bone']]['length']
+
+            head_position = bone_info[info['armature_bone']]['head_position']
+            if math.isnan(bone_length) or any(math.isnan(c) for c in head_position):
+                print(f"Skipping scaling for vertex group '{vertex_group}': "
+                      f"invalid (NaN) bone data for '{info['armature_bone']}' — leaving unscaled.")
+                continue
 
             # Get the scale ratio using the bone length
             scale_ratio = bone_length / origin_end_distance
