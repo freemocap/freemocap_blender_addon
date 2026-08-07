@@ -40,6 +40,11 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
             # Get the bone vector
             bone_vector = bone_info[info['armature_bone']]['tail_position'] - bone_info[info['armature_bone']]['head_position']
 
+            if bone_vector.length == 0 or vertex_group_vector.length == 0:
+                print(f"Skipping rotation for vertex group '{vertex_group}': "
+                      f"zero-length bone vector (no valid mocap data for '{info['armature_bone']}') — leaving unrotated.")
+                continue
+
             # Normalize the vectors
             vertex_group_vector.normalize()
             bone_vector.normalize()
