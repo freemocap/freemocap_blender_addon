@@ -34,14 +34,20 @@ def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],
     print(f'Bone lengths calculated successfully!\n bones: \n{list(bone_definitions.keys())}')
     # Update the length median and stdev values for each bone
     for name, bone in bone_definitions.items():
-        # print(f'Calculating median and stdev for bone: {name}...')
         # Exclude posible length NaN (produced by an empty with NaN values as position) values from the median and standard deviation
-        bone.median = statistics.median(
-            [length for length in bone.lengths if not math.isnan(length)])
-        # virtual_bone['median'] = statistics.median(virtual_bone['lengths'])
-        bone.stdev = statistics.stdev(
-            [length for length in bone.lengths if not math.isnan(length)])
-        # virtual_bone['stdev'] = statistics.stdev(virtual_bone['lengths'])
+        valid_lengths = [length for length in bone.lengths if not math.isnan(length)]
+
+        if len(valid_lengths) == 0:
+            # No valid detections for this bone in the whole recording - leave it out of rigid-bone enforcement entirely.
+            bone.median = math.nan
+            bone.stdev = math.nan
+        elif len(valid_lengths) == 1:
+            # stdev requires at least two data points.
+            bone.median = valid_lengths[0]
+            bone.stdev = 0.0
+        else:
+            bone.median = statistics.median(valid_lengths)
+            bone.stdev = statistics.stdev(valid_lengths)
 
     print(f'Bone length statistics calculated successfully!')
 

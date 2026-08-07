@@ -31,6 +31,7 @@ def create_freemocap_empties(handler: FreemocapDataHandler,
             empty_scale=hand_empty_scale,
             empty_type="PLAIN_AXES",
             parent_object=parent_object,
+            fallback_trajectory_fr_xyz=handler.trajectories["right_wrist"],
         )
         # left hand trajectories
         empties["hands"]["left"] = create_empties(
@@ -39,6 +40,7 @@ def create_freemocap_empties(handler: FreemocapDataHandler,
             empty_scale=hand_empty_scale,
             empty_type="PLAIN_AXES",
             parent_object=parent_object,
+            fallback_trajectory_fr_xyz=handler.trajectories["left_wrist"],
         )
 
         empties["other"] = {}

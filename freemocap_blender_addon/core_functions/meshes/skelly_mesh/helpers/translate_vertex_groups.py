@@ -1,3 +1,5 @@
+import math
+
 import bpy
 import bmesh
 from mathutils import Vector
@@ -33,6 +35,12 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
 
         # Calculate distance vector
         bone_position = bone_info[info['armature_bone']]['head_position']
+
+        if any(math.isnan(c) for c in bone_position):
+            print(f"Skipping translation for vertex group '{vertex_group}': "
+                  f"invalid (NaN) bone position for '{info['armature_bone']}' — leaving untranslated.")
+            continue
+
         delta_vector = Vector((
             bone_position[0] - origin_vertex.co[0],
             bone_position[1] - origin_vertex.co[1],
