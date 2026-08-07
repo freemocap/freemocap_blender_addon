@@ -100,7 +100,7 @@ def add_rig_by_bone(
                 rig_bone.head = parent_bone.tail
 
         # Get the bone vector
-        if inv_bone_name_map[bone] not in bone_data:
+        if inv_bone_name_map[bone] not in bone_data or m.isnan(bone_data[inv_bone_name_map[bone]]["median"]):
             bone_vector = mathutils.Vector(
                 [0, 0, armature_definition[bone].default_length]
             )
