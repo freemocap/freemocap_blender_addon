@@ -86,6 +86,14 @@ def translate_trajectory_and_its_children(name: str,
                                           updated_trajectories: Dict[str, np.ndarray],
                                           hierarchy: Dict[str, Dict[str, str]]) -> Dict[str, np.ndarray]:
     # recursively translate the tail empty and its children by the position delta.
+    #
+    # The hierarchy describes MediaPipe's full marker set. Other detectors provide a subset -
+    # RTMPose, for instance, has no body-level finger stubs (`right_thumb`, `right_index`,
+    # `right_pinky`) - so a child named here may simply not exist in this recording. Skip
+    # those rather than raising: an absent marker needs no translating.
+    if name not in updated_trajectories:
+        return updated_trajectories
+
     try:
         updated_trajectories[name][frame_number, :] = updated_trajectories[name][frame_number, :] + position_delta
 

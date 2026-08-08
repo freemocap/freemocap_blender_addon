@@ -9,12 +9,21 @@ from freemocap_blender_addon.data_models.parameter_models.parameter_models impor
 
 def ajc27_run_as_main_function(recording_path: str,
                                blend_file_path: str,
-                               config: Config = load_default_parameters_config()):
+                               config: Config = load_default_parameters_config(),
+                               skeleton_profile: str = "default"):
+    """
+    skeleton_profile: bone-naming convention applied at export, so the rig matches a
+        target skeleton by name. "default" keeps Rigify naming; "mgear", "metahuman" and
+        "daz_g8.1" rename onto those industry-standard rigs. Rigify names contain dots,
+        which several importers escape to `FBXASC046` and thereby break name-based
+        retargeting, so any of the named profiles is the safer choice downstream.
+    """
     from freemocap_blender_addon.core_functions.main_controller import MainController
 
     controller = MainController(recording_path=recording_path,
                                 blend_file_path=blend_file_path,
-                                config=config)
+                                config=config,
+                                skeleton_profile=skeleton_profile)
 
     clear_scene()
 

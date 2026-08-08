@@ -46,17 +46,31 @@ def calculate_virtual_trajectory(all_trajectories: np.ndarray,
     return virtual_trajectory_frame_xyz
 
 
+def get_virtual_trajectory_definitions(data_source: str = "mediapipe") -> Dict:
+    """Virtual marker definitions for the detector that produced the data.
+
+    Detectors do not share a body layout - MediaPipe includes finger stubs that RTMPose
+    does not - so the definitions cannot be shared.
+    """
+    if data_source == "rtmpose":
+        from freemocap_blender_addon.data_models.rtmpose_names.virtual_trajectories import \
+            get_rtmpose_virtual_trajectory_definition
+        return get_rtmpose_virtual_trajectory_definition()
+    return get_media_pipe_virtual_trajectory_definition()
+
+
 def calculate_virtual_trajectories(body_frame_name_xyz: np.ndarray,
-                                   body_names: List[str]) -> Dict[str, np.ndarray]:
+                                   body_names: List[str],
+                                   data_source: str = "mediapipe") -> Dict[str, np.ndarray]:
     """
     Create virtual markers from the body data using the marker definitions.
     """
-    mediapipe_virtual_trajectory_definitions = get_media_pipe_virtual_trajectory_definition()
-    print("Creating virtual markers...")
-    validate_marker_definitions(mediapipe_virtual_trajectory_definitions)
+    virtual_trajectory_definitions = get_virtual_trajectory_definitions(data_source)
+    print(f"Creating virtual markers for `{data_source}` data...")
+    validate_marker_definitions(virtual_trajectory_definitions)
 
     virtual_trajectories = {}
-    for virtual_trajectory_name, virtual_trajectory_definition in mediapipe_virtual_trajectory_definitions.items():
+    for virtual_trajectory_name, virtual_trajectory_definition in virtual_trajectory_definitions.items():
         # print(f"Calculating virtual marker trajectory: {virtual_trajectory_name} \n"
         #             f"Component trajectories: {virtual_trajectory_definition['marker_names']} \n"
         #             f"weights: {virtual_trajectory_definition['marker_weights']}")

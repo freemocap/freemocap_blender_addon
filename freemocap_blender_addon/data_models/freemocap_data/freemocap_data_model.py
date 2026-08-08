@@ -45,12 +45,15 @@ class FreemocapData:
                   other: Optional[Dict[str, Union[FreemocapComponentData, Dict[str, Any]]]] = None,
                   metadata: Optional[Dict[Any, Any]] = None) -> "FreemocapData":
 
-        if not data_source == "mediapipe":
+        num_face_markers = face_frame_name_xyz.shape[1] if face_frame_name_xyz.ndim == 3 else 0
+        if data_source == "mediapipe":
+            trajectory_names = MediapipeTrajectoryNames(num_face_markers=num_face_markers)
+        elif data_source == "rtmpose":
+            from ..rtmpose_names.rtmpose_trajectory_names import RtmposeTrajectoryNames
+            trajectory_names = RtmposeTrajectoryNames(num_face_markers=num_face_markers)
+        else:
             raise NotImplementedError(
                 f"Data source `{data_source}` not recognized - create the equivalent of `MediapipeTrajectoryNames` for this data source")
-        else:
-            num_face_markers = face_frame_name_xyz.shape[1] if face_frame_name_xyz.ndim == 3 else 0
-            trajectory_names = MediapipeTrajectoryNames(num_face_markers=num_face_markers)
         if metadata is None:
             metadata = {}
 
@@ -216,6 +219,7 @@ class FreemocapData:
                                                             trajectory_names=["center_of_mass"])},
             metadata=metadata,
             groundplane_calibration=groundplane_calibration,
+            data_source=data_paths.data_source,
         )
 
     @classmethod

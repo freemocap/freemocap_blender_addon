@@ -126,3 +126,58 @@ bone_naming_mapping = {
         'foot.L': 'lFoot',
     }
 }
+
+
+def _build_mgear_mapping() -> dict:
+    """Rigify -> mGear biped joint names.
+
+    Two reasons this matters beyond convenience:
+
+    * Rigify names contain dots (`f_index.01.L`). Dots are not legal in node names in
+      several DCC packages, which escape them on FBX import - `f_index.01.L` arrives as
+      `f_indexFBXASC04601FBXASC046L` - and that defeats any name-based retargeting. EVERY
+      bone is renamed here, even ones with no mGear counterpart, so no dot survives the
+      export.
+
+    * mGear's finger components are indexed 0-3 rather than named, so index/middle/ring/pinky
+      map onto finger_L0 .. finger_L3.
+
+    Derived from a joint dump of a real mGear biped rig, not from documentation.
+    """
+    mapping = {
+        'pelvis': 'spine_C0_pelvis_Jnt',
+        'spine': 'spine_C0_spine_01_Jnt',
+        'spine.001': 'spine_C0_spine_05_Jnt',   # chest: shoulders and neck attach here
+        'neck': 'neck_C0_neck_01_Jnt',
+        'face': 'neck_C0_head_Jnt',
+    }
+    # (rigify side suffix, mGear side token)
+    for rig_side, mg in (('L', 'L0'), ('R', 'R0')):
+        mapping.update({
+            f'shoulder.{rig_side}': f'shoulder_{mg}_shoulder_Jnt',
+            f'upper_arm.{rig_side}': f'arm_{mg}_upperarm_Jnt',
+            f'forearm.{rig_side}': f'arm_{mg}_lowerarm_Jnt',
+            f'hand.{rig_side}': f'arm_{mg}_hand_Jnt',
+            f'thigh.{rig_side}': f'leg_{mg}_thigh_Jnt',
+            f'shin.{rig_side}': f'leg_{mg}_calf_Jnt',
+            f'foot.{rig_side}': f'leg_{mg}_foot_Jnt',
+        })
+        # mGear's thumb starts at the proximal phalanx; Rigify has an extra carpal.
+        for i in (1, 2, 3):
+            mapping[f'thumb.0{i}.{rig_side}'] = f'thumb_{mg}_thumb_0{i}_Jnt'
+        # Metacarpals and fingers: index/middle/ring/pinky -> finger_?0 .. finger_?3
+        for idx, rigify_finger in enumerate(('f_index', 'f_middle', 'f_ring', 'f_pinky')):
+            mapping[f'palm.0{idx + 1}.{rig_side}'] = f'meta_{mg}_{idx}_Jnt'
+            for joint in (1, 2, 3):
+                mapping[f'{rigify_finger}.0{joint}.{rig_side}'] = \
+                    f'finger_{rig_side}{idx}_finger_0{joint}_Jnt'
+
+        # No mGear counterpart, but must still lose their dots so no importer mangles them.
+        low = rig_side.lower()
+        mapping[f'pelvis.{rig_side}'] = f'pelvis_{low}'       # mGear goes pelvis -> thigh
+        mapping[f'thumb.carpal.{rig_side}'] = f'thumb_carpal_{low}'
+        mapping[f'heel.02.{rig_side}'] = f'heel_{low}'        # mGear's ball_Jnt is a toe, not a heel
+    return mapping
+
+
+bone_naming_mapping["mgear"] = _build_mgear_mapping()

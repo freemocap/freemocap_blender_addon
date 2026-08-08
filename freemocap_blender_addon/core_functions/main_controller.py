@@ -27,7 +27,8 @@ from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.scene_objects.ground_plane.create_ground_plane import create_ground_plane
-from .setup_scene.set_start_end_frame import set_start_end_frame
+from .setup_scene.set_start_end_frame import set_start_end_frame, set_scene_framerate
+from ..utilities.recording_framerate import get_recording_framerate
 from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -45,7 +46,9 @@ class MainController:
     This class is used to run the program as a main script.
     """
 
-    def __init__(self, recording_path: str, blend_file_path: str, config: Config):
+    def __init__(self, recording_path: str, blend_file_path: str, config: Config,
+                 skeleton_profile: str = "default"):
+        self.skeleton_profile = skeleton_profile
         self.rig = None
         self.empties = None
         self._data_parent_empty = None
@@ -140,6 +143,16 @@ class MainController:
             set_start_end_frame(
                 number_of_frames=self.freemocap_data_handler.number_of_frames
             )
+            # Use the recording's real framerate rather than the assumed default - it drives
+            # both the exported scene rate and the velocity-based shakiness reduction.
+            framerate = get_recording_framerate(self.recording_path)
+            if framerate is not None:
+                set_scene_framerate(framerate)
+                self.config.reduce_shakiness.recording_fps = framerate
+            else:
+                print(f"Could not determine recording framerate; falling back to "
+                      f"{self.config.reduce_shakiness.recording_fps} fps. Exported timing and "
+                      f"velocity-based smoothing may be incorrect.")
         except Exception as e:
             print(f"Failed to load freemocap data: {e}")
             raise e
@@ -449,12 +462,26 @@ class MainController:
     def export_3d_model(self):
         print("Exporting 3D model...")
         try:
+            # Tag the export with the detector that produced it, so exporting the same
+            # recording under rtmpose and mediapipe yields two comparable files instead
+            # of one overwriting the other.
+            # FreemocapData itself does not carry data_source - the components do.
+            body = getattr(
+                getattr(self.freemocap_data_handler, "freemocap_data", None), "body", None)
+            data_source = getattr(body, "data_source", None)
+            suffix = f"_{data_source}" if data_source else ""
+            # Tag the profile too, so exports under different target conventions coexist.
+            if self.skeleton_profile and self.skeleton_profile != "default":
+                suffix += f"_{self.skeleton_profile}"
+            print(f"Exporting with skeleton profile: {self.skeleton_profile}")
             export_3d_model(
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
                 destination_folder=self.recording_path,
                 add_subfolder=True,
                 rename_root_bone=False,
+                bones_naming_convention=self.skeleton_profile,
+                name_suffix=suffix,
             )
         except Exception as e:
             print(f"Failed to export 3D model: {e}")
@@ -519,6 +546,7 @@ class MainController:
         self.create_empties()
         end_time = time.perf_counter_ns()
         stage_times['create_empties'] = (end_time - start_time)/1e9
+
 
         start_time = time.perf_counter_ns()
         self.add_rig()
