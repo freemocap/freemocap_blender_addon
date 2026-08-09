@@ -517,11 +517,41 @@ class FreemocapDataHandler:
 
         self.mark_processing_stage(stage_name)
 
+    def _hand_derived_virtual_trajectories(self, data_source: str) -> dict:
+        """`*_hand_middle`, computed from the hand arrays rather than the body.
+
+        MediaPipe's body model carries finger stubs (`right_index`, `right_pinky`) and
+        synthesises hand_middle from those. RTMPose has no body finger stubs, so the same
+        marker has to come from the real hand data.
+
+        It cannot wait for `add_hands_middle_empties()` - `enforce_rigid_bodies` runs first
+        and the bone definitions reference `*_hand_middle` by then.
+        """
+        if data_source != "rtmpose":
+            return {}
+        derived = {}
+        sides = (("right", self.right_hand_frame_name_xyz, self.right_hand_names),
+                 ("left", self.left_hand_frame_name_xyz, self.left_hand_names))
+        for side, frame_name_xyz, names in sides:
+            # Same two references the addon's own empties path uses.
+            wanted = [f"{side}_hand_middle_finger_mcp", f"{side}_hand_ring_finger_mcp"]
+            try:
+                indices = [names.index(n) for n in wanted]
+            except ValueError:
+                print(f"Cannot derive {side}_hand_middle - missing one of {wanted}")
+                continue
+            derived[f"{side}_hand_middle"] = frame_name_xyz[:, indices, :].mean(axis=1)
+        return derived
+
     def calculate_virtual_trajectories(self):
         print(f"Calculating virtual trajectories")
         try:
-            virtual_trajectories = calculate_virtual_trajectories(body_frame_name_xyz=self.body_frame_name_xyz,
-                                                                  body_names=self.body_names)
+            data_source = getattr(self.freemocap_data.body, "data_source", "mediapipe")
+            virtual_trajectories = calculate_virtual_trajectories(
+                body_frame_name_xyz=self.body_frame_name_xyz,
+                body_names=self.body_names,
+                data_source=data_source)
+            virtual_trajectories.update(self._hand_derived_virtual_trajectories(data_source))
             self.add_trajectories(trajectories=virtual_trajectories,
                                   component_type="body",
                                   )

@@ -16,7 +16,10 @@ class BoneDefinition:
     x_rotation_limit_max: float = 0.0
     z_rotation_limit_min: float = 0.0
     z_rotation_limit_max: float = 0.0
-    new_head_metacarpal_ratio: float = 0.0,
+    # NOTE: this default used to read `0.0,` - the trailing comma made it the tuple
+    # `(0.0,)`, so every bone that did not set the field explicitly (which is all of them
+    # except six palm bones) carried a tuple where a float was expected.
+    new_head_metacarpal_ratio: float = 0.0
     angle_offset: float = 0.0
 
 # TODO: Adjust the x and z rotation limits for hand bones to make the
