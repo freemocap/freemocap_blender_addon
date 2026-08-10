@@ -33,6 +33,11 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
             if origin_vertex:
                 break
 
+        if info['armature_bone'] not in bone_info:
+            print(f"Skipping translation for vertex group '{vertex_group}': "
+                  f"bone '{info['armature_bone']}' not found on rig — leaving untranslated.")
+            continue
+
         # Calculate distance vector
         bone_position = bone_info[info['armature_bone']]['head_position']
 

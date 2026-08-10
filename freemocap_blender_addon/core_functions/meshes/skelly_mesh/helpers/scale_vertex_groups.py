@@ -41,13 +41,24 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
                 break
 
         if origin_vertex is not None and end_vertex is not None:
+            # Get the corresponding bone length
+            if vertex_group == "pelvis":
+                required_bones = ['pelvis.L', 'pelvis.R', info['armature_bone']]
+            else:
+                required_bones = [info['armature_bone']]
+
+            missing_bones = [bone for bone in required_bones if bone not in bone_info]
+            if missing_bones:
+                print(f"Skipping scaling for vertex group '{vertex_group}': "
+                      f"bone(s) {missing_bones} not found on rig — leaving unscaled.")
+                continue
+
             # Calculate the distance between origin and end vertices
             origin_end_vector = origin_vertex.co - end_vertex.co
             origin_end_distance = origin_end_vector.length
 
-            # Get the corresponding bone length
+            # TODO : make length as the sum of the elements of a armature_bone list to avoid this if
             if vertex_group == "pelvis":
-                # TODO : make length as the sum of the elements of a armature_bone list to avoid this if
                 bone_length = bone_info['pelvis.L']['length'] + bone_info['pelvis.R']['length']
             else:
                 bone_length = bone_info[info['armature_bone']]['length']

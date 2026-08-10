@@ -40,6 +40,11 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
                 break
 
         if origin_vertex is not None and end_vertex is not None:
+            if info['armature_bone'] not in bone_info:
+                print(f"Skipping rotation for vertex group '{vertex_group}': "
+                      f"bone '{info['armature_bone']}' not found on rig — leaving unrotated.")
+                continue
+
             # Calculate the vertex group vector
             vertex_group_vector = end_vertex.co - origin_vertex.co
 
