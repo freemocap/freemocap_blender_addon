@@ -97,14 +97,19 @@ def set_armature_rest_pose(
                 bone.parent = armature.data.edit_bones[f'hand.{thumb_side[0].upper()}']
 
                 # Get the thumb cmc marker
-                thumb_cmc = [
-                    marker for marker in data_parent_empty.children_recursive
-                    if thumb_side + '_hand_thumb_cmc' in marker.name
-                ][0]
+                thumb_cmc = next(
+                    (marker for marker in data_parent_empty.children_recursive
+                     if thumb_side + '_hand_thumb_cmc' in marker.name),
+                    None,
+                )
 
-                bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
-                bone_location_constraint.target = thumb_cmc
-                armature.pose.bones[bone.name].constraints.move(1, 0)
+                if thumb_cmc is None:
+                    print(f"Skipping thumb rest-pose setup for '{bone.name}': "
+                          f"marker '{thumb_side}_hand_thumb_cmc' not found.")
+                else:
+                    bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
+                    bone_location_constraint.target = thumb_cmc
+                    armature.pose.bones[bone.name].constraints.move(1, 0)
 
                 # Remove the thumb.carpal bone
                 if 'thumb.carpal.' + thumb_side[0].upper() in armature.data.edit_bones:
@@ -116,16 +121,23 @@ def set_armature_rest_pose(
             hand_bone = armature.pose.bones['hand' + '.' + side[0].upper()]
 
             # Get the hand_middle_finger_mcp
-            hand_middle_finger_mcp = [
-                marker for marker in data_parent_empty.children_recursive
-                if side + '_hand_middle_finger_mcp' in marker.name
-            ][0]
+            hand_middle_finger_mcp = next(
+                (marker for marker in data_parent_empty.children_recursive
+                 if side + '_hand_middle_finger_mcp' in marker.name),
+                None,
+            )
 
             # Get the hand_index_finger_mcp
-            hand_index_finger_mcp = [
-                marker for marker in data_parent_empty.children_recursive
-                if side + '_hand_index_finger_mcp' in marker.name
-            ][0]
+            hand_index_finger_mcp = next(
+                (marker for marker in data_parent_empty.children_recursive
+                 if side + '_hand_index_finger_mcp' in marker.name),
+                None,
+            )
+
+            if hand_middle_finger_mcp is None or hand_index_finger_mcp is None:
+                print(f"Skipping hand constraint retargeting for '{side}': "
+                      f"middle/index finger MCP marker not found.")
+                continue
 
             hand_bone.constraints['Damped Track'].target = hand_middle_finger_mcp
             hand_bone.constraints['Locked Track'].target = hand_index_finger_mcp
@@ -145,55 +157,67 @@ def set_armature_rest_pose(
                 bone.parent = armature.data.edit_bones[f'hand.{thumb_side[0].upper()}']
 
                 # Get the thumb cmc marker
-                thumb_cmc = [
-                    marker for marker in data_parent_empty.children_recursive
-                    if thumb_side + '_hand_thumb_cmc' in marker.name
-                ][0]
+                thumb_cmc = next(
+                    (marker for marker in data_parent_empty.children_recursive
+                     if thumb_side + '_hand_thumb_cmc' in marker.name),
+                    None,
+                )
 
-                bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
-                bone_location_constraint.target = thumb_cmc
-                armature.pose.bones[bone.name].constraints.move(1, 0)
+                if thumb_cmc is None:
+                    print(f"Skipping thumb rest-pose setup for '{bone.name}': "
+                          f"marker '{thumb_side}_hand_thumb_cmc' not found.")
+                else:
+                    bone_location_constraint = armature.pose.bones[bone.name].constraints.new('COPY_LOCATION')
+                    bone_location_constraint.target = thumb_cmc
+                    armature.pose.bones[bone.name].constraints.move(1, 0)
 
                 # Remove the thumb.carpal bone
                 if 'thumb.carpal.' + thumb_side[0].upper() in armature.data.edit_bones:
                     armature.data.edit_bones.remove(armature.data.edit_bones['thumb.carpal.' + thumb_side[0].upper()])
 
 
-        # Create a new damped_tracked constraint for the face and set it to the z-axis with 0.6 influence
-        new_constraint = armature.pose.bones["face"].constraints.new('DAMPED_TRACK')
-        new_constraint.name = "DazG8.1_Face_Correction"
-
         # Get the nose marker
-        nose_marker = [
-            marker for marker in data_parent_empty.children_recursive
-            if 'nose' in marker.name
-        ][0]
-        new_constraint.target = nose_marker
-        new_constraint.track_axis = 'TRACK_Z'
-        new_constraint.influence = 0.6
-
-        # Create a new locked_tracked constraint for the pelvis and set it to the y-axis with 0.87 influence
-        new_constraint = armature.pose.bones["pelvis"].constraints.new('LOCKED_TRACK')
-        new_constraint.name = "DazG8.1_Pelvis_Correction"
+        nose_marker = next(
+            (marker for marker in data_parent_empty.children_recursive if 'nose' in marker.name),
+            None,
+        )
+        if nose_marker is not None:
+            # Create a new damped_tracked constraint for the face and set it to the z-axis with 0.6 influence
+            new_constraint = armature.pose.bones["face"].constraints.new('DAMPED_TRACK')
+            new_constraint.name = "DazG8.1_Face_Correction"
+            new_constraint.target = nose_marker
+            new_constraint.track_axis = 'TRACK_Z'
+            new_constraint.influence = 0.6
+        else:
+            print("Skipping DazG8.1 face correction: marker 'nose' not found.")
 
         # Get the trunk_center marker
-        trunk_center_marker = [
-            marker for marker in data_parent_empty.children_recursive
-            if 'trunk_center' in marker.name
-        ][0]
-        new_constraint.target = trunk_center_marker
-        new_constraint.track_axis = 'TRACK_Y'
-        new_constraint.lock_axis = 'LOCK_X'
-        new_constraint.influence = 0.87
+        trunk_center_marker = next(
+            (marker for marker in data_parent_empty.children_recursive if 'trunk_center' in marker.name),
+            None,
+        )
+        if trunk_center_marker is not None:
+            # Create a new locked_tracked constraint for the pelvis and set it to the y-axis with 0.87 influence
+            new_constraint = armature.pose.bones["pelvis"].constraints.new('LOCKED_TRACK')
+            new_constraint.name = "DazG8.1_Pelvis_Correction"
+            new_constraint.target = trunk_center_marker
+            new_constraint.track_axis = 'TRACK_Y'
+            new_constraint.lock_axis = 'LOCK_X'
+            new_constraint.influence = 0.87
+        else:
+            print("Skipping DazG8.1 pelvis correction: marker 'trunk_center' not found.")
 
-        # Create a new damped_tracked constraint for the spine (abdomenLower) and set it to the -z-axis with 0.2 influence
-        new_constraint = armature.pose.bones["spine"].constraints.new('DAMPED_TRACK')
-        new_constraint.name = "DazG8.1_Spine_Correction"
-        
-        # Reuse the trunk_center marker
-        new_constraint.target = trunk_center_marker
-        new_constraint.track_axis = 'TRACK_NEGATIVE_Z'
-        new_constraint.influence = 0.2
+        if trunk_center_marker is not None:
+            # Create a new damped_tracked constraint for the spine (abdomenLower) and set it to the -z-axis with 0.2 influence
+            new_constraint = armature.pose.bones["spine"].constraints.new('DAMPED_TRACK')
+            new_constraint.name = "DazG8.1_Spine_Correction"
+
+            # Reuse the trunk_center marker
+            new_constraint.target = trunk_center_marker
+            new_constraint.track_axis = 'TRACK_NEGATIVE_Z'
+            new_constraint.influence = 0.2
+        else:
+            print("Skipping DazG8.1 spine correction: marker 'trunk_center' not found.")
 
         # Change the length of Spine.001 (chestLower) to compensate for the new parent position
         spine_rotation = m.radians(18) # 18 results from the 0.2 influence of the trunk_center marker above
@@ -229,7 +253,13 @@ def set_armature_rest_pose(
         bpy.ops.object.mode_set(mode='POSE')
 
         for side in ['left', 'right']:
-            forearm_twist_bone = armature.pose.bones['forearm_twist' + '.' + side[0].upper()]
+            forearm_twist_bone_name = 'forearm_twist' + '.' + side[0].upper()
+            if forearm_twist_bone_name not in armature.pose.bones:
+                print(f"Skipping DazG8.1 forearm twist correction for '{side}': "
+                      f"bone '{forearm_twist_bone_name}' was not created (missing forearm bone).")
+                continue
+
+            forearm_twist_bone = armature.pose.bones[forearm_twist_bone_name]
 
             hand_bone = armature.pose.bones['hand' + '.' + side[0].upper()]
 
@@ -241,13 +271,19 @@ def set_armature_rest_pose(
             copy_rotation_constraint.use_z = False
             copy_rotation_constraint.target_space = 'LOCAL'
             copy_rotation_constraint.owner_space = 'LOCAL'
-            
+
             forearm_bone = armature.pose.bones['forearm' + '.' + side[0].upper()]
             # Get the thumb cmc marker
-            thumb_cmc = [
-                marker for marker in data_parent_empty.children_recursive
-                if side + '_hand_thumb_cmc' in marker.name
-            ][0]
+            thumb_cmc = next(
+                (marker for marker in data_parent_empty.children_recursive
+                 if side + '_hand_thumb_cmc' in marker.name),
+                None,
+            )
+
+            if thumb_cmc is None:
+                print(f"Skipping DazG8.1 forearm bend correction for '{side}': "
+                      f"marker '{side}_hand_thumb_cmc' not found.")
+                continue
 
             # Add a locked track constraint to the forearm bone to point to the thumb cmc marker
             bend_bone_constraint = forearm_bone.constraints.new('LOCKED_TRACK')
