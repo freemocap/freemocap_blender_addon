@@ -10,6 +10,40 @@ from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.scale_ver
 from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
+HAND_BONE_PREFIXES = (
+    "thumb.",
+    "f_index.",
+    "f_middle.",
+    "f_ring.",
+    "f_pinky.",
+    "palm.",
+)
+
+
+def is_hand_bone(bone_name: str) -> bool:
+    return bone_name.startswith(HAND_BONE_PREFIXES)
+
+
+def filter_missing_hand_bones(vertex_groups, bone_info):
+    filtered_vertex_groups = {}
+
+    for vertex_group, info in vertex_groups.items():
+        armature_bone = info["armature_bone"]
+
+        if (
+            is_hand_bone(armature_bone)
+            and armature_bone not in bone_info
+        ):
+            print(
+                f"Skipping vertex group '{vertex_group}': "
+                f"hand bone '{armature_bone}' does not exist."
+            )
+            continue
+
+        filtered_vertex_groups[vertex_group] = info
+
+    return filtered_vertex_groups
+
 def attach_skelly_by_vertex_group(
     skelly_mesh_path: Path,
     rig: bpy.types.Object,
@@ -47,8 +81,6 @@ def align_and_parent_vertex_groups_to_armature(
 ):
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
-    # Get the bone info (postions and lengths)
-    bone_info = get_bone_info(armature)
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
     # Remove the modifiers from the mesh
@@ -59,6 +91,13 @@ def align_and_parent_vertex_groups_to_armature(
     # Change to edit mode
     bpy.ops.object.mode_set(mode='EDIT')
     # Transform the vertex groups to match the new pose
+    bone_info = get_bone_info(armature)
+
+    vertex_groups = filter_missing_hand_bones(
+        vertex_groups,
+        bone_info,
+    )
+
     translate_vertex_groups(mesh_object, vertex_groups, bone_info)
     scale_vertex_groups(mesh_object, vertex_groups, bone_info)
     rotate_vertex_groups(mesh_object, vertex_groups, bone_info)
