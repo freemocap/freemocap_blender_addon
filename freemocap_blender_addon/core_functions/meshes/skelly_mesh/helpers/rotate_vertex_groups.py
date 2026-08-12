@@ -64,11 +64,11 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
             # Create the rotation matrix
             rotation_matrix = Matrix.Rotation(rotation_angle, 4, rotation_axis)
 
-            # Get the bmesh representation
             bm = bmesh.from_edit_mesh(target_mesh.data)
 
             # Ensure we start with no selections
-            bpy.ops.mesh.select_all(action='DESELECT')
+            for vert in bm.verts:
+                vert.select = False
 
             # Find and select vertices in the specified vertex group
             for vert in bm.verts:

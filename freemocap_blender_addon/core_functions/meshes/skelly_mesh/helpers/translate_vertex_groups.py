@@ -51,7 +51,9 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
         bm = bmesh.from_edit_mesh(target_mesh.data)
 
         # Ensure we start with no selections
-        bpy.ops.mesh.select_all(action='DESELECT')
+        for vert in bm.verts:
+            vert.select = False
+
 
         # Find and select vertices in the specified vertex group
         for vert in bm.verts:
@@ -77,4 +79,3 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
 
         # Update the mesh vertices' positions
         bmesh.update_edit_mesh(target_mesh.data)
-

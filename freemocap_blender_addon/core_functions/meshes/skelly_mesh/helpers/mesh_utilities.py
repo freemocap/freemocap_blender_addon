@@ -1,5 +1,7 @@
 import bpy
-
+from freemocap_blender_addon.data_models.bones.bone_definitions import (
+    is_bone_required,
+)
 
 def get_bone_info(armature):
 
@@ -30,10 +32,28 @@ def align_markers_to_armature(
 ) -> None:
     # Move the empty markers to make the T-Pose in frame 0
     for marker, info in markers_reference.items():
-        target_marker = [obj for obj in markers_list if marker in obj.name][0]
-        if info["at_head"]:
-            target_marker.location = bone_info[info["bone"]]['head_position']
-        else:
-            target_marker.location = bone_info[info["bone"]]['tail_position']
+        bone_name = info["bone"]
 
-    return 
+        if bone_name not in bone_info:
+            if not is_bone_required(bone_name):
+                print(
+                    f"Skipping optional marker '{marker}': "
+                    f"bone '{bone_name}' does not exist."
+                )
+                continue
+
+            raise KeyError(
+                f"Required bone '{bone_name}' does not exist."
+            )
+
+        target_marker = [
+            obj for obj in markers_list
+            if marker in obj.name
+        ][0]
+
+        if info["at_head"]:
+            target_marker.location = bone_info[bone_name]["head_position"]
+        else:
+            target_marker.location = bone_info[bone_name]["tail_position"]
+
+    return

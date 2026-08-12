@@ -10,33 +10,23 @@ from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.scale_ver
 from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
-HAND_BONE_PREFIXES = (
-    "thumb.",
-    "f_index.",
-    "f_middle.",
-    "f_ring.",
-    "f_pinky.",
-    "palm.",
+from freemocap_blender_addon.data_models.bones.bone_definitions import (
+    is_bone_required,
 )
 
-
-def is_hand_bone(bone_name: str) -> bool:
-    return bone_name.startswith(HAND_BONE_PREFIXES)
-
-
-def filter_missing_hand_bones(vertex_groups, bone_info):
+def filter_missing_optional_bones(vertex_groups, bone_info):
     filtered_vertex_groups = {}
 
     for vertex_group, info in vertex_groups.items():
         armature_bone = info["armature_bone"]
 
         if (
-            is_hand_bone(armature_bone)
-            and armature_bone not in bone_info
+            armature_bone not in bone_info
+            and not is_bone_required(armature_bone)
         ):
             print(
-                f"Skipping vertex group '{vertex_group}': "
-                f"hand bone '{armature_bone}' does not exist."
+                f"Skipping optional vertex group '{vertex_group}': "
+                f"bone '{armature_bone}' does not exist."
             )
             continue
 
@@ -93,7 +83,7 @@ def align_and_parent_vertex_groups_to_armature(
     # Transform the vertex groups to match the new pose
     bone_info = get_bone_info(armature)
 
-    vertex_groups = filter_missing_hand_bones(
+    vertex_groups = filter_missing_optional_bones(
         vertex_groups,
         bone_info,
     )
