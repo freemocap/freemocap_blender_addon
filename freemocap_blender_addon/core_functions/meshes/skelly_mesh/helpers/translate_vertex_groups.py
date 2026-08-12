@@ -34,16 +34,7 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
                 break
 
         # Calculate distance vector
-        armature_bone = info["armature_bone"]
-
-        if armature_bone not in bone_info:
-            print(
-                f"Skipping translation for vertex group '{vertex_group}': "
-                f"armature bone '{armature_bone}' does not exist."
-            )
-            continue
-
-        bone_position = bone_info[armature_bone]["head_position"]
+        bone_position = bone_info[info['armature_bone']]['head_position']
 
         if any(math.isnan(c) for c in bone_position):
             print(f"Skipping translation for vertex group '{vertex_group}': "
