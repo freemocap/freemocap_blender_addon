@@ -715,7 +715,7 @@ def run_foot_group_movement(context):
                 + markers['right_hip']['fcurves'][2, changed_frame]
             ) / 2
 
-            # Calculate the Z delta to propagate to the upper body
+            # Calculate the XYZ delta to propagate to the upper body
             upper_body_delta = [
                 0,
                 0,
