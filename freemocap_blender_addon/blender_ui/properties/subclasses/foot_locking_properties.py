@@ -8,89 +8,81 @@ class FootLockingProperties(bpy.types.PropertyGroup):
     ) # type: ignore
     foot_locking_method: PropertyTypes.Enum(
         description = 'Foot locking method',
-        items = [('individual_marker_height', 'Individual Marker Height', ''),
+        items = [('foot_group_movement', 'Foot Group Movement', '')
         ]
     ) # type: ignore
-    show_individual_marker_height_options: PropertyTypes.Bool(
-        description = 'Toggle Individual Marker Height Options'
+
+    # ── Foot Group Movement (fgm) Properties ─────────────────────────
+    show_fgm_options: PropertyTypes.Bool(
+        description = 'Toggle Foot Group Movement Options'
     ) # type: ignore
-    target_foot: PropertyTypes.Enum(
+    fgm_target_foot: PropertyTypes.Enum(
         description = 'Target foot for applying foot locking',
         items = [('both_feet', 'Both Feet', ''),
                  ('left_foot', 'Left Foot', ''),
                  ('right_foot', 'Right Foot', '')
                 ]
     ) # type: ignore
-    target_base_markers: PropertyTypes.Enum(
-        description = 'Target foot base markers for applying foot locking',
-        items = [('foot_index_and_heel', 'foot_index and heel', ''),
-                 ('foot_index', 'foot_index', ''),
-                 ('heel', 'heel', '')
-                ]
-    ) # type: ignore
-    z_threshold: PropertyTypes.Float(
+    fgm_z_threshold: PropertyTypes.Float(
         default = 0.02,
         precision = 3,
         description = 'Vertical threshold under which foot markers are '
                       'considered for applying foot locking'
     ) # type: ignore
-    ground_level: PropertyTypes.Float(
+    fgm_ground_level: PropertyTypes.Float(
+        default = 0.0,
         precision = 3,
-        description = 'Ground level for applying foot locking. Markers with '
-                      'z global coordinate lower than this value will be '
-                      'fixed to this level. It must be lower than the '
-                      'z threshold'
+        description = 'Ground level for foot locking. Markers with z global '
+                      'coordinate lower than this value will be fixed to '
+                      'this level. It must be lower than the z threshold'
     ) # type: ignore
-    frame_window_min_size: PropertyTypes.Int(
+    fgm_frame_window_min_size: PropertyTypes.Int(
         default = 10,
         min = 1,
-        description = 'Minimum frame window size for applying foot locking. '
-                      'A markers z global coordinate has to be lower than the '
-                      'z threshold for a consecutive frames count equal or '
-                      'bigger than this value.'
-                      'It must be equal or greater than '
-                      'initial_attenuation_count + final_attenuation_count'
+        description = 'Minimum number of consecutive frames a marker must '
+                      'be below the z threshold to trigger foot locking'
     ) # type: ignore
-    initial_attenuation_count: PropertyTypes.Int(
+    fgm_initial_attenuation_count: PropertyTypes.Int(
         default = 5,
         min = 0,
-        description = 'This are the first frames of the window which have '
-                      'their z coordinate attenuated by the the initial '
-                      'quadratic attenuation function'
+        description = 'Number of frames at the start of a locked block '
+                      'where the correction is attenuated by a quadratic '
+                      'ease-in function'
     ) # type: ignore
-    final_attenuation_count: PropertyTypes.Int(
-        default = 5,
-        min = 0,
-        description = 'This are the last frames of the window which have '
-                      'their z coordinate attenuated by the the final '
-                      'quadratic attenuation function'
-    ) # type: ignore
-    lock_xy_at_ground_level: PropertyTypes.Bool(
-        description = 'When applying foot locking, lock also the x and y '
-                      'coordinates at the ground level. This is useful only '
-                      'when character is standing still as it might leed to '
-                      '"sticky" or "lead" feet effect'
-    ) # type: ignore
-    knee_hip_compensation_coefficient: PropertyTypes.Float(
-        default = 1.0,
-        precision = 3,
+    fgm_knee_hip_compensation_coefficient: PropertyTypes.FloatVector(
+        size = 3,
+        subtype = 'NONE',
         min = 0.0,
         max = 1.0,
-        description = 'After calculating the ankle new z global coordinate, '
-                      'the knee and hip markers will be adjusted on the z '
-                      'axis by the same delta multiplied by this coefficient.'
-                      'A value of 1.0 means knee and hip have the same '
-                      'adjustment as the ankle. A value of 0 means knee and '
-                      'hip have no adjustment at all. Values lower than 1.0 '
-                      'are useful when the rig has IK constraints on the legs.'
-                      'This way the ankle adjustment is compensated by the '
-                      'knee IK bending'
+        default = (0.0, 0.0, 1.0),
+        description = 'Per-axis (X, Y, Z) multiplier for knee and hip '
+                      'adjustment when the ankle position changes. '
+                      'Default (0, 0, 1) applies only vertical compensation'
     ) # type: ignore
-    compensate_upper_body: PropertyTypes.Bool(
+    fgm_compensate_upper_body: PropertyTypes.Bool(
         default = True,
-        description = 'Compensate the upper body markers by setting the new '
-                      'z coordinate of the hips_center marker as the average '
-                      'z coordinate of left and right hips markers.'
-                      'Then propagate the new z delta to the upper body '
-                      'markers starting from the trunk_center.'
+        description = 'Propagate the foot locking z delta to the upper body '
+                      'markers via the hips_center and trunk_center chain'
+    ) # type: ignore
+    fgm_negative_height_limit: PropertyTypes.Float(
+        default = 0.02,
+        precision = 3,
+        description = 'Maximum vertical lift applied to the leg when a foot '
+                      'marker dips below ground. Limits how much the body '
+                      'is raised. Excess depth is compensated by foot rotation'
+    ) # type: ignore
+    fgm_xy_radius: PropertyTypes.Float(
+        default = 0.02,
+        precision = 3,
+        min = 0.001,
+        step = 0.001,
+        description = 'Maximum XY distance from the moving average position '
+                      'for a frame to be considered a lock candidate. '
+                      'Filters out frames where the foot is moving laterally'
+    ) # type: ignore
+    fgm_moving_average_window: PropertyTypes.Int(
+        default = 5,
+        min = 1,
+        description = 'Number of frames before and after the current frame '
+                      'used to calculate the XY moving average position'
     ) # type: ignore
