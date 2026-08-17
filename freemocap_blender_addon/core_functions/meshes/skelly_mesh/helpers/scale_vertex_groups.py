@@ -3,6 +3,9 @@ import math
 import bpy
 import bmesh
 from mathutils import Vector, Matrix
+from freemocap_blender_addon.data_models.bones.bone_definitions import (
+    is_hand_bone,
+)
 
 
 def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
@@ -45,17 +48,36 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
             origin_end_vector = origin_vertex.co - end_vertex.co
             origin_end_distance = origin_end_vector.length
 
-            # Get the corresponding bone length
-            if vertex_group == "pelvis":
-                # TODO : make length as the sum of the elements of a armature_bone list to avoid this if
-                bone_length = bone_info['pelvis.L']['length'] + bone_info['pelvis.R']['length']
-            else:
-                bone_length = bone_info[info['armature_bone']]['length']
+            armature_bone = info["armature_bone"]
 
-            head_position = bone_info[info['armature_bone']]['head_position']
+            try:
+                # Get the corresponding bone length
+                if vertex_group == "pelvis":
+                    # TODO: make length as the sum of the elements of an armature_bone list to avoid this if
+                    bone_length = (
+                        bone_info["pelvis.L"]["length"]
+                        + bone_info["pelvis.R"]["length"]
+                    )
+                else:
+                    bone_length = bone_info[armature_bone]["length"]
+
+                head_position = bone_info[armature_bone]["head_position"]
+
+            except KeyError:
+                if is_hand_bone(armature_bone):
+                    print(
+                        f"Skipping scaling for vertex group '{vertex_group}': "
+                        f"hand bone '{armature_bone}' does not exist."
+                    )
+                    continue
+
+                raise
+
             if math.isnan(bone_length) or any(math.isnan(c) for c in head_position):
-                print(f"Skipping scaling for vertex group '{vertex_group}': "
-                      f"invalid (NaN) bone data for '{info['armature_bone']}' — leaving unscaled.")
+                print(
+                    f"Skipping scaling for vertex group '{vertex_group}': "
+                    f"invalid (NaN) bone data for '{armature_bone}' — leaving unscaled."
+                )
                 continue
 
             # Get the scale ratio using the bone length
@@ -79,7 +101,7 @@ def scale_vertex_groups(target_mesh, vertex_groups, bone_info):
             bmesh.ops.scale(
                 bm,
                 vec=Vector((scale_ratio, scale_ratio, scale_ratio)),
-                space=Matrix.Translation(-bone_info[info['armature_bone']]['head_position']),
+                space=Matrix.Translation(-head_position),
                 verts=[vert for vert in bm.verts if vert.select],
             )
 
