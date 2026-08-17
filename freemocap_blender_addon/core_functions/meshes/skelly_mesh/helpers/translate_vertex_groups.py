@@ -3,6 +3,9 @@ import math
 import bpy
 import bmesh
 from mathutils import Vector
+from freemocap_blender_addon.data_models.bones.bone_definitions import (
+    is_hand_bone,
+)
 
 
 def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
@@ -33,12 +36,26 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
             if origin_vertex:
                 break
 
-        # Calculate distance vector
-        bone_position = bone_info[info['armature_bone']]['head_position']
+        armature_bone = info["armature_bone"]
+
+        try:
+            bone_position = bone_info[armature_bone]["head_position"]
+
+        except KeyError:
+            if is_hand_bone(armature_bone):
+                print(
+                    f"Skipping translation for vertex group '{vertex_group}': "
+                    f"hand bone '{armature_bone}' does not exist."
+                )
+                continue
+
+            raise
 
         if any(math.isnan(c) for c in bone_position):
-            print(f"Skipping translation for vertex group '{vertex_group}': "
-                  f"invalid (NaN) bone position for '{info['armature_bone']}' — leaving untranslated.")
+            print(
+                f"Skipping translation for vertex group '{vertex_group}': "
+                f"invalid (NaN) bone position for '{armature_bone}' — leaving untranslated."
+            )
             continue
 
         delta_vector = Vector((

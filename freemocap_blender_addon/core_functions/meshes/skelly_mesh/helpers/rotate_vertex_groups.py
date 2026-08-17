@@ -3,7 +3,9 @@ import math
 import bpy
 import bmesh
 from mathutils import Matrix
-
+from freemocap_blender_addon.data_models.bones.bone_definitions import (
+    is_hand_bone,
+)
 
 def _is_invalid_vector(vector) -> bool:
     return vector.length == 0 or any(math.isnan(c) for c in vector)
@@ -43,14 +45,34 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
             # Calculate the vertex group vector
             vertex_group_vector = end_vertex.co - origin_vertex.co
 
-            # Get the bone vector
-            bone_vector = bone_info[info['armature_bone']]['tail_position'] - bone_info[info['armature_bone']]['head_position']
+
+            armature_bone = info["armature_bone"]
+
+            try:
+                head_position = bone_info[armature_bone]["head_position"]
+                tail_position = bone_info[armature_bone]["tail_position"]
+
+            except KeyError:
+                if is_hand_bone(armature_bone):
+                    print(
+                        f"Skipping rotation for vertex group '{vertex_group}': "
+                        f"hand bone '{armature_bone}' does not exist."
+                    )
+                    continue
+
+                raise
+
+            bone_vector = tail_position - head_position
+
 
             if _is_invalid_vector(bone_vector) or _is_invalid_vector(vertex_group_vector):
-                print(f"Skipping rotation for vertex group '{vertex_group}': "
-                      f"invalid bone vector (zero-length or NaN) for '{info['armature_bone']}' — leaving unrotated.")
+                print(
+                    f"Skipping rotation for vertex group '{vertex_group}': "
+                    f"invalid bone vector (zero-length or NaN) for "
+                    f"'{armature_bone}' — leaving unrotated."
+                )
                 continue
-
+            
             # Normalize the vectors
             vertex_group_vector.normalize()
             bone_vector.normalize()

@@ -19,6 +19,16 @@ class BoneDefinition:
     new_head_metacarpal_ratio: float = 0.0,
     angle_offset: float = 0.0
 
+def is_hand_bone(bone_name: str) -> bool: #since this fix will be overwritten by future changes, going ahead with this manual 'identify hand bones fix', even if I don't like this (Aaron 08/17/26)
+    return bone_name.startswith((
+        "thumb.",
+        "palm.",
+        "f_index.",
+        "f_middle.",
+        "f_ring.",
+        "f_pinky.",
+    ))
+
 # TODO: Adjust the x and z rotation limits for hand bones to make the
 # Range of motion limit less stiff
 _BONE_DEFINITIONS: Dict[str, BoneDefinition] = {
