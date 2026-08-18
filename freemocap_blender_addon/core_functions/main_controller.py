@@ -27,7 +27,6 @@ from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.scene_objects.ground_plane.create_ground_plane import create_ground_plane
-from .setup_scene.set_start_end_frame import set_start_end_frame
 from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -36,6 +35,9 @@ from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
+
+from .setup_scene.set_start_end_frame import set_start_end_frame, set_scene_framerate
+from ..utilities.recording_framerate import get_recording_framerate
 
 from freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
@@ -140,6 +142,18 @@ class MainController:
             set_start_end_frame(
                 number_of_frames=self.freemocap_data_handler.number_of_frames
             )
+
+            framerate = get_recording_framerate(self.recording_path)
+
+            if framerate is not None:
+                set_scene_framerate(framerate)
+                self.config.reduce_shakiness.recording_fps = framerate
+            else:
+                print(
+                    f"Could not determine recording framerate; falling back to "
+                    f"{self.config.reduce_shakiness.recording_fps} fps. Exported timing and "
+                    f"velocity-based smoothing may be incorrect."
+                )
         except Exception as e:
             print(f"Failed to load freemocap data: {e}")
             raise e
