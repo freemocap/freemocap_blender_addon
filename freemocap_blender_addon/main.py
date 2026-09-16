@@ -9,8 +9,11 @@ from freemocap_blender_addon.data_models.parameter_models.parameter_models impor
 
 def ajc27_run_as_main_function(recording_path: str,
                                blend_file_path: str,
-                               config: Config = load_default_parameters_config()):
+                               config: Config | None = None):
     from freemocap_blender_addon.core_functions.main_controller import MainController
+
+    if config is None:
+        config = load_default_parameters_config()
 
     controller = MainController(recording_path=recording_path,
                                 blend_file_path=blend_file_path,

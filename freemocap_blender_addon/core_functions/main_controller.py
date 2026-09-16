@@ -461,11 +461,16 @@ class MainController:
 
 
     def export_3d_model(self):
+        formats = self.config.export_3d_model.formats
+        if not formats:
+            print("No 3D model formats selected - skipping 3D model export.")
+            return
         print("Exporting 3D model...")
         try:
             export_3d_model(
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
+                formats=formats,
                 destination_folder=self.recording_path,
                 add_subfolder=True,
                 rename_root_bone=False,

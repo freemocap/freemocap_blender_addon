@@ -36,9 +36,20 @@ class AddBodyMesh:
 
 
 @dataclass
+class Export3DModel:
+    """Options for `MainController.export_3d_model()` (= `export_3d_model()`).
+
+    `formats` may be empty, in which case the 3D model export stage is skipped.
+    """
+
+    formats: list[str] = field(default_factory=lambda: ["fbx", "bvh"])
+
+
+@dataclass
 class Config:
     adjust_empties: AdjustEmpties = field(default_factory=AdjustEmpties)
     reduce_bone_length_dispersion: ReduceBoneLengthDispersion = field(default_factory=ReduceBoneLengthDispersion)
     reduce_shakiness: ReduceShakiness = field(default_factory=ReduceShakiness)
     add_rig: AddRig = field(default_factory=AddRig)
     add_body_mesh: AddBodyMesh = field(default_factory=AddBodyMesh)
+    export_3d_model: Export3DModel = field(default_factory=Export3DModel)
