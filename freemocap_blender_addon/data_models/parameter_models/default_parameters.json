@@ -18,7 +18,8 @@
     "bone_length_method": "median_length",
     "keep_symmetry": false,
     "add_fingers_constraints": true,
-    "use_limit_rotation": false
+    "use_limit_rotation": false,
+    "rest_pose": "tpose"
   },
   "add_body_mesh": {
     "body_mesh_mode": "custom"

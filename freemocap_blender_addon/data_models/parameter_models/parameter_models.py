@@ -28,6 +28,8 @@ class AddRig:
     keep_symmetry: bool = False
     add_fingers_constraints: bool = True
     use_limit_rotation: bool = False
+    """Rest pose the armature is built in: 'tpose' or 'apose'."""
+    rest_pose: str = "tpose"
 
 
 @dataclass

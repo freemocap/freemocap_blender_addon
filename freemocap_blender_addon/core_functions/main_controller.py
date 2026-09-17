@@ -269,6 +269,7 @@ class MainController:
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
                 bone_constraint_definitions=self.bone_constraint_definitions,
                 use_limit_rotation=self.config.add_rig.use_limit_rotation,
+                rest_pose=self.config.add_rig.rest_pose,
             )
         except Exception as e:
             print(f"Failed to add rig: {e}")

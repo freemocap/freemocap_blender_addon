@@ -2,11 +2,11 @@ from typing import Dict
 
 import bpy
 
-from freemocap_blender_addon.core_functions.create_rig.add_rig_by_method import add_rig_by_method
+from freemocap_blender_addon.core_functions.create_rig.add_rig_by_method import DEFAULT_REST_POSE, add_rig_by_method, pose_from_rest_pose
 from freemocap_blender_addon.core_functions.create_rig.add_rig_method_enum import AddRigMethods
 from freemocap_blender_addon.core_functions.create_rig.apply_bone_constraints import apply_bone_constraints
 from freemocap_blender_addon.data_models.bones.bone_constraints import Constraint
-from freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
+from freemocap_blender_addon.data_models.data_references import ArmatureType
 
 
 def create_rig(
@@ -18,16 +18,22 @@ def create_rig(
         add_fingers_constraints: bool = False,
         bone_constraint_definitions=Dict[str, Constraint],
         use_limit_rotation: bool = False,
+        rest_pose: str = DEFAULT_REST_POSE,
 ) -> bpy.types.Object:
     # Deselect all objects
     for object in bpy.data.objects:
         object.select_set(False)
 
+    # Resolved through the same shared mapping add_rig_by_method uses, so the rig and
+    # the bone constraints applied to it can never disagree on the pose.
+    pose_definition = pose_from_rest_pose(rest_pose)
+
     rig = add_rig_by_method(add_rig_method=add_rig_method,
                             bone_data=bone_data,
                             keep_symmetry=keep_symmetry,
                             parent_object=parent_object,
-                            rig_name=rig_name)
+                            rig_name=rig_name,
+                            rest_pose=rest_pose)
     rig.parent = parent_object
     # Change mode to object mode
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -38,7 +44,7 @@ def create_rig(
         add_fingers_constraints=add_fingers_constraints,
         parent_object=parent_object,
         armature_definition=ArmatureType.FREEMOCAP,
-        pose_definition=PoseType.FREEMOCAP_TPOSE,
+        pose_definition=pose_definition,
         bone_constraint_definitions=bone_constraint_definitions,
 
         use_limit_rotation=use_limit_rotation,
