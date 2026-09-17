@@ -48,6 +48,14 @@ class Export3DModel:
 
 
 @dataclass
+class MotionCleanup:
+    """Cleanup applied to the marker motion before the scene is set up."""
+
+    """If True, run `MainController.apply_foot_locking()` on the marker empties."""
+    apply_foot_locking: bool = False
+
+
+@dataclass
 class Config:
     adjust_empties: AdjustEmpties = field(default_factory=AdjustEmpties)
     reduce_bone_length_dispersion: ReduceBoneLengthDispersion = field(default_factory=ReduceBoneLengthDispersion)
@@ -55,3 +63,4 @@ class Config:
     add_rig: AddRig = field(default_factory=AddRig)
     add_body_mesh: AddBodyMesh = field(default_factory=AddBodyMesh)
     export_3d_model: Export3DModel = field(default_factory=Export3DModel)
+    motion_cleanup: MotionCleanup = field(default_factory=MotionCleanup)

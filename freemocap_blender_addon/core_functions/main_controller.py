@@ -434,6 +434,28 @@ class MainController:
             print(e)
             raise e
 
+    def apply_foot_locking(self):
+        if not self.config.motion_cleanup.apply_foot_locking:
+            print("Foot locking disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.methods.foot_group_movement import (
+            run_foot_group_movement,
+        )
+
+        print("Applying foot locking...")
+        try:
+            run_foot_group_movement(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to apply foot locking: {e}")
+            raise e
+
     def setup_scene(self):
         import bpy
 
@@ -574,6 +596,11 @@ class MainController:
         self.add_capture_cameras()
         end_time = time.perf_counter_ns()
         stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.apply_foot_locking()
+        end_time = time.perf_counter_ns()
+        stage_times['apply_foot_locking'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()

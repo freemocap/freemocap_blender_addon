@@ -23,5 +23,11 @@
   },
   "add_body_mesh": {
     "body_mesh_mode": "custom"
+  },
+  "export_3d_model": {
+    "formats": ["fbx", "bvh"]
+  },
+  "motion_cleanup": {
+    "apply_foot_locking": false
   }
 }
