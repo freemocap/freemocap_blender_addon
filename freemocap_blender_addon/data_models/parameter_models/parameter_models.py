@@ -53,6 +53,8 @@ class MotionCleanup:
 
     """If True, run `MainController.apply_foot_locking()` on the marker empties."""
     apply_foot_locking: bool = False
+    """If True, run `MainController.limit_hand_markers_range_of_motion()` on the marker empties."""
+    limit_hand_markers_range_of_motion: bool = False
 
 
 @dataclass

@@ -28,6 +28,7 @@
     "formats": ["fbx", "bvh"]
   },
   "motion_cleanup": {
-    "apply_foot_locking": false
+    "apply_foot_locking": false,
+    "limit_hand_markers_range_of_motion": false
   }
 }

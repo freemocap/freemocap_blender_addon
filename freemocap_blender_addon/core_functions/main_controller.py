@@ -456,6 +456,28 @@ class MainController:
             print(f"Failed to apply foot locking: {e}")
             raise e
 
+    def limit_hand_markers_range_of_motion(self):
+        if not self.config.motion_cleanup.limit_hand_markers_range_of_motion:
+            print("Limit hand markers range of motion disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
+            limit_markers_range_of_motion,
+        )
+
+        print("Limiting hand markers range of motion...")
+        try:
+            limit_markers_range_of_motion(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to limit hand markers range of motion: {e}")
+            raise e
+
     def setup_scene(self):
         import bpy
 
@@ -601,6 +623,11 @@ class MainController:
         self.apply_foot_locking()
         end_time = time.perf_counter_ns()
         stage_times['apply_foot_locking'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.limit_hand_markers_range_of_motion()
+        end_time = time.perf_counter_ns()
+        stage_times['limit_hand_markers_range_of_motion'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()
