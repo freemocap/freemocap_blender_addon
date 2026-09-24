@@ -269,6 +269,7 @@ class MainController:
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
                 bone_constraint_definitions=self.bone_constraint_definitions,
                 use_limit_rotation=self.config.add_rig.use_limit_rotation,
+                rest_pose=self.config.add_rig.rest_pose,
             )
         except Exception as e:
             print(f"Failed to add rig: {e}")
@@ -433,6 +434,50 @@ class MainController:
             print(e)
             raise e
 
+    def apply_foot_locking(self):
+        if not self.config.motion_cleanup.apply_foot_locking:
+            print("Foot locking disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.methods.foot_group_movement import (
+            run_foot_group_movement,
+        )
+
+        print("Applying foot locking...")
+        try:
+            run_foot_group_movement(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to apply foot locking: {e}")
+            raise e
+
+    def limit_hand_markers_range_of_motion(self):
+        if not self.config.motion_cleanup.limit_hand_markers_range_of_motion:
+            print("Limit hand markers range of motion disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
+            limit_markers_range_of_motion,
+        )
+
+        print("Limiting hand markers range of motion...")
+        try:
+            limit_markers_range_of_motion(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to limit hand markers range of motion: {e}")
+            raise e
+
     def setup_scene(self):
         import bpy
 
@@ -461,11 +506,16 @@ class MainController:
 
 
     def export_3d_model(self):
+        formats = self.config.export_3d_model.formats
+        if not formats:
+            print("No 3D model formats selected - skipping 3D model export.")
+            return
         print("Exporting 3D model...")
         try:
             export_3d_model(
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
+                formats=formats,
                 destination_folder=self.recording_path,
                 add_subfolder=True,
                 rename_root_bone=False,
@@ -568,6 +618,16 @@ class MainController:
         self.add_capture_cameras()
         end_time = time.perf_counter_ns()
         stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.apply_foot_locking()
+        end_time = time.perf_counter_ns()
+        stage_times['apply_foot_locking'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.limit_hand_markers_range_of_motion()
+        end_time = time.perf_counter_ns()
+        stage_times['limit_hand_markers_range_of_motion'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()

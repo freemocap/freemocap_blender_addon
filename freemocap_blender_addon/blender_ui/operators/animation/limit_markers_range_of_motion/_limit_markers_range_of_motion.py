@@ -1,10 +1,4 @@
 import bpy
-import numpy as np
-import math as m
-from mathutils import Vector, Matrix
-from copy import deepcopy
-from dataclasses import make_dataclass, field
-import re
 
 from freemocap_blender_addon.utilities.get_fcurves_from_object_action import (
     get_fcurves_from_object_action,
@@ -24,10 +18,17 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
 
         print("Limiting Markers Range of Motion.......")
 
-        MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
-
         scene = context.scene
         props = context.scene.freemocap_ui_properties.limit_markers_range_of_motion_properties
+
+        # Get the top-level parent empty that contains all marker empties
+        data_parent_empty = bpy.data.objects[
+            context.scene.freemocap_properties.scope_data_parent
+        ]
+
+        # Frame Range
+        start_frame = context.scene.frame_start
+        end_frame = context.scene.frame_end
 
         target_categories = []
 
@@ -48,18 +49,14 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         hand_locked_track_marker_name = props.hand_locked_track_marker
         hand_damped_track_marker_name = props.hand_damped_track_marker
 
-        BONE_DEFINITIONS = deepcopy(_BONE_DEFINITIONS)
-        
-        # Create a mutable dataclass for the virtual bones
-        VirtualBoneDefinition = make_dataclass(
-            'VirtualBoneDefinition',
-            fields=[
-                *_BONE_DEFINITIONS['pelvis.R'].__dataclass_fields__.keys(),
-                ('bone_x_axis', tuple, field(default=(0,0,0))),
-                ('bone_y_axis', tuple, field(default=(0,0,0))),
-                ('bone_z_axis', tuple, field(default=(0,0,0))),
-            ],
-            frozen=False
+        limit_markers_range_of_motion(
+            data_parent_empty=data_parent_empty,
+            start_frame=start_frame,
+            end_frame=end_frame,
+            target_categories=target_categories,
+            range_of_motion_scale=range_of_motion_scale,
+            hand_locked_track_marker_name=hand_locked_track_marker_name,
+            hand_damped_track_marker_name=hand_damped_track_marker_name,
         )
 
         VirtualBones = {k: VirtualBoneDefinition(**v.__dict__) for k, v in _BONE_DEFINITIONS.items()}
@@ -311,133 +308,3 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
                     fcurve.update()  # Finalize changes
 
         return {'FINISHED'}
-    
-# TODO: Move these functions to a separate module,
-# an scpecific module for limit markers range of motion or a general one
-# like utilities
-def calculate_bone_axes_from_parent(
-    bone_y_axis: Vector,
-    parent_bone_axes: list[Vector, Vector, Vector],
-) -> list[Vector, Vector, Vector]:
-
-    # Calculate the difference between the bone's y axis and its parent bone's y axis
-    rotation_quat = parent_bone_axes[1].rotation_difference(bone_y_axis)
-
-    # Rotate the parent x and z axes to get the bones local x and z axes
-    bone_x_axis = parent_bone_axes[0]
-    bone_x_axis.rotate(rotation_quat)
-    bone_z_axis = parent_bone_axes[2]
-    bone_z_axis.rotate(rotation_quat)
-
-    return [
-        Vector(bone_x_axis),
-        Vector(bone_y_axis),
-        Vector(bone_z_axis)
-    ]
-
-
-def get_bone_axis_rotation_delta(
-    bone_axis,
-    parent_bone_axis,
-    parent_bone_ort_axis,
-    axis_rotation_limit_min,
-    axis_rotation_limit_max,
-) -> float:
-
-    # Normalize the vectors
-    bone_axis_normalized = bone_axis.normalized()
-    parent_bone_axis_normalized = parent_bone_axis.normalized()
-    
-    # Calculate the dot product between the the bone axis and its parent bone axis
-    dot_product = bone_axis_normalized.dot(parent_bone_axis_normalized)
-    # Clamp the dot product to avoid numerical errors beyond the range of acos
-    clamped_dot_product = max(min(dot_product, 1.0), -1.0)
-
-    # Calculate the angle
-    angle = m.acos(clamped_dot_product)
-
-    # Calculate the cross product between the axis of the bone and its parent bone axis
-    cross_product = Vector(parent_bone_axis_normalized.cross(bone_axis_normalized))
-
-    # Calculate the dot product between the cross product and the parent orthogonal axis
-    cross_dot_orthogonal = cross_product.dot(parent_bone_ort_axis)
-
-    # If the dot product is negative then the rotation angle is negative
-    if cross_dot_orthogonal < 0:
-        angle = -angle
-    
-    # Check if the angle is within the rotation limit values.
-    # If it is outside, rotate the bone tail empty around the cross product
-    # so the angle is on the closest rotation limit.
-    rot_delta = 0
-
-    # Calculate the angle difference between the rotation limit and the x_angle
-    if angle < m.radians(axis_rotation_limit_min):
-        rot_delta = m.radians(axis_rotation_limit_min) - angle
-    elif angle > m.radians(axis_rotation_limit_max):
-        rot_delta = m.radians(axis_rotation_limit_max) - angle
-
-    # Adjust the rotation delta according to the dot product
-    if cross_dot_orthogonal < 0:
-        rot_delta = -rot_delta
-
-    return rot_delta
-
-
-def rotate_marker_around_pivot(
-    marker: str,
-    pivot: Vector,
-    rotation_matrix: Matrix,
-    frame: int,
-    markers_fcurves: dict,
-    mediapipe_hierarchy: dict,
-):
-    marker_global_position = Vector(markers_fcurves[marker]['fcurves'][:, frame])
-    marker_pivot_vector = marker_global_position - pivot
-    rotated_marker_pivot_vector = rotation_matrix @ marker_pivot_vector
-    marker_new_global_position = pivot + rotated_marker_pivot_vector
-
-    # Update the marker fcurve
-    markers_fcurves[marker]['fcurves'][:, frame] = marker_new_global_position[:]
-
-    # If marker has children then call this function for every child
-    if marker in mediapipe_hierarchy and mediapipe_hierarchy[marker]['children']:
-        for child in mediapipe_hierarchy[marker]['children']:
-            rotate_marker_around_pivot(
-                marker=child,
-                pivot=pivot,
-                rotation_matrix=rotation_matrix,
-                frame=frame,
-                markers_fcurves=markers_fcurves,
-                mediapipe_hierarchy=mediapipe_hierarchy
-            )
-
-    return
-
-# Function to get the correct head position of the metacarpals
-def compute_new_metacarpal_head(
-    metacarpal_head: Vector,
-    metacarpal_tail: Vector,
-    reference_head: Vector,
-    reference_tail: Vector,
-    new_head_metacarpal_ratio: float,
-    angle_offset: float
-) -> Vector:
-
-    # Current and reference vectors
-    current_metacarpal_vector = (metacarpal_tail - metacarpal_head).normalized()
-    reference_vector = (reference_tail - reference_head).normalized()
-
-    # Plane normal between them
-    rotation_plane_normal = reference_vector.cross(current_metacarpal_vector).normalized()
-
-    # Vector scaled by ratio
-    rotating_vector = (metacarpal_tail - metacarpal_head) * new_head_metacarpal_ratio
-
-    # Rotate by angle_offset around the plane normal
-    angle_offset_rad = m.radians(angle_offset)
-    rotation_matrix = Matrix.Rotation(angle_offset_rad, 4, rotation_plane_normal)
-    rotated_vector = rotation_matrix @ rotating_vector
-
-    # New head position
-    return metacarpal_head + rotated_vector
