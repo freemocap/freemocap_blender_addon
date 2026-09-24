@@ -18,9 +18,17 @@
     "bone_length_method": "median_length",
     "keep_symmetry": false,
     "add_fingers_constraints": true,
-    "use_limit_rotation": false
+    "use_limit_rotation": false,
+    "rest_pose": "tpose"
   },
   "add_body_mesh": {
     "body_mesh_mode": "custom"
+  },
+  "export_3d_model": {
+    "formats": ["fbx", "bvh"]
+  },
+  "motion_cleanup": {
+    "apply_foot_locking": false,
+    "limit_hand_markers_range_of_motion": false
   }
 }

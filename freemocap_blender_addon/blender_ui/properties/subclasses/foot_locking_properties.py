@@ -36,18 +36,40 @@ class FootLockingProperties(bpy.types.PropertyGroup):
                       'coordinate lower than this value will be fixed to '
                       'this level. It must be lower than the z threshold'
     ) # type: ignore
-    fgm_frame_window_min_size: PropertyTypes.Int(
+    fgm_negative_height_limit: PropertyTypes.Float(
+        default = 0.02,
+        precision = 3,
+        description = 'Maximum vertical lift applied to the leg when a foot '
+                      'marker dips below ground. Limits how much the body '
+                      'is raised. Excess depth is compensated by foot rotation'
+    ) # type: ignore
+    fgm_min_lock_frames: PropertyTypes.Int(
         default = 10,
         min = 1,
         description = 'Minimum number of consecutive frames a marker must '
                       'be below the z threshold to trigger foot locking'
     ) # type: ignore
-    fgm_initial_attenuation_count: PropertyTypes.Int(
+    fgm_blend_frames: PropertyTypes.Int(
         default = 5,
         min = 0,
         description = 'Number of frames at the start of a locked block '
                       'where the correction is attenuated by a quadratic '
                       'ease-in function'
+    ) # type: ignore
+    fgm_xy_radius: PropertyTypes.Float(
+        default = 0.02,
+        precision = 3,
+        min = 0.001,
+        step = 0.001,
+        description = 'Maximum XY distance from the moving average position '
+                      'for a frame to be considered a lock candidate. '
+                      'Filters out frames where the foot is moving laterally'
+    ) # type: ignore
+    fgm_xy_moving_average_window: PropertyTypes.Int(
+        default = 5,
+        min = 1,
+        description = 'Number of frames before and after the current frame '
+                      'used to calculate the XY moving average position'
     ) # type: ignore
     fgm_knee_hip_compensation_coefficient: PropertyTypes.FloatVector(
         size = 3,
@@ -64,25 +86,5 @@ class FootLockingProperties(bpy.types.PropertyGroup):
         description = 'Propagate the foot locking z delta to the upper body '
                       'markers via the hips_center and trunk_center chain'
     ) # type: ignore
-    fgm_negative_height_limit: PropertyTypes.Float(
-        default = 0.02,
-        precision = 3,
-        description = 'Maximum vertical lift applied to the leg when a foot '
-                      'marker dips below ground. Limits how much the body '
-                      'is raised. Excess depth is compensated by foot rotation'
-    ) # type: ignore
-    fgm_xy_radius: PropertyTypes.Float(
-        default = 0.02,
-        precision = 3,
-        min = 0.001,
-        step = 0.001,
-        description = 'Maximum XY distance from the moving average position '
-                      'for a frame to be considered a lock candidate. '
-                      'Filters out frames where the foot is moving laterally'
-    ) # type: ignore
-    fgm_moving_average_window: PropertyTypes.Int(
-        default = 5,
-        min = 1,
-        description = 'Number of frames before and after the current frame '
-                      'used to calculate the XY moving average position'
-    ) # type: ignore
+    
+    

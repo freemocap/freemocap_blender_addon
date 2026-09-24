@@ -196,20 +196,20 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                 split.split().column().prop(foot_locking_props, 'fgm_negative_height_limit')
 
                 split = box.column().row().split(factor=0.6)
-                split.column().label(text='Frame Window Minimum Size')
-                split.split().column().prop(foot_locking_props, 'fgm_frame_window_min_size')
+                split.column().label(text='Minimum Lock Frames')
+                split.split().column().prop(foot_locking_props, 'fgm_min_lock_frames')
 
                 split = box.column().row().split(factor=0.6)
-                split.column().label(text='Initial Attenuation Count')
-                split.split().column().prop(foot_locking_props, 'fgm_initial_attenuation_count')
+                split.column().label(text='Blend Frames')
+                split.split().column().prop(foot_locking_props, 'fgm_blend_frames')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='XY Radius (m)')
                 split.split().column().prop(foot_locking_props, 'fgm_xy_radius')
 
                 split = box.column().row().split(factor=0.6)
-                split.column().label(text='Moving Average Window')
-                split.split().column().prop(foot_locking_props, 'fgm_moving_average_window')
+                split.column().label(text='XY Moving Average Window')
+                split.split().column().prop(foot_locking_props, 'fgm_xy_moving_average_window')
 
                 split = box.column().row().split(factor=0.6)
                 split.column().label(text='Knee Hip Comp. Coeff. (X,Y,Z)')

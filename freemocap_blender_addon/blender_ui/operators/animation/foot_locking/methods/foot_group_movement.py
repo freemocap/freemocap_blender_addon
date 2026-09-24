@@ -38,39 +38,25 @@ from freemocap_blender_addon.utilities.get_fcurves_from_object_action import (
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
 
 
-def run_foot_group_movement(context):
+def run_foot_group_movement(
+    data_parent_empty: bpy.types.Object,
+    start_frame: int,
+    end_frame: int,
+    target_foot_list: list[str] = ['left_foot', 'right_foot'],
+    z_threshold: float = 0.02,
+    ground_level: float = 0.0,
+    negative_height_limit: float = 0.02,
+    min_lock_frames: int = 10,
+    blend_frames: int = 5,
+    xy_radius: float = 0.02,
+    xy_moving_average_window: int = 5,
+    knee_hip_compensation_coefficient: list[float] = [0.0, 0.0, 1.0],
+    compensate_upper_body: bool = True,
+):
     """
     Main entry point for the Foot Group Movement foot-locking method.
     Called by the foot locking operator when this method is selected.
     """
-    print("Applying Foot Locking (Method: Foot Group Movement).......")
-
-    # ── Read UI Properties ───────────────────────────────────────────
-    scene = context.scene
-    props = scene.freemocap_ui_properties.foot_locking_properties
-
-    # Determine which feet to process
-    if props.fgm_target_foot == 'both_feet':
-        target_foot_list = ['left_foot', 'right_foot']
-    else:
-        target_foot_list = [props.fgm_target_foot]
-
-    # Foot locking algorithm parameters
-    z_threshold = props.fgm_z_threshold
-    ground_level = props.fgm_ground_level
-    knee_hip_compensation_coefficient = props.fgm_knee_hip_compensation_coefficient
-    xy_radius = props.fgm_xy_radius
-    moving_average_window = props.fgm_moving_average_window
-    min_lock_frames = props.fgm_frame_window_min_size
-    blend_frames = props.fgm_initial_attenuation_count
-    compensate_upper_body = props.fgm_compensate_upper_body
-    negative_height_limit = props.fgm_negative_height_limit
-
-    # ── Load All Marker Data ─────────────────────────────────────────
-    # Get the top-level parent empty that contains all marker empties
-    data_parent_empty = bpy.data.objects[
-        scene.freemocap_properties.scope_data_parent
-    ]
 
     # Build a dictionary mapping marker names to their fcurve data.
     # Each entry contains:
@@ -106,9 +92,6 @@ def run_foot_group_movement(context):
                         'fcurves': fcurve_data,
                     }
 
-    # ── Frame Range ──────────────────────────────────────────────────
-    start_frame = scene.frame_start
-    end_frame = scene.frame_end
     # last_frame is the relative index of the last frame (0-based)
     last_frame = end_frame - start_frame
 
@@ -126,7 +109,7 @@ def run_foot_group_movement(context):
         frame_end,
         z_threshold,
         xy_radius,
-        moving_average_window,
+        xy_moving_average_window,
         min_lock_frames,
         blend_frames,
         knee_hip_compensation_coefficient,
@@ -193,8 +176,8 @@ def run_foot_group_movement(context):
                 position = get_position(marker_name, frame)
 
                 # Calculate the moving average window boundaries
-                window_start = max(frame_start, frame - moving_average_window)
-                window_end = min(frame_end, frame + moving_average_window)
+                window_start = max(frame_start, frame - xy_moving_average_window)
+                window_end = min(frame_end, frame + xy_moving_average_window)
                 window_size = window_end - window_start + 1
 
                 # Calculate the XY average position within the window
@@ -692,7 +675,7 @@ def run_foot_group_movement(context):
             frame_end=last_frame - 1,
             z_threshold=z_threshold,
             xy_radius=xy_radius,
-            moving_average_window=moving_average_window,
+            xy_moving_average_window=xy_moving_average_window,
             min_lock_frames=min_lock_frames,
             blend_frames=blend_frames,
             knee_hip_compensation_coefficient=knee_hip_compensation_coefficient,
@@ -757,6 +740,3 @@ def run_foot_group_movement(context):
                 co[1::2] = marker_data['fcurves'][axis_idx]  # Values
                 fcurve.keyframe_points.foreach_set("co", co)
                 fcurve.update()
-
-    # Force a viewport refresh by setting the current frame
-    scene.frame_current = scene.frame_current
