@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.com_bos.add_com_vertical_projection import add_com_vertical_projection
+from ...core_functions.com_bos.add_com_vertical_projection import add_com_vertical_projection
 
 class FREEMOCAP_OT_add_com_vertical_projection(bpy.types.Operator):
     bl_idname = 'freemocap._add_com_vertical_projection'

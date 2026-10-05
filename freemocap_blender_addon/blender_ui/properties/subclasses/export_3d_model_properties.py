@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
+from ....blender_ui.properties.property_types import PropertyTypes
 
 
 class Export3DModelProperties(bpy.types.PropertyGroup):

@@ -2,10 +2,10 @@ import bpy
 import os
 from copy import deepcopy
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info, \
+from ....core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info, \
     align_markers_to_armature
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.empty_markers_for_rest_pose import (
+from ....core_functions.meshes.skelly_mesh.helpers.empty_markers_for_rest_pose import (
     _EMPTY_MARKERS,
 )
 

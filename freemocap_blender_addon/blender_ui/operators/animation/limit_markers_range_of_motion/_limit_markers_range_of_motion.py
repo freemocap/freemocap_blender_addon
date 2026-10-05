@@ -6,8 +6,8 @@ from copy import deepcopy
 from dataclasses import make_dataclass, field
 import re
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from .....data_models.bones.bone_definitions import _BONE_DEFINITIONS
+from .....data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
 
 class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):

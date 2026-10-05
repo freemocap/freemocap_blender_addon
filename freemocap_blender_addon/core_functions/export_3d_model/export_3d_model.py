@@ -1,12 +1,12 @@
 import bpy
 import os
 
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
+from ...core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
+from ...core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
+from ...core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
+from ...core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
+from ...core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
+from ...core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
     _SKELLY_VERTEX_GROUPS,
 )
 

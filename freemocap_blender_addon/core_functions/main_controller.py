@@ -3,12 +3,12 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos_as_planes
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
-from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
+from ..core_functions.load_videos.load_videos import load_videos_as_planes
+from ..core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
+from ..freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from ..freemocap_data_handler.utilities.load_data import load_freemocap_data
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
@@ -37,7 +37,7 @@ from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodi
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
 
-from freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
+from ..core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
 
 class MainController:

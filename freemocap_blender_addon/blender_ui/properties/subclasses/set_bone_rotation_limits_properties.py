@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
+from ....blender_ui.properties.property_types import PropertyTypes
 
 class SetBoneRotationLimitsProperties(bpy.types.PropertyGroup):
     show_set_bone_rotation_limits_options: PropertyTypes.Bool(

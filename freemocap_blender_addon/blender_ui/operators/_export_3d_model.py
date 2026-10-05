@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.export_3d_model.export_3d_model import export_3d_model
+from ...core_functions.export_3d_model.export_3d_model import export_3d_model
 
 class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
     bl_idname = 'freemocap._export_3d_model'

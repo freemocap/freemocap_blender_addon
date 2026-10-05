@@ -3,7 +3,7 @@ import re
 from mathutils import Vector
 import math as m
 
-from freemocap_blender_addon.blender_ui.ui_utilities.common_bone_names import COMMON_BONE_NAMES
+from ...blender_ui.ui_utilities.common_bone_names import COMMON_BONE_NAMES
 
 # Function to draw a vector for debbuging purposes
 def draw_vector(origin, angle, name):

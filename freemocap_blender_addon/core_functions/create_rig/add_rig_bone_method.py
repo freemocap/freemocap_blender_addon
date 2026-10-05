@@ -4,14 +4,14 @@ from typing import Dict
 import bpy
 import mathutils
 
-from freemocap_blender_addon.core_functions.data_models.armatures.root_bone_name import ROOT_BONE_NAME
-from freemocap_blender_addon.data_models.armatures.armature_bone_info import ArmatureBoneInfo
-from freemocap_blender_addon.data_models.armatures.bone_name_map import bone_name_map
-from freemocap_blender_addon.data_models.bones.ik_control_bones import ik_control_bones
-from freemocap_blender_addon.data_models.bones.ik_pole_bones import ik_pole_bones
-from freemocap_blender_addon.data_models.data_references import ArmatureType, PoseType
-from freemocap_blender_addon.data_models.poses.pose_element import PoseElement
-from freemocap_blender_addon.system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE
+from ...core_functions.data_models.armatures.root_bone_name import ROOT_BONE_NAME
+from ...data_models.armatures.armature_bone_info import ArmatureBoneInfo
+from ...data_models.armatures.bone_name_map import bone_name_map
+from ...data_models.bones.ik_control_bones import ik_control_bones
+from ...data_models.bones.ik_pole_bones import ik_pole_bones
+from ...data_models.data_references import ArmatureType, PoseType
+from ...data_models.poses.pose_element import PoseElement
+from ...system.constants import UE_METAHUMAN_SIMPLE_ARMATURE, FREEMOCAP_ARMATURE
 
 
 def add_rig_by_bone(

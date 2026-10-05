@@ -4,7 +4,7 @@ from typing import Dict, Any
 
 import numpy as np
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition
+from ....data_models.bones.bone_definitions import BoneDefinition
 
 
 def calculate_bone_length_statistics(trajectories: Dict[str, np.ndarray],

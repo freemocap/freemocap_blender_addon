@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
+from ....blender_ui.properties.property_types import PropertyTypes
 
 def get_available_armatures(self, context):
     available_armatures = []

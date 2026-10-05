@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
+from ...freemocap_data_handler.operations.freemocap_empties_from_parent_object import \
     empties_from_parent_object
 
 

@@ -1,32 +1,32 @@
 import re
 
 import bpy
-from freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
-from freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
+from ...blender_ui.sub_panels.visualizer_panel import ViewPanelPropNames
+from ...blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
-from freemocap_blender_addon.blender_ui.properties.subclasses.add_joint_angles_properties import (
+from ...blender_ui.properties.subclasses.add_joint_angles_properties import (
     AddJointAnglesProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.retarget_animation_properties import (
+from ...blender_ui.properties.subclasses.retarget_animation_properties import (
     RetargetAnimationProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.set_bone_rotation_limits_properties import (
+from ...blender_ui.properties.subclasses.set_bone_rotation_limits_properties import (
     SetBoneRotationLimitsProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.limit_markers_range_of_motion_properties import (
+from ...blender_ui.properties.subclasses.limit_markers_range_of_motion_properties import (
     LimitMarkersRangeOfMotionProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.export_3d_model_properties import (
+from ...blender_ui.properties.subclasses.export_3d_model_properties import (
     Export3DModelProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.export_video_properties import (
+from ...blender_ui.properties.subclasses.export_video_properties import (
     ExportVideoProperties
 )
 
-from freemocap_blender_addon.blender_ui.properties.subclasses.foot_locking_properties import (
+from ...blender_ui.properties.subclasses.foot_locking_properties import (
     FootLockingProperties
 )
-from freemocap_blender_addon.blender_ui.properties.subclasses.add_data_overlays_properties import (
+from ...blender_ui.properties.subclasses.add_data_overlays_properties import (
     AddDataOverlaysProperties
 )
 # TODO: Group the rest of the properties as the Retarget Animation and Set Bone Rotation Limits Properties

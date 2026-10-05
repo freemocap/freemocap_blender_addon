@@ -1,7 +1,7 @@
 import math as m
 import time
 
-from freemocap_blender_addon.core_functions.fbx_export.fbx import export_fbx
+from ...core_functions.fbx_export.fbx import export_fbx
 import  bpy
 
 

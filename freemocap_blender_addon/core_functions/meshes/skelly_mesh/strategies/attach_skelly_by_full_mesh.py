@@ -1,4 +1,4 @@
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_MESH_PATH
+from .....core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_MESH_PATH
 
 import bpy
 def attach_skelly_complete_mesh(

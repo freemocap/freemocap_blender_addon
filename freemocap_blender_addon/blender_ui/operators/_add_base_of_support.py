@@ -1,7 +1,7 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.com_bos.add_bos import add_base_of_support
-from freemocap_blender_addon.core_functions.com_bos.add_com_vertical_projection import add_com_vertical_projection
+from ...core_functions.com_bos.add_bos import add_base_of_support
+from ...core_functions.com_bos.add_com_vertical_projection import add_com_vertical_projection
 
 
 class FREEMOCAP_OT_add_base_of_support(bpy.types.Operator):

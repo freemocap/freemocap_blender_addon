@@ -6,8 +6,8 @@ import math
 from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_component import OverlayComponent
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlays.rom_gauge.rom_gauge_angle_definitions import rom_gauge_angle_definitions
+from ......blender_ui.operators.data_overlays.overlay_component import OverlayComponent
+from ......blender_ui.operators.data_overlays.overlays.rom_gauge.rom_gauge_angle_definitions import rom_gauge_angle_definitions
 
 # TODO: Move the shared methods to a utility module
 

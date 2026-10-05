@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.motion_path.clear_motion_path import clear_motion_path
+from ...core_functions.motion_path.clear_motion_path import clear_motion_path
 
 class FREEMOCAP_OT_clear_motion_path(bpy.types.Operator):
     bl_idname = 'freemocap._clear_motion_path'

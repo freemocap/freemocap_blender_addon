@@ -1,4 +1,5 @@
-import addon_utils
+from __future__ import annotations
+
 import bpy
 import numpy as np
 from pathlib import Path
@@ -285,10 +286,9 @@ def load_videos_as_planes(recording_path: str,
             elif blender_version[0] >= 4 and blender_version[1] >= 2:
                 print("Using Blender 4.2+ import_as_mesh_planes method")
                 try:
-                    addon_utils.enable("io_import_images_as_planes")
-                except Exception as e:
-                    print("Warning: Could not enable io_import_images_as_planes addon: ")
-                    print(e)
+                    bpy.ops.image.import_as_mesh_planes.get_rna_type()
+                except (AttributeError, RuntimeError) as exc:
+                    raise RuntimeError("Enable Images as Planes in Blender preferences to import videos") from exc
                 add_videos_to_scene(
                     videos_directory=str(videos_path), 
                     parent_object=parent_object
@@ -297,10 +297,9 @@ def load_videos_as_planes(recording_path: str,
             else:
                 print("Using pre-4.2 import_image.to_plane method")
                 try:
-                    addon_utils.enable("io_import_images_as_planes")
-                except Exception as e:
-                    print("Warning: Could not enable io_import_images_as_planes addon: ")
-                    print(e)
+                    bpy.ops.import_image.to_plane.get_rna_type()
+                except (AttributeError, RuntimeError) as exc:
+                    raise RuntimeError("Enable Images as Planes in Blender preferences to import videos") from exc
                 add_videos_to_scene_pre_4_2(
                     videos_path=str(videos_path), 
                     parent_object=parent_object

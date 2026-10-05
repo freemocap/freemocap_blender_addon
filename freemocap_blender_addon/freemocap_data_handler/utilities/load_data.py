@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from freemocap_blender_addon.freemocap_data_handler.handler import FreemocapDataHandler
-from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import \
+from ...freemocap_data_handler.handler import FreemocapDataHandler
+from ...freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import \
     create_freemocap_data_handler
 
 _BASE_FREEMOCAP_RECORDINGS_PATH = Path().home() / "freemocap_data" / "recordings"

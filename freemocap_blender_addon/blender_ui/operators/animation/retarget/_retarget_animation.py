@@ -1,7 +1,7 @@
 import bpy
 import math
 
-from freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import get_edit_bones_adjusted_axes
+from .....blender_ui.ui_utilities.ui_utilities import get_edit_bones_adjusted_axes
 
 class FREEMOCAP_OT_retarget_animation(bpy.types.Operator):
     bl_idname = 'freemocap._retarget_animation'

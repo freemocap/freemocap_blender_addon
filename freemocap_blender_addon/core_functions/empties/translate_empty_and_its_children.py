@@ -2,7 +2,7 @@ from typing import Tuple, List, Union
 
 import bpy
 import numpy as np
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from ...data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
 
 def translate_empty_and_its_children(empty_name: str,

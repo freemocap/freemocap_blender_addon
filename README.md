@@ -5,6 +5,10 @@
 
 <h3 align="center">FreeMoCap Blender Addon</h3>
 
+Dependency packaging work and its current compatibility limits are documented in
+[DEPENDENCIES.md](DEPENDENCIES.md). The new offline packages are under validation;
+the existing release ZIP workflow does not yet use that builder.
+
 
 
 <p align="center">

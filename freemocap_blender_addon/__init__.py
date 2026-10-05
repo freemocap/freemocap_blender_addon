@@ -1,6 +1,7 @@
 __author__ = """Skelly FreeMoCap"""
 __email__ = "info@freemocap.org"
 __version__ = "v2026.04.1041"
+__freemocap_export_api__ = True
 
 #######################################################################
 ### Add-on to adapt the Freemocap Blender output. It can adjust the
@@ -14,8 +15,6 @@ import logging
 import sys
 from pathlib import Path
 
-from freemocap_blender_addon.utilities.install_dependencies import check_and_install_dependencies
-from freemocap_blender_addon.utilities.git_source_manager import resolve_git_sources
 
 PACKAGE_ROOT_PATH = str(Path(__file__).parent)
 
@@ -43,21 +42,24 @@ def unregister():
 
     try:
         print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering {__file__} as add-on")
+        for name in ("freemocap_properties", "freemocap_ui_properties", "freemocap_overlay_manager"):
+            if hasattr(bpy.types.Scene, name):
+                delattr(bpy.types.Scene, name)
         from .blender_ui import BLENDER_USER_INTERFACE_CLASSES
-        for cls in BLENDER_USER_INTERFACE_CLASSES:
+        for cls in reversed(BLENDER_USER_INTERFACE_CLASSES):
             print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering class {cls.__name__}")
             bpy.utils.unregister_class(cls)
 
         print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Unregistering property group FREEMOCAP_PROPERTIES")
-        del bpy.types.Scene.freemocap_properties
+        for km, kmi in addon_keymaps:
+            km.keymap_items.remove(kmi)
+        addon_keymaps.clear()
     except Exception as e:
         print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Error unregistering {__file__} as add-on: {e}")
 
 
 def register():
     import bpy
-    print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Checking and/or installing optional dependencies...")
-    check_and_install_dependencies()
     print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering {__file__} as add-on")
     from .blender_ui import BLENDER_USER_INTERFACE_CLASSES
     print(f"[FREEMOCAP-BLENDER-ADDON-INIT] - Registering classes {BLENDER_USER_INTERFACE_CLASSES}")
@@ -66,13 +68,13 @@ def register():
         bpy.utils.register_class(cls)
 
         # this is a clunky way to add keymaps (shortcuts) to some operators, we can improve this later
-        if cls.__name__ == "FREEMOCAP_load_data":
+        if cls.__name__ == "FREEMOCAP_load_data" and bpy.context.window_manager.keyconfigs.addon is not None:
             # Add the keymap configuration
             wm = bpy.context.window_manager
             km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
             kmi = km.keymap_items.new(cls.bl_idname, 'R', 'PRESS', shift=True, alt=True)
             addon_keymaps.append((km, kmi))
-        if cls.__name__ == "FREEMOCAP_clear_scene":
+        if cls.__name__ == "FREEMOCAP_clear_scene" and bpy.context.window_manager.keyconfigs.addon is not None:
             wm = bpy.context.window_manager
             km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
             kmi = km.keymap_items.new(cls.bl_idname, 'X', 'PRESS', shift=True, alt=True)
@@ -80,11 +82,11 @@ def register():
 
     print("[FREEMOCAP-BLENDER-ADDON-INIT] - Registering property group FREEMOCAP_PROPERTIES")
 
-    from freemocap_blender_addon.blender_ui import FREEMOCAP_CORE_PROPERTIES, FREEMOCAP_UI_PROPERTIES
+    from .blender_ui import FREEMOCAP_CORE_PROPERTIES, FREEMOCAP_UI_PROPERTIES
     bpy.types.Scene.freemocap_properties = bpy.props.PointerProperty(type=FREEMOCAP_CORE_PROPERTIES)
     bpy.types.Scene.freemocap_ui_properties = bpy.props.PointerProperty(type=FREEMOCAP_UI_PROPERTIES)
 
-    from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_manager import OverlayManager
+    from .blender_ui.operators.data_overlays.overlay_manager import OverlayManager
     bpy.types.Scene.freemocap_overlay_manager = OverlayManager()
 
 

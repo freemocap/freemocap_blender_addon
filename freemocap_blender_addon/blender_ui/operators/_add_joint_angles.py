@@ -1,8 +1,8 @@
 import bpy
 import numpy as np
 
-from freemocap_blender_addon.core_functions.joint_angles.add_joint_angles import add_joint_angles
-from freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
+from ...core_functions.joint_angles.add_joint_angles import add_joint_angles
+from ...data_models.joint_angles.joint_angles import joint_angles
 
 
 class FREEMOCAP_OT_add_joint_angles(bpy.types.Operator):

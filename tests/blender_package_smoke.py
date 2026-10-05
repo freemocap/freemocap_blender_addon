@@ -1,0 +1,89 @@
+"""Run in a disposable Blender configuration: --python this_file -- KIND ZIP OUTPUT.
+
+Only test-managed preferences are modified. No global Python path manipulation is
+used: installation and module discovery are performed by Blender itself.
+"""
+import importlib
+import json
+from pathlib import Path
+import sys
+
+import addon_utils
+import bpy
+
+
+arguments = sys.argv[sys.argv.index('--') + 1:]
+kind, archive, output = arguments[:3]
+phase = arguments[3] if len(arguments) > 3 else 'install'
+existing = phase != 'install'
+output = Path(output)
+output.mkdir(parents=True, exist_ok=True)
+if existing:
+    if phase == 'reenable':
+        saved = json.loads((output / 'report.json').read_text(encoding='utf-8'))
+        addon_utils.enable(saved['package'], default_set=True)
+elif kind == 'extension':
+    repo = bpy.context.preferences.extensions.repos.new(name='FreeMoCap test', module='freemocap_test',
+                                                       custom_directory=str(output / 'repository'))
+    repo.use_remote_url = False
+    result = bpy.ops.extensions.package_install_files(filepath=str(Path(archive).resolve()),
+                                                      repo=repo.module, enable_on_install=True)
+    assert result == {'FINISHED'}, result
+else:
+    bpy.ops.preferences.addon_install(filepath=str(Path(archive).resolve()), overwrite=True)
+    addon_utils.enable('freemocap_blender_addon', default_set=True)
+# addon_utils.modules returns metadata-only modules, not executed packages.
+modules = [importlib.import_module(name) for name in bpy.context.preferences.addons.keys()
+           if name.split('.')[-1] == 'freemocap_blender_addon']
+assert len(modules) == 1, [m.__name__ for m in modules]
+module = modules[0]
+package = module.__name__
+assert package in bpy.context.preferences.addons, 'Registration failed'
+# Exercise registration hooks before binary imports. Blender's wheel manager has
+# separate disable/re-enable tests across process boundaries below.
+module.unregister()
+assert not hasattr(bpy.types.Scene, 'freemocap_properties')
+module.register()
+assert hasattr(bpy.types.Scene, 'freemocap_properties')
+dependencies = importlib.import_module(package + '.utilities.dependencies')
+report = dependencies.dependency_report()
+assert dependencies.require_module('tomli').loads('example = 1')['example'] == 1
+arrow = dependencies.require_module('pyarrow')
+parquet = dependencies.parquet_module()
+sample = output / 'parquet round trip.parquet'
+table = arrow.table(dict(frame_number=[0, 1], value=[1.25, None]))
+parquet.write_table(table, sample, compression='zstd')
+assert parquet.read_table(sample).equals(table)
+assert dependencies.load_toml(Path(__file__).parents[1] / 'pyproject.toml')['project']['name'] == 'freemocap_blender_addon'
+# Verify the public API through an installed package, without running the scene pipeline.
+api = importlib.import_module(package + '.export_api')
+try:
+    api.export_recording(recording_path=output / 'absent', blend_file_path=output / 'out.blend')
+except ValueError:
+    pass
+else:
+    raise AssertionError('Invalid recording accepted')
+report.update(package=package, blender=list(bpy.app.version), parquet_roundtrip=True,
+              register_twice=True, export_preflight=True, restarted=existing)
+# Exercise dispatch with a controlled scene writer, not the recording loader.
+main_module = importlib.import_module(package + '.main')
+original = main_module.ajc27_run_as_main_function
+configuration = object()
+recording = output / 'recording with spaces'
+recording.mkdir(exist_ok=True)
+def scene_writer(recording_path, blend_file_path, config):
+    assert Path(recording_path) == recording.resolve()
+    assert config is configuration
+    bpy.ops.wm.save_as_mainfile(filepath=blend_file_path)
+try:
+    main_module.ajc27_run_as_main_function = scene_writer
+    api.export_recording(recording_path=recording, blend_file_path=output / 'dispatch test.blend', config=configuration)
+finally:
+    main_module.ajc27_run_as_main_function = original
+report['controlled_export_dispatch'] = True
+(output / (phase + '-report.json' if existing else 'report.json')).write_text(json.dumps(report, indent=2), encoding='utf-8')
+if phase == 'disable':
+    addon_utils.disable(package, default_set=True)
+    assert package not in bpy.context.preferences.addons
+bpy.ops.wm.save_userpref()
+print('FREEMOCAP_SMOKE_PASS ' + json.dumps(report))

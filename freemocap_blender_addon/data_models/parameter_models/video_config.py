@@ -1,5 +1,5 @@
 from pathlib import Path
-from freemocap_blender_addon import PACKAGE_ROOT_PATH
+from ... import PACKAGE_ROOT_PATH
 
 EXPORT_PROFILES = {
     'debug': {

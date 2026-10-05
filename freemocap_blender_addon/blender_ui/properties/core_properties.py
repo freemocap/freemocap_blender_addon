@@ -1,8 +1,8 @@
 import bpy
 import re
 
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import get_test_recording_path
-from freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
+from ...freemocap_data_handler.utilities.load_data import get_test_recording_path
+from ...blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
 # Function to enable or disable the ui elements checkboxes depending on the elements visibility
 def update_scope_ui_variables(self, context):

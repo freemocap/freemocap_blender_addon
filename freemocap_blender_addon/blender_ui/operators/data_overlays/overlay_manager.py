@@ -1,7 +1,7 @@
 import bpy
 from typing import List
 
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_component import OverlayComponent
+from ....blender_ui.operators.data_overlays.overlay_component import OverlayComponent
 
 class OverlayManager:
     def __init__(self):

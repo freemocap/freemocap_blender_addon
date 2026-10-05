@@ -1,13 +1,13 @@
 import bpy
 import numpy as np
 
-from freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
-from freemocap_blender_addon.core_functions.joint_angles.calculate_joint_angle_info import calculate_joint_angle_info
-from freemocap_blender_addon.core_functions.joint_angles.add_angle_meshes import add_angle_meshes
-from freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import parent_meshes
-from freemocap_blender_addon.core_functions.joint_angles.create_angle_geometry_nodes import create_angle_geometry_nodes
-from freemocap_blender_addon.core_functions.joint_angles.animate_angle_meshes import animate_angle_meshes
-from freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import draw_vector
+from ...data_models.joint_angles.joint_angles import joint_angles
+from ...core_functions.joint_angles.calculate_joint_angle_info import calculate_joint_angle_info
+from ...core_functions.joint_angles.add_angle_meshes import add_angle_meshes
+from ...blender_ui.ui_utilities.ui_utilities import parent_meshes
+from ...core_functions.joint_angles.create_angle_geometry_nodes import create_angle_geometry_nodes
+from ...core_functions.joint_angles.animate_angle_meshes import animate_angle_meshes
+from ...blender_ui.ui_utilities.ui_utilities import draw_vector
 
 # TODO: Add multicapture support. Change the joint_angles dict to have the correct scope marker names (left_elbow.001, etc.)
 # but have to check the impact on the new angle/text meshes, if getting a sufix like .001 would affect the functions.

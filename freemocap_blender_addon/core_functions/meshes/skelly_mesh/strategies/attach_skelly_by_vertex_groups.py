@@ -1,13 +1,13 @@
 import bpy
 from pathlib import Path  
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import \
+from .....core_functions.meshes.skelly_mesh.helpers.mesh_utilities import \
     get_bone_info
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.rotate_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.rotate_vertex_groups import \
     rotate_vertex_groups
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.scale_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.scale_vertex_groups import \
     scale_vertex_groups
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
 def attach_skelly_by_vertex_group(

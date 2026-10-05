@@ -2,12 +2,12 @@ import bpy
 import numpy as np
 import math
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import get_bone_definitions
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from .....data_models.bones.bone_definitions import get_bone_definitions
+from .....data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.foot_locking_markers import foot_locking_markers
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import translate_marker, quadratic_function, error_function
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.minimize_functions import gradient_descent_central
+from .....blender_ui.operators.animation.foot_locking.foot_locking_markers import foot_locking_markers
+from .....blender_ui.operators.animation.foot_locking.helpers.basic_functions import translate_marker, quadratic_function, error_function
+from .....blender_ui.operators.animation.foot_locking.helpers.minimize_functions import gradient_descent_central
 
 MEDIAPIPE_HIERARCHY = get_mediapipe_hierarchy()
 
