@@ -75,6 +75,18 @@ class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
         subtype='DIR_PATH',
     ) # type: ignore
 
+    import_route: bpy.props.EnumProperty(name='Import route', default='parquet_segments', items=[
+        ('parquet_segments', 'Parquet: saved segments', 'Model landmarks and saved segment world poses'),
+        ('parquet_constraints', 'Parquet: legacy constraints', 'Reconstruct a Blender skeleton from trajectories'),
+        ('legacy_npy', 'Legacy NPY recording', 'Original recording loader and processing pipeline'),
+    ])
+    trajectory_channel: bpy.props.EnumProperty(name='Trajectories', default='LANDMARKS_3D', items=[
+        ('LANDMARKS_3D', 'Landmarks', 'Rigidified SkellyForge model landmarks'),
+        ('MAPPED_KEYPOINTS_3D', 'Mapped keypoints', 'Mapped observations before rigidification'),
+    ])
+    parquet_run_id: bpy.props.IntProperty(name='Run (-1 = selected)', default=-1, min=-1)
+    parquet_sensor_group: bpy.props.StringProperty(name='Sensor group', description='Leave blank if unambiguous')
+
     video_export_profile: bpy.props.EnumProperty(
         name='',
         description='Profile of the export video',

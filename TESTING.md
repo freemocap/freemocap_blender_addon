@@ -82,12 +82,27 @@ reported as reference-data acceptance. Requested but unavailable data fails.
   evaluation of its finite positions in Blender after millimeters-to-meters
   conversion. Fitted-skeleton channels are not substituted for model channels.
 
-The fixture reader in `tests/blender_scene_checks.py` is **test code**, not the
-production Parquet loader. These checks do not yet validate a complete recording
-loader, landmark rigidification, segment orientation import, anatomical accuracy,
-or equivalence of the three proposed import paths. Reports include missing new
-pipeline channels explicitly; a passing trajectory-primitive test does not make
-an old recording compatible with a future loader.
+The fixture reader in `tests/blender_scene_checks.py` remains a small primitive
+check. Production-loader acceptance is separate in `tests/blender_parquet_checks.py`:
+both prepared datasets load through **saved segments** and **legacy constraints**.
+Every native landmark position, segment origin, world rotation, bone pose and
+validity sample is checked. The legacy armature must have the expected constraints
+and exact targets, respond to a perturbed target, and evaluate finite limb poses.
+Reports measure corresponding limb-origin distances rather than assuming equality.
+Scenes containing both routes are saved and reopened for further checks.
+The optional mapped-keypoint comparison input and the standalone Load Data
+operator are also exercised against both real datasets.
+
+`tests/blender_parquet_contract.py` supplies small adversarial fixtures for units,
+basis, source/run/group selection, component completeness, timestamp consistency,
+quaternion normalization, missing-parent behavior, and actual public API export.
+No SkellyForge, SkellyTracker, or core package is imported by these tests.
+
+These checks do not establish anatomical accuracy, full rotation equivalence
+between different rig conventions, or end-to-end legacy NPY processing. The NPY
+API dispatch is still covered, but a full old-format reference fixture is needed
+for that separate acceptance test. The producer owns landmark rigidification;
+native import must preserve its saved results without solving them again.
 
 Logs, snapshots, generated packages, `.blend` files, JSON results and `junit.xml`
 are retained in `.test-artifacts/suite-*`. Installed test packages/preferences
@@ -117,7 +132,53 @@ Known Windows limitation: disabling and immediately re-enabling an Extension
 after loading PyArrow can break Blender's wheel cleanup. The tested lifecycle
 restarts Blender while disabled before re-enabling. See `DEPENDENCIES.md`.
 
-## Local results — 2026-10-05
+## Parquet loader results — 2026-10-06
+
+Development setup follow-up: 24 offline tests passed. The generated private
+development bundles passed source synchronization and two same-process reloads
+using the `UpdateAddonOperator` from installed JacquesLucke 0.0.31 on Blender
+3.0.0 and 5.2.2. The test changed staged Python code and verified the new values
+after each reload while preserving the loaded PyArrow module. Both actual
+background-helper routes exported the accepted test recording afterward.
+Reports: `.test-artifacts/development-test-lku4u3rt/` (3.0.0) and
+`.test-artifacts/development-test-fylw0drf/` (5.2.2). The editor's network/debugger
+startup and interactive VS Code commands were not automated; only its real reload
+operator was executed with editor notification/redraw hooks replaced.
+
+The background CLI now accepts route, trajectory channel, run and sensor group.
+The release builder produces complete version-labelled packages; GitHub release
+workflow execution and publication remain untested remotely. Release candidates
+are limited to the Windows runtimes tested so far.
+
+Both routes passed against refreshed test data (222 frames) and sample data
+(1,108 frames): 124 landmarks and 61 segments each. All 13 applicable package
+combinations passed on Windows x64 across Blender **3.0.0, 3.6.0, 3.6.23,
+4.2.0, 4.2.23, 4.5.0, 4.5.14, and 5.2.2**. Nineteen offline unit tests also passed.
+Native positions and world rotations were checked at every frame; the legacy
+armature had 75 expected active constraints and responded to target perturbation.
+Both routes survived save/reopen. Nine invalid contract cases were rejected.
+Shared publication files, acceptance markers and calibration files were unchanged.
+
+For the six paired upper/lower-arm and lower-leg origins, the largest measured
+legacy/native distance was **0.567 mm** across both recordings. This is a scoped
+position comparison, not evidence that all bone rotation conventions coincide.
+
+Evidence: `.test-artifacts/suite-_51_xmf6/review-summary.json` combines the matrix
+with the focused rerun in `.test-artifacts/suite-57w9pbj_/summary.json`, preserving
+the initial failure history. An added mapped-input assertion initially assumed
+the pelvis itself must move under rigidification; its origin can legitimately
+remain unchanged. That test assumption was corrected to compare all landmarks.
+Blender 3.0.0 and 4.5.0 were rerun successfully. Mapped-input and standalone UI
+checks also passed on 4.5.14 and 5.2.2. Earlier matrix builds checked the two main
+landmark routes before those additional cases were added.
+
+The 5.2 Extension comparison scenes are in
+`.test-artifacts/suite-_51_xmf6/build-7/extension/*-both-routes.blend`.
+No macOS/Linux Blender runtime, 3.1 runtime, old-format full NPY recording, or
+FreeMoCap core invocation was exercised in this stage. Core integration remains
+an independent stage after the owner commits and pushes this add-on change.
+
+## Historical packaging/primitive results — 2026-10-05
 
 Nineteen unit tests passed. The full suite passed against these Launcher-managed
 Windows x64 builds (these are measured versions, not inferred family coverage):

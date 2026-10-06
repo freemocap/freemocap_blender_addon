@@ -3,6 +3,45 @@
 For the automated local suite, Blender Launcher discovery, and shared core
 reference recordings, see [TESTING.md](TESTING.md).
 
+## VS Code development
+
+Loading the raw checkout does not supply PyArrow. Prepare a development workspace
+for the actual Blender executable (run from the add-on repository):
+
+```powershell
+.venv/Scripts/python.exe -B -m tools.develop prepare --blender "C:/path/to/blender.exe"
+```
+
+The command probes Blender's Python/OS, verifies cached pinned wheels, creates
+an isolated development package and Blender profile, and prints a generated
+`.code-workspace` path under `.test-artifacts/development/`. Open that workspace
+in VS Code, then use **Blender: Start**. Edit the normal source files, save, and
+use **Blender: Reload Addons**. The build task synchronizes source before
+Start/Reload; debugger mappings point from staged code to the checkout.
+Existing VS Code settings and regular Blender preferences are not rewritten.
+
+On a machine without cached wheels, add `--download` to explicitly acquire build
+inputs. No packages are installed into system Python or Blender. Generated stages
+use short system-temp paths to avoid Windows path limits. If cleanup removes one,
+run prepare again. Changing Blender or dependency pins requires Stop, prepare,
+and reopening the generated workspace. Edit source, not the staging copy.
+
+For the installed JacquesLucke extension's disable/re-enable reload cycle, the
+development container uses the **private legacy dependency bundle**, including
+on modern Blender. Reload leaves binary dependencies in place. This is development
+tooling, not the Extension submitted to Blender's repository. Modern releases
+still use manifest-declared wheels and exclude the legacy loader. The VS Code
+extension manages its own debugger dependencies separately.
+
+Test the setup using the printed state file and installed editor extension:
+
+```powershell
+.venv/Scripts/python.exe -B -m tools.test_development --state <state.json> --vscode-extension <jacqueslucke.blender-development-directory>
+```
+
+This executes the actual editor reload operator in background Blender with editor
+notification hooks replaced. It does not exercise VS Code's GUI/debugger connection.
+
 ## Plan and boundaries
 
 One source tree serves standalone use and FreeMoCap-launched export. Build two
@@ -23,8 +62,8 @@ Stage 1, this repository: relative imports, dependency loading, reproducible pac
 builder, standalone/background registration and a shared export entry point.
 Stage 2, after the human commits and pushes this repository: change FreeMoCap to
 invoke the installed package's entry point instead of injecting its environment.
-Stage 3: implement the three Parquet/legacy data paths described in the workspace
-handoff. This stage does not implement the new landmark/segment scene loader.
+The Parquet landmark/segment and legacy-constraint import paths are now implemented
+and locally tested; see TESTING.md. Core integration remains a separate handoff.
 
 The export caller must supply the exact installed package name. For Extensions,
 that includes the repository namespace chosen by Blender; never hard-code it.
@@ -93,15 +132,23 @@ Install the resulting ZIP explicitly using Blender's install-from-disk UI. For
 background export, use the saved configuration where that package is enabled:
 
 ```sh
-blender --background --python-exit-code 1 --python tools/blender_export.py -- bl_ext.REPOSITORY.freemocap_blender_addon /recording /output/scene.blend
+blender --background --python-exit-code 1 --python tools/blender_export.py -- bl_ext.REPOSITORY.freemocap_blender_addon /recording /output/scene.blend --route parquet_segments
 ```
 
 For legacy installations the package name is `freemocap_blender_addon`.
 Select any required Rigify/Images as Planes capability explicitly in preferences;
 FreeMoCap no longer enables other add-ons on the user's behalf. The existing
-tag-release ZIP workflow has not been migrated to this builder: its source-only
-archive is not a self-contained Parquet-capable distribution. Do not publish it
-as one. Release automation migration follows validation of the supported matrix.
+tag-release workflow now uses `tools.build_release`, bundling verified wheels or
+expanded legacy dependencies. Archive names include the Blender series to avoid
+collisions between versions sharing a Python ABI. Candidates currently cover
+tested Windows x64 series 3.0/3.6 (legacy) and 4.2/4.5/5.2 (Extensions). Linux/macOS
+remain builder targets but are excluded from release candidates pending runtime
+acceptance. Manual workflow dispatch builds artifacts only; human-pushed version
+tags create draft releases for human review. The new workflow has not run remotely.
+
+The background helper also accepts `--route parquet_constraints`,
+`--trajectory-channel MAPPED_KEYPOINTS_3D`, `--run-id`, and `--sensor-group`.
+Its default remains `legacy_npy` for existing callers.
 
 ## Observed validation and limitations (2026-10-05)
 

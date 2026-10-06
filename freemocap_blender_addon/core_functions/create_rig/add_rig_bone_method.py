@@ -53,11 +53,11 @@ def add_rig_by_bone(
     )
 
     # Get reference to armature
-    rig = bpy.data.objects["Armature"]
+    rig = bpy.context.object
     # Rename the armature
     rig.name = rig_name
     # Rename the rig object to pelvis
-    bpy.data.armatures[0].name = ROOT_BONE_NAME
+    rig.data.name = ROOT_BONE_NAME
 
     # Change to edit mode
     bpy.ops.object.mode_set(mode="EDIT")

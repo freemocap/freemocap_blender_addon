@@ -104,6 +104,16 @@ class PackagingTests(unittest.TestCase):
 
 
 class DependencyFailures(unittest.TestCase):
+    def test_missing_dependency_is_distinct_from_incompatible_binary(self):
+        missing = ModuleNotFoundError("No module named 'pyarrow'", name='pyarrow')
+        with patch.object(dependencies.importlib, 'import_module', side_effect=missing):
+            with self.assertRaisesRegex(dependencies.DependencyUnavailable, 'tools.develop prepare') as caught:
+                dependencies.require_module('pyarrow.parquet')
+            self.assertNotIn('binary compatibility', str(caught.exception))
+        with patch.object(dependencies.importlib, 'import_module', side_effect=ImportError('DLL load failed')):
+            with self.assertRaisesRegex(dependencies.DependencyUnavailable, 'binary compatibility'):
+                dependencies.require_module('pyarrow.parquet')
+
     def test_missing_module_is_actionable_without_installing(self):
         with patch.object(dependencies.importlib, 'import_module', side_effect=ImportError('missing')):
             with self.assertRaisesRegex(dependencies.DependencyUnavailable, 'No packages were downloaded'):

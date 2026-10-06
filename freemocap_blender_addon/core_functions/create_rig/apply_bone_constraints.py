@@ -23,6 +23,7 @@ def apply_bone_constraints(
     pose_definition: Dict[str, PoseElement] = PoseType.FREEMOCAP_TPOSE,
 
     use_limit_rotation: bool = False,
+    target_objects=None,
 ) -> None:
     if armature_definition == ArmatureType.UE_METAHUMAN_SIMPLE:
         armature_name = UE_METAHUMAN_SIMPLE_ARMATURE
@@ -94,18 +95,23 @@ def apply_bone_constraints(
         for constraint in constraint_definitions:
             # Get the correspondent target tracked point name within the parent object children
             if hasattr(constraint, "target"):
-                empties_parent = (
-                    [obj for obj in parent_object.children_recursive 
-                    if 'empties_parent' in obj.name and obj.type == 'EMPTY'][0]
-                )
-                try:
-                    constraint.target = (
-                        [obj.name for obj in empties_parent.children_recursive 
-                        if constraint.target in obj.name][0]
+                if target_objects is not None:
+                    # The Parquet adapter supplies exact object identities. Names
+                    # may have Blender suffixes when comparing two imports.
+                    constraint.target = target_objects[constraint.target].name
+                else:
+                    empties_parent = (
+                        [obj for obj in parent_object.children_recursive
+                        if 'empties_parent' in obj.name and obj.type == 'EMPTY'][0]
                     )
-                except:
-                    print(f"Failed to add rig: {bone_name} constraint {constraint.type} target {constraint.target}")
-                    continue
+                    try:
+                        constraint.target = (
+                            [obj.name for obj in empties_parent.children_recursive
+                            if constraint.target in obj.name][0]
+                        )
+                    except:
+                        print(f"Failed to add rig: {bone_name} constraint {constraint.type} target {constraint.target}")
+                        continue
 
             # Add new constraint determined by type
             if not use_limit_rotation and constraint.type == ConstraintType.LIMIT_ROTATION:

@@ -26,9 +26,16 @@ class VIEW3D_PT_load_data(bpy.types.Panel):
         row = box.row()
         row.label(text="FreeMoCap Recording Folder:")
         row.prop(context.scene.freemocap_properties, "recording_path", text="")
+        props = context.scene.freemocap_properties
+        box.prop(props, 'import_route')
+        if props.import_route != 'legacy_npy':
+            box.prop(props, 'parquet_run_id')
+            box.prop(props, 'parquet_sensor_group')
+            if props.import_route == 'parquet_constraints':
+                box.prop(props, 'trajectory_channel')
         box.operator('freemocap._load_data', text='Load Data')
 
         # Save data to disk panel
         box = layout.box()
         box.prop(context.scene.freemocap_properties, "scope_data_parent", text="Scope Data Parent")
-    
+

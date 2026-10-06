@@ -3,7 +3,8 @@
 Example: python -B tools/test_blender_package.py --blender /path/to/blender
   --kind extension --archive dist/package.zip
 Reports/logs are retained under ignored .test-artifacts; nothing is installed in
-the user's Blender configuration. This does not validate recording reconstruction.
+the user's Blender configuration. Prepared references exercise both Parquet
+loading routes, animation evaluation, and saved-scene reloads.
 """
 import argparse
 import os
@@ -58,7 +59,7 @@ def _run(blender, kind, archive, output, references, resources):
         if phase != 'install':
             command += [phase]
         with (output / (phase + '.log')).open('w', encoding='utf-8') as log:
-            result = subprocess.run(command, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=300)
+            result = subprocess.run(command, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=900)
         if result.returncode:
             raise RuntimeError('Blender {} failed ({}); inspect {}'.format(phase, result.returncode, output))
         report = output / ('report.json' if phase == 'install' else phase + '-report.json')

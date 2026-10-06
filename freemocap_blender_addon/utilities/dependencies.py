@@ -20,9 +20,21 @@ def require_module(name):
             from .legacy_dependencies import load_module
             return load_module(name, root)
         return importlib.import_module(name)
+    except ModuleNotFoundError as exc:
+        if exc.name == name.split('.')[0]:
+            raise DependencyUnavailable(
+                "Missing {} in Blender's Python. The add-on code is present, but its dependency is not. "
+                "Install the complete FreeMoCap ZIP. For VS Code source development, run "
+                "python -B -m tools.develop prepare --blender <blender-executable>, then open "
+                "the generated .code-workspace. No packages were downloaded or installed.".format(exc.name)
+            ) from exc
+        raise DependencyUnavailable(
+            "The {} dependency is incomplete: {}. Reinstall the complete package for this Blender. "
+            "No packages were downloaded or installed.".format(name, exc)
+        ) from exc
     except (ImportError, OSError, RuntimeError) as exc:
         raise DependencyUnavailable(
-            "Cannot load {} in Blender's Python. Install the FreeMoCap package "
+            "Cannot initialize {} in Blender's Python (binary compatibility or dependency conflict). Install the FreeMoCap package "
             "built for this Blender Python version and operating system. "
             "No packages were downloaded or installed. Details: {}".format(name, exc)
         ) from exc

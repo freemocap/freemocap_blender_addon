@@ -54,6 +54,11 @@ The core functionality is run automatically at the end of a standard freemocap r
 ![image](https://github.com/freemocap/freemocap_blender_addon/assets/15314521/94d482c1-9fa7-4c66-8354-34cf5707af9f)
 
 # Installation
+
+For source development with JacquesLucke's VS Code extension, first prepare the
+dependency-equipped workspace using the [development setup](DEPENDENCIES.md#vs-code-development).
+Opening the raw source folder alone does not provide PyArrow to Blender.
+
 1. Download the `freemocap_blender_addon.zip` ([from the latest release](https://github.com/freemocap/freemocap_blender_addon/releases/latest))
 1. Open [Blender]()
 1. `Edit` > `Preferences` > `Add-ons` > `Install...` 
@@ -75,6 +80,94 @@ You may download a pre-processed `freemocap_test_data` recording on the [`freemo
     
 
 ## Running the skeleton building pipeline
+
+### Current Parquet recordings
+
+In the **💀FreeMoCap → Load FreeMoCap Data** panel, choose the recording folder
+containing `*_data.parquet`, then select an **Import route**:
+
+| Route | Input | Blender result |
+| --- | --- | --- |
+| Parquet: saved segments | `LANDMARKS_3D`, `SEGMENT_ORIGINS`, `ROTATIONS_WORLD` | Canonically named landmarks, segment axes, and a **Blender skeleton** displaying the saved independent world poses |
+| Parquet: legacy constraints | `LANDMARKS_3D` by default; optionally `MAPPED_KEYPOINTS_3D` | Canonical trajectories plus an explicit compatibility projection into the existing connected Blender armature and tracking constraints |
+| Legacy NPY recording | Original recording folder | Existing loading and processing pipeline |
+
+**Load Data** adds a Parquet import to the current scene without clearing it or
+writing into the recording. Load both routes to compare them, then save the scene
+normally. Select a run explicitly or leave `-1` to use the file's selected run.
+Leave sensor group blank only when there is a single matching group.
+
+The native route selects `model:standard_human`; it never selects optional
+`skeleton_fit:*` results. Tracker keypoints, mapped keypoint observations, model
+landmarks, and the Blender skeleton are distinct concepts. No tracker package or
+SkellyForge installation is needed inside Blender: the model snapshot is in the
+Parquet metadata. Millimeters become meters; world wxyz rotations retain their
+Blender coordinate basis. Source frame numbers and timestamps are retained;
+playback uses the median sample rate. Contiguous, nonnegative frame numbers are
+required. Animation holds each measured sample until the next frame.
+
+Native segment bones are deliberately independent, with anatomical parents saved
+as metadata. Connecting them would change the saved poses and could hide valid
+children when a parent is missing. Missing native samples are hidden/collapsed
+and carry an animated `sample_valid` property. Bone drawing axes have a fixed
+conversion to Blender's local bone Y axis; segment objects carry the exact saved
+world quaternion. Model scales determine the bone display lengths.
+
+The comparison route reuses the old armature, median bone lengths, and Blender
+tracking constraints. It keeps canonical centers and projects names only at the
+constraint-target boundary (`pelvis_origin` → `hips_center`, `chest_center` →
+`trunk_center`, canonical digits → old hand names). Its hand-midpoint helper uses
+the old index/pinky tip average. Legacy targets retain the old missing-data
+hold/backfill behavior; the separate canonical trajectories retain validity.
+This route does not rerun the old preprocessing/landmark adjustment pipeline.
+The two skeletons need not be numerically identical.
+
+The Parquet routes currently create trajectories and Blender skeletons. The old
+body-mesh/video and editing panels have not been adapted to their model snapshot.
+
+For headless callers, the installed package exposes:
+
+```python
+from freemocap_blender_addon.export_api import export_recording
+
+export_recording(
+    recording_path="C:/recordings/session/session_data.parquet",
+    blend_file_path="C:/exports/session.blend",
+    route="parquet_segments",  # or "parquet_constraints"
+)
+```
+
+For an Extension, import through its installed `bl_ext.<repository>.<package>`
+namespace. The API default remains `legacy_npy` for existing callers. Parquet
+routes reject a legacy processing `config` instead of silently ignoring it.
+FreeMoCap core must opt into the new route in a separate integration change.
+
+### Local acceptance tests
+
+Run from the add-on repository with its existing Python environment:
+
+```powershell
+.venv/Scripts/python.exe -B -m tools.run_tests
+```
+
+The runner discovers Blender Launcher installations and tests every discovered
+build using legacy ZIPs plus Extensions where
+supported. It snapshots core's accepted prepared test/sample recordings, verifies
+their provenance, and checks that the shared originals remain unchanged. Use
+`--blender "C:/path/to/blender.exe"` to select a build, or `--dataset test_data`
+for a smaller run. Reports and saved `*-both-routes.blend` comparison scenes are
+under `.test-artifacts/suite-*/build-*/<install-kind>/`.
+
+Tests verify all native landmark and segment samples, actual legacy constraint
+targets and responses, numerical limb-origin differences, saved-scene reloads,
+and the public export API. Small adversarial fixtures reject ambiguous selection,
+duplicate/missing components, conflicting timestamps, wrong units/basis, and
+non-unit rotations; they also check that a missing parent does not remove a valid
+child. The older NPY API dispatch remains covered separately. Full legacy NPY
+recording processing still requires an old-format recording fixture.
+
+### Original NPY workflow
+
 1. In the `3D viewport` window, press `n` to show the sidebar
 2. Select the `💀FreeMoCap` tab
 3. Set the path to the FreeMoCap recording you want to load (path should point to the directory that contains the `output_data/` and `annotated_videos/` folders)

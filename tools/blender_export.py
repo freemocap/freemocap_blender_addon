@@ -4,13 +4,21 @@ PACKAGE is the exact installed/enabled add-on name, including the Blender-chosen
 extension repository namespace when applicable. This script never installs one.
 """
 import importlib
+import argparse
 import sys
 
 
 def main(arguments):
-    if len(arguments) != 3:
-        raise ValueError("Expected installed package name, recording directory, and .blend output")
-    package, recording, output = arguments
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('package')
+    parser.add_argument('recording')
+    parser.add_argument('output')
+    parser.add_argument('--route', choices=('legacy_npy', 'parquet_segments', 'parquet_constraints'), default='legacy_npy')
+    parser.add_argument('--trajectory-channel', choices=('LANDMARKS_3D', 'MAPPED_KEYPOINTS_3D'), default='LANDMARKS_3D')
+    parser.add_argument('--run-id', type=int)
+    parser.add_argument('--sensor-group')
+    args = parser.parse_args(arguments)
+    package, recording, output = args.package, args.recording, args.output
     import bpy
     if package not in bpy.context.preferences.addons:
         raise RuntimeError("Enable the installed FreeMoCap add-on before exporting: " + package)
@@ -18,7 +26,9 @@ def main(arguments):
     if not getattr(module, "__freemocap_export_api__", False):
         raise ValueError("Selected package does not expose the FreeMoCap export API")
     api = importlib.import_module(package + ".export_api")
-    return api.export_recording(recording_path=recording, blend_file_path=output)
+    return api.export_recording(recording_path=recording, blend_file_path=output, route=args.route,
+                                trajectory_channel=args.trajectory_channel, run_id=args.run_id,
+                                sensor_group=args.sensor_group)
 
 
 if __name__ == "__main__":

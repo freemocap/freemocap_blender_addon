@@ -1,62 +1,56 @@
-name: Create and Upload Addon Zip
+name: Build complete Blender release candidates
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ['3.0', '3.6', '4.2', '4.5', '5.2']
+        # Expand after runtime acceptance, not merely wheel acquisition.
+        platform: ['windows-x64']
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Extract version from __init__.py
-        id: get_version
-        run: |
-          version=$(grep -Po '(?<=^__version__ = ")[^"]*' freemocap_blender_addon/__init__.py)
-          version=${version#v}
-          echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Create zip file
-        run: |
-          version=${{ steps.get_version.outputs.version }}
-          zip -r freemocap_blender_addon_$version.zip freemocap_blender_addon/
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          name: freemocap_blender_addon
-          path: freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
-
-      - name: Create release notes
-        run: |
-          version=${{ steps.get_version.outputs.version }}
-          echo "You can install the attached .zip as a Blender Add-on. See README.md for basic installation and usage instructions" > release_notes.md
-          echo "Attached Files" >> release_notes.md
-          echo "" >> release_notes.md
-          echo "- freemocap_blender_addon_${version}.zip - A zipped archive of the freemocap_blender_addon folder in this repo." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "To install this addon, download the .zip file and follow these steps:" >> release_notes.md
-          echo "- Download/install/open Blender (https://www.blender.org/download/)" >> release_notes.md
-          echo "- Go to Edit > Preferences > Add-ons" >> release_notes.md
-          echo "- Click Install... and select the .zip file" >> release_notes.md
-          echo "- Enable the add-on by checking the box next to it" >> release_notes.md
-          echo "- The add-on should now be available in Blender under the 'FreeMoCap' tab in the 3d Viewport (press 'n' if its not visible)" >> release_notes.md
-          echo "(See README.md for more detailed instructions and usage information)" >> release_notes.md
-
-      - name: Create GitHub Release and upload asset
-        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+          python-version: '3.11'
+      - name: Verify offline package contracts
+        run: python -B -m tools.run_tests --unit-only
+      - name: Build with pinned wheels
+        run: python -B -m tools.build_release --target '${{ matrix.target }}' --platform '${{ matrix.platform }}' --download
+      - uses: actions/upload-artifact@v4
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release ${{ steps.get_version.outputs.version }}
-          body_path: ./release_notes.md
-          draft: false
-          prerelease: false
-          files: freemocap_blender_addon_${{ steps.get_version.outputs.version }}.zip
+          name: blender-${{ matrix.target }}-${{ matrix.platform }}
+          path: dist/*.zip
+          if-no-files-found: error
+
+  draft-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blender-*
+          path: packages
+          merge-multiple: true
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+        with:
+          draft: true
+          files: packages/*.zip
+          fail_on_unmatched_files: true
+          body: |
+            Complete Blender packages with bundled dependencies. Select the archive
+            matching your Blender series and operating system. Blender 4.2+ archives
+            are Extensions; older archives are legacy add-ons. These are release
+            candidates pending human review, not an official Extensions submission.
