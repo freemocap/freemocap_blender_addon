@@ -2,6 +2,7 @@ name: Dependency package safety tests
 
 on:
   workflow_dispatch:
+  push:
   pull_request:
     paths:
       - 'tools/**'
@@ -25,4 +26,11 @@ jobs:
         with:
           python-version: '3.11'
       - name: Run offline packaging contracts (no Blender runtime)
-        run: python -B -m unittest discover -s tests -p test_dependency_packaging.py
+        run: python -B -m tools.run_tests --unit-only
+      - name: Retain test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-${{ matrix.os }}
+          include-hidden-files: true
+          path: .test-artifacts/suite-*/

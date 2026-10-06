@@ -5,6 +5,7 @@ used: installation and module discovery are performed by Blender itself.
 """
 import importlib
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -24,7 +25,7 @@ if existing:
         addon_utils.enable(saved['package'], default_set=True)
 elif kind == 'extension':
     repo = bpy.context.preferences.extensions.repos.new(name='FreeMoCap test', module='freemocap_test',
-                                                       custom_directory=str(output / 'repository'))
+                                                       custom_directory=os.environ.get('FREEMOCAP_BLENDER_TEST_REPOSITORY', str(output / 'repository')))
     repo.use_remote_url = False
     result = bpy.ops.extensions.package_install_files(filepath=str(Path(archive).resolve()),
                                                       repo=repo.module, enable_on_install=True)
@@ -81,6 +82,16 @@ try:
 finally:
     main_module.ajc27_run_as_main_function = original
 report['controlled_export_dispatch'] = True
+# Check actual animation primitives against synthetic and prepared recording data.
+spec = importlib.util.spec_from_file_location('scene_checks', Path(__file__).with_name('blender_scene_checks.py'))
+scene_checks = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(scene_checks)
+checks, references = scene_checks.build_checks(package, parquet, include_references=phase == 'install')
+scene_file = output / ('animation ' + phase + '.blend')
+bpy.ops.wm.save_as_mainfile(filepath=str(scene_file.resolve()))
+bpy.ops.wm.open_mainfile(filepath=str(scene_file.resolve()))
+scene_checks.assert_locations(checks)
+report.update(animation_evaluation=True, animation_reopen=True, reference_checks=references)
 (output / (phase + '-report.json' if existing else 'report.json')).write_text(json.dumps(report, indent=2), encoding='utf-8')
 if phase == 'disable':
     addon_utils.disable(package, default_set=True)

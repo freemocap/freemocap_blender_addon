@@ -9,6 +9,9 @@ Dependency packaging work and its current compatibility limits are documented in
 [DEPENDENCIES.md](DEPENDENCIES.md). The new offline packages are under validation;
 the existing release ZIP workflow does not yet use that builder.
 
+[Testing](TESTING.md): run `python -B -m tools.run_tests` to test locally with
+Blender Launcher builds and core's prepared test/sample datasets.
+
 
 
 <p align="center">

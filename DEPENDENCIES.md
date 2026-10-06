@@ -1,5 +1,8 @@
 # Self contained Blender packages
 
+For the automated local suite, Blender Launcher discovery, and shared core
+reference recordings, see [TESTING.md](TESTING.md).
+
 ## Plan and boundaries
 
 One source tree serves standalone use and FreeMoCap-launched export. Build two
@@ -102,7 +105,7 @@ as one. Release automation migration follows validation of the supported matrix.
 
 ## Observed validation and limitations (2026-10-05)
 
-- Nine offline unit tests pass locally on Windows/Python 3.12. They cover archive
+- Nineteen offline unit tests pass locally on Windows/Python 3.12. They cover archive
   separation, repeatability, Python 3.9 parsing, relative imports, binary target
   rejection, traversal, hash tampering, and dependency conflict/failure behavior.
 - Windows 11 x64, Blender 5.2.2 / Python 3.13.13: both package formats load
@@ -115,10 +118,11 @@ as one. Release automation migration follows validation of the supported matrix.
   Extension is disabled, then re-enable it.** No add-on-side wheel repair, DLL
   deletion, or module eviction is attempted. This needs upstream Blender follow-up
   and testing on each supported release before general distribution.
-- Blender 3.0/3.1/4.2 runtime coverage, macOS/Linux runtime coverage, read-only
-  filesystem enforcement, full recording export, and official marketplace
-  licensing/asset review remain outstanding. The official portable-binary server
-  returned HTTP 403 in this environment; older-version tests were not executed.
+- The Launcher-managed Windows matrix now passes on Blender 3.0.0, 3.6.0, 4.2.0,
+  4.5.0 and 5.2.2, with both core reference datasets; see TESTING.md for scope.
+  Blender 3.1 runtime coverage, macOS/Linux runtime coverage, read-only filesystem
+  enforcement, full recording export, and marketplace licensing/asset review
+  remain outstanding. Launcher downloads superseded the earlier HTTP 403 blocker.
 
 ## FreeMoCap integration handoff
 
