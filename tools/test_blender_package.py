@@ -41,15 +41,15 @@ def run(blender, kind, archive, output=None, references=None):
 def _run(blender, kind, archive, output, references, resources):
     artifacts = ROOT / '.test-artifacts'
     artifacts.mkdir(exist_ok=True)
-    output = Path(output) if output is not None else Path(tempfile.mkdtemp(prefix='blender-smoke-', dir=artifacts))
+    output = Path(output).resolve() if output is not None else Path(tempfile.mkdtemp(prefix='blender-smoke-', dir=artifacts))
     output.mkdir(parents=True, exist_ok=True)
     environment = isolated_environment(resources)
     environment['FREEMOCAP_BLENDER_TEST_REPOSITORY'] = str(resources / 'repository')
     environment.pop('FREEMOCAP_BLENDER_REFERENCE_MANIFEST', None)
     if references is not None:
-        environment['FREEMOCAP_BLENDER_REFERENCE_MANIFEST'] = str(references)
+        environment['FREEMOCAP_BLENDER_REFERENCE_MANIFEST'] = str(Path(references).resolve())
     for phase in ('install', 'restart', 'disable', 'reenable'):
-        command = [str(blender), '--background', '--python-exit-code', '1']
+        command = [str(blender.resolve()), '--background', '--python-exit-code', '1']
         if phase == 'install':
             command += ['--factory-startup']
         if kind == 'extension':
@@ -59,7 +59,10 @@ def _run(blender, kind, archive, output, references, resources):
         if phase != 'install':
             command += [phase]
         with (output / (phase + '.log')).open('w', encoding='utf-8') as log:
-            result = subprocess.run(command, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=900)
+            # Blender's Windows thumbnail code can create malformed relative
+            # cache paths when the OS profile lookup fails. Contain incidental
+            # writes in this disposable directory, never in the source checkout.
+            result = subprocess.run(command, cwd=resources, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=900)
         if result.returncode:
             raise RuntimeError('Blender {} failed ({}); inspect {}'.format(phase, result.returncode, output))
         report = output / ('report.json' if phase == 'install' else phase + '-report.json')

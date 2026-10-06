@@ -40,28 +40,30 @@ def bind(mesh, rig, groups):
 
 def rigid_meshes(result, parent):
     """One visible rigid shape for every Blender bone, driven by that bone."""
+    from .meshes.rigid_body_meshes.helpers.make_bone_mesh import make_bone_mesh
+    from .meshes.rigid_body_meshes.helpers.put_meshes_on_empties import get_bone_mesh_color_and_squish
     rig = result['rig']
     objects = []
     for bone in rig.data.bones:
-        head, tail = bone.head_local.copy(), bone.tail_local.copy()
-        vector = tail - head
-        radius = min(.025, max(.003, vector.length * .08))
-        orientation = vector.to_track_quat('Z', 'Y')
-        center = head + vector * .35
-        ring = [center + orientation @ Vector(v) for v in
-                [(radius, 0, 0), (0, radius, 0), (-radius, 0, 0), (0, -radius, 0)]]
-        mesh = bpy.data.meshes.new('segment_' + bone.name)
-        mesh.from_pydata([head, tail] + ring, [],
-                         [(0, 2+i, 2+(i+1) % 4) for i in range(4)] +
-                         [(1, 2+(i+1) % 4, 2+i) for i in range(4)])
-        obj = bpy.data.objects.new('rigid_body_' + bone.name, mesh)
-        bpy.context.collection.objects.link(obj)
-        bind(obj, rig, {bone.name: list(range(6))})
+        canonical = asset_segments().get(bone.name, bone.name)
+        style = canonical
+        if canonical.endswith(('.L', '.R')):
+            style = ('left_' if canonical.endswith('.L') else 'right_') + canonical[:-2]
+        if any(digit in canonical for digit in ('thumb', 'index', 'middle', 'ring', 'pinky')):
+            style = ('left' if canonical.startswith('left_') else 'right') + '_hand'
+        color, squish = get_bone_mesh_color_and_squish(style)
+        obj = make_bone_mesh(name='rigid_body_' + bone.name, length=bone.length,
+                             squish_scale=squish, joint_color=color, cone_color=color,
+                             axis_visible=False)
+        orientation = (bone.tail_local - bone.head_local).to_track_quat('Z', 'Y')
+        for vertex in obj.data.vertices:
+            vertex.co = bone.head_local + orientation @ vertex.co
+        bind(obj, rig, {bone.name: list(range(len(obj.data.vertices)))})
         obj.parent = parent
         obj['segment_name'] = bone.name
-        obj.color = (.16, .65, .85, 1)
         objects.append(obj)
     return objects
+
 
 
 def native_skelly(result):
@@ -90,7 +92,9 @@ def native_skelly(result):
             world_rest[name] = rest_rotation(parent) @ local if parent else local
         return world_rest[name]
 
-    obj = load_skelly_mesh()
+    from .meshes.skelly_mesh.attachment_frame import attachment_rotation
+    obj = load_skelly_mesh(canonical=True)
+    attachment_frames = json.loads(obj['attachment_frames'])
     obj.modifiers.clear()
     original = [v.co.copy() for v in obj.data.vertices]
     memberships = {g.name: [] for g in obj.vertex_groups}
@@ -104,7 +108,7 @@ def native_skelly(result):
         name = mapping[old]
         indices = memberships[old]
         source_head = original[memberships[old + '_origin'][0]]
-        source_tail = (source_head + Vector((0, 0, 1)) if old == 'pelvis'
+        source_tail = (original[memberships['pelvis_left'][0]] if old == 'pelvis'
                        else original[memberships[old + '_end'][0]])
         source_vector = source_tail - source_head
         segment = segments[name]
@@ -115,7 +119,17 @@ def native_skelly(result):
         if local_tail.length < 1e-8 or source_vector.length < 1e-8:
             raise ValueError('Cannot fit zero-length Skelly part ' + old)
         rest_q = rest_rotation(name)
-        rotation = rest_q.inverted() @ source_vector.rotation_difference(rest_q @ local_tail)
+        frame = attachment_frames[old]
+        secondary_name = frame.get('model_secondary_landmark')
+        local_secondary = None
+        if secondary_name is not None:
+            secondary = landmarks[secondary_name]
+            if (secondary['segment'] != name or
+                    segment['frame'].get('secondary_point') != secondary_name):
+                raise ValueError('Asset secondary landmark disagrees with model frame: ' + name)
+            local_secondary = Vector(secondary['position'])
+        rotation = attachment_rotation(source_vector, local_tail, rest_q,
+                                       frame['roll_reference'], local_secondary)
         scale = local_tail.length / source_vector.length
         if old == 'pelvis':
             source_width = (original[memberships['pelvis_left'][0]] -
@@ -123,9 +137,6 @@ def native_skelly(result):
             target_width = (Vector(landmarks['left_hip_socket']['position']) -
                             Vector(landmarks['right_hip_socket']['position'])).length
             scale = target_width * data['scales'][name] / 1000. / source_width
-            # Asset pelvis points upward, whereas the segment primary axis is
-            # lateral. Pelvis local axes already match Blender's rest basis.
-            rotation = Quaternion()
         for index in indices:
             if index in assigned:
                 raise ValueError('Overlapping rigid asset groups at vertex ' + str(index))
@@ -234,6 +245,16 @@ def build_scene(result):
         before = set(bpy.data.objects)
         attach_skelly_mesh_to_rig(rig, {})
         skelly = next(o for o in set(bpy.data.objects) - before if o.type == 'MESH')
+    com = None
+    if 'center_of_mass' in data['channels'].get('DERIVED_POINTS', {}):
+        values = data['channels']['DERIVED_POINTS']['center_of_mass']
+        target = trajectory('center_of_mass', values, data['frames'], root)
+        from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
+        com = create_center_of_mass_mesh(parent_object=root, center_of_mass_empty=target)
+        target.hide_set(True)  # Hide the helper, not the COM sphere (run-all behavior).
+        fc = curves(com)
+        for visibility in ('hide_viewport', 'hide_render'):
+            animate(fc, visibility, data['frames'], (~np.isfinite(values).all(axis=1)).astype(float))
     video_objects = videos(result, groups['videos_parent'])
     camera_objects = cameras(result, groups['capture_cameras_parent'])
     if camera_objects:
@@ -243,25 +264,8 @@ def build_scene(result):
         render.resolution_percentage = 100
         render.pixel_aspect_x = 1.
         render.pixel_aspect_y = first_camera['intrinsics']['fx'] / first_camera['intrinsics']['fy']
-    com = None
-    if 'center_of_mass' in data['channels'].get('DERIVED_POINTS', {}):
-        values = data['channels']['DERIVED_POINTS']['center_of_mass']
-        target = trajectory('center_of_mass', values, data['frames'], root)
-        bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, radius=.04)
-        com = bpy.context.object
-        com.name = 'center_of_mass_mesh'
-        com.parent = target
-        fc = curves(com)
-        for visibility in ('hide_viewport', 'hide_render'):
-            animate(fc, visibility, data['frames'], (~np.isfinite(values).all(axis=1)).astype(float))
-        com.hide_set(True)
-    bpy.ops.mesh.primitive_plane_add(size=10)
-    ground = bpy.context.object
-    ground.name = 'FreeMoCap_ground'
-    ground.parent = root
-    from .materials.create_checkerboard_material import create_checkerboard_material
-    ground.data.materials.append(create_checkerboard_material(
-        name='FreeMoCap_ground_material', color1=(.22, .22, .22, 1), color2=(.35, .35, .35, 1), square_scale=10))
+    from .setup_scene.ground_plane import create_ground_plane
+    ground = create_ground_plane(data['channels'].get('DERIVED_POINTS', {}).get('center_of_mass'), root)
     overview = bpy.data.objects.new('FreeMoCap_overview', bpy.data.cameras.new('FreeMoCap_overview'))
     bpy.context.collection.objects.link(overview)
     overview.parent = root
@@ -278,11 +282,8 @@ def build_scene(result):
     light.data.energy = 1000
     light.data.shape = 'DISK'
     light.data.size = 5
-    # Keep both representations available without drawing the rigid shapes over
-    # the anatomical mesh by default. hide_set is independent of sample validity.
-    for obj in rigid:
-        obj.hide_set(skelly is not None)
-        obj.hide_render = skelly is not None
+    # The run-all controller hides organizational empties, not their mesh children.
+    groups['rigid_body_meshes_parent'].hide_set(True)
     for obj in list(result['landmarks'].values()) + list(result['segments'].values()) + list(result['targets'].values()):
         obj.hide_set(True)
     scene = bpy.context.scene

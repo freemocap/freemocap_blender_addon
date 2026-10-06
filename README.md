@@ -126,9 +126,27 @@ Both Parquet routes also build the Skelly mesh, rigid segment meshes, saved
 center of mass (when present), video planes, capture cameras, ground, lighting,
 and an overview camera. **Data View Settings → Scope data parent** selects an
 import; its visibility controls switch the armature, landmarks, rigid bodies,
-Skelly mesh, videos, and center of mass. Rigid bodies and landmark axes start
-hidden to keep the anatomical mesh readable. These presentation objects do not
+Skelly mesh, videos, and center of mass. Both mesh layers and the COM sphere start visible, as in the run-all controller;
+landmark axes start hidden. These presentation objects do not
 alter the native saved segment poses.
+
+The portable Skelly artwork uses the same +X right, +Y forward, +Z up convention
+as the recorded model. Each part declares a rest-world roll reference in addition
+to its origin and endpoint: endpoint alignment alone cannot orient a skull or
+pelvis. The skull, pelvis, and thorax attach using their model-defined secondary
+landmarks. Parts without that definition use the model's parent-relative rest
+rotations and the asset's roll reference to map into segment local space. The loader applies the
+saved world poses unchanged. The legacy attachment boundary converts the artwork
+back to its historical basis. The editable `.blend` remains the source artwork;
+`tools/extract_skelly_asset.py` reproduces the canonical portable asset.
+
+Both Parquet routes use the existing cone-and-joint stick mesh builder and its
+left/right/hand palette. The anatomical Skelly layer retains the source asset's
+Base, Cavities, and Sparkles materials and per-face assignments. The COM sphere
+uses the existing cyan/magenta checkerboard builder; the shared ground builder
+uses the run-all controller's dark navy checks (0.5 m squares). The Sparkles
+material belongs to the anatomical asset. COM trails remain an optional
+controller operation outside the run-all sequence.
 
 Videos come from `annotated_videos`, falling back to `synchronized_videos` beside
 the Parquet. Keep those folders beside it when moving a recording. The `.blend`
@@ -181,7 +199,11 @@ under `.test-artifacts/suite-*/build-*/<install-kind>/`.
 
 Tests verify all native landmark and segment samples, actual legacy constraint
 targets and responses, numerical limb-origin differences, saved-scene reloads,
-and the public export API. Small adversarial fixtures reject ambiguous selection,
+and the public export API. Anatomical attachment checks independently verify
+skull up/forward and pelvis left/right, including the antiparallel frame case;
+both routes must preserve the separate stick, authored Skelly, COM, and ground
+materials and visibility defaults.
+Small adversarial fixtures reject ambiguous selection,
 duplicate/missing components, conflicting timestamps, wrong units/basis, and
 non-unit rotations; they also check that a missing parent does not remove a valid
 child. The older NPY API dispatch remains covered separately. Full legacy NPY

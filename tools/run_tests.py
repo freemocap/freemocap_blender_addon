@@ -50,6 +50,8 @@ def discover(library):
 
 
 def probe(blender, output):
+    blender = Path(blender).resolve()
+    output = Path(output).resolve()
     expression = (
         "import bpy,sys,platform,json; "
         "print('FREEMOCAP_RUNTIME ' + json.dumps(dict(blender=list(bpy.app.version), "
@@ -58,7 +60,7 @@ def probe(blender, output):
     output.mkdir(parents=True, exist_ok=True)
     result = subprocess.run([str(blender), '--background', '--factory-startup', '--python-exit-code', '1',
                              '--python-expr', expression],
-                            env=test_blender_package.isolated_environment(output / 'user'),
+                            cwd=output, env=test_blender_package.isolated_environment(output / 'user'),
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=120)
     log = result.stdout.decode('utf-8', errors='replace')
     (output / 'probe.log').write_text(log, encoding='utf-8')

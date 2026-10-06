@@ -25,3 +25,4 @@ def create_center_of_mass_mesh(parent_object: bpy.types.Object,
 
     mesh.active_material = center_of_mass_material
     mesh.data.materials.append(center_of_mass_material)
+    return mesh

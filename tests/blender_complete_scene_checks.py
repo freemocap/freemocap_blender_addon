@@ -1,5 +1,6 @@
 """Assertions on actual evaluated meshes/media, not only armature existence."""
 import json
+import gzip
 from pathlib import Path
 
 import bpy
@@ -12,12 +13,74 @@ def descendants(obj):
     return [child for direct in obj.children for child in [direct] + descendants(direct)]
 
 
+def check_anatomy(result, package_path):
+    """Independent anatomical landmarks on the artwork, not bind-matrix echoes."""
+    with gzip.open(package_path / 'assets/skelly_mesh.json.gz', 'rt', encoding='utf-8') as stream:
+        asset = json.load(stream)
+    mesh = result['skelly_mesh']
+    surface = {v for face in asset['faces'] for v in face}
+    skull = [i for i, weight in asset['groups']['face'] if weight and i in surface]
+    top = max(skull, key=lambda i: asset['vertices'][i][2])
+    front = max(skull, key=lambda i: asset['vertices'][i][1])
+    # The skull frame is explicitly +Y nose, +Z vertex, with origin at its base.
+    assert mesh.data.vertices[top].co.z > .02, 'Skull top is inverted'
+    assert mesh.data.vertices[front].co.y > .02, 'Skull faces backward'
+    pelvis = [i for i, weight in asset['groups']['pelvis'] if weight and i in surface]
+    left = min(pelvis, key=lambda i: asset['vertices'][i][0])
+    right = max(pelvis, key=lambda i: asset['vertices'][i][0])
+    assert mesh.data.vertices[left].co.x < mesh.data.vertices[right].co.x, 'Pelvis left/right reversed'
+    for frame in (0, len(result['data']['frames']) // 2):
+        data = result['data']
+        bpy.context.scene.frame_set(int(data['frames'][frame]))
+        evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        q = data['channels']['ROTATIONS_WORLD']['skull'][frame]
+        origin = data['channels']['SEGMENT_ORIGINS']['skull'][frame]
+        if np.isfinite(q).all() and np.isfinite(origin).all():
+            up = Quaternion(q) @ Vector((0, 0, 1))
+            forward = Quaternion(q) @ Vector((0, 1, 0))
+            assert (evaluated.data.vertices[top].co - Vector(origin)).dot(up) > .02
+            assert (evaluated.data.vertices[front].co - Vector(origin)).dot(forward) > .02
+
+
 def check(result, reference):
     data, rig, skelly = result['data'], result['rig'], result['skelly_mesh']
     assert skelly is not None and len(skelly.data.polygons) > 1000
     assert any(m.type == 'ARMATURE' and m.object == rig for m in skelly.modifiers)
     assert len(result['rigid_bodies']) == len(rig.data.bones)
+    # The two layers must retain DIFFERENT presentation contracts.
+    assert all(not o.hide_get() and not o.hide_render for o in result['rigid_bodies'])
+    for obj in result['rigid_bodies']:
+        assert len(obj.data.vertices) > 40, 'Expected the existing cone + joint sphere builder'
+        assert {p.material_index for p in obj.data.polygons} == {0, 1}, 'Cone and joint must both exist'
+        canonical = obj['segment_name']
+        if canonical in ('left_upper_arm', 'upper_arm.L', 'right_upper_arm', 'upper_arm.R'):
+            expected = (0, 0, 1, 1) if canonical in ('left_upper_arm', 'upper_arm.L') else (1, 0, 0, 1)
+            for mat in obj.data.materials:
+                emission = next(n for n in mat.node_tree.nodes if n.type == 'EMISSION')
+                np.testing.assert_allclose(emission.inputs['Color'].default_value, expected)
+    assert len(skelly.data.materials) == 3
+    expected_colors = [(0.37123689, 0.67244279, 0.6938718, 1), (0, 0, 0, 1),
+                       (0.69387192, 0.08228248, 0.09530751, 1)]
+    for mat, expected in zip(skelly.data.materials, expected_colors):
+        shader = next(n for n in mat.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
+        np.testing.assert_allclose(shader.inputs['Base Color'].default_value, expected, atol=1e-6)
+    assert {p.material_index for p in skelly.data.polygons} == {0, 1, 2}
+    source_asset = Path(__file__).resolve().parents[1] / 'freemocap_blender_addon/assets/skelly_mesh.json.gz'
+    with gzip.open(source_asset, 'rt', encoding='utf-8') as stream:
+        appearance = json.load(stream)
+    np.testing.assert_array_equal([p.material_index for p in skelly.data.polygons], appearance['face_materials'])
     assert result['center_of_mass'] is not None
+    assert not result['center_of_mass'].hide_get(), 'Only the COM empty should be hidden'
+    for obj, colors, scale in [(result['center_of_mass'], [(0, .5, 1, 1), (1, 0, 1, 1)], 2),
+                               (result['ground'], [(.02, .02, .15, 1), (.01, .01, .08, 1)],
+                                result['ground'].dimensions.x / .5)]:
+        mat = obj.data.materials[0]
+        checker = next(n for n in mat.node_tree.nodes if n.type == 'TEX_CHECKER')
+        for socket, color in zip(('Color1', 'Color2'), colors):
+            np.testing.assert_allclose(checker.inputs[socket].default_value, color, atol=1e-6)
+        np.testing.assert_allclose(checker.inputs['Scale'].default_value, scale)
+        shaders = [n for n in mat.node_tree.nodes if n.type == 'BSDF_PRINCIPLED']
+        assert len(shaders) == 1, 'Configured checker shader must not be replaced'
     center_values = data['channels']['DERIVED_POINTS']['center_of_mass']
     center_frames = {0, len(center_values) // 2, len(center_values) - 1}
     missing = np.flatnonzero(~np.isfinite(center_values).all(axis=1))
@@ -101,6 +164,13 @@ def check(result, reference):
     ui.show_rigid_bodies = True
     assert all(not o.hide_get() for o in result['rigid_bodies'])
     ui.show_rigid_bodies = False
+    assert all(o.hide_get() for o in result['rigid_bodies'])
+    assert not skelly.hide_get(), 'Stick visibility must not hide the anatomical layer'
+    ui.show_rigid_bodies = True
+    ui.show_center_of_mass = False
+    assert result['center_of_mass'].hide_get()
+    ui.show_center_of_mass = True
+    assert not result['center_of_mass'].hide_get()
     ui.show_videos = False
     assert all(o.hide_get() for o in result['videos'])
     ui.show_videos = True

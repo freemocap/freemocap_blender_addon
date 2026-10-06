@@ -12,9 +12,13 @@ from tools import run_tests, test_blender_package
 class RunnerTests(unittest.TestCase):
     def test_zero_process_exit_without_test_completion_is_failure(self):
         with tempfile.TemporaryDirectory() as directory:
-            with patch.object(test_blender_package.subprocess, 'run', return_value=SimpleNamespace(returncode=0)):
+            with patch.object(test_blender_package.subprocess, 'run', return_value=SimpleNamespace(returncode=0)) as launch:
                 with self.assertRaisesRegex(RuntimeError, 'without completing checks'):
                     test_blender_package.run(Path('unused-blender'), 'legacy', Path('unused.zip'), output=Path(directory))
+                working_directory = Path(launch.call_args.kwargs['cwd'])
+                self.assertNotEqual(working_directory, test_blender_package.ROOT)
+                self.assertFalse(working_directory.exists(), 'Disposable process directory was not cleaned up')
+                self.assertTrue(Path(launch.call_args.args[0][0]).is_absolute())
 
     def test_blender_cannot_inherit_callers_python_dependency_paths(self):
         with tempfile.TemporaryDirectory() as directory:

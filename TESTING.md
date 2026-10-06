@@ -245,6 +245,22 @@ No macOS/Linux Blender runtime, 3.1 runtime, old-format full NPY recording, or
 FreeMoCap core invocation was exercised in this stage. Core integration remains
 an independent stage after the owner commits and pushes this add-on change.
 
+## Windows thumbnail-cache isolation
+
+Blender test subprocesses use disposable working directories (runtime probes use
+their ignored report directory), never the source checkout. On 2026-10-06 the
+agent environment's `SHGetSpecialFolderPathW(CSIDL_PROFILE)` returned failure.
+Blender's Windows thumbnail implementation does not check that return value
+before converting the output buffer. This is the suspected cause of malformed
+relative directories containing empty `.thumbnails/large` and
+`.thumbnails/fail/blender` trees during earlier tests. Working-directory isolation
+contains these incidental writes; it does not repair Blender's native code.
+Do not add Unicode-name ignore patterns or delete arbitrary Unicode directories.
+
+After this isolation change, 26 offline tests and the Blender 5.2.2 development
+reload/export test passed, exercising both Parquet routes without adding cache
+directories at the repository root.
+
 ## Historical packaging/primitive results — 2026-10-05
 
 Nineteen unit tests passed. The full suite passed against these Launcher-managed

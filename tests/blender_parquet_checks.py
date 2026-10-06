@@ -6,7 +6,7 @@ from pathlib import Path
 
 import bpy
 import numpy as np
-from mathutils import Quaternion
+from mathutils import Quaternion, Vector
 spec = importlib.util.spec_from_file_location('complete_scene', Path(__file__).with_name('blender_complete_scene_checks.py'))
 complete_scene = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(complete_scene)
@@ -53,9 +53,33 @@ def build_checks(package, output):
     loader = importlib.import_module(package + '.core_functions.parquet_import')
     definitions = importlib.import_module(package + '.data_models.bones.bone_constraints')
     api = importlib.import_module(package + '.export_api')
+    attachment = importlib.import_module(package + '.core_functions.meshes.skelly_mesh.attachment_frame')
+    # Analytic cases include an antiparallel primary (the former upside-down
+    # head failure), and a rotated rest frame. Up must remain fully specified.
+    identity = Quaternion((1, 0, 0, 0))
+    for source, expected in (((0, 1, 0), np.eye(3)),
+                             ((0, -1, 0), np.diag([-1., -1., 1.]))):
+        rotation = attachment.attachment_rotation(source, (0, 1, 0), identity, (0, 0, 1))
+        np.testing.assert_allclose(rotation, expected, atol=1e-6)
+        np.testing.assert_allclose(rotation @ Vector((0, 0, 1)), (0, 0, 1), atol=1e-6)
+    quarter_turn = Quaternion((0, 0, 1), np.pi / 2)
+    rotation = attachment.attachment_rotation((0, 1, 0), (0, 1, 0), quarter_turn, (0, 0, 1))
+    np.testing.assert_allclose(rotation, np.eye(3), atol=1e-6)
+    # An explicitly defined skull-up landmark takes precedence over a rolled
+    # authored rest pose. Binding must remain +Y nose/+Z up in segment space.
+    rolled_rest = Quaternion((0, 1, 0), np.pi / 2)
+    rotation = attachment.attachment_rotation((0, 1, 0), (0, 1, 0), rolled_rest,
+                                               (0, 0, 1), local_secondary=(0, 0, 1))
+    np.testing.assert_allclose(rotation, np.eye(3), atol=1e-6)
+    try:
+        attachment.basis((0, 0, 1), (0, 0, 1))
+        raise AssertionError('Parallel frame accepted')
+    except ValueError:
+        pass
     reports = []
     for reference in references:
         native = loader.load_parquet(reference['path'])
+        complete_scene.check_anatomy(native, Path(importlib.import_module(package).__file__).parent)
         data = native['data']
         native_scene = complete_scene.check(native, reference)
         if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
