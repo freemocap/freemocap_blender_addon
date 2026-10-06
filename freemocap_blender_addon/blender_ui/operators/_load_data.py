@@ -21,11 +21,13 @@ class FREEMOCAP_OT_load_data(bpy.types.Operator):
             props = context.scene.freemocap_properties
             if props.import_route != 'legacy_npy':
                 from ...core_functions.parquet_import import load_parquet
-                load_parquet(bpy.path.abspath(recording_path), route=props.import_route,
+                result = load_parquet(bpy.path.abspath(recording_path), route=props.import_route,
                              trajectory_channel=props.trajectory_channel if props.import_route == 'parquet_constraints' else 'LANDMARKS_3D',
                              run_id=None if props.parquet_run_id == -1 else props.parquet_run_id,
                              sensor_group=props.parquet_sensor_group.strip() or None)
-                self.report({'INFO'}, 'Loaded Blender skeleton; save the scene to retain it')
+                report = result['scene_report']
+                self.report({'INFO'}, 'Loaded scene: {} rigid bodies, {} videos, {} capture cameras; save to retain it'.format(
+                    report['rigid_bodies'], report['videos'], report['capture_cameras']))
                 return {'FINISHED'}
             print(f"Executing `main_controller.load_data() with config:{config}")
             controller = MainController(recording_path=recording_path,

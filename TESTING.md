@@ -41,9 +41,9 @@ transactions, missing data, wrong dataset identity/frame counts, and mismatched
 Parquet/calibration hashes fail the reference setup. There is no fallback to
 an arbitrary raw recording or an unsuccessful processing attempt.
 
-The runner copies the verified Parquet file into the ignored suite directory,
+The runner copies the verified Parquet and available synchronized/annotated videos into the ignored suite directory,
 records `ready.json` and its software/workflow provenance, and checks the original
-Parquet, calibration, publication marker, and copied Parquet hashes after testing.
+Parquet, calibration, publication marker, copied Parquet, and original/copied video hashes after testing.
 Blender only reads the copy. Tests never overwrite shared prepared data, rerun
 tracking, run the optional skeleton fitter, or import FreeMoCap/SkellyForge/
 SkellyTracker. This follows the file-based consumer approach used by Forge's
@@ -93,6 +93,25 @@ Scenes containing both routes are saved and reopened for further checks.
 The optional mapped-keypoint comparison input and the standalone Load Data
 operator are also exercised against both real datasets.
 
+`tests/blender_complete_scene_checks.py` checks the actual Skelly surface and
+rigid-body vertices against their driving segment/bone transforms, animation,
+movie textures and timing, capture camera transforms/backgrounds, center of mass,
+ground, scoped visibility controls, and scene persistence. The test recording
+also exercises FBX export through both routes without changing the current
+landmark pose or frame. To additionally render both routes for visual inspection:
+
+```powershell
+$env:FREEMOCAP_TEST_RENDER = '1'
+python -B -m tools.run_tests --blender 'PATH/TO/blender.exe'
+```
+
+Preview PNGs use CPU Cycles and live beside the comparison `.blend` files.
+The bundled `assets/skelly_mesh.json.gz` is an intentional portable asset, not a
+test artifact. It preserves the source `.blend` topology and binding groups so
+Blender 3.0 does not need to read a newer Blender mesh serialization. Rebuild it
+with `tools/extract_skelly_asset.py` in a Blender that reads the source asset,
+writing first to `.test-artifacts/` and reviewing the result before replacing it.
+
 `tests/blender_parquet_contract.py` supplies small adversarial fixtures for units,
 basis, source/run/group selection, component completeness, timestamp consistency,
 quaternion normalization, missing-parent behavior, and actual public API export.
@@ -132,7 +151,55 @@ Known Windows limitation: disabling and immediately re-enabling an Extension
 after loading PyArrow can break Blender's wheel cleanup. The tested lifecycle
 restarts Blender while disabled before re-enabling. See `DEPENDENCIES.md`.
 
+## Complete-scene follow-up — 2026-10-06
+
+Both prepared recordings passed the expanded scene checks on Windows x64:
+
+| Blender | Package formats |
+| --- | --- |
+| 3.0.0 | Legacy |
+| 3.6.23 | Legacy |
+| 4.2.23 | Legacy, Extension |
+| 4.5.14 | Legacy, Extension |
+| 5.2.2 | Legacy, Extension |
+
+The native route creates 61 rigid-body visuals; the constraint route creates 63
+Blender-bone visuals. Both have a 10,604-vertex / 20,011-face Skelly mesh, three
+movie planes and three capture cameras for each recording, plus saved center of
+mass, ground, light and overview camera. Tests check evaluated mesh deformation,
+scope toggles, source poses, saved-scene reopening and actual FBX output. The
+existing all-frame native pose checks and 75-constraint comparison checks remain.
+Twenty-six offline tests passed. Shared reference checksums remained unchanged.
+
+Evidence: `.test-artifacts/suite-kvsi3tfj/` covers 3.0/3.6/4.2/4.5;
+`.test-artifacts/suite-r094_f2a/` reruns 3.0/5.2 with camera projection checks.
+The final 5.2 run, `.test-artifacts/suite-hx6s72h7/`, additionally checks saved
+center-of-mass positions and invalid-sample viewport/render visibility.
+CPU renders of both routes and both datasets were inspected in
+`.test-artifacts/suite-bnr7setn/build-0/legacy/*-native.png` and
+`*-constraints.png`. The isolated JacquesLucke reload-operator test passed twice
+in one process and exported both scenes after reload; latest evidence is
+`.test-artifacts/development-test-jentxdn_/`.
+
+The initial complete-scene matrix found a newer `.blend` asset incompatibility
+on 3.0, unavailable `children_recursive` on 3.0, and an object-name collision in
+the older-version comparison scene. Portable mesh data, compatible traversal and
+import-specific rig names fixed those failures. Initial failing logs remain in
+`.test-artifacts/suite-97d1x150/`; later passing runs supersede them.
+
+Scope limits: no macOS/Linux Blender runtime, Blender 3.1, full old-format NPY
+recording, or FreeMoCap core invocation was tested here. Parquet 3D-model export
+supports FBX with default names/rest pose. Legacy editing/retargeting/analysis
+tools and other export formats are not established by these scene tests. Movie
+files remain external dependencies of saved `.blend` files. Existing Windows
+Extension DLL-cleanup warnings still require the documented process restart;
+the private development bundle supports same-process reloads.
+
 ## Parquet loader results — 2026-10-06
+
+The original results in this section tested trajectories/armatures only. They
+did **not** establish complete scene output. See the complete-scene follow-up
+above for mesh, video, camera, visibility and FBX coverage.
 
 Development setup follow-up: 24 offline tests passed. The generated private
 development bundles passed source synchronization and two same-process reloads

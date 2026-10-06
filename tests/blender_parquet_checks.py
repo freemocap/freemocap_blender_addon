@@ -7,6 +7,9 @@ from pathlib import Path
 import bpy
 import numpy as np
 from mathutils import Quaternion
+spec = importlib.util.spec_from_file_location('complete_scene', Path(__file__).with_name('blender_complete_scene_checks.py'))
+complete_scene = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(complete_scene)
 
 
 def check_native(result, frames):
@@ -54,12 +57,29 @@ def build_checks(package, output):
     for reference in references:
         native = loader.load_parquet(reference['path'])
         data = native['data']
+        native_scene = complete_scene.check(native, reference)
+        if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
+            complete_scene.render_preview(native, output / (reference['dataset'] + '-native.png'))
         assert len(data['frames']) == reference['frames']
         state = dict(data=data, rig_name=native['rig'].name,
                      landmark_names={n: o.name for n, o in native['landmarks'].items()},
                      segment_names={n: o.name for n, o in native['segments'].items()})
         check_native(state, range(len(data['frames'])))
         legacy = loader.load_parquet(reference['path'], route='parquet_constraints')
+        legacy_scene = complete_scene.check(legacy, reference)
+        if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
+            complete_scene.render_preview(legacy, output / (reference['dataset'] + '-constraints.png'))
+        if reference['dataset'] == 'test_data':
+            export = importlib.import_module(package + '.core_functions.export_3d_model.export_3d_model').export_3d_model
+            for result in (native, legacy):
+                scene = bpy.context.scene
+                frame = scene.frame_current
+                landmark = result['landmarks']['pelvis_origin']
+                position = landmark.matrix_world.copy()
+                export(result['root'], result['rig'], formats=['fbx'], destination_folder=str(output))
+                assert (output / (result['root'].name + '.fbx')).stat().st_size > 10000
+                assert scene.frame_current == frame
+                np.testing.assert_allclose(np.array(landmark.matrix_world), np.array(position), atol=1e-6)
         rig = legacy['rig']
         # All expected active constraints must exist, with exact scoped targets.
         expected_count = 0
@@ -105,22 +125,25 @@ def build_checks(package, output):
         scene_file = output / (reference['dataset'] + '-both-routes.blend')
         bpy.ops.wm.save_as_mainfile(filepath=str(scene_file))
         bpy.ops.wm.open_mainfile(filepath=str(scene_file))
+        complete_scene.check_reopened(native_scene)
+        complete_scene.check_reopened(legacy_scene)
         check_native(state, sorted(set([0, len(data['frames']) // 2, len(data['frames']) - 1])))
         assert sum(len(b.constraints) for b in bpy.data.objects[legacy_name].pose.bones) == expected_count
         reports.append(dict(dataset=reference['dataset'], frames=len(data['frames']),
                             landmarks=len(state['landmark_names']), segments=len(state['segment_names']),
                             native_all_frames=True, legacy_constraints=expected_count,
+                            native_scene=native_scene, legacy_scene=legacy_scene,
                             legacy_target_response=True, save_reopen=True, full_loader_tested=True,
                             comparison_head_distance_median_m=float(np.median(errors)),
                             comparison_head_distance_max_m=float(np.max(errors)), scene=str(scene_file)))
         # Keep the next dataset's saved comparison scene self-contained.
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.object.delete(use_global=False)
+        for obj in list(bpy.data.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
         # The optional comparison input must stay mapped observations rather
         # than silently selecting rigidified landmarks or saved segment poses.
         mapped = loader.load_parquet(reference['path'], route='parquet_constraints',
                                      trajectory_channel='MAPPED_KEYPOINTS_3D')
-        assert set(mapped['data']['channels']) == {'MAPPED_KEYPOINTS_3D'}
+        assert set(mapped['data']['channels']) == {'MAPPED_KEYPOINTS_3D', 'DERIVED_POINTS'}
         values = mapped['data']['channels']['MAPPED_KEYPOINTS_3D']['pelvis_origin']
         for i in np.flatnonzero(np.isfinite(values).all(axis=1)):
             bpy.context.scene.frame_set(int(mapped['data']['frames'][i]))
@@ -129,8 +152,8 @@ def build_checks(package, output):
         assert any(not np.allclose(v, data['channels']['LANDMARKS_3D'][n], equal_nan=True)
                    for n, v in mapped['data']['channels']['MAPPED_KEYPOINTS_3D'].items())
         assert sum(len(b.constraints) for b in mapped['rig'].pose.bones) == expected_count
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.object.delete(use_global=False)
+        for obj in list(bpy.data.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
         # Exercise the actual standalone Load Data operator, not just its helper.
         props = bpy.context.scene.freemocap_properties
         props.recording_path = str(Path(reference['path']).parent)
@@ -138,7 +161,7 @@ def build_checks(package, output):
         props.trajectory_channel = 'LANDMARKS_3D'
         assert bpy.ops.freemocap._load_data() == {'FINISHED'}
         assert any(o.get('import_route') == 'parquet_constraints' for o in bpy.data.objects)
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.object.delete(use_global=False)
+        for obj in list(bpy.data.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
         reports[-1].update(mapped_observations_checked=True, standalone_operator=True)
     return reports

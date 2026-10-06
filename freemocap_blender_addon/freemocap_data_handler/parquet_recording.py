@@ -50,6 +50,9 @@ def read_recording(path, *, trajectory_channel='LANDMARKS_3D', segments=True,
     if model['skeleton']['coordinate_system'] != 'blender':
         raise ValueError('Unsupported model coordinate system')
     kinds = [trajectory_channel] + (['SEGMENT_ORIGINS', 'ROTATIONS_WORLD'] if segments else [])
+    if any(c['kind'] == 'DERIVED_POINTS' and all(c[k] == v for k, v in identity.items())
+           for c in run['channels']):
+        kinds.append('DERIVED_POINTS')
     arrays, frame_grid, times = {}, None, None
     for kind in kinds:
         channels = [c for c in run['channels'] if c['kind'] == kind and
@@ -112,4 +115,5 @@ def read_recording(path, *, trajectory_channel='LANDMARKS_3D', segments=True,
             raise ValueError('Missing or invalid segment scales')
     return dict(path=str(path), run_id=run_id, **identity, frames=np.array(frame_grid),
                 times=times, channels=arrays, model=model, scales=scales,
+                camera_geometry=run.get('camera_geometry', {}).get(identity['sensor_group'], []),
                 trajectory_channel=trajectory_channel)

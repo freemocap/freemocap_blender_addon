@@ -1,4 +1,5 @@
 import bpy
+from ...utilities.scene_objects import descendants
 
 from ...core_functions.export_3d_model.export_3d_model import export_3d_model
 
@@ -18,7 +19,7 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
 
         # Get the armature object from the data parent
         armature = None
-        for child in data_parent_empty.children_recursive:
+        for child in descendants(data_parent_empty):
             if child.type == 'ARMATURE':
                 armature = child
                 break
@@ -37,19 +38,23 @@ class FREEMOCAP_OT_export_3d_model(bpy.types.Operator):
             # bpy.ops.wm.simple_popup('INVOKE_DEFAULT', message="This is a popup!")
             return {'FINISHED'}
 
-        export_3d_model(
-            data_parent_empty=data_parent_empty,
-            armature=armature,
-            formats=[props.model_format],
-            destination_folder=model_destination_folder,
-            add_subfolder=False,
-            rename_root_bone=True,
-            bones_naming_convention=props.bones_naming_convention,
-            rest_pose_type=props.rest_pose_type,
-            restore_defaults_after_export=props.restore_defaults_after_export,
-            fbx_add_leaf_bones=props.fbx_add_leaf_bones,
-            fbx_primary_bone_axis=props.fbx_primary_bone_axis,
-            fbx_secondary_bone_axis=props.fbx_secondary_bone_axis,
-        )
+        try:
+            export_3d_model(
+                data_parent_empty=data_parent_empty,
+                armature=armature,
+                formats=[props.model_format],
+                destination_folder=model_destination_folder,
+                add_subfolder=False,
+                rename_root_bone=True,
+                bones_naming_convention=props.bones_naming_convention,
+                rest_pose_type=props.rest_pose_type,
+                restore_defaults_after_export=props.restore_defaults_after_export,
+                fbx_add_leaf_bones=props.fbx_add_leaf_bones,
+                fbx_primary_bone_axis=props.fbx_primary_bone_axis,
+                fbx_secondary_bone_axis=props.fbx_secondary_bone_axis,
+            )
+        except (ValueError, RuntimeError) as exc:
+            self.report({'ERROR'}, str(exc))
+            return {'CANCELLED'}
 
         return {'FINISHED'}

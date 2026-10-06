@@ -40,6 +40,20 @@ class ReferenceDataTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Pending'):
             self.snapshot()
 
+    def test_media_is_copied_and_source_and_copy_are_checked(self):
+        folder = self.recording / 'annotated_videos'
+        folder.mkdir()
+        video = folder / 'camera.MP4'
+        video.write_bytes(b'opaque movie fixture')
+        result = self.snapshot()
+        self.assertEqual(len(result['media']), 1)
+        copy = Path(result['media'][0]['path'])
+        self.assertNotEqual(copy, video)
+        reference_data.verify_unchanged([result])
+        copy.write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, 'video changed'):
+            reference_data.verify_unchanged([result])
+
     def test_mismatched_parquet_hash_is_not_silently_accepted(self):
         self.parquet.write_bytes(b'tampered')
         with self.assertRaisesRegex(ValueError, 'checksum'):

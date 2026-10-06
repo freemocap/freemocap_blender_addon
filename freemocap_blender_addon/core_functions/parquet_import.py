@@ -210,12 +210,16 @@ def load_parquet(path, *, route='parquet_segments', trajectory_channel='LANDMARK
         root['source'] = data['source']
         root['timestamps_s'] = json.dumps(data['times'].tolist())
         root['model_snapshot'] = json.dumps(data['model'])
-        parent = empty('landmarks' if trajectory_channel == 'LANDMARKS_3D' else 'mapped_keypoints', root)
+        parent = empty('landmarks_empties_parent' if trajectory_channel == 'LANDMARKS_3D' else 'mapped_keypoints_empties_parent', root)
         landmarks = {n: trajectory(n, v, frames, parent) for n, v in data['channels'][trajectory_channel].items()}
         rig, objects = native_skeleton(data, root) if native else legacy_skeleton(data, root)
         scene.frame_set(int(frames[0]))
-        return dict(root=root, rig=rig, landmarks=landmarks,
-                    segments=objects if native else {}, targets={} if native else objects, data=data)
+        result = dict(root=root, rig=rig, landmarks=landmarks,
+                      segments=objects if native else {}, targets={} if native else objects, data=data)
+        from .parquet_scene import build_scene
+        build_scene(result)
+        scene.frame_set(int(frames[0]))
+        return result
     except Exception:
         if bpy.context.object is not None and bpy.context.object.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')

@@ -25,6 +25,11 @@ def export_3d_model(
         fbx_primary_bone_axis: str = 'Y',
         fbx_secondary_bone_axis: str = 'X',
 ) -> None:
+    if data_parent_empty.get('import_route', '').startswith('parquet_'):
+        from .parquet_export import export
+        return export(data_parent_empty, armature, formats, destination_folder, add_subfolder,
+                      bones_naming_convention, rest_pose_type, fbx_add_leaf_bones,
+                      fbx_primary_bone_axis, fbx_secondary_bone_axis)
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 

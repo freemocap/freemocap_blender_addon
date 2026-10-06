@@ -122,8 +122,29 @@ hold/backfill behavior; the separate canonical trajectories retain validity.
 This route does not rerun the old preprocessing/landmark adjustment pipeline.
 The two skeletons need not be numerically identical.
 
-The Parquet routes currently create trajectories and Blender skeletons. The old
-body-mesh/video and editing panels have not been adapted to their model snapshot.
+Both Parquet routes also build the Skelly mesh, rigid segment meshes, saved
+center of mass (when present), video planes, capture cameras, ground, lighting,
+and an overview camera. **Data View Settings → Scope data parent** selects an
+import; its visibility controls switch the armature, landmarks, rigid bodies,
+Skelly mesh, videos, and center of mass. Rigid bodies and landmark axes start
+hidden to keep the anatomical mesh readable. These presentation objects do not
+alter the native saved segment poses.
+
+Videos come from `annotated_videos`, falling back to `synchronized_videos` beside
+the Parquet. Keep those folders beside it when moving a recording. The `.blend`
+references the movies; it does not embed them. Camera geometry comes from the
+selected run/sensor group in the Parquet, and camera backgrounds match video
+filenames to camera IDs. No Images as Planes extension is required for these
+routes. The completion message reports actual video and camera counts, including
+zero when those resources are absent. Blender cameras use the pinhole intrinsics;
+recorded lens distortion remains metadata, not a distortion compositor.
+
+The existing **Export 3D Model** panel supports Parquet **FBX** export using
+default names/rest pose, without changing trajectory keyframes. Other export
+formats and legacy rest-pose/renaming conversions are explicitly rejected for
+Parquet scenes. Legacy editing/analysis tools such as foot locking and custom
+joint overlays are not part of this scene-loading acceptance and should not be
+assumed to support canonical names. The original NPY route remains available.
 
 For headless callers, the installed package exposes:
 

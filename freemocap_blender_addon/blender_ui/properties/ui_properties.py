@@ -1,3 +1,4 @@
+from ...utilities.scene_objects import descendants
 import re
 
 import bpy
@@ -368,7 +369,7 @@ def toggle_element_visibility(self,
                               toggle_children_not_parent: bool,)->None:
 
     data_parent_object = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
-    for data_object in data_parent_object.children_recursive:
+    for data_object in descendants(data_parent_object):
         if re.search(parent_pattern, data_object.name):
             hide_objects(data_object,
                          not bool(self[panel_property]),

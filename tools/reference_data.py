@@ -49,6 +49,18 @@ def snapshot(prepared_root, dataset, output):
     output.mkdir(parents=True)
     destination = output / source.name
     shutil.copyfile(source, destination)
+    media = []
+    for folder in ('synchronized_videos', 'annotated_videos'):
+        for video in sorted((recording / folder).glob('*')):
+            if video.suffix.lower() != '.mp4':
+                continue
+            copy = output / folder / video.name
+            copy.parent.mkdir(exist_ok=True)
+            checksum = digest(video)
+            shutil.copyfile(video, copy)
+            if digest(copy) != checksum or digest(video) != checksum:
+                raise ValueError('Video changed while taking the test snapshot')
+            media.append(dict(source=str(video), path=str(copy), sha256=checksum))
     if digest(destination) != before or digest(source) != before or digest(marker) != marker_hash or (root / 'replacement.json').exists():
         raise ValueError('Prepared recording changed while taking the test snapshot')
     (output / 'ready.json').write_text(json.dumps(ready, indent=2), encoding='utf-8')
@@ -56,11 +68,14 @@ def snapshot(prepared_root, dataset, output):
                 marker=str(marker), marker_sha256=marker_hash, calibration=str(calibration),
                 calibration_sha256=calibration_hash, frames=expected_frames,
                 run_id=validation.get('run_id'), sensor_group=validation.get('sensor_group'),
-                software=ready['identity'].get('software'), workflow=ready.get('workflow'))
+                software=ready['identity'].get('software'), workflow=ready.get('workflow'), media=media)
 
 
 def verify_unchanged(references):
     for reference in references:
+        for item in reference.get('media', []):
+            if digest(item['source']) != item['sha256'] or digest(item['path']) != item['sha256']:
+                raise ValueError('Reference video changed during tests: ' + item['source'])
         for path, expected in ((reference['source'], reference['sha256']),
                                (reference['path'], reference['sha256']),
                                (reference['marker'], reference['marker_sha256']),
