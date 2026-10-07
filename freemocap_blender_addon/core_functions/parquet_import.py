@@ -95,7 +95,9 @@ def legacy_trajectories(data):
     return result
 
 
-def legacy_skeleton(data, root):
+def legacy_skeleton(data, root, rest_pose="tpose"):
+    from .create_rig.add_rig_by_method import pose_from_rest_pose
+    pose = pose_from_rest_pose(rest_pose)
     from .create_rig.add_rig_bone_method import add_rig_by_bone
     from .create_rig.apply_bone_constraints import apply_bone_constraints
     from .empties.creation.create_empty_from_trajectory import create_keyframed_empty_from_3d_trajectory_data
@@ -120,10 +122,11 @@ def legacy_skeleton(data, root):
         # Canonical landmark objects remain separate and retain their validity.
         targets[name] = create_keyframed_empty_from_3d_trajectory_data(
             values[name], 'legacy_' + name, parent_object=targets_parent, empty_scale=.01)
-    rig = add_rig_by_bone(bone_data, 'Legacy Blender skeleton')
+        targets[name]['legacy_target_name'] = name
+    rig = add_rig_by_bone(bone_data, 'Legacy Blender skeleton', pose=pose)
     rig.parent = root
     apply_bone_constraints(rig=rig, add_fingers_constraints=True, parent_object=root,
-                           bone_constraint_definitions=constraints, target_objects=targets)
+                           bone_constraint_definitions=constraints, target_objects=targets, pose_definition=pose)
     bpy.ops.object.mode_set(mode='OBJECT')
     rig['reconstruction'] = 'legacy Blender constraints; fixed median lengths; missing targets held/backfilled'
     return rig, targets
@@ -180,12 +183,14 @@ def native_skeleton(data, root):
 
 
 def load_parquet(path, *, route='parquet_segments', trajectory_channel='LANDMARKS_3D',
-                 run_id=None, sensor_group=None):
+                 run_id=None, sensor_group=None, rest_pose="tpose"):
     if route not in ('parquet_segments', 'parquet_constraints'):
         raise ValueError('Unknown Parquet import route: ' + route)
     native = route == 'parquet_segments'
     if native and trajectory_channel != 'LANDMARKS_3D':
         raise ValueError('Saved segment poses must use model landmarks')
+    if rest_pose not in ('tpose', 'apose') or (route == 'parquet_segments' and rest_pose != 'tpose'):
+        raise ValueError('Saved segment poses retain the recorded model frame; A-pose requires the constraints route')
     data = read_recording(path, trajectory_channel=trajectory_channel, segments=native,
                           run_id=run_id, sensor_group=sensor_group)
     frames = data['frames']
@@ -212,7 +217,7 @@ def load_parquet(path, *, route='parquet_segments', trajectory_channel='LANDMARK
         root['model_snapshot'] = json.dumps(data['model'])
         parent = empty('landmarks_empties_parent' if trajectory_channel == 'LANDMARKS_3D' else 'mapped_keypoints_empties_parent', root)
         landmarks = {n: trajectory(n, v, frames, parent) for n, v in data['channels'][trajectory_channel].items()}
-        rig, objects = native_skeleton(data, root) if native else legacy_skeleton(data, root)
+        rig, objects = native_skeleton(data, root) if native else legacy_skeleton(data, root, rest_pose)
         scene.frame_set(int(frames[0]))
         result = dict(root=root, rig=rig, landmarks=landmarks,
                       segments=objects if native else {}, targets={} if native else objects, data=data)

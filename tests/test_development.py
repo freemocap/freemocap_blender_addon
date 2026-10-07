@@ -70,4 +70,4 @@ class DevelopmentTests(unittest.TestCase):
             runner.main(['installed', 'input.parquet', 'output.blend', '--route', 'parquet_constraints',
                          '--trajectory-channel', 'MAPPED_KEYPOINTS_3D', '--run-id', '3', '--sensor-group', 'camera_group:a'])
         self.assertEqual(calls, [dict(recording_path='input.parquet', blend_file_path='output.blend',
-            route='parquet_constraints', trajectory_channel='MAPPED_KEYPOINTS_3D', run_id=3, sensor_group='camera_group:a')])
+            route='parquet_constraints', trajectory_channel='MAPPED_KEYPOINTS_3D', run_id=3, sensor_group='camera_group:a', config=None)])

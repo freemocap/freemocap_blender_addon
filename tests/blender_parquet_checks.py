@@ -80,6 +80,12 @@ def build_checks(package, output):
     for reference in references:
         native = loader.load_parquet(reference['path'])
         complete_scene.check_anatomy(native, Path(importlib.import_module(package).__file__).parent)
+        cleanup_api = importlib.import_module(package + '.core_functions.animation_cleanup').apply_cleanup
+        try:
+            cleanup_api(native['root'], foot_locking=True)
+            raise AssertionError('Saved-segment cleanup was silently accepted')
+        except ValueError as error:
+            assert 'constraint' in str(error)
         data = native['data']
         native_scene = complete_scene.check(native, reference)
         if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
@@ -91,6 +97,7 @@ def build_checks(package, output):
         check_native(state, range(len(data['frames'])))
         legacy = loader.load_parquet(reference['path'], route='parquet_constraints')
         legacy_scene = complete_scene.check(legacy, reference)
+        tpose_rest = {b.name: tuple(b.tail_local - b.head_local) for b in legacy['rig'].data.bones}
         if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
             complete_scene.render_preview(legacy, output / (reference['dataset'] + '-constraints.png'))
         if reference['dataset'] == 'test_data':
@@ -187,5 +194,30 @@ def build_checks(package, output):
         assert any(o.get('import_route') == 'parquet_constraints' for o in bpy.data.objects)
         for obj in list(bpy.data.objects):
             bpy.data.objects.remove(obj, do_unlink=True)
-        reports[-1].update(mapped_observations_checked=True, standalone_operator=True)
+        # Reconciled main features: A-pose constraints and Blender-only cleanup.
+        import hashlib
+        before_hash = hashlib.sha256(Path(reference['path']).read_bytes()).hexdigest()
+        cleaned = loader.load_parquet(reference['path'], route='parquet_constraints', rest_pose='apose')
+        assert any(not np.allclose(tuple(b.tail_local - b.head_local), tpose_rest[b.name])
+                   for b in cleaned['rig'].data.bones), 'A-pose option did not change the Blender skeleton rest pose'
+        curves_for = importlib.import_module(package + '.utilities.get_fcurves_from_object_action').get_fcurves_from_object_action
+        def locations(objects):
+            return {name: [[tuple(k.co) for k in curves_for(obj).find('location', index=i).keyframe_points]
+                           for i in range(3)] for name, obj in objects.items()}
+        canonical_before = locations(cleaned['landmarks'])
+        targets_before = locations(cleaned['targets'])
+        cleanup = importlib.import_module(package + '.core_functions.animation_cleanup').apply_cleanup
+        cleanup(cleaned['root'], foot_locking=True, hand_limits=True)
+        assert locations(cleaned['landmarks']) == canonical_before
+        assert locations(cleaned['targets']) != targets_before, 'Cleanup did not modify Blender animation targets'
+        assert hashlib.sha256(Path(reference['path']).read_bytes()).hexdigest() == before_hash
+        assert 'animation_cleanup' in cleaned['root']
+        scene_path = output / (reference['dataset'] + '-cleaned-apose.blend')
+        bpy.ops.wm.save_as_mainfile(filepath=str(scene_path))
+        bpy.ops.wm.open_mainfile(filepath=str(scene_path))
+        assert any('animation_cleanup' in o for o in bpy.data.objects)
+        for obj in list(bpy.data.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
+        reports[-1].update(mapped_observations_checked=True, standalone_operator=True,
+                          apose_cleanup=True, cleanup_preserves_recording=True)
     return reports

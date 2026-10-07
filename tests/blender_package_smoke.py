@@ -82,6 +82,11 @@ try:
 finally:
     main_module.ajc27_run_as_main_function = original
 report['controlled_export_dispatch'] = True
+legacy_timing = importlib.import_module(package + '.core_functions.setup_scene.set_start_end_frame')
+legacy_timing.set_start_end_frame(10)
+assert (bpy.context.scene.frame_start, bpy.context.scene.frame_end) == (0, 9)
+legacy_timing.set_scene_framerate(59.94)
+assert abs(bpy.context.scene.render.fps / bpy.context.scene.render.fps_base - 59.94) < 1e-4
 # Check actual animation primitives against synthetic and prepared recording data.
 spec = importlib.util.spec_from_file_location('scene_checks', Path(__file__).with_name('blender_scene_checks.py'))
 scene_checks = importlib.util.module_from_spec(spec)

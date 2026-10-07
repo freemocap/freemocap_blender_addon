@@ -13,6 +13,57 @@ def descendants(obj):
     return [child for direct in obj.children for child in [direct] + descendants(direct)]
 
 
+def check_camera_extrinsics(result):
+    """Check actual world-space landmarks against independently stored R,t.
+
+    Comparing only to world_orientation repeats the importer's assumption and
+    cannot catch disagreements between that cached pose and the extrinsics.
+    This verifies an ideal pinhole projection, not raw-video lens distortion.
+    """
+    scene = bpy.context.scene
+    render = scene.render
+    previous = (render.resolution_x, render.resolution_y,
+                render.resolution_percentage, render.pixel_aspect_x, render.pixel_aspect_y)
+    frame = scene.frame_current
+    data = result['data']
+    try:
+        bpy.context.view_layer.update()
+        for obj, camera in zip(result['cameras'], data['camera_geometry']):
+            extrinsics = camera['extrinsics']
+            rotation = np.asarray(Quaternion(extrinsics['quaternion_wxyz']).to_matrix())
+            translation = np.asarray(extrinsics['translation']) / 1000.
+            np.testing.assert_allclose(obj.matrix_world.translation,
+                                       -rotation.T @ translation, atol=2e-6)
+            np.testing.assert_allclose(np.asarray(obj.matrix_world.to_3x3()),
+                                       rotation.T @ np.diag([1., -1., -1.]), atol=2e-6)
+            width, height = camera['image_size']
+            k = camera['intrinsics']
+            render.resolution_x, render.resolution_y = width, height
+            render.resolution_percentage = 100
+            render.pixel_aspect_x, render.pixel_aspect_y = 1., k['fx'] / k['fy']
+            checked = 0
+            for i in (len(data['frames']) // 3, 2 * len(data['frames']) // 3):
+                scene.frame_set(int(data['frames'][i]))
+                for name, landmark in result['landmarks'].items():
+                    point = data['channels'][data['trajectory_channel']][name][i]
+                    if not np.isfinite(point).all():
+                        continue
+                    camera_point = rotation @ point + translation
+                    if camera_point[2] <= .01:
+                        continue
+                    ndc = world_to_camera_view(scene, obj, landmark.matrix_world.translation)
+                    assert ndc.z > 0
+                    expected = camera_point[:2] / camera_point[2] * [k['fx'], k['fy']] + [k['cx'], k['cy']]
+                    np.testing.assert_allclose([ndc.x * width - .5, (1 - ndc.y) * height - .5],
+                                               expected, atol=.005, rtol=0)
+                    checked += 1
+            assert checked, 'No finite landmarks in front of the calibrated camera'
+    finally:
+        (render.resolution_x, render.resolution_y, render.resolution_percentage,
+         render.pixel_aspect_x, render.pixel_aspect_y) = previous
+        scene.frame_set(frame)
+
+
 def check_anatomy(result, package_path):
     """Independent anatomical landmarks on the artwork, not bind-matrix echoes."""
     with gzip.open(package_path / 'assets/skelly_mesh.json.gz', 'rt', encoding='utf-8') as stream:
@@ -96,6 +147,7 @@ def check(result, reference):
     assert result['ground'].parent == result['root']
     assert result['cameras'], 'Reference recording must exercise capture cameras'
     assert len(result['cameras']) == len(data['camera_geometry'])
+    check_camera_extrinsics(result)
     assert len(result['videos']) == len([m for m in reference['media'] if 'annotated_videos' in Path(m['path']).parts])
     assert result['videos'], 'Reference recording must exercise video loading'
     for plane in result['videos']:

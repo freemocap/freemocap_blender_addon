@@ -256,6 +256,10 @@ def build_scene(result):
         for visibility in ('hide_viewport', 'hide_render'):
             animate(fc, visibility, data['frames'], (~np.isfinite(values).all(axis=1)).astype(float))
     video_objects = videos(result, groups['videos_parent'])
+    # The canonical model faces +Y. Put the presentation wall behind it,
+    # rotating the planes together so their textures remain front-facing.
+    # Capture calibration and recorded motion remain in their original frame.
+    groups['videos_parent'].rotation_euler.z = math.pi
     camera_objects = cameras(result, groups['capture_cameras_parent'])
     if camera_objects:
         first_camera = data['camera_geometry'][0]
@@ -269,15 +273,16 @@ def build_scene(result):
     overview = bpy.data.objects.new('FreeMoCap_overview', bpy.data.cameras.new('FreeMoCap_overview'))
     bpy.context.collection.objects.link(overview)
     overview.parent = root
-    overview.location = (3.5, -7, 2.8)
-    overview.rotation_euler = (Vector((0, .5, 1)) - overview.location).to_track_quat('-Z', 'Y').to_euler()
+    overview.location = (-3.5, 7, 2.8)
+    view_target = Vector((0, -.5, 1))
+    overview.rotation_euler = (view_target - overview.location).to_track_quat('-Z', 'Y').to_euler()
     overview.data.lens = 40
     overview.data.sensor_fit = 'HORIZONTAL'
     bpy.context.scene.camera = overview
     light = bpy.data.objects.new('FreeMoCap_light', bpy.data.lights.new('FreeMoCap_light', 'AREA'))
     bpy.context.collection.objects.link(light)
     light.parent = root
-    light.location = (1, -3, 5)
+    light.location = (-1, 3, 5)
     light.rotation_euler = (Vector((0, 0, 1)) - light.location).to_track_quat('-Z', 'Y').to_euler()
     light.data.energy = 1000
     light.data.shape = 'DISK'
@@ -295,6 +300,19 @@ def build_scene(result):
         props.scope_data_parent = root.name
     from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
     set_viewport_to_material_preview()
+    # Store an orbitable front overview in every saved workspace, including
+    # background exports where there is no active window/VIEW_3D context.
+    for screen in bpy.data.screens:
+        for area in screen.areas:
+            if area.type != 'VIEW_3D':
+                continue
+            space = area.spaces.active
+            space.lens = overview.data.lens
+            region = space.region_3d
+            region.view_rotation = overview.rotation_euler.to_quaternion()
+            region.view_location = view_target
+            region.view_distance = (overview.location - view_target).length
+            region.view_perspective = 'PERSP'
     # The factory cube otherwise obscures a meter-scale subject. Keep it
     # recoverable rather than deleting an existing scene object.
     cube = bpy.data.objects.get(bpy.app.translations.pgettext_data('Cube'))

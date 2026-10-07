@@ -235,3 +235,5 @@ ___
 # Join the FreeMoCap Discord Community for support, feedback, and collaboration!
 Click this link to join the our community Discord server - https://discord.gg/XpRQJnqZxf
 
+
+Main-branch feature reconciliation and route-specific export capabilities are documented in [MAIN_RECONCILIATION.md](MAIN_RECONCILIATION.md).

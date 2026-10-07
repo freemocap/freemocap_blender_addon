@@ -42,6 +42,7 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
             + 'Use a high value (like 500) to set the ranges to a max of [-180º, 180º].'
         ),
         default=1.0,
+        min=0.0,
         precision=2,
     )  # type: ignore
 
@@ -54,7 +55,7 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
         items = [
             ('hand_index_finger_mcp', 'hand_index_finger_mcp', ''),
             ('index', 'index', ''),
-            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),            
+            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),
         ]
     )  # type: ignore
 
@@ -66,6 +67,6 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
         ),
         items = [
             ('hand_middle_finger_mcp', 'hand_middle_finger_mcp', ''),
-            ('hand_middle', 'hand_middle', ''),            
+            ('hand_middle', 'hand_middle', ''),
         ]
     )  # type: ignore

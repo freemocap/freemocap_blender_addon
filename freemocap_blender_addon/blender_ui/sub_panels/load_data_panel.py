@@ -28,6 +28,8 @@ class VIEW3D_PT_load_data(bpy.types.Panel):
         row.prop(context.scene.freemocap_properties, "recording_path", text="")
         props = context.scene.freemocap_properties
         box.prop(props, 'import_route')
+        if props.import_route != 'parquet_segments':
+            box.prop(props, 'import_rest_pose')
         if props.import_route != 'legacy_npy':
             box.prop(props, 'parquet_run_id')
             box.prop(props, 'parquet_sensor_group')

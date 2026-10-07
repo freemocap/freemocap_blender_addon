@@ -6,6 +6,8 @@ extension repository namespace when applicable. This script never installs one.
 import importlib
 import argparse
 import sys
+import json
+from pathlib import Path
 
 
 def main(arguments):
@@ -17,6 +19,7 @@ def main(arguments):
     parser.add_argument('--trajectory-channel', choices=('LANDMARKS_3D', 'MAPPED_KEYPOINTS_3D'), default='LANDMARKS_3D')
     parser.add_argument('--run-id', type=int)
     parser.add_argument('--sensor-group')
+    parser.add_argument('--config', type=Path, help='JSON file containing add-on configuration sections')
     args = parser.parse_args(arguments)
     package, recording, output = args.package, args.recording, args.output
     import bpy
@@ -28,7 +31,8 @@ def main(arguments):
     api = importlib.import_module(package + ".export_api")
     return api.export_recording(recording_path=recording, blend_file_path=output, route=args.route,
                                 trajectory_channel=args.trajectory_channel, run_id=args.run_id,
-                                sensor_group=args.sensor_group)
+                                sensor_group=args.sensor_group,
+                                config=json.loads(args.config.read_text(encoding='utf-8')) if args.config else None)
 
 
 if __name__ == "__main__":

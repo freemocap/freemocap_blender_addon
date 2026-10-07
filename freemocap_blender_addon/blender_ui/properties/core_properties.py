@@ -56,6 +56,10 @@ def update_scope_ui_variables(self, context):
 class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
     print("Initializing FREEMOCAP_PROPERTIES class...")
 
+    import_rest_pose: bpy.props.EnumProperty(
+        name="Blender skeleton rest pose", items=[('tpose', 'T-pose', ''), ('apose', 'A-pose', '')], default='tpose'
+    )
+
     data_parent_collection: bpy.props.CollectionProperty(
         name="FreeMoCap data parent empties",
         description="A collection of empties to be used as parents",

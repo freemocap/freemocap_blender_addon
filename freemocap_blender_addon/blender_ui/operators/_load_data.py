@@ -19,12 +19,14 @@ class FREEMOCAP_OT_load_data(bpy.types.Operator):
         config = load_default_parameters_config()
         try:
             props = context.scene.freemocap_properties
+            config.add_rig.rest_pose = props.import_rest_pose
             if props.import_route != 'legacy_npy':
                 from ...core_functions.parquet_import import load_parquet
                 result = load_parquet(bpy.path.abspath(recording_path), route=props.import_route,
                              trajectory_channel=props.trajectory_channel if props.import_route == 'parquet_constraints' else 'LANDMARKS_3D',
                              run_id=None if props.parquet_run_id == -1 else props.parquet_run_id,
-                             sensor_group=props.parquet_sensor_group.strip() or None)
+                             sensor_group=props.parquet_sensor_group.strip() or None,
+                             rest_pose=props.import_rest_pose if props.import_route == 'parquet_constraints' else 'tpose')
                 report = result['scene_report']
                 self.report({'INFO'}, 'Loaded scene: {} rigid bodies, {} videos, {} capture cameras; save to retain it'.format(
                     report['rigid_bodies'], report['videos'], report['capture_cameras']))

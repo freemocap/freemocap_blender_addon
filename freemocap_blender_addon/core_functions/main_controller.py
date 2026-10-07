@@ -26,7 +26,6 @@ from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_
 from .setup_scene.make_parent_empties import create_parent_empty
 from .setup_scene.scene_objects.create_scene_objects import create_scene_objects
 from .setup_scene.scene_objects.ground_plane.create_ground_plane import create_ground_plane
-from .setup_scene.set_start_end_frame import set_start_end_frame
 from .setup_scene.set_viewport_shading import set_viewport_to_material_preview
 from ..data_models.bones.bone_constraints import get_bone_constraint_definitions
 from ..data_models.bones.bone_definitions import get_bone_definitions
@@ -35,6 +34,9 @@ from ..freemocap_data_handler.helpers.saver import FreemocapDataSaver
 from ..freemocap_data_handler.operations.enforce_rigid_bodies.enforce_rigid_bodies import enforce_rigid_bodies
 from ..freemocap_data_handler.operations.fix_hand_data import fix_hand_data
 from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skeleton_on_ground
+
+from .setup_scene.set_start_end_frame import set_start_end_frame, set_scene_framerate
+from ..utilities.recording_framerate import get_recording_framerate
 
 from ..core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
@@ -92,7 +94,7 @@ class MainController:
         get_empty_names_from_dict(self.empties)
 
         return empty_names
-    
+
     @property
     def center_of_mass_empty(self):
         if self.empties is None:
@@ -139,6 +141,18 @@ class MainController:
             set_start_end_frame(
                 number_of_frames=self.freemocap_data_handler.number_of_frames
             )
+
+            framerate = get_recording_framerate(self.recording_path)
+
+            if framerate is not None:
+                set_scene_framerate(framerate)
+                self.config.reduce_shakiness.recording_fps = framerate
+            else:
+                print(
+                    f"Could not determine recording framerate; falling back to "
+                    f"{self.config.reduce_shakiness.recording_fps} fps. Exported timing and "
+                    f"velocity-based smoothing may be incorrect."
+                )
         except Exception as e:
             print(f"Failed to load freemocap data: {e}")
             raise e
@@ -254,6 +268,7 @@ class MainController:
                 add_fingers_constraints=self.config.add_rig.add_fingers_constraints,
                 bone_constraint_definitions=self.bone_constraint_definitions,
                 use_limit_rotation=self.config.add_rig.use_limit_rotation,
+                rest_pose=self.config.add_rig.rest_pose,
             )
         except Exception as e:
             print(f"Failed to add rig: {e}")
@@ -282,7 +297,7 @@ class MainController:
     def attach_rigid_body_mesh_to_rig(self):
         if self.rig is None:
             raise ValueError("Rig is None!")
-        
+
         if self.empties is None:
             raise ValueError("Empties have not been created yet!")
 
@@ -363,6 +378,50 @@ class MainController:
             print(e)
             raise e
 
+    def apply_foot_locking(self):
+        if not self.config.motion_cleanup.apply_foot_locking:
+            print("Foot locking disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from ..blender_ui.operators.animation.foot_locking.methods.foot_group_movement import (
+            run_foot_group_movement,
+        )
+
+        print("Applying foot locking...")
+        try:
+            run_foot_group_movement(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to apply foot locking: {e}")
+            raise e
+
+    def limit_hand_markers_range_of_motion(self):
+        if not self.config.motion_cleanup.limit_hand_markers_range_of_motion:
+            print("Limit hand markers range of motion disabled - skipping motion cleanup.")
+            return
+
+        import bpy
+
+        from ..blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
+            limit_markers_range_of_motion,
+        )
+
+        print("Limiting hand markers range of motion...")
+        try:
+            limit_markers_range_of_motion(
+                data_parent_empty=self.data_parent_empty,
+                start_frame=bpy.context.scene.frame_start,
+                end_frame=bpy.context.scene.frame_end,
+            )
+        except Exception as e:
+            print(f"Failed to limit hand markers range of motion: {e}")
+            raise e
+
     def setup_scene(self):
         import bpy
 
@@ -391,11 +450,16 @@ class MainController:
 
 
     def export_3d_model(self):
+        formats = self.config.export_3d_model.formats
+        if not formats:
+            print("No 3D model formats selected - skipping 3D model export.")
+            return
         print("Exporting 3D model...")
         try:
             export_3d_model(
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
+                formats=formats,
                 destination_folder=self.recording_path,
                 add_subfolder=True,
                 rename_root_bone=False,
@@ -498,6 +562,16 @@ class MainController:
         self.add_capture_cameras()
         end_time = time.perf_counter_ns()
         stage_times['add_capture_cameras'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.apply_foot_locking()
+        end_time = time.perf_counter_ns()
+        stage_times['apply_foot_locking'] = (end_time - start_time)/1e9
+
+        start_time = time.perf_counter_ns()
+        self.limit_hand_markers_range_of_motion()
+        end_time = time.perf_counter_ns()
+        stage_times['limit_hand_markers_range_of_motion'] = (end_time - start_time)/1e9
 
         start_time = time.perf_counter_ns()
         self.setup_scene()

@@ -1,5 +1,74 @@
 # Local Blender add-on tests
 
+## Capture camera audit — 2026-10-07
+
+Blender 5.2.2 passed independent extrinsics checks for both Parquet routes with
+both current prepared publications. The new `check_camera_extrinsics` scene test
+derives camera centers from `-R.T @ t`, checks the full world orientation, and
+projects actual imported landmark objects against `K(RX+t)`. It does not derive
+expected results from the same cached `world_orientation` used by the importer.
+
+A denser sampled audit of all six cameras found maximum center disagreement below
+0.0004 mm and maximum ideal pinhole projection disagreement below 0.00024 pixels.
+The presentation video-wall rotation has a separate parent and does not affect
+calibrated capture cameras. Evidence: `.test-artifacts/camera-audit/`.
+
+These checks establish agreement with the saved calibration. They do not establish
+that camera-to-video matching or upstream alignment is correct, or compare against
+observed image keypoints. Blender's pinhole camera also does not model the saved
+lens distortion for raw-video overlays. No production camera transforms were
+changed as a result of this audit.
+
+## Front overview follow-up — 2026-10-07
+
+Both Parquet routes passed a focused Blender 5.2.2 check on the test recording:
+the opening viewport and overview camera view from +Y, with the presentation
+video wall behind the subject and its textures facing the viewer. Saved viewport
+orientation survived save/reopen. Imported landmark and calibrated camera positions
+were checked against the recording; the source Parquet hash was unchanged.
+The native overview render was visually inspected. Evidence is under
+`.test-artifacts/front-overview/`. This presentation-only change does not rotate
+the imported recording root or change the old NPY scene layout.
+
+## Main reconciliation validation — 2026-10-06
+
+See [MAIN_RECONCILIATION.md](MAIN_RECONCILIATION.md) for the feature provenance,
+route capabilities and remaining core integration contract. Earlier results below
+describe previous revisions; they do not establish coverage for these new features.
+
+The reconciliation adds real-recording checks for an A-pose constraint skeleton,
+foot locking and hand limits. Tests verify that Blender target curves change while
+canonical landmark curves and the source Parquet hash remain unchanged. Cleaned
+scenes are saved and reopened. Saved-segment imports reject unsupported cleanup.
+Existing checks continue to cover both Parquet routes, mapped observations, meshes,
+materials, videos/cameras, FBX export and the standalone Load Data operator.
+
+Thirty offline tests passed. The actual JacquesLucke 0.0.31 reload operator passed
+two same-process reloads on Blender 5.2.2, followed by background exports through
+both Parquet routes. Evidence: `.test-artifacts/development-test-vv0vtzk0/`.
+This does not automate the editor's debugger/network startup.
+
+The final Windows x64 matrix passed all five applicable package combinations:
+Blender 3.0.0 legacy, 4.2.23 legacy/Extension, and 5.2.2 legacy/Extension. Each
+checked both refreshed reference publications (222 test frames and 1,108 sample
+frames), installation, restart, disable/re-enable, both Parquet scene routes and
+the additional cleanup checks. Shared reference integrity passed after the suite.
+Evidence: `.test-artifacts/suite-qa6uzosq/summary.json` and `junit.xml`.
+The explicit A-pose-versus-T-pose rest-vector assertion was added during the
+matrix; 4.2/5.2 exercised it. The 3.0 run constructed, cleaned and reopened A-pose
+scenes but did not include that later comparison assertion.
+
+A rendered frame from the cleaned test-data scene was visually inspected for the
+two mesh layers, upright anatomy, floor and COM materials. It is a spot-check,
+not a claim of visual correctness throughout every animation. COM remains the
+recorded COM after cleanup; it is not recalculated for the edited animation.
+
+Remaining limits: no full old-format NPY recording or macOS/Linux Blender runtime
+was exercised in this reconciliation. Parquet BVH and saved-segment cleanup remain
+unsupported. Core invocation is a separate stage after the human commit/push.
+
+## Running the suite
+
 From the add-on repository, with its existing Python environment:
 
 ```powershell
