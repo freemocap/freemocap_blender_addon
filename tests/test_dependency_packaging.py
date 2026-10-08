@@ -87,12 +87,26 @@ class PackagingTests(unittest.TestCase):
                     self.assertIn('wheels/' + wheel.name, names)
                     self.assertFalse(any(name.endswith(tuple(builder.EXCLUDED)) for name in names))
                     self.assertNotIn('bl_info =', archive.read('__init__.py').decode())
+                    identity = json.loads(archive.read('build-info.json'))
+                    self.assertEqual(identity['version'], builder.package_version())
+                    self.assertEqual(identity['export_api_version'], 1)
+                    self.assertEqual(identity['dependency_lock_sha256'], hashlib.sha256(archive.read('dependency-lock.json')).hexdigest())
+                    archive.extractall(root / 'identity-check')
+                    from tools.build_identity import identity_module
+                    checker = identity_module(ROOT)
+                    self.assertEqual(checker.read_identity(root / 'identity-check'), identity)
+                    (root / 'identity-check/export_api.py').write_text('# local edit')
+                    with self.assertRaisesRegex(ValueError, 'differ'):
+                        checker.read_identity(root / 'identity-check')
                 addon = builder.build(kind='legacy', **args)
                 with zipfile.ZipFile(addon) as archive:
                     names = archive.namelist()
                     self.assertIn('freemocap_blender_addon/_dependencies/sample/__init__.py', names)
                     self.assertIn('freemocap_blender_addon/utilities/legacy_dependencies.py', names)
                     self.assertNotIn('blender_manifest.toml', names)
+                    legacy_identity = json.loads(archive.read('freemocap_blender_addon/build-info.json'))
+                    self.assertEqual(legacy_identity['source_sha256'], identity['source_sha256'])
+                    self.assertEqual(legacy_identity['source_sha256'], checker.source_hash(ROOT / builder.PACKAGE))
 
     def test_source_parses_as_python39_and_uses_relative_imports(self):
         for path in (ROOT / builder.PACKAGE).rglob('*.py'):

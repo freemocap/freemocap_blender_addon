@@ -29,7 +29,7 @@ PACKAGE_ROOT_PATH = str(Path(__file__).parent)
 bl_info = {
     'name': 'freemocap_blender_addon',
     'author': 'ajc27',
-    'version': (1, 1, 7),
+    'version': tuple(int(part) for part in __version__.lstrip('v').split('.')),
     'blender': (3, 0, 0),
     'location': '3D Viewport > Sidebar > Freemocap Adapter',
     'description': 'A Blender add-on for loading and visualizing motion capture data recorded with the FreeMoCap software (https://freemocap.org)',

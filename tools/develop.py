@@ -24,7 +24,7 @@ def source_files(root):
         relative = path.relative_to(root)
         if (path.is_file() and not any(p.startswith('.') or p in ('__pycache__', '_dependencies', 'wheels') for p in relative.parts)
                 and path.name not in build_addon.EXCLUDED
-                and path.name not in ('dependency-lock.json', '_legacy_dependencies.json', 'blender_manifest.toml')
+                and path.name not in ('build-info.json', 'dependency-lock.json', '_legacy_dependencies.json', 'blender_manifest.toml')
                 and path.suffix not in ('.pyc', '.blend1')):
             yield relative, path
 
@@ -57,6 +57,11 @@ def sync(state_path):
         if relative not in current:
             (package / relative).unlink(missing_ok=True)
     state['source_files'] = [p.as_posix() for p in current]
+    from tools.build_identity import write_identity
+    runtime = json.loads((package / '_legacy_dependencies.json').read_text())['runtime']
+    platform = next(name for name, target in build_addon.PLATFORMS.items() if list(target[:2]) == runtime[:2])
+    write_identity(root=ROOT, package=package, version=build_addon.package_version(),
+                   kind='development', python=runtime[2], platform=platform)
     state_path.write_text(json.dumps(state, indent=2) + '\n', encoding='utf-8')
     return package
 

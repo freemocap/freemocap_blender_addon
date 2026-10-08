@@ -1,5 +1,37 @@
 # Self contained Blender packages
 
+## Build identity and core readiness
+
+Every built ZIP includes `build-info.json` (schema 1): the normalized release
+version, export API version, source commit when Git is available, working-tree
+change status, source SHA-256, package format, Python/platform target, and the
+dependency-lock SHA-256. No timestamp is included, so repeated builds of the same
+inputs remain reproducible. `__version__` supplies both legacy `bl_info.version`
+and the generated Extension manifest version; bumpver updates that source value.
+
+The source hash is the identity of runtime code/assets, not a Git commit alias.
+It includes uncommitted source files, normalizes text line endings and removes
+the legacy-only `bl_info` assignment from `__init__.py` before hashing. Generated
+metadata, dependency payloads, caches and the excluded legacy helpers are omitted.
+Extension and legacy distributions of the same source therefore share a source
+identity, while their targets and dependency locks remain separately identified.
+Blender recomputes that hash to detect edits after packaging. This is consistency
+checking, not a signature or proof of authorship.
+
+Development `prepare`/`sync` refreshes the manifest with source changes while
+leaving binary dependencies intact. Git is read only by build tooling; installed
+Blender packages neither run Git nor access GitHub to identify themselves.
+
+Core compares the installed Blender package against its own pinned add-on Python
+distribution's source hash. Its inspection reports build identity separately from
+dependency readiness, and actually round-trips nullable Zstandard Parquet data in
+the selected Blender runtime. Export repeats these checks before opening input.
+Older packages without this manifest are unverified. A different build requires
+explicit selection of its exact source hash for development; that does not bypass
+API, installed-file, binary target, dependency-version or Parquet checks. Subsequent
+source changes require another explicit selection. Publishing add-on changes and
+refreshing core's pinned dependency makes the new source the normal expected build.
+
 For the automated local suite, Blender Launcher discovery, and shared core
 reference recordings, see [TESTING.md](TESTING.md).
 

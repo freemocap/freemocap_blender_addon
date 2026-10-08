@@ -2,6 +2,7 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+import shutil
 import types
 import unittest
 from unittest.mock import patch
@@ -31,9 +32,12 @@ class DevelopmentTests(unittest.TestCase):
             source = root / 'freemocap_blender_addon'
             source.mkdir(parents=True)
             (source / '__init__.py').write_text('version = 2')
+            shutil.copyfile(develop.ROOT / 'freemocap_blender_addon/build_identity.py', source / 'build_identity.py')
             stage = Path(directory) / 'stage'
             package = stage / 'user/scripts/addons/freemocap_blender_addon'
             package.mkdir(parents=True)
+            (package / '_legacy_dependencies.json').write_text(json.dumps(dict(runtime=['Windows', 'x86_64', '3.13'])))
+            (package / 'dependency-lock.json').write_text('[]')
             (package / 'removed.py').write_text('old')
             (package / '_dependencies').mkdir()
             binary = package / '_dependencies/pinned.dll'
@@ -44,7 +48,12 @@ class DevelopmentTests(unittest.TestCase):
             (stage / 'development-owner.json').write_text(json.dumps(dict(repository=str(root), state=str(state.resolve()))))
             with patch.object(develop, 'ROOT', root):
                 develop.sync(state)
+                first_identity = json.loads((package / 'build-info.json').read_text())
+                (source / 'changed.py').write_text('VALUE = 1')
                 develop.sync(state)
+                second_identity = json.loads((package / 'build-info.json').read_text())
+                self.assertNotEqual(first_identity['source_sha256'], second_identity['source_sha256'])
+                self.assertEqual(second_identity['package_format'], 'development')
             self.assertEqual((package / '__init__.py').read_text(), 'version = 2')
             self.assertFalse((package / 'removed.py').exists())
             self.assertEqual(binary.stat().st_mtime_ns, timestamp)

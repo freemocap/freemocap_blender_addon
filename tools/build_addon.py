@@ -147,7 +147,7 @@ def build(*, kind, python, platform, cache, output, download=False, blender_min=
             relative = path.relative_to(ROOT / PACKAGE)
             if not path.is_file() or any(p.startswith('.') or p == '__pycache__' for p in relative.parts):
                 continue
-            if path.name in EXCLUDED or path.suffix in ('.pyc', '.blend1'):
+            if path.name in EXCLUDED or path.name == 'build-info.json' or path.suffix in ('.pyc', '.blend1'):
                 continue
             destination = package / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -180,6 +180,9 @@ def build(*, kind, python, platform, cache, output, download=False, blender_min=
                 expand_wheel(cache / entry['filename'], package / '_dependencies')
             runtime = list(PLATFORMS[platform][:2]) + [python]
             (package / '_legacy_dependencies.json').write_text(json.dumps(dict(runtime=runtime)), encoding='utf-8')
+        from tools.build_identity import write_identity
+        write_identity(root=ROOT, package=package, version=package_version(), kind=kind,
+                       python=python, platform=platform)
         destination = output / ('freemocap-{}-py{}-{}.zip'.format(kind, python, platform))
         with zipfile.ZipFile(destination, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
             for path in sorted(staging.rglob('*')):
