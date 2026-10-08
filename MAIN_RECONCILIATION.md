@@ -2,7 +2,10 @@
 
 Source: add-on main `549b0fd7fc840c8b0908a8373a986eca91c18ad8` (PRs 70, 71, 73, 74, 77).
 Core main integration reference: `75c8acc2cd7fa486ee674021473be4b95b7be2cb`, especially PR 898.
-Changes are ported into the working tree; no Git merge, branch changes or commits were performed.
+The feature ports were committed as `d0dd5ef`. On 2026-10-08 the owner started
+the Git merge of the source revision above. Conflict resolutions preserve those
+reviewed ports and accept main's deletion of the unused `minimize_functions.py`
+helper. The owner completes staging, the merge commit, and push.
 
 ## Incorporated behavior
 
