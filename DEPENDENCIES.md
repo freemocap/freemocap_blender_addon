@@ -99,8 +99,11 @@ and locally tested; see TESTING.md. Core integration remains a separate handoff.
 
 The export caller must supply the exact installed package name. For Extensions,
 that includes the repository namespace chosen by Blender; never hard-code it.
-Both entry points use the same code and dependencies. Installation is a separate,
-explicit user action, not a side effect of importing data or registering the UI.
+Both entry points use the same code and dependencies. The add-on never installs
+itself while importing data or registering its UI. FreeMoCap's host application
+automatically prepares the required package through Blender's installer before
+export: reuse a verified installation, otherwise create a managed profile and
+use that profile for export and the opened Blender window.
 
 ## Validation targets
 
@@ -160,7 +163,8 @@ export-dispatch check writes a real empty Blender scene through a test writer;
 it does **not** exercise recording reconstruction. Offline unit tests also run in
 the new Windows/Linux/macOS CI workflow; that workflow does not certify Blender.
 
-Install the resulting ZIP explicitly using Blender's install-from-disk UI. For
+Standalone Blender users can install the ZIP using Blender's install-from-disk UI.
+FreeMoCap users receive automatic setup through the host application. For
 background export, use the saved configuration where that package is enabled:
 
 ```sh
@@ -203,13 +207,23 @@ Its default remains `legacy_npy` for existing callers.
   enforcement, full recording export, and marketplace licensing/asset review
   remain outstanding. Launcher downloads superseded the earlier HTTP 403 blocker.
 
-## FreeMoCap integration handoff
+## FreeMoCap automatic integration
 
-After the human commits/pushes this add-on stage on `development-streaming`, core
-must replace its environment-injection launcher with an installed-package call.
-Core should discover/report Blender's version, Python ABI, architecture and exact
-enabled package name; offer the matching package as an explicit installation
-step; pass recording/output paths as arguments; and require nonzero exit status
-on failure using `--python-exit-code 1`. It must not expose core's site-packages
-to Blender, evict modules, or silently install the add-on during export.
-Validate this integration independently before advancing to the three data loaders.
+FreeMoCap uses its installed Python dependency as the source of the add-on and
+its host-only package builder. `_host_tools` ships in the Python wheel but is
+excluded from generated Blender ZIPs. The CLI in `tools/build_addon.py` delegates
+to that same implementation. Source mode and Electron both build/cache the correct
+ZIP automatically for the selected Blender, using pinned precompiled dependency
+wheels. Blender installs the result in a managed profile when no matching normal
+installation exists. The host tools are never executed inside Blender.
+
+Push changes, update/sync FreeMoCap's Python dependency, and run. No GitHub Action
+completion, separate release, catalog copy or manual installation is required.
+Electron bundles source and host tools as unpacked backend resources; users do
+not need a checkout, Git, pip or a separate Python environment. First use requires
+internet for missing binary wheels; cached wheels/packages support offline use.
+
+The tag/manual GitHub workflow remains for standalone Blender ZIP distribution.
+Its optional package catalog can also support explicit developer overrides, but
+is not part of normal FreeMoCap setup. Windows runtime coverage is established;
+Linux/macOS runtime acceptance and marketplace review remain separate work.

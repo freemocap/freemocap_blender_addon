@@ -22,7 +22,7 @@ TASK = 'FreeMoCap: sync Blender development code'
 def source_files(root):
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
-        if (path.is_file() and not any(p.startswith('.') or p in ('__pycache__', '_dependencies', 'wheels') for p in relative.parts)
+        if (path.is_file() and not any(p.startswith('.') or p in ('__pycache__', '_dependencies', 'wheels', '_host_tools') for p in relative.parts)
                 and path.name not in build_addon.EXCLUDED
                 and path.name not in ('build-info.json', 'dependency-lock.json', '_legacy_dependencies.json', 'blender_manifest.toml')
                 and path.suffix not in ('.pyc', '.blend1')):

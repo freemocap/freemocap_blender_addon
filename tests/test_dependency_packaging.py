@@ -21,12 +21,25 @@ def load_file(name, path):
     return module
 
 
-builder = load_file('builder', ROOT / 'tools/build_addon.py')
-legacy = load_file('legacy', ROOT / 'tools/legacy_dependencies.py')
+builder = load_file('builder', ROOT / 'freemocap_blender_addon/_host_tools/build_addon.py')
+host_identity = load_file('host_identity', ROOT / 'freemocap_blender_addon/_host_tools/build_identity.py')
+legacy = load_file('legacy', ROOT / 'freemocap_blender_addon/_host_tools/legacy_dependencies.py')
 dependencies = load_file('dependencies', ROOT / 'freemocap_blender_addon/utilities/dependencies.py')
 
 
 class PackagingTests(unittest.TestCase):
+    def test_application_provenance_never_invokes_git(self):
+        with tempfile.TemporaryDirectory() as directory:
+            package = Path(directory)
+            (package/'__init__.py').write_text('')
+            (package/'dependency-lock.json').write_text('[]')
+            with patch.object(host_identity.subprocess, 'check_output', side_effect=AssertionError('Git unavailable')):
+                identity = host_identity.write_identity(root=ROOT, package=package,
+                    version='2026.4.1041', kind='extension', python='3.13', platform='windows-x64',
+                    provenance={'source_commit': None})
+            self.assertIsNone(identity['source_commit'])
+            self.assertEqual(identity['source_sha256'], host_identity.identity_module(ROOT).source_hash(package))
+
     def test_binary_selection_rejects_wrong_abi_platform_and_free_threading(self):
         self.assertTrue(builder.matches('pyarrow-25.0.1-cp313-cp313-win_amd64.whl', '3.13', 'windows-x64'))
         for filename in ('pyarrow-25.0.1-cp312-cp312-win_amd64.whl',
@@ -86,6 +99,7 @@ class PackagingTests(unittest.TestCase):
                     self.assertIn('blender_manifest.toml', names)
                     self.assertIn('wheels/' + wheel.name, names)
                     self.assertFalse(any(name.endswith(tuple(builder.EXCLUDED)) for name in names))
+                    self.assertFalse(any('_host_tools/' in name for name in names))
                     self.assertNotIn('bl_info =', archive.read('__init__.py').decode())
                     identity = json.loads(archive.read('build-info.json'))
                     self.assertEqual(identity['version'], builder.package_version())

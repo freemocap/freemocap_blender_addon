@@ -1,4 +1,4 @@
-name: Build complete Blender release candidates
+name: Build standalone Blender release packages
 
 on:
   push:
@@ -7,6 +7,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: blender-packages-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -39,15 +43,22 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           pattern: blender-*
           path: packages
           merge-multiple: true
+      - name: Describe immutable release packages for FreeMoCap
+        env:
+          RELEASE_URL: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}
+        run: python -B -m tools.package_catalog --directory packages --base-url "$RELEASE_URL"
       - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
         with:
           draft: true
-          files: packages/*.zip
+          files: |
+            packages/*.zip
+            packages/package-catalog.json
           fail_on_unmatched_files: true
           body: |
             Complete Blender packages with bundled dependencies. Select the archive

@@ -23,7 +23,7 @@ def source_hash(root):
     for path in sorted(Path(root).rglob('*')):
         relative = path.relative_to(root)
         if (not path.is_file() or any(p.startswith('.') or p in
-                ('__pycache__', '_dependencies', 'wheels') for p in relative.parts)
+                ('__pycache__', '_dependencies', 'wheels', '_host_tools') for p in relative.parts)
                 or path.name in EXCLUDED or path.suffix in ('.pyc', '.blend1')):
             continue
         data = path.read_bytes()
