@@ -1,8 +1,8 @@
 """Route capabilities and validation, usable outside Blender."""
 CAPABILITIES = {
     'legacy_npy': dict(formats=['fbx', 'bvh'], rest_poses=['tpose', 'apose'], animation_cleanup=True),
-    'parquet_constraints': dict(formats=['fbx'], rest_poses=['tpose', 'apose'], animation_cleanup=True),
-    'parquet_segments': dict(formats=['fbx'], rest_poses=['tpose'], animation_cleanup=False),
+    'parquet_constraints': dict(formats=['fbx', 'bvh'], rest_poses=['tpose', 'apose'], animation_cleanup=True),
+    'parquet_segments': dict(formats=['fbx', 'bvh'], rest_poses=['tpose'], animation_cleanup=False),
 }
 
 

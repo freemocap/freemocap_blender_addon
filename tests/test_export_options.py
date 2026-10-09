@@ -16,7 +16,7 @@ class OptionsTests(unittest.TestCase):
         for route, config in [
             ('parquet_segments', {'motion_cleanup': {'apply_foot_locking': True}}),
             ('parquet_segments', {'add_rig': {'rest_pose': 'apose'}}),
-            ('parquet_constraints', {'export_3d_model': {'formats': ['bvh']}}),
+            ('parquet_constraints', {'export_3d_model': {'formats': ['unsupported']}}),
             ('parquet_constraints', {'reduce_shakiness': {}}),
         ]:
             with self.subTest(route=route, config=config), self.assertRaises(ValueError):
@@ -28,6 +28,13 @@ class OptionsTests(unittest.TestCase):
         self.assertEqual(options['formats'], [])
         self.assertFalse(options['foot_locking'])
         self.assertFalse(options['hand_limits'])
+
+    def test_both_parquet_routes_support_blender_fbx_and_bvh(self):
+        for route in ('parquet_segments', 'parquet_constraints'):
+            for formats in (['bvh'], ['fbx'], ['fbx', 'bvh']):
+                with self.subTest(route=route, formats=formats):
+                    self.assertEqual(parquet_options(route,
+                        {'export_3d_model': {'formats': formats}})['formats'], formats)
 
 
 class FramerateTests(unittest.TestCase):

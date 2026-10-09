@@ -97,6 +97,12 @@ def build_checks(package, output):
         check_native(state, range(len(data['frames'])))
         legacy = loader.load_parquet(reference['path'], route='parquet_constraints')
         legacy_scene = complete_scene.check(legacy, reference)
+        spec = importlib.util.spec_from_file_location('bvh_checks', Path(__file__).with_name('blender_bvh_checks.py'))
+        bvh_checks = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bvh_checks)
+        export = importlib.import_module(package + '.core_functions.export_3d_model.export_3d_model').export_3d_model
+        for result in (native, legacy):
+            bvh_checks.check_export(export, result, output)
         tpose_rest = {b.name: tuple(b.tail_local - b.head_local) for b in legacy['rig'].data.bones}
         if os.environ.get('FREEMOCAP_TEST_RENDER') == '1':
             complete_scene.render_preview(legacy, output / (reference['dataset'] + '-constraints.png'))
@@ -192,6 +198,14 @@ def build_checks(package, output):
         props.trajectory_channel = 'LANDMARKS_3D'
         assert bpy.ops.freemocap._load_data() == {'FINISHED'}
         assert any(o.get('import_route') == 'parquet_constraints' for o in bpy.data.objects)
+        export_props = bpy.context.scene.freemocap_ui_properties.export_3d_model_properties
+        export_props.model_format = 'bvh'
+        export_props.model_destination_folder = str(output)
+        export_props.bones_naming_convention = 'default'
+        export_props.rest_pose_type = 'default'
+        assert bpy.ops.freemocap._export_3d_model() == {'FINISHED'}
+        exported_root = bpy.data.objects[props.scope_data_parent]
+        assert (output / (exported_root.name + '.bvh')).is_file()
         for obj in list(bpy.data.objects):
             bpy.data.objects.remove(obj, do_unlink=True)
         # Reconciled main features: A-pose constraints and Blender-only cleanup.

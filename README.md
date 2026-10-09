@@ -181,6 +181,27 @@ namespace. The API default remains `legacy_npy` for existing callers. Parquet
 routes reject a legacy processing `config` instead of silently ignoring it.
 FreeMoCap core must opt into the new route in a separate integration change.
 
+Both Parquet routes support FBX and BVH through Blender's exporters, from the
+Export 3D Model panel or `config={"export_3d_model": {"formats": ["fbx", "bvh"]}}`
+in the export API. BVH exports the loaded armature and does not require a Skelly
+mesh. It evaluates the scene frame range with non-root translations enabled,
+matching the legacy Blender BVH settings. Bone names and the current rest pose
+are preserved. Deferral of a standalone FreeMoCap FBX/BVH writer does not restrict
+these Blender exports.
+
+Saved-segment missing samples use zero scale for display, which BVH cannot encode.
+BVH export uses a temporary copy with unit scale, retaining the loader's existing
+zero-location/identity-rotation placeholders at those samples. A neighboring
+`.bvh.metadata.json` records missing frame numbers by bone. The original scene,
+animation and sample validity are unchanged; BVH alone does not preserve visibility.
+
+Core integration handoff: after this add-on change is committed and pushed on
+`development-streaming`, update core's consumed add-on revision and remove its
+legacy-only BVH checks in `BlenderExportConfig`, `BlenderPackageSettings`, and
+`blender-slice`. Verify that changing Parquet routes retains BVH selection and
+that automatic and manual export requests reach Blender. Those core changes
+are a separate repository stage; add-on support alone does not enable the core UI.
+
 ### Local acceptance tests
 
 Run from the add-on repository with its existing Python environment:
@@ -199,7 +220,9 @@ under `.test-artifacts/suite-*/build-*/<install-kind>/`.
 
 Tests verify all native landmark and segment samples, actual legacy constraint
 targets and responses, numerical limb-origin differences, saved-scene reloads,
-and the public export API. Anatomical attachment checks independently verify
+and the public export API.
+BVH exports from both Parquet routes are reimported and checked for hierarchy,
+frame count, frame time, and sampled bone positions/rotations. Anatomical attachment checks independently verify
 skull up/forward and pelvis left/right, including the antiparallel frame case;
 both routes must preserve the separate stick, authored Skelly, COM, and ground
 materials and visibility defaults.
