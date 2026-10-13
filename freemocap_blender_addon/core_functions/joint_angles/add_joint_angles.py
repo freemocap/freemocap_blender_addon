@@ -1,6 +1,10 @@
 import bpy
 import numpy as np
 
+from freemocap_blender_addon.utilities.get_fcurves_from_object_action import (
+    get_fcurves_from_object_action,
+)
+
 from freemocap_blender_addon.data_models.joint_angles.joint_angles import joint_angles
 from freemocap_blender_addon.core_functions.joint_angles.calculate_joint_angle_info import calculate_joint_angle_info
 from freemocap_blender_addon.core_functions.joint_angles.add_angle_meshes import add_angle_meshes
@@ -32,10 +36,17 @@ def add_joint_angles(
         if child.type == 'EMPTY' and 'empties_parent' in child.name:
             for marker in child.children:
                 if marker.type == 'EMPTY':
+                    fcurves = get_fcurves_from_object_action(marker)
+                    if fcurves is None:
+                        continue
+
                     # Get the position fcurves
-                    fcurve_x = marker.animation_data.action.fcurves.find("location", index=0)
-                    fcurve_y = marker.animation_data.action.fcurves.find("location", index=1)
-                    fcurve_z = marker.animation_data.action.fcurves.find("location", index=2)
+                    fcurve_x = fcurves.find("location", index=0)
+                    fcurve_y = fcurves.find("location", index=1)
+                    fcurve_z = fcurves.find("location", index=2)
+
+                    if fcurve_x is None or fcurve_y is None or fcurve_z is None:
+                        continue
 
                     # Get the fcurve data as numpy arrays
                     fcurve_data = np.array([

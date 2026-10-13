@@ -54,10 +54,16 @@ def create_angle_geometry_nodes(
             material_name = 'angle_' + mesh_key
             if material_name not in bpy.data.materials.keys():
                 bpy.data.materials.new(name = material_name)
-            if overwrite_colors:
-                bpy.data.materials[material_name].diffuse_color = angle_mesh_color
-            else:
-                bpy.data.materials[material_name].diffuse_color = joint_angles[mesh_key]['angle_color']
+
+            angle_color = angle_mesh_color if overwrite_colors else joint_angles[mesh_key]['angle_color']
+
+            # Set the viewport display color and the Principled BSDF base color
+            material = bpy.data.materials[material_name]
+            material.diffuse_color = angle_color
+            if material.use_nodes:
+                principled_bsdf = material.node_tree.nodes.get("Principled BSDF")
+                if principled_bsdf is not None:
+                    principled_bsdf.inputs["Base Color"].default_value = angle_color
 
             # Assign the material to the node
             node_tree.nodes["Material"].material = bpy.data.materials[material_name]
@@ -100,10 +106,16 @@ def create_angle_geometry_nodes(
             material_name = 'angletext_' + mesh_key
             if material_name not in bpy.data.materials.keys():
                 bpy.data.materials.new(name = material_name)
-            if overwrite_colors:
-                bpy.data.materials[material_name].diffuse_color = angle_text_color
-            else:
-                bpy.data.materials[material_name].diffuse_color = joint_angles[mesh_key]['text_color']
+
+            text_color = angle_text_color if overwrite_colors else joint_angles[mesh_key]['text_color']
+
+            # Set the viewport display color and the Principled BSDF base color
+            material = bpy.data.materials[material_name]
+            material.diffuse_color = text_color
+            if material.use_nodes:
+                principled_bsdf = material.node_tree.nodes.get("Principled BSDF")
+                if principled_bsdf is not None:
+                    principled_bsdf.inputs["Base Color"].default_value = text_color
 
             # Assign the material to the node
             node_tree.nodes["Material"].material = bpy.data.materials[material_name]
@@ -114,8 +126,8 @@ def create_angle_geometry_nodes(
             # Add a Taansform Geometry Node
             transform_geometry_node = node_tree.nodes.new(type="GeometryNodeTransform")
             # Set the local transformations
-            transform_geometry_node.inputs[1].default_value[0] = angle_text_local_x_offset / 100
-            transform_geometry_node.inputs[1].default_value[1] = angle_text_local_y_offset / 100
+            transform_geometry_node.inputs["Translation"].default_value[0] = angle_text_local_x_offset / 100
+            transform_geometry_node.inputs["Translation"].default_value[1] = angle_text_local_y_offset / 100
 
             # Connect the Material node to the Set Material Node
             node_tree.links.new(material_node.outputs["Material"], set_material_node.inputs["Material"])
