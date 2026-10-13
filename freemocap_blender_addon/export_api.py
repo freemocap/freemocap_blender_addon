@@ -34,7 +34,8 @@ def export_recording(*, recording_path, blend_file_path, config=None, route='leg
         if options['formats']:
             from .core_functions.export_3d_model.export_3d_model import export_3d_model
             export_3d_model(result['root'], result['rig'], formats=options['formats'],
-                            destination_folder=str(output.parent), add_subfolder=True)
+                            destination_folder=str((recording if recording.is_dir() else recording.parent) / 'exports'),
+                            add_subfolder=True)
         bpy.ops.wm.save_as_mainfile(filepath=str(output))
     else:
         raise ValueError('Unknown import route: ' + route)

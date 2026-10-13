@@ -460,7 +460,7 @@ class MainController:
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
                 formats=formats,
-                destination_folder=self.recording_path,
+                destination_folder=str(Path(self.recording_path) / 'exports'),
                 add_subfolder=True,
                 rename_root_bone=False,
             )

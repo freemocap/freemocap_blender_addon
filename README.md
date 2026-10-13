@@ -189,6 +189,14 @@ matching the legacy Blender BVH settings. Bone names and the current rest pose
 are preserved. Deferral of a standalone FreeMoCap FBX/BVH writer does not restrict
 these Blender exports.
 
+Automatic recording exports put FBX/BVH files and their metadata in
+`<recording>/exports/3d_models/`, for both Parquet routes and legacy NPY processing.
+A direct Parquet-file input uses its containing folder as the recording folder.
+Choosing a custom `.blend` destination does not relocate those model exports.
+The `.blend` file stays at the requested destination. The interactive Export 3D
+Model panel continues to honor its explicitly selected destination folder.
+Existing output folders are not automatically moved or deleted.
+
 Saved-segment missing samples use zero scale for display, which BVH cannot encode.
 BVH export uses a temporary copy with unit scale, retaining the loader's existing
 zero-location/identity-rotation placeholders at those samples. A neighboring

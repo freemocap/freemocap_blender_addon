@@ -85,8 +85,16 @@ def run(package, output):
     assert scene['rig'].pose.bones['child']['sample_valid']
     assert not scene['rig'].pose.bones['root']['sample_valid']
     # Exercise the real public export API, then reload its actual saved result.
-    blend = output / 'contract-export.blend'
-    api.export_recording(recording_path=path, blend_file_path=blend, route='parquet_segments')
+    blend_folder = output / 'custom-blend-destination'
+    blend_folder.mkdir(exist_ok=True)
+    blend = blend_folder / 'contract-export.blend'
+    api.export_recording(recording_path=path, blend_file_path=blend, route='parquet_segments',
+                         config={'export_3d_model': {'formats': ['bvh']}})
+    model_folder = path.parent / 'exports' / '3d_models'
+    assert list(model_folder.glob('*.bvh'))
+    assert list(model_folder.glob('*.bvh.metadata.json'))
+    assert not (blend_folder / '3d_models').exists()
+    assert not (blend_folder / 'exports').exists()
     bpy.ops.wm.open_mainfile(filepath=str(blend))
     bpy.context.scene.frame_set(7)
     imported = [o for o in bpy.data.objects if o.get('import_route') == 'parquet_segments']

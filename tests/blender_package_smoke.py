@@ -82,6 +82,22 @@ try:
 finally:
     main_module.ajc27_run_as_main_function = original
 report['controlled_export_dispatch'] = True
+# Exercise the legacy controller's destination contract without an NPY fixture.
+from types import SimpleNamespace
+controller_module = importlib.import_module(package + '.core_functions.main_controller')
+original_export = controller_module.export_3d_model
+export_calls = []
+try:
+    controller_module.export_3d_model = lambda **kwargs: export_calls.append(kwargs)
+    controller_module.MainController.export_3d_model(SimpleNamespace(
+        config=SimpleNamespace(export_3d_model=SimpleNamespace(formats=['fbx', 'bvh'])),
+        recording_path=str(recording), data_parent_empty=None, rig=None))
+finally:
+    controller_module.export_3d_model = original_export
+assert len(export_calls) == 1
+assert Path(export_calls[0]['destination_folder']) == recording / 'exports'
+assert export_calls[0]['add_subfolder'] is True
+report['legacy_model_export_destination'] = True
 legacy_timing = importlib.import_module(package + '.core_functions.setup_scene.set_start_end_frame')
 legacy_timing.set_start_end_frame(10)
 assert (bpy.context.scene.frame_start, bpy.context.scene.frame_end) == (0, 9)
