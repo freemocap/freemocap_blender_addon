@@ -1,13 +1,13 @@
 import bpy
 from pathlib import Path  
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import \
+from .....core_functions.meshes.skelly_mesh.helpers.mesh_utilities import \
     get_bone_info
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.rotate_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.rotate_vertex_groups import \
     rotate_vertex_groups
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.scale_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.scale_vertex_groups import \
     scale_vertex_groups
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
+from .....core_functions.meshes.skelly_mesh.helpers.translate_vertex_groups import \
     translate_vertex_groups
 
 def attach_skelly_by_vertex_group(
@@ -16,20 +16,15 @@ def attach_skelly_by_vertex_group(
     vertex_groups: dict,
 ) -> None:
     
-    object_name = 'skelly_mesh'
-
-    # Append the skelly mesh as blend file because the exports (fbx, obj)
-    # don't save all the vertex groups
-    with bpy.data.libraries.load(skelly_mesh_path, link=False) as (data_from, data_to):
-        if object_name in data_from.objects:
-            data_to.objects.append(object_name)
-
-    # Link the appended object to the current scene
-    for obj in bpy.data.objects:
-        if object_name in obj.name and obj.parent is None:
-            bpy.context.collection.objects.link(obj)
-            skelly_mesh = obj
-            break
+    from ..portable_asset import load_skelly_mesh
+    from ..skelly_mesh_paths import SKELLY_FULL_MESH_PATH
+    if Path(skelly_mesh_path) == Path(SKELLY_FULL_MESH_PATH):
+        skelly_mesh = load_skelly_mesh()
+    else:
+        with bpy.data.libraries.load(str(skelly_mesh_path), link=False) as (_, target):
+            target.objects = ['skelly_mesh']
+        skelly_mesh = target.objects[0]
+        bpy.context.collection.objects.link(skelly_mesh)
 
     align_and_parent_vertex_groups_to_armature(
         armature=rig,

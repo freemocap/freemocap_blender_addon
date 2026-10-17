@@ -1,18 +1,18 @@
 from enum import Enum
 from typing import Dict
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_FULL_MESH_PATH
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_bone_mesh import \
+from ....core_functions.meshes.skelly_mesh.skelly_mesh_paths import SKELLY_FULL_MESH_PATH
+from ....core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_bone_mesh import \
     attach_skelly_by_bone_mesh
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_full_mesh import \
+from ....core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_full_mesh import \
     attach_skelly_complete_mesh
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import \
+from ....core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import \
     attach_skelly_by_vertex_group
 
 import bpy
 from copy import deepcopy
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
+from ....core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
     _SKELLY_VERTEX_GROUPS,
 )
 

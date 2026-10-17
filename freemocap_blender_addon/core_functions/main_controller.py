@@ -3,12 +3,12 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from freemocap_blender_addon.core_functions.load_videos.load_videos import load_videos_as_planes
-from freemocap_blender_addon.core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
-from freemocap_blender_addon.freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
+from ..core_functions.load_videos.load_videos import load_videos_as_planes
+from ..core_functions.meshes.rigid_body_meshes.attach_rigid_body_meshes_to_rig import create_rigid_body_meshes
+from ..freemocap_data_handler.utilities.get_or_create_freemocap_data_handler import (
     get_or_create_freemocap_data_handler,
 )
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import load_freemocap_data
+from ..freemocap_data_handler.utilities.load_data import load_freemocap_data
 from .create_rig.add_rig_method_enum import AddRigMethods
 from .create_rig.create_rig import create_rig
 
@@ -21,7 +21,6 @@ from .export_3d_model.export_3d_model import export_3d_model
 from .empties.creation.create_freemocap_empties import create_freemocap_empties
 from .meshes.center_of_mass.center_of_mass_mesh import create_center_of_mass_mesh
 from .meshes.center_of_mass.center_of_mass_trails import create_center_of_mass_trails
-from .materials.create_checkerboard_material import create_checkerboard_material
 from .meshes.skelly_mesh.attach_skelly_mesh import attach_skelly_mesh_to_rig
 from .create_rig.save_bone_and_joint_angles_from_rig import save_bone_and_joint_angles_from_rig
 from .setup_scene.make_parent_empties import create_parent_empty
@@ -39,7 +38,7 @@ from ..freemocap_data_handler.operations.put_skeleton_on_ground import put_skele
 from .setup_scene.set_start_end_frame import set_start_end_frame, set_scene_framerate
 from ..utilities.recording_framerate import get_recording_framerate
 
-from freemocap_blender_addon.core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
+from ..core_functions.add_capture_cameras.add_capture_cameras import add_capture_cameras
 
 
 class MainController:
@@ -95,7 +94,7 @@ class MainController:
         get_empty_names_from_dict(self.empties)
 
         return empty_names
-    
+
     @property
     def center_of_mass_empty(self):
         if self.empties is None:
@@ -298,7 +297,7 @@ class MainController:
     def attach_rigid_body_mesh_to_rig(self):
         if self.rig is None:
             raise ValueError("Rig is None!")
-        
+
         if self.empties is None:
             raise ValueError("Empties have not been created yet!")
 
@@ -364,63 +363,8 @@ class MainController:
             raise e
 
     def create_ground_plane(self):
-        """
-        Create a ground plane at Z=0 with a checkerboard texture.
-        The plane covers double the x/y extent of the center of mass data.
-        Checkerboard squares are 20cm on each side with deep dark blue colors.
-        """
-        import bpy
-        try:
-            print("Creating ground plane...")
-            
-            # Get center of mass trajectory data
-            com_trajectory = np.squeeze(self.freemocap_data_handler.center_of_mass_trajectory)
-            
-            # Calculate extent of center of mass data
-            x_extent = np.max(com_trajectory[:, 0]) - np.min(com_trajectory[:, 0])
-            y_extent = np.max(com_trajectory[:, 1]) - np.min(com_trajectory[:, 1])
-            
-            # Double the extent for the ground plane size
-            plane_size = max(max(x_extent, y_extent) * 2.0, 10.0) # Minimum size of 3 meters to ensure it's visible even for small movements
-            
-            # Create the ground plane
-            bpy.ops.mesh.primitive_plane_add(size=plane_size, location=(0, 0, 0))
-            ground_plane = bpy.context.active_object
-            ground_plane.name = "ground_plane"
-            
-            # Calculate checker scale: 20cm squares (0.2 meters)
-            # The checker scale is relative to UV coordinates
-            square_size_meters = 0.50  # 20cm
-            checker_scale = plane_size / square_size_meters
-            
-            # Create deep dark blue checkerboard material
-            # Deep dark blue: RGB (0.02, 0.02, 0.15) - very dark navy
-            # Slightly deeper darker blue: RGB (0.01, 0.01, 0.08) - almost black navy
-            color1 = (0.02, 0.02, 0.15, 1.0)  # Deep dark blue
-            color2 = (0.01, 0.01, 0.08, 1.0)  # Slightly deeper darker blue
-            
-            material = create_checkerboard_material(
-                name="ground_checkerboard",
-                color1=color1,
-                color2=color2,
-                square_scale=checker_scale,
-                roughness=1.0,
-                metallic=1.0
-            )
-            
-            # Assign material to the ground plane
-            if ground_plane.data.materials:
-                ground_plane.data.materials[0] = material
-            else:
-                ground_plane.data.materials.append(material)
-
-            print(f"Created ground plane with size {plane_size:.2f}m and {checker_scale:.1f} checker squares (20cm each)")
-            
-        except Exception as e:
-            print(f"Failed to create ground plane: {e}")
-            import traceback
-            print(traceback.format_exc())
-            raise e
+        from .setup_scene.ground_plane import create_ground_plane
+        return create_ground_plane(np.squeeze(self.freemocap_data_handler.center_of_mass_trajectory))
 
     def add_videos(self):
         try:
@@ -441,7 +385,7 @@ class MainController:
 
         import bpy
 
-        from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.methods.foot_group_movement import (
+        from ..blender_ui.operators.animation.foot_locking.methods.foot_group_movement import (
             run_foot_group_movement,
         )
 
@@ -463,7 +407,7 @@ class MainController:
 
         import bpy
 
-        from freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
+        from ..blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
             limit_markers_range_of_motion,
         )
 
@@ -516,7 +460,7 @@ class MainController:
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
                 formats=formats,
-                destination_folder=self.recording_path,
+                destination_folder=str(Path(self.recording_path) / 'exports'),
                 add_subfolder=True,
                 rename_root_bone=False,
             )

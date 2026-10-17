@@ -3,7 +3,7 @@ import math
 import bpy
 import bmesh
 from mathutils import Vector
-from freemocap_blender_addon.data_models.bones.bone_definitions import (
+from .....data_models.bones.bone_definitions import (
     is_hand_bone,
 )
 
@@ -94,4 +94,3 @@ def translate_vertex_groups(target_mesh, vertex_groups, bone_info):
 
         # Update the mesh vertices' positions
         bmesh.update_edit_mesh(target_mesh.data)
-

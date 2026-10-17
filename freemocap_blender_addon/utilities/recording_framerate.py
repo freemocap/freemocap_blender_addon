@@ -7,6 +7,8 @@ velocity-based smoothing was computed against a framerate the recording never ha
 FreeMoCap writes per-frame capture timestamps next to the synchronized videos, so the real
 rate is available on disk and does not need to be guessed.
 """
+from __future__ import annotations
+
 import csv
 import statistics
 from pathlib import Path

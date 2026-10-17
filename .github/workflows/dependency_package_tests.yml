@@ -1,0 +1,36 @@
+name: Dependency package safety tests
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    paths:
+      - 'tools/**'
+      - 'tests/**'
+      - 'freemocap_blender_addon/**'
+      - '.github/workflows/dependency_package_tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run offline packaging contracts (no Blender runtime)
+        run: python -B -m tools.run_tests --unit-only
+      - name: Retain test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-${{ matrix.os }}
+          include-hidden-files: true
+          path: .test-artifacts/suite-*/

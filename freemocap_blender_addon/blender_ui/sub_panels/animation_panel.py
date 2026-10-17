@@ -71,7 +71,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
 
             split = box.column().row().split(factor=0.5)
             split.column().label(text='Target Bone Rotation Owner Space')
-            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_owner_space')            
+            split.column().prop(retarget_animation_props, 'retarget_target_bone_rotation_owner_space')
 
             box.operator(
                 'freemocap._detect_bone_mapping',
@@ -116,7 +116,7 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
         row.prop(limit_markers_range_of_motion_props, "show_limit_markers_range_of_motion_options", text="",
                  icon='TRIA_DOWN' if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options else 'TRIA_RIGHT', emboss=False)
         row.label(text="Limit Markers Range of Motion")
-        
+
         if limit_markers_range_of_motion_props.show_limit_markers_range_of_motion_options:
             box = layout.box()
 
@@ -224,4 +224,3 @@ class VIEW3D_PT_animation_panel(bpy.types.Panel):
                 'freemocap._foot_locking',
                 text='Apply Foot Locking',
             )
-

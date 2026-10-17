@@ -1,4 +1,5 @@
-import addon_utils
+from __future__ import annotations
+
 import bpy
 import numpy as np
 from pathlib import Path
@@ -70,35 +71,35 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                                    ):
     """
     Load videos into scene using Blender 5+ Mesh Plane operator.
-    
-    In Blender 5+, the 'Import Images as Planes' addon was replaced with 
+
+    In Blender 5+, the 'Import Images as Planes' addon was replaced with
     a built-in 'Mesh Plane' operator accessible via Add -> Image -> Mesh Plane.
-    
+
     This function tries multiple operator names and fallback methods.
     """
     print(f"Adding videos to scene (Blender 5+ method)...")
     video_paths = get_video_paths(videos_directory)
-    
+
     imported_objects = []
-    
+
     # Try to find the correct operator for Blender 5+
     # Check available operators
     mesh_ops = [op for op in dir(bpy.ops.mesh) if not op.startswith('_')]
     object_ops = [op for op in dir(bpy.ops.object) if not op.startswith('_')]
     image_ops = [op for op in dir(bpy.ops.image) if not op.startswith('_')]
-    
+
     print(f"Available mesh operators with 'import' or 'plane': {[o for o in mesh_ops if 'import' in o or 'plane' in o]}")
     print(f"Available object operators with 'import': {[o for o in object_ops if 'import' in o]}")
     print(f"Available image operators: {image_ops}")
-    
+
     for video_path in video_paths:
         video_name = Path(video_path).name
         print(f"Importing: {video_name}")
-        
+
         success = False
-        
+
         # Method 1: Try import_mesh_plane under different namespaces
-        for op_path in ['bpy.ops.mesh.import_image_as_plane', 
+        for op_path in ['bpy.ops.mesh.import_image_as_plane',
                         'bpy.ops.object.import_image_as_plane',
                         'bpy.ops.image.import_as_mesh_planes']:
             try:
@@ -116,7 +117,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                     break
             except (AttributeError, TypeError) as e:
                 continue
-        
+
         # Method 2: Use the import_as_mesh_planes operator (works in Blender 5.1!)
         if not success:
             try:
@@ -135,12 +136,12 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                     print(f"  Success with import_as_mesh_planes")
             except (AttributeError, TypeError) as e:
                 print(f"  import_as_mesh_planes failed: {e}")
-        
+
         # Method 3: Fallback - create plane manually with image texture
         if not success:
             try:
                 print(f"  Using fallback method (manual plane + texture)...")
-                
+
                 # Create plane
                 bpy.ops.mesh.primitive_plane_add(
                     size=video_scale,
@@ -149,21 +150,21 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                 )
                 plane = bpy.context.active_object
                 plane.name = f"video_{video_name}"
-                
+
                 # Load image
                 try:
                     img = bpy.data.images.load(filepath=str(video_path), check_existing=True)
                 except Exception as img_e:
                     print(f"    Could not load image: {img_e}")
                     img = None
-                
+
                 if img:
                     # Create material with image texture
                     mat = bpy.data.materials.new(name=f"mat_{video_name}")
                     mat.use_nodes = True
                     nodes = mat.node_tree.nodes
                     links = mat.node_tree.links
-                    
+
                     # Get or create output node
                     output_node = None
                     for node in nodes:
@@ -172,31 +173,31 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                             break
                     if not output_node:
                         output_node = nodes.new('ShaderNodeOutputMaterial')
-                    
+
                     # Create Principled BSDF
                     bsdf_node = nodes.new('ShaderNodeBsdfPrincipled')
-                    
+
                     # Create image texture node
                     tex_node = nodes.new('ShaderNodeTexImage')
                     tex_node.image = img
-                    
+
                     # Link texture to base color
                     links.new(tex_node.outputs['Color'], bsdf_node.inputs['Base Color'])
                     links.new(bsdf_node.outputs['BSDF'], output_node.inputs['Surface'])
-                    
+
                     # Assign material to plane
                     if plane.data.materials:
                         plane.data.materials[0] = mat
                     else:
                         plane.data.materials.append(mat)
-                
+
                 imported_objects.append(plane)
                 success = True
                 print(f"  Success with fallback method")
-                
+
             except Exception as fallback_e:
                 print(f"  Fallback method failed: {fallback_e}")
-    
+
     # Offset the videos horizontally
     # Note: import_as_mesh_planes with align_axis='-Y' handles rotation automatically
     if imported_objects:
@@ -206,7 +207,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
             obj.location.x = x_offset
             obj.location.y = video_scale / 2
             obj.location.z = video_scale / 2 + 0.5
-    
+
     # Create videos collection
     videos_collection = bpy.data.collections.new(name="Videos")
     bpy.context.scene.collection.children.link(videos_collection)
@@ -225,7 +226,7 @@ def add_videos_to_scene_blender_5(videos_directory: str,
                     if node.type == 'TEX_IMAGE' and node.image:
                         # Offset the video playback by adjusting the frame
                         node.image_user.frame_offset = frame_offset
-    
+
     print(f"Successfully imported {len(imported_objects)} videos using Blender 5+ method")
 
 
@@ -285,7 +286,7 @@ def load_videos_as_planes(recording_path: str,
     """
     ############################
     Load videos into scene using appropriate method based on Blender version.
-    
+
     Version handling:
     - Blender 5.0+: Uses new built-in Mesh Plane operator (bpy.ops.image.import_mesh_plane)
     - Blender 4.2 - 4.x: Uses io_import_images_as_planes addon (bpy.ops.image.import_as_mesh_planes)
@@ -304,13 +305,13 @@ def load_videos_as_planes(recording_path: str,
     if videos_path is not None:
         blender_version = bpy.app.version
         print(f"Blender version: {blender_version}")
-        
+
         try:
             # Blender 5.0+ uses built-in Mesh Plane (no addon needed)
             if blender_version[0] >= 5:
                 print("Using Blender 5+ Mesh Plane import method")
                 add_videos_to_scene_blender_5(
-                    videos_directory=str(videos_path), 
+                    videos_directory=str(videos_path),
                     parent_object=parent_object,
                     frame_offset=frame_offset,
                 )
@@ -318,12 +319,11 @@ def load_videos_as_planes(recording_path: str,
             elif blender_version[0] >= 4 and blender_version[1] >= 2:
                 print("Using Blender 4.2+ import_as_mesh_planes method")
                 try:
-                    addon_utils.enable("io_import_images_as_planes")
-                except Exception as e:
-                    print("Warning: Could not enable io_import_images_as_planes addon: ")
-                    print(e)
+                    bpy.ops.image.import_as_mesh_planes.get_rna_type()
+                except (AttributeError, RuntimeError) as exc:
+                    raise RuntimeError("Enable Images as Planes in Blender preferences to import videos") from exc
                 add_videos_to_scene(
-                    videos_directory=str(videos_path), 
+                    videos_directory=str(videos_path),
                     parent_object=parent_object,
                     frame_offset=frame_offset,
                 )
@@ -331,12 +331,11 @@ def load_videos_as_planes(recording_path: str,
             else:
                 print("Using pre-4.2 import_image.to_plane method")
                 try:
-                    addon_utils.enable("io_import_images_as_planes")
-                except Exception as e:
-                    print("Warning: Could not enable io_import_images_as_planes addon: ")
-                    print(e)
+                    bpy.ops.import_image.to_plane.get_rna_type()
+                except (AttributeError, RuntimeError) as exc:
+                    raise RuntimeError("Enable Images as Planes in Blender preferences to import videos") from exc
                 add_videos_to_scene_pre_4_2(
-                    videos_path=str(videos_path), 
+                    videos_path=str(videos_path),
                     parent_object=parent_object,
                     frame_offset=frame_offset,
                 )

@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.methods.foot_group_movement import run_foot_group_movement
+from .....blender_ui.operators.animation.foot_locking.methods.foot_group_movement import run_foot_group_movement
 
 
 class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
@@ -18,6 +18,13 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
         ]
 
         # ── Frame Range ──────────────────────────────────────────────────
+        from .....utilities.animation_targets import animation_targets
+        try:
+            animation_targets(data_parent_empty, context.scene.frame_start, context.scene.frame_end)
+        except ValueError as error:
+            self.report({'ERROR'}, str(error))
+            return {'CANCELLED'}
+
         start_frame = context.scene.frame_start
         end_frame = context.scene.frame_end
 
@@ -43,7 +50,7 @@ class FREEMOCAP_OT_foot_locking(bpy.types.Operator):
             xy_moving_average_window = props.fgm_xy_moving_average_window
             knee_hip_compensation_coefficient = props.fgm_knee_hip_compensation_coefficient
             compensate_upper_body = props.fgm_compensate_upper_body
-            
+
 
             run_foot_group_movement(
                 data_parent_empty=data_parent_empty,

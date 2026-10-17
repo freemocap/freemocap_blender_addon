@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.materials.create_checkerboard_material import \
+from ....core_functions.materials.create_checkerboard_material import \
     create_checkerboard_material
 
 
@@ -25,3 +25,4 @@ def create_center_of_mass_mesh(parent_object: bpy.types.Object,
 
     mesh.active_material = center_of_mass_material
     mesh.data.materials.append(center_of_mass_material)
+    return mesh

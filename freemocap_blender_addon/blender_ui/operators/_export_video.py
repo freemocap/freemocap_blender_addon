@@ -2,12 +2,12 @@ from copy import deepcopy
 import bpy
 from pathlib import Path
 
-from freemocap_blender_addon.core_functions.export_video.export_video import export_video
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ...core_functions.export_video.export_video import export_video
+from ...data_models.parameter_models.video_config import (
     EXPORT_PROFILES,
     RENDER_BACKGROUND
 )
-from freemocap_blender_addon import PACKAGE_ROOT_PATH
+from ... import PACKAGE_ROOT_PATH
 
 class FREEMOCAP_OT_export_video(bpy.types.Operator):
     bl_idname = 'freemocap._export_video'

@@ -1,10 +1,10 @@
 import bpy
 from mathutils import Vector
 
-from freemocap_blender_addon.core_functions.com_bos.animate_bos_mesh import animate_base_of_support
-from freemocap_blender_addon.core_functions.com_bos.create_bos_geometry_nodes import \
+from ...core_functions.com_bos.animate_bos_mesh import animate_base_of_support
+from ...core_functions.com_bos.create_bos_geometry_nodes import \
     create_base_of_support_geometry_nodes
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_biomechanics import ground_contact_points
+from ...data_models.mediapipe_names.mediapipe_biomechanics import ground_contact_points
 
 
 def add_base_of_support(

@@ -3,7 +3,7 @@ import math
 import bpy
 import bmesh
 from mathutils import Matrix
-from freemocap_blender_addon.data_models.bones.bone_definitions import (
+from .....data_models.bones.bone_definitions import (
     is_hand_bone,
 )
 
@@ -72,7 +72,7 @@ def rotate_vertex_groups(target_mesh, vertex_groups, bone_info):
                     f"'{armature_bone}' — leaving unrotated."
                 )
                 continue
-            
+
             # Normalize the vectors
             vertex_group_vector.normalize()
             bone_vector.normalize()

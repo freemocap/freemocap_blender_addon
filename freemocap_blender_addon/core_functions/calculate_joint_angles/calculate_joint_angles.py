@@ -3,7 +3,7 @@ import math as m
 from mathutils import Vector
 from typing import Dict, List, Tuple, Optional
 
-from freemocap_blender_addon.core_functions.calculate_joint_angles.joint_angle_definitions import (
+from ...core_functions.calculate_joint_angles.joint_angle_definitions import (
     JointAngleDefinition,
     RotationVectorDefinition,
     ProjectedVectorDefinition,

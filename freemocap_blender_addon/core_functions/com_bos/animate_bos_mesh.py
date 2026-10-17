@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.core_functions.com_bos.add_com_vertical_projection import COM_PROJECTION_MESH_NAME
+from ...core_functions.com_bos.add_com_vertical_projection import COM_PROJECTION_MESH_NAME
 
 import numpy as np
 

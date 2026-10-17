@@ -3,7 +3,7 @@ Dictionary to map the default armature bone names with the different
 armatures bone names.
 """
 
-from freemocap_blender_addon.system.constants import (
+from ...system.constants import (
     UE_METAHUMAN_SIMPLE_ARMATURE,
     FREEMOCAP_ARMATURE,
 )

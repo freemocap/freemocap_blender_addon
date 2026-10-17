@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
+from ....blender_ui.properties.property_types import PropertyTypes
 
 
 class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
@@ -55,7 +55,7 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
         items = [
             ('hand_index_finger_mcp', 'hand_index_finger_mcp', ''),
             ('index', 'index', ''),
-            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),            
+            ('hand_thumb_cmc', 'hand_thumb_cmc', ''),
         ]
     )  # type: ignore
 
@@ -67,6 +67,6 @@ class LimitMarkersRangeOfMotionProperties(bpy.types.PropertyGroup):
         ),
         items = [
             ('hand_middle_finger_mcp', 'hand_middle_finger_mcp', ''),
-            ('hand_middle', 'hand_middle', ''),            
+            ('hand_middle', 'hand_middle', ''),
         ]
     )  # type: ignore

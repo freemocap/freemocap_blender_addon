@@ -1,17 +1,17 @@
 import time
 import bpy
 
-from freemocap_blender_addon.core_functions.export_video.helpers.place_render_cameras import place_render_cameras
-from freemocap_blender_addon.core_functions.export_video.helpers.place_lights import place_lights
-from freemocap_blender_addon.core_functions.export_video.helpers.rearrange_background_videos import rearrange_background_videos
-from freemocap_blender_addon.core_functions.export_video.helpers.set_render_elements import set_render_elements
-from freemocap_blender_addon.core_functions.export_video.helpers.create_render_scenes import create_render_scenes
-from freemocap_blender_addon.core_functions.export_video.helpers.set_render_parameters import set_render_parameters
-from freemocap_blender_addon.core_functions.export_video.helpers.render_cameras import render_cameras
-from freemocap_blender_addon.core_functions.export_video.helpers.composite_video import composite_video
-from freemocap_blender_addon.core_functions.export_video.helpers.reset_scene_defaults import reset_scene_defaults
+from ...core_functions.export_video.helpers.place_render_cameras import place_render_cameras
+from ...core_functions.export_video.helpers.place_lights import place_lights
+from ...core_functions.export_video.helpers.rearrange_background_videos import rearrange_background_videos
+from ...core_functions.export_video.helpers.set_render_elements import set_render_elements
+from ...core_functions.export_video.helpers.create_render_scenes import create_render_scenes
+from ...core_functions.export_video.helpers.set_render_parameters import set_render_parameters
+from ...core_functions.export_video.helpers.render_cameras import render_cameras
+from ...core_functions.export_video.helpers.composite_video import composite_video
+from ...core_functions.export_video.helpers.reset_scene_defaults import reset_scene_defaults
 
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ...data_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
 

@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
+from .....blender_ui.operators.animation.limit_markers_range_of_motion.limit_markers_range_of_motion import (
     limit_markers_range_of_motion,
 )
 
@@ -24,6 +24,13 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
         ]
 
         # Frame Range
+        from .....utilities.animation_targets import animation_targets
+        try:
+            animation_targets(data_parent_empty, context.scene.frame_start, context.scene.frame_end)
+        except ValueError as error:
+            self.report({'ERROR'}, str(error))
+            return {'CANCELLED'}
+
         start_frame = context.scene.frame_start
         end_frame = context.scene.frame_end
 
@@ -37,11 +44,11 @@ class FREEMOCAP_OT_limit_markers_range_of_motion(bpy.types.Operator):
             target_categories.append('intermediate_phalanx')
         if props.limit_distal_phalanx_markers:
             target_categories.append('distal_phalanx')
-            
+
         if len(target_categories) == 0:
             print("No target categories selected")
             return {'FINISHED'}
-        
+
         range_of_motion_scale = props.range_of_motion_scale
         hand_locked_track_marker_name = props.hand_locked_track_marker
         hand_damped_track_marker_name = props.hand_damped_track_marker

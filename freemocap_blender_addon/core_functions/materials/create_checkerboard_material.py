@@ -69,9 +69,6 @@ def create_checkerboard_material(name: str,
                                                     metallic=metallic,
                                                     noise_scale=noise_scale
                                                      )
-        bsdf_node, output_node = create_bsdf_and_output_nodes(nodes)
-        # Connect the Checker Texture node to the BSDF
-        material.node_tree.links.new(bsdf_node.inputs['Base Color'], checker_node.outputs['Color'])
-        # Connect the BSDF to the output
-        material.node_tree.links.new(output_node.inputs['Surface'], bsdf_node.outputs['BSDF'])
+        # create_checker_texture already connects the configured shader. A second
+        # default Principled node would silently discard roughness/metallic.
     return material

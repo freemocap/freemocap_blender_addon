@@ -1,0 +1,229 @@
+# Self contained Blender packages
+
+## Build identity and core readiness
+
+Every built ZIP includes `build-info.json` (schema 1): the normalized release
+version, export API version, source commit when Git is available, working-tree
+change status, source SHA-256, package format, Python/platform target, and the
+dependency-lock SHA-256. No timestamp is included, so repeated builds of the same
+inputs remain reproducible. `__version__` supplies both legacy `bl_info.version`
+and the generated Extension manifest version; bumpver updates that source value.
+
+The source hash is the identity of runtime code/assets, not a Git commit alias.
+It includes uncommitted source files, normalizes text line endings and removes
+the legacy-only `bl_info` assignment from `__init__.py` before hashing. Generated
+metadata, dependency payloads, caches and the excluded legacy helpers are omitted.
+Extension and legacy distributions of the same source therefore share a source
+identity, while their targets and dependency locks remain separately identified.
+Blender recomputes that hash to detect edits after packaging. This is consistency
+checking, not a signature or proof of authorship.
+
+Development `prepare`/`sync` refreshes the manifest with source changes while
+leaving binary dependencies intact. Git is read only by build tooling; installed
+Blender packages neither run Git nor access GitHub to identify themselves.
+
+Core compares the installed Blender package against its own pinned add-on Python
+distribution's source hash. Its inspection reports build identity separately from
+dependency readiness, and actually round-trips nullable Zstandard Parquet data in
+the selected Blender runtime. Export repeats these checks before opening input.
+Older packages without this manifest are unverified. A different build requires
+explicit selection of its exact source hash for development; that does not bypass
+API, installed-file, binary target, dependency-version or Parquet checks. Subsequent
+source changes require another explicit selection. Publishing add-on changes and
+refreshing core's pinned dependency makes the new source the normal expected build.
+
+For the automated local suite, Blender Launcher discovery, and shared core
+reference recordings, see [TESTING.md](TESTING.md).
+
+## VS Code development
+
+Loading the raw checkout does not supply PyArrow. Prepare a development workspace
+for the actual Blender executable (run from the add-on repository):
+
+```powershell
+.venv/Scripts/python.exe -B -m tools.develop prepare --blender "C:/path/to/blender.exe"
+```
+
+The command probes Blender's Python/OS, verifies cached pinned wheels, creates
+an isolated development package and Blender profile, and prints a generated
+`.code-workspace` path under `.test-artifacts/development/`. Open that workspace
+in VS Code, then use **Blender: Start**. Edit the normal source files, save, and
+use **Blender: Reload Addons**. The build task synchronizes source before
+Start/Reload; debugger mappings point from staged code to the checkout.
+Existing VS Code settings and regular Blender preferences are not rewritten.
+
+On a machine without cached wheels, add `--download` to explicitly acquire build
+inputs. No packages are installed into system Python or Blender. Generated stages
+use short system-temp paths to avoid Windows path limits. If cleanup removes one,
+run prepare again. Changing Blender or dependency pins requires Stop, prepare,
+and reopening the generated workspace. Edit source, not the staging copy.
+
+For the installed JacquesLucke extension's disable/re-enable reload cycle, the
+development container uses the **private legacy dependency bundle**, including
+on modern Blender. Reload leaves binary dependencies in place. This is development
+tooling, not the Extension submitted to Blender's repository. Modern releases
+still use manifest-declared wheels and exclude the legacy loader. The VS Code
+extension manages its own debugger dependencies separately.
+
+Test the setup using the printed state file and installed editor extension:
+
+```powershell
+.venv/Scripts/python.exe -B -m tools.test_development --state <state.json> --vscode-extension <jacqueslucke.blender-development-directory>
+```
+
+This executes the actual editor reload operator in background Blender with editor
+notification hooks replaced. It does not exercise VS Code's GUI/debugger connection.
+
+## Plan and boundaries
+
+One source tree serves standalone use and FreeMoCap-launched export. Build two
+distribution formats: Blender Extensions for 4.2 and newer, and legacy add-ons
+for 3.0 through 4.1. Select binary dependencies by Python ABI, OS and architecture,
+not merely the Blender version. A declared target is not a tested target.
+
+Extensions bundle unmodified wheels in their manifest. Blender manages their
+installation. No add-on code runs pip, ensurepip, Git, downloads, or installs
+dependencies. Legacy Blender lacks wheel management: its separate package contains
+build-time-expanded dependencies and a legacy-only import bridge. That bridge is
+excluded from Extension packages and is not claimed to satisfy Extension rules.
+
+Preserve the existing code license. Do not claim official marketplace readiness:
+license/asset provenance and the remaining application behavior need separate review.
+
+Stage 1, this repository: relative imports, dependency loading, reproducible package
+builder, standalone/background registration and a shared export entry point.
+Stage 2, after the human commits and pushes this repository: change FreeMoCap to
+invoke the installed package's entry point instead of injecting its environment.
+The Parquet landmark/segment and legacy-constraint import paths are now implemented
+and locally tested; see TESTING.md. Core integration remains a separate handoff.
+
+The export caller must supply the exact installed package name. For Extensions,
+that includes the repository namespace chosen by Blender; never hard-code it.
+Both entry points use the same code and dependencies. The add-on never installs
+itself while importing data or registering its UI. FreeMoCap's host application
+automatically prepares the required package through Blender's installer before
+export: reuse a verified installation, otherwise create a managed profile and
+use that profile for export and the opened Blender window.
+
+## Validation targets
+
+Test Python 3.9 (Blender 3.0), 3.10 (starting with Blender 3.1), and the actual
+Python versions bundled with each supported newer Blender. Test Windows x64,
+Linux x64, macOS Intel and macOS Apple Silicon where the Blender binary and wheel
+both exist. Additional architectures require explicit wheel and Blender validation.
+OS names alone are not compatibility promises: wheel minimum OS/glibc and CPU
+requirements still apply. Missing binaries must fail the build, never compile or
+download on a user's machine.
+
+Tests must cover offline/read-only installation, registration and re-registration,
+real Parquet I/O, both legacy and Extension namespaces, paths containing spaces,
+failed/mismatched dependencies, and export dispatch. Full recording-to-animation
+acceptance follows the Parquet loader work; do not label a packaging smoke test
+as full export validation.
+
+## Official guidance
+
+- https://developer.blender.org/docs/handbook/extensions/addon_guidelines/
+- https://docs.blender.org/manual/en/latest/advanced/extensions/python_wheels.html
+- https://docs.blender.org/manual/en/latest/advanced/extensions/addons.html
+
+Build tools may acquire pinned wheels. Runtime code must remain offline and must
+not overwrite another add-on's loaded dependency or write into its installation.
+
+## Build and test
+
+Use a build-machine Python 3.9 or newer. No packages need to be installed into it.
+The first build explicitly downloads pinned wheels from PyPI; subsequent builds
+without `--download` require the cached lock and verify every wheel's SHA-256.
+The lock is included in the resulting archive. Preserve the cache lock with
+release artifacts for reproducibility. Acquisition trusts PyPI's HTTPS metadata;
+hash checking is integrity verification, not an independent signature check.
+
+```sh
+# Blender 3.0 / Python 3.9, Windows example (runtime validation still required)
+python -B tools/build_addon.py --kind legacy --python 3.9 --platform windows-x64 --download
+# Blender 3.1 / Python 3.10: use --python 3.10 for the legacy package.
+# A narrow Extension interval for the Blender version being tested:
+python -B tools/build_addon.py --kind extension --python 3.11 --platform windows-x64 --blender-min 4.2.0 --blender-max 4.3.0 --download
+python -B -m unittest discover -s tests -p test_dependency_packaging.py
+python -B tools/test_blender_package.py --blender /path/to/blender --kind extension --archive dist/freemocap-extension-py3.11-windows-x64.zip
+```
+
+Other platform selectors are `linux-x64`, `macos-x64`, and `macos-arm64`.
+Read the selected Blender's actual Python version before building. Manifest bounds
+are an explicit maintainer responsibility; do not extend them across an ABI change.
+Currently PyArrow 18.1.0 is selected for Python 3.9 and 25.0.1 for newer targets;
+TOMLI 2.2.1 supplies TOML parsing where the standard library lacks it. NumPy comes
+from Blender; do not replace it. Unsupported wheel targets fail during the build.
+
+The smoke runner uses isolated test preferences and four separate Blender processes:
+install, normal restart, disable after using the dependency, then restart and
+re-enable. Logs and JSON reports stay under `.test-artifacts/`. The controlled
+export-dispatch check writes a real empty Blender scene through a test writer;
+it does **not** exercise recording reconstruction. Offline unit tests also run in
+the new Windows/Linux/macOS CI workflow; that workflow does not certify Blender.
+
+Standalone Blender users can install the ZIP using Blender's install-from-disk UI.
+FreeMoCap users receive automatic setup through the host application. For
+background export, use the saved configuration where that package is enabled:
+
+```sh
+blender --background --python-exit-code 1 --python tools/blender_export.py -- bl_ext.REPOSITORY.freemocap_blender_addon /recording /output/scene.blend --route parquet_segments
+```
+
+For legacy installations the package name is `freemocap_blender_addon`.
+Select any required Rigify/Images as Planes capability explicitly in preferences;
+FreeMoCap no longer enables other add-ons on the user's behalf. The existing
+tag-release workflow now uses `tools.build_release`, bundling verified wheels or
+expanded legacy dependencies. Archive names include the Blender series to avoid
+collisions between versions sharing a Python ABI. Candidates currently cover
+tested Windows x64 series 3.0/3.6 (legacy) and 4.2/4.5/5.2 (Extensions). Linux/macOS
+remain builder targets but are excluded from release candidates pending runtime
+acceptance. Manual workflow dispatch builds artifacts only; human-pushed version
+tags create draft releases for human review. The new workflow has not run remotely.
+
+The background helper also accepts `--route parquet_constraints`,
+`--trajectory-channel MAPPED_KEYPOINTS_3D`, `--run-id`, and `--sensor-group`.
+Its default remains `legacy_npy` for existing callers.
+
+## Observed validation and limitations (2026-10-05)
+
+- Nineteen offline unit tests pass locally on Windows/Python 3.12. They cover archive
+  separation, repeatability, Python 3.9 parsing, relative imports, binary target
+  rejection, traversal, hash tampering, and dependency conflict/failure behavior.
+- Windows 11 x64, Blender 5.2.2 / Python 3.13.13: both package formats load
+  PyArrow 25.0.1 and round-trip nullable Zstandard-compressed Parquet data offline.
+- Both formats pass normal restart and re-enable after a process restart, including
+  the controlled public export dispatch. A real
+  failure was found when disabling and immediately re-enabling in the same
+  process after importing PyArrow: Blender's wheel cleanup cannot remove loaded
+  DLLs, and the next startup can lack required DLLs. **Restart Blender while the
+  Extension is disabled, then re-enable it.** No add-on-side wheel repair, DLL
+  deletion, or module eviction is attempted. This needs upstream Blender follow-up
+  and testing on each supported release before general distribution.
+- The Launcher-managed Windows matrix now passes on Blender 3.0.0, 3.6.0, 4.2.0,
+  4.5.0 and 5.2.2, with both core reference datasets; see TESTING.md for scope.
+  Blender 3.1 runtime coverage, macOS/Linux runtime coverage, read-only filesystem
+  enforcement, full recording export, and marketplace licensing/asset review
+  remain outstanding. Launcher downloads superseded the earlier HTTP 403 blocker.
+
+## FreeMoCap automatic integration
+
+FreeMoCap uses its installed Python dependency as the source of the add-on and
+its host-only package builder. `_host_tools` ships in the Python wheel but is
+excluded from generated Blender ZIPs. The CLI in `tools/build_addon.py` delegates
+to that same implementation. Source mode and Electron both build/cache the correct
+ZIP automatically for the selected Blender, using pinned precompiled dependency
+wheels. Blender installs the result in a managed profile when no matching normal
+installation exists. The host tools are never executed inside Blender.
+
+Push changes, update/sync FreeMoCap's Python dependency, and run. No GitHub Action
+completion, separate release, catalog copy or manual installation is required.
+Electron bundles source and host tools as unpacked backend resources; users do
+not need a checkout, Git, pip or a separate Python environment. First use requires
+internet for missing binary wheels; cached wheels/packages support offline use.
+
+The tag/manual GitHub workflow remains for standalone Blender ZIP distribution.
+Its optional package catalog can also support explicit developer overrides, but
+is not part of normal FreeMoCap setup. Windows runtime coverage is established;
+Linux/macOS runtime acceptance and marketplace review remain separate work.
