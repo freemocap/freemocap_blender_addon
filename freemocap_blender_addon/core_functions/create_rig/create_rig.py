@@ -2,11 +2,11 @@ from typing import Dict
 
 import bpy
 
-from freemocap_blender_addon.core_functions.create_rig.add_rig_by_method import DEFAULT_REST_POSE, add_rig_by_method, pose_from_rest_pose
-from freemocap_blender_addon.core_functions.create_rig.add_rig_method_enum import AddRigMethods
-from freemocap_blender_addon.core_functions.create_rig.apply_bone_constraints import apply_bone_constraints
-from freemocap_blender_addon.data_models.bones.bone_constraints import Constraint
-from freemocap_blender_addon.data_models.data_references import ArmatureType
+from ...core_functions.create_rig.add_rig_by_method import DEFAULT_REST_POSE, add_rig_by_method, pose_from_rest_pose
+from ...core_functions.create_rig.add_rig_method_enum import AddRigMethods
+from ...core_functions.create_rig.apply_bone_constraints import apply_bone_constraints
+from ...data_models.bones.bone_constraints import Constraint
+from ...data_models.data_references import ArmatureType
 
 
 def create_rig(

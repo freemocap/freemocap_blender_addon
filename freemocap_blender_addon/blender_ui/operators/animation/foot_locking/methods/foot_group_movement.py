@@ -21,16 +21,16 @@ import math
 import mathutils
 from mathutils import Vector
 
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import (
+from ......data_models.mediapipe_names.mediapipe_heirarchy import (
     get_mediapipe_hierarchy,
 )
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.foot_locking_markers import (
+from ......blender_ui.operators.animation.foot_locking.foot_locking_markers import (
     foot_locking_markers,
 )
-from freemocap_blender_addon.blender_ui.operators.animation.foot_locking.helpers.basic_functions import (
+from ......blender_ui.operators.animation.foot_locking.helpers.basic_functions import (
     translate_marker,
 )
-from freemocap_blender_addon.utilities.get_fcurves_from_object_action import (
+from ......utilities.get_fcurves_from_object_action import (
     get_fcurves_from_object_action,
 )
 
@@ -62,37 +62,9 @@ def run_foot_group_movement(
     # Each entry contains:
     #   'object': the Blender empty object
     #   'fcurves': a numpy array of shape (3, num_frames) with XYZ positions
-    markers = {}
-    for child in data_parent_empty.children_recursive:
-        if child.type == 'EMPTY' and 'empties_parent' in child.name:
-            for marker in child.children:
-                if marker.type == 'EMPTY':
-                    # Find the location fcurves for X, Y, Z axes
-                    fcurves = get_fcurves_from_object_action(marker)
-                    if fcurves is None:
-                        continue
+    from ......utilities.animation_targets import animation_targets
+    markers = animation_targets(data_parent_empty, start_frame, end_frame)
 
-                    fcurve_x = fcurves.find("location", index=0)
-                    fcurve_y = fcurves.find("location", index=1)
-                    fcurve_z = fcurves.find("location", index=2)
-
-                    # Skip markers without complete location fcurves
-                    if fcurve_x is None or fcurve_y is None or fcurve_z is None:
-                        continue
-
-                    # Extract keyframe values into a numpy array (3 x num_frames)
-                    fcurve_data = np.array([
-                        [kp.co[1] for kp in fcurve_x.keyframe_points],
-                        [kp.co[1] for kp in fcurve_y.keyframe_points],
-                        [kp.co[1] for kp in fcurve_z.keyframe_points],
-                    ])
-
-                    markers[marker.name] = {
-                        'object': marker,
-                        'fcurves': fcurve_data,
-                    }
-
-    # last_frame is the relative index of the last frame (0-based)
     last_frame = end_frame - start_frame
 
     # Accumulate all frames that were modified across both feet

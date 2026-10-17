@@ -1,5 +1,5 @@
-from freemocap_blender_addon.core_functions.data_models.armatures.root_bone_name import ROOT_BONE_NAME
-from freemocap_blender_addon.data_models.armatures.armature_bone_info import (
+from ...core_functions.data_models.armatures.root_bone_name import ROOT_BONE_NAME
+from ...data_models.armatures.armature_bone_info import (
     ArmatureBoneInfo,
 )
 

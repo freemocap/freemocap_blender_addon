@@ -1,7 +1,7 @@
 import bpy
 
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_manager import OverlayManager
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlays.rom_gauge.rom_gauge import ROMGauge
+from ....blender_ui.operators.data_overlays.overlay_manager import OverlayManager
+from ....blender_ui.operators.data_overlays.overlays.rom_gauge.rom_gauge import ROMGauge
 
 # TODO: Probably generate the joint angle numpy file as a npz file to include the column names
 # and then load the npz file here to get the column names dynamically

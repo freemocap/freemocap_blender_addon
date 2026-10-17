@@ -1,12 +1,12 @@
 import bpy
 import os
 
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
+from ...core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
+from ...core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
+from ...core_functions.export_3d_model.helpers.bone_naming_mapping import bone_naming_mapping
+from ...core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
+from ...core_functions.meshes.skelly_mesh.strategies.attach_skelly_by_vertex_groups import align_and_parent_vertex_groups_to_armature
+from ...core_functions.meshes.skelly_mesh.helpers.skelly_vertex_groups import (
     _SKELLY_VERTEX_GROUPS,
 )
 
@@ -25,6 +25,11 @@ def export_3d_model(
         fbx_primary_bone_axis: str = 'Y',
         fbx_secondary_bone_axis: str = 'X',
 ) -> None:
+    if data_parent_empty.get('import_route', '').startswith('parquet_'):
+        from .parquet_export import export
+        return export(data_parent_empty, armature, formats, destination_folder, add_subfolder,
+                      bones_naming_convention, rest_pose_type, fbx_add_leaf_bones,
+                      fbx_primary_bone_axis, fbx_secondary_bone_axis)
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 

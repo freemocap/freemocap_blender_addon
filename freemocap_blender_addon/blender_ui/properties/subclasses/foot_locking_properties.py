@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.blender_ui.properties.property_types import PropertyTypes
+from ....blender_ui.properties.property_types import PropertyTypes
 
 
 class FootLockingProperties(bpy.types.PropertyGroup):
@@ -86,5 +86,3 @@ class FootLockingProperties(bpy.types.PropertyGroup):
         description = 'Propagate the foot locking z delta to the upper body '
                       'markers via the hips_center and trunk_center chain'
     ) # type: ignore
-    
-    

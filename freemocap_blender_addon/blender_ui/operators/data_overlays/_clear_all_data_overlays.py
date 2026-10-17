@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_manager import OverlayManager
+from ....blender_ui.operators.data_overlays.overlay_manager import OverlayManager
 
 class FREEMOCAP_OT_clear_all_data_overlays(bpy.types.Operator):
     bl_idname = 'freemocap._clear_all_data_overlays'

@@ -6,7 +6,10 @@ def translate_marker(
     delta,
     frame,
 ):
-    markers[marker_name]['fcurves'][:, frame] += delta
+    # Optional tracker aliases/hand points may be absent from a constraint rig.
+    # Continue through the hierarchy so existing descendants still receive the edit.
+    if marker_name in markers:
+        markers[marker_name]['fcurves'][:, frame] += delta
 
     if marker_name in hierarchy and hierarchy[marker_name]['children']:
         for child in hierarchy[marker_name]['children']:

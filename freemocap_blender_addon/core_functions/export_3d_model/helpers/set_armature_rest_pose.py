@@ -2,8 +2,8 @@ import bpy
 from mathutils import Vector, Euler
 import math as m
 
-from freemocap_blender_addon.core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
-from freemocap_blender_addon.core_functions.export_3d_model.helpers.rest_pose_types import rest_pose_type_rotations
+from ....core_functions.meshes.skelly_mesh.helpers.mesh_utilities import get_bone_info
+from ....core_functions.export_3d_model.helpers.rest_pose_types import rest_pose_type_rotations
 
 def set_armature_rest_pose(
     data_parent_empty: bpy.types.Object,

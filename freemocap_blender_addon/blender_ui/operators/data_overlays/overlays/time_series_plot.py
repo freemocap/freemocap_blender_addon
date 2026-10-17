@@ -4,7 +4,7 @@ import gpu
 import blf
 from gpu_extras.batch import batch_for_shader
 
-from freemocap_blender_addon.blender_ui.operators.data_overlays.overlay_component import OverlayComponent
+from .....blender_ui.operators.data_overlays.overlay_component import OverlayComponent
 
 # TODO: Move the shared methods to a utility module
 

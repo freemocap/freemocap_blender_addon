@@ -1,8 +1,9 @@
+from ...utilities.scene_objects import descendants
 import bpy
 import re
 
-from freemocap_blender_addon.freemocap_data_handler.utilities.load_data import get_test_recording_path
-from freemocap_blender_addon.blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
+from ...freemocap_data_handler.utilities.load_data import get_test_recording_path
+from ...blender_ui.sub_panels.visualizer_panel import ViewPanelPropNamesElements
 
 # Function to enable or disable the ui elements checkboxes depending on the elements visibility
 def update_scope_ui_variables(self, context):
@@ -10,30 +11,30 @@ def update_scope_ui_variables(self, context):
     scope_data_parent = bpy.data.objects[context.scene.freemocap_properties.scope_data_parent]
     for base_element in ViewPanelPropNamesElements:
         if base_element == ViewPanelPropNamesElements.SHOW_TRACKED_POINTS:
-            tracked_points_parent = next((child for child in scope_data_parent.children_recursive if 'empties_parent' in child.name), None)
+            tracked_points_parent = next((child for child in descendants(scope_data_parent) if 'empties_parent' in child.name), None)
             base_element_visible = (
                 any(
                     child.type == 'EMPTY' 
                     and not child.hide_get() 
-                    for child in tracked_points_parent.children_recursive
+                    for child in descendants(tracked_points_parent)
                 )
             )
         elif base_element == ViewPanelPropNamesElements.SHOW_RIGID_BODIES:
-            rigid_body_meshes_parent = next((child for child in scope_data_parent.children_recursive if 'rigid_body_meshes_parent' in child.name), None)
+            rigid_body_meshes_parent = next((child for child in descendants(scope_data_parent) if 'rigid_body_meshes_parent' in child.name), None)
             base_element_visible = (
                 any(
                     child.type == 'MESH' 
                     and not child.hide_get() 
-                    for child in rigid_body_meshes_parent.children_recursive
+                    for child in descendants(rigid_body_meshes_parent)
                 )
             )
         elif base_element == ViewPanelPropNamesElements.SHOW_VIDEOS:
-            videos_parent = next((child for child in scope_data_parent.children_recursive if 'videos_parent' in child.name), None)
+            videos_parent = next((child for child in descendants(scope_data_parent) if 'videos_parent' in child.name), None)
             base_element_visible = (
                 any(
                     child.type == 'MESH' 
                     and not child.hide_get() 
-                    for child in videos_parent.children_recursive
+                    for child in descendants(videos_parent)
                 )
             )
         else:
@@ -42,7 +43,7 @@ def update_scope_ui_variables(self, context):
                     re.search(base_element.object_name_pattern, child.name) 
                     and child.type == base_element.object_type 
                     and not child.hide_get() 
-                    for child in scope_data_parent.children_recursive
+                    for child in descendants(scope_data_parent)
                 )
             )
 
@@ -53,7 +54,9 @@ def update_scope_ui_variables(self, context):
         )
 
 class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
-    print("Initializing FREEMOCAP_PROPERTIES class...")
+    import_rest_pose: bpy.props.EnumProperty(
+        name="Blender skeleton rest pose", items=[('tpose', 'T-pose', ''), ('apose', 'A-pose', '')], default='tpose'
+    )
 
     data_parent_collection: bpy.props.CollectionProperty(
         name="FreeMoCap data parent empties",
@@ -74,6 +77,18 @@ class FREEMOCAP_CORE_PROPERTIES(bpy.types.PropertyGroup):
         default=get_test_recording_path(),
         subtype='DIR_PATH',
     ) # type: ignore
+
+    import_route: bpy.props.EnumProperty(name='Import route', default='parquet_segments', items=[
+        ('parquet_segments', 'Parquet: saved segments', 'Model landmarks and saved segment world poses'),
+        ('parquet_constraints', 'Parquet: legacy constraints', 'Reconstruct a Blender skeleton from trajectories'),
+        ('legacy_npy', 'Legacy NPY recording', 'Original recording loader and processing pipeline'),
+    ])
+    trajectory_channel: bpy.props.EnumProperty(name='Trajectories', default='LANDMARKS_3D', items=[
+        ('LANDMARKS_3D', 'Landmarks', 'Rigidified SkellyForge model landmarks'),
+        ('MAPPED_KEYPOINTS_3D', 'Mapped keypoints', 'Mapped observations before rigidification'),
+    ])
+    parquet_run_id: bpy.props.IntProperty(name='Run (-1 = selected)', default=-1, min=-1)
+    parquet_sensor_group: bpy.props.StringProperty(name='Sensor group', description='Leave blank if unambiguous')
 
     video_export_profile: bpy.props.EnumProperty(
         name='',

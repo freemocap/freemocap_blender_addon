@@ -1,4 +1,4 @@
-from freemocap_blender_addon.core_functions.export_3d_model.helpers import set_armature_pose_by_markers
+from .....core_functions.export_3d_model.helpers import set_armature_pose_by_markers
 import bpy
 import numpy as np
 import math as m
@@ -7,12 +7,12 @@ from copy import deepcopy
 from dataclasses import make_dataclass, field
 import re
 
-from freemocap_blender_addon.utilities.get_fcurves_from_object_action import (
+from .....utilities.get_fcurves_from_object_action import (
     get_fcurves_from_object_action,
 )
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import _BONE_DEFINITIONS
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from .....data_models.bones.bone_definitions import _BONE_DEFINITIONS
+from .....data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 
 
 def limit_markers_range_of_motion(
@@ -56,35 +56,8 @@ def limit_markers_range_of_motion(
     
     # TODO: Move this code a separate module as it is used in more than one operator
     # Create a dictionary with all the markers that are children of the data parent empty
-    markers = {}
-    for child in data_parent_empty.children_recursive:
-        if child.type == 'EMPTY' and 'empties_parent' in child.name:
-            for marker in child.children:
-                if marker.type == 'EMPTY':
-                    fcurves = get_fcurves_from_object_action(marker)
-                    if fcurves is None:
-                        continue
-
-                    # Get the position fcurves
-                    fcurve_x = fcurves.find("location", index=0)
-                    fcurve_y = fcurves.find("location", index=1)
-                    fcurve_z = fcurves.find("location", index=2)
-
-                    if fcurve_x is None or fcurve_y is None or fcurve_z is None:
-                        continue
-
-                    # Get the fcurve data as numpy arrays
-                    fcurve_data = np.array([
-                        [kp.co[1] for kp in fcurve_x.keyframe_points],
-                        [kp.co[1] for kp in fcurve_y.keyframe_points],
-                        [kp.co[1] for kp in fcurve_z.keyframe_points]
-                    ])
-            
-                    # Save the marker object and its position fcurves in the dictionary
-                    markers[marker.name] = {
-                        'object': marker,
-                        'fcurves': fcurve_data,
-                    }
+    from .....utilities.animation_targets import animation_targets
+    markers = animation_targets(data_parent_empty, start_frame, end_frame)
 
     # Modify the head and tail markers of each virtual bone to match
     # the markers that are children of the data parent empty
@@ -127,7 +100,7 @@ def limit_markers_range_of_motion(
         del MEDIAPIPE_HIERARCHY[closest_match]
 
     # Iterate through each frame of the scene
-    for frame in range (start_frame, end_frame):
+    for frame in range (start_frame, end_frame + 1):
 
         # Calculate the hand axes as a starting point.
         # TODO: Extend the function to start from the pelvis bone

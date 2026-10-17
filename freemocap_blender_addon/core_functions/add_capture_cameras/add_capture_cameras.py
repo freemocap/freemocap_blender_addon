@@ -3,14 +3,7 @@ import os
 import math
 from mathutils import Matrix, Quaternion
 
-try:
-    import tomllib
-except ModuleNotFoundError:
-    tomllib = None
-    try:
-        import toml
-    except ModuleNotFoundError:
-        toml = None
+from ...utilities.dependencies import load_toml
 
 # Assumed fixed sensor width in mm becuase the variable is the focal length
 DEFAULT_SENSOR_WIDTH = 36.0 # Same as Blender default
@@ -80,12 +73,7 @@ def add_capture_cameras(
         return
 
     # Load the TOML file
-    if tomllib is not None:
-        with open(calibration_file_path, 'rb') as file:
-            data = tomllib.load(file)
-    else:
-        with open(calibration_file_path, 'r') as file:
-            data = toml.load(file)
+    data = load_toml(calibration_file_path)
 
     metadata = data.get("metadata", {})
 

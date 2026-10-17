@@ -1,0 +1,354 @@
+# Local Blender add-on tests
+
+## Capture camera audit — 2026-10-07
+
+Blender 5.2.2 passed independent extrinsics checks for both Parquet routes with
+both current prepared publications. The new `check_camera_extrinsics` scene test
+derives camera centers from `-R.T @ t`, checks the full world orientation, and
+projects actual imported landmark objects against `K(RX+t)`. It does not derive
+expected results from the same cached `world_orientation` used by the importer.
+
+A denser sampled audit of all six cameras found maximum center disagreement below
+0.0004 mm and maximum ideal pinhole projection disagreement below 0.00024 pixels.
+The presentation video-wall rotation has a separate parent and does not affect
+calibrated capture cameras. Evidence: `.test-artifacts/camera-audit/`.
+
+These checks establish agreement with the saved calibration. They do not establish
+that camera-to-video matching or upstream alignment is correct, or compare against
+observed image keypoints. Blender's pinhole camera also does not model the saved
+lens distortion for raw-video overlays. No production camera transforms were
+changed as a result of this audit.
+
+## Front overview follow-up — 2026-10-07
+
+Both Parquet routes passed a focused Blender 5.2.2 check on the test recording:
+the opening viewport and overview camera view from +Y, with the presentation
+video wall behind the subject and its textures facing the viewer. Saved viewport
+orientation survived save/reopen. Imported landmark and calibrated camera positions
+were checked against the recording; the source Parquet hash was unchanged.
+The native overview render was visually inspected. Evidence is under
+`.test-artifacts/front-overview/`. This presentation-only change does not rotate
+the imported recording root or change the old NPY scene layout.
+
+## Main reconciliation validation — 2026-10-06
+
+See [MAIN_RECONCILIATION.md](MAIN_RECONCILIATION.md) for the feature provenance,
+route capabilities and remaining core integration contract. Earlier results below
+describe previous revisions; they do not establish coverage for these new features.
+
+The reconciliation adds real-recording checks for an A-pose constraint skeleton,
+foot locking and hand limits. Tests verify that Blender target curves change while
+canonical landmark curves and the source Parquet hash remain unchanged. Cleaned
+scenes are saved and reopened. Saved-segment imports reject unsupported cleanup.
+Existing checks continue to cover both Parquet routes, mapped observations, meshes,
+materials, videos/cameras, FBX export and the standalone Load Data operator.
+
+Thirty offline tests passed. The actual JacquesLucke 0.0.31 reload operator passed
+two same-process reloads on Blender 5.2.2, followed by background exports through
+both Parquet routes. Evidence: `.test-artifacts/development-test-vv0vtzk0/`.
+This does not automate the editor's debugger/network startup.
+
+The final Windows x64 matrix passed all five applicable package combinations:
+Blender 3.0.0 legacy, 4.2.23 legacy/Extension, and 5.2.2 legacy/Extension. Each
+checked both refreshed reference publications (222 test frames and 1,108 sample
+frames), installation, restart, disable/re-enable, both Parquet scene routes and
+the additional cleanup checks. Shared reference integrity passed after the suite.
+Evidence: `.test-artifacts/suite-qa6uzosq/summary.json` and `junit.xml`.
+The explicit A-pose-versus-T-pose rest-vector assertion was added during the
+matrix; 4.2/5.2 exercised it. The 3.0 run constructed, cleaned and reopened A-pose
+scenes but did not include that later comparison assertion.
+
+A rendered frame from the cleaned test-data scene was visually inspected for the
+two mesh layers, upright anatomy, floor and COM materials. It is a spot-check,
+not a claim of visual correctness throughout every animation. COM remains the
+recorded COM after cleanup; it is not recalculated for the edited animation.
+
+Remaining limits: no full old-format NPY recording or macOS/Linux Blender runtime
+was exercised in this reconciliation. Parquet BVH and saved-segment cleanup remain
+unsupported. Core invocation is a separate stage after the human commit/push.
+
+## Running the suite
+
+From the add-on repository, with its existing Python environment:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m tools.run_tests
+```
+
+This runs offline unit tests, discovers Blender Launcher installations, probes
+their actual Blender/Python/OS/architecture, builds the appropriate packages,
+and starts isolated background Blender processes. For Blender 4.2+ both legacy
+and Extension packaging are tested; older builds test the legacy format.
+Blender Launcher owns downloads and version management. The test runner never
+updates Launcher, installs Blender, or changes your normal Blender preferences.
+It reads the Windows Launcher's `library_folder` setting. A custom or non-Windows
+library can be supplied explicitly:
+
+```powershell
+python -B -m tools.run_tests --launcher-library 'D:/Blender Library'
+python -B -m tools.run_tests --blender 'D:/Blender Library/stable/build/blender.exe'
+```
+
+Repeat `--blender` for multiple explicit executables. Discovery checks only
+`stable`, `daily`, `experimental`, and `custom` build directories, excluding
+download staging and fork channels. An empty library is a failure, not a green
+test run. Build-time dependency downloads require `--download-wheels`; without
+that flag a missing verified wheel cache is reported as a failure. No test uses
+pip or borrows core's Python environment to supply Blender dependencies.
+
+## Shared FreeMoCap reference data
+
+The default run consumes **both** `test_data` (222 frames) and `sample_data`
+(1,108 frames). These are the accepted publications produced by core's
+`freemocap.tools.datasets` workflow, not private copies of raw downloads or a
+second processing pipeline maintained by the add-on.
+
+Discovery uses `~/freemocap_data/testing/prepared`, or
+`FREEMOCAP_PROVENANCE_PREPARED_ROOT` / `--prepared-root`. Each dataset's `ready.json`
+must point inside its published `current` directory. Pending `replacement.json`
+transactions, missing data, wrong dataset identity/frame counts, and mismatched
+Parquet/calibration hashes fail the reference setup. There is no fallback to
+an arbitrary raw recording or an unsuccessful processing attempt.
+
+The runner copies the verified Parquet and available synchronized/annotated videos into the ignored suite directory,
+records `ready.json` and its software/workflow provenance, and checks the original
+Parquet, calibration, publication marker, copied Parquet, and original/copied video hashes after testing.
+Blender only reads the copy. Tests never overwrite shared prepared data, rerun
+tracking, run the optional skeleton fitter, or import FreeMoCap/SkellyForge/
+SkellyTracker. This follows the file-based consumer approach used by Forge's
+reference tests while enforcing core's publication checks.
+
+Acquire or refresh data through **core's own environment and commands**, from
+`repos/freemocap`: `poe process-test-data` / `poe process-sample-data`.
+Use core's documented recovery commands for interrupted publications. Do not
+edit markers or bypass checksums to make a test pass. Dataset generation is an
+explicit upstream activity, not an automatic side effect of add-on tests.
+
+Useful scopes:
+
+```powershell
+python -B -m tools.run_tests --unit-only
+python -B -m tools.run_tests --dataset test_data
+python -B -m tools.run_tests --dataset sample_data
+python -B -m tools.run_tests --dataset none
+```
+
+`--dataset none` explicitly excludes real recording checks; it must not be
+reported as reference-data acceptance. Requested but unavailable data fails.
+
+## What is checked
+
+- Offline package contracts: dependency hashes, unsafe paths, wrong ABI/platform,
+  package separation, namespace imports, and reproducible archives.
+- Runner/data contracts: Launcher discovery, runtime selection, failed process
+  reporting, Python environment isolation, publication integrity and immutability.
+- Real Blender: registration, Parquet/TOML dependencies, restart and re-enable
+  across process boundaries, and controlled export API dispatch.
+- Animation: real evaluated positions at keyframes, existing missing-sample
+  handling, and preservation after saving and reopening a `.blend`.
+- Reference data: selected processing run and sensor group, descriptor basis and
+  units, full frame/timestamp grid for one saved model landmark trajectory, and
+  evaluation of its finite positions in Blender after millimeters-to-meters
+  conversion. Fitted-skeleton channels are not substituted for model channels.
+
+The fixture reader in `tests/blender_scene_checks.py` remains a small primitive
+check. Production-loader acceptance is separate in `tests/blender_parquet_checks.py`:
+both prepared datasets load through **saved segments** and **legacy constraints**.
+Every native landmark position, segment origin, world rotation, bone pose and
+validity sample is checked. The legacy armature must have the expected constraints
+and exact targets, respond to a perturbed target, and evaluate finite limb poses.
+Reports measure corresponding limb-origin distances rather than assuming equality.
+Scenes containing both routes are saved and reopened for further checks.
+The optional mapped-keypoint comparison input and the standalone Load Data
+operator are also exercised against both real datasets.
+
+`tests/blender_complete_scene_checks.py` checks the actual Skelly surface and
+rigid-body vertices against their driving segment/bone transforms, animation,
+movie textures and timing, capture camera transforms/backgrounds, center of mass,
+ground, scoped visibility controls, and scene persistence. The test recording
+also exercises FBX export through both routes without changing the current
+landmark pose or frame. To additionally render both routes for visual inspection:
+
+```powershell
+$env:FREEMOCAP_TEST_RENDER = '1'
+python -B -m tools.run_tests --blender 'PATH/TO/blender.exe'
+```
+
+Preview PNGs use CPU Cycles and live beside the comparison `.blend` files.
+The bundled `assets/skelly_mesh.json.gz` is an intentional portable asset, not a
+test artifact. It preserves the source `.blend` topology and binding groups so
+Blender 3.0 does not need to read a newer Blender mesh serialization. Rebuild it
+with `tools/extract_skelly_asset.py` in a Blender that reads the source asset,
+writing first to `.test-artifacts/` and reviewing the result before replacing it.
+
+`tests/blender_parquet_contract.py` supplies small adversarial fixtures for units,
+basis, source/run/group selection, component completeness, timestamp consistency,
+quaternion normalization, missing-parent behavior, and actual public API export.
+No SkellyForge, SkellyTracker, or core package is imported by these tests.
+
+These checks do not establish anatomical accuracy, full rotation equivalence
+between different rig conventions, or end-to-end legacy NPY processing. The NPY
+API dispatch is still covered, but a full old-format reference fixture is needed
+for that separate acceptance test. The producer owns landmark rigidification;
+native import must preserve its saved results without solving them again.
+
+Logs, snapshots, generated packages, `.blend` files, JSON results and `junit.xml`
+are retained in `.test-artifacts/suite-*`. Installed test packages/preferences
+use short system-temp paths to avoid Windows extraction path limits and are
+removed after Blender exits. A failing build does not prevent other builds from
+being tested, and any failure makes the overall command exit nonzero.
+
+## Version coverage and CI
+
+Recommended small matrix, latest patch per series: **3.0, 3.6 LTS, 4.2 LTS,
+4.5 LTS, 5.2**. Add 3.1 as a Python-transition boundary test before promising
+all intermediate releases. Prioritize downloading 4.2 and 3.6, then 4.5 and 3.0.
+This tests the old minimum, later legacy behavior, Extensions introduction,
+action-slot animation API, and current 5.x behavior. Old versions are compatibility
+targets, not recommendations for general use. Passing selected releases does
+not establish every minor version or another OS/architecture.
+
+GitHub Actions runs the offline unit suite on push, pull request and manual
+dispatch across Windows, Linux and macOS, preserving reports. The workflow has
+not been run remotely as part of this local change. Full Blender CI is a later
+stage: provision pinned Blender builds and validated prepared dataset artifacts,
+then invoke this same runner with `--blender` and `--prepared-root`. CI does not
+need Blender Launcher. Keep expensive processing in core and publish its accepted
+artifacts for consumers; do not import sibling repositories to generate fixtures.
+
+Known Windows limitation: disabling and immediately re-enabling an Extension
+after loading PyArrow can break Blender's wheel cleanup. The tested lifecycle
+restarts Blender while disabled before re-enabling. See `DEPENDENCIES.md`.
+
+## Complete-scene follow-up — 2026-10-06
+
+Both prepared recordings passed the expanded scene checks on Windows x64:
+
+| Blender | Package formats |
+| --- | --- |
+| 3.0.0 | Legacy |
+| 3.6.23 | Legacy |
+| 4.2.23 | Legacy, Extension |
+| 4.5.14 | Legacy, Extension |
+| 5.2.2 | Legacy, Extension |
+
+The native route creates 61 rigid-body visuals; the constraint route creates 63
+Blender-bone visuals. Both have a 10,604-vertex / 20,011-face Skelly mesh, three
+movie planes and three capture cameras for each recording, plus saved center of
+mass, ground, light and overview camera. Tests check evaluated mesh deformation,
+scope toggles, source poses, saved-scene reopening and actual FBX output. The
+existing all-frame native pose checks and 75-constraint comparison checks remain.
+Twenty-six offline tests passed. Shared reference checksums remained unchanged.
+
+Evidence: `.test-artifacts/suite-kvsi3tfj/` covers 3.0/3.6/4.2/4.5;
+`.test-artifacts/suite-r094_f2a/` reruns 3.0/5.2 with camera projection checks.
+The final 5.2 run, `.test-artifacts/suite-hx6s72h7/`, additionally checks saved
+center-of-mass positions and invalid-sample viewport/render visibility.
+CPU renders of both routes and both datasets were inspected in
+`.test-artifacts/suite-bnr7setn/build-0/legacy/*-native.png` and
+`*-constraints.png`. The isolated JacquesLucke reload-operator test passed twice
+in one process and exported both scenes after reload; latest evidence is
+`.test-artifacts/development-test-jentxdn_/`.
+
+The initial complete-scene matrix found a newer `.blend` asset incompatibility
+on 3.0, unavailable `children_recursive` on 3.0, and an object-name collision in
+the older-version comparison scene. Portable mesh data, compatible traversal and
+import-specific rig names fixed those failures. Initial failing logs remain in
+`.test-artifacts/suite-97d1x150/`; later passing runs supersede them.
+
+Scope limits: no macOS/Linux Blender runtime, Blender 3.1, full old-format NPY
+recording, or FreeMoCap core invocation was tested here. Parquet 3D-model export
+supports FBX with default names/rest pose. Legacy editing/retargeting/analysis
+tools and other export formats are not established by these scene tests. Movie
+files remain external dependencies of saved `.blend` files. Existing Windows
+Extension DLL-cleanup warnings still require the documented process restart;
+the private development bundle supports same-process reloads.
+
+## Parquet loader results — 2026-10-06
+
+The original results in this section tested trajectories/armatures only. They
+did **not** establish complete scene output. See the complete-scene follow-up
+above for mesh, video, camera, visibility and FBX coverage.
+
+Development setup follow-up: 24 offline tests passed. The generated private
+development bundles passed source synchronization and two same-process reloads
+using the `UpdateAddonOperator` from installed JacquesLucke 0.0.31 on Blender
+3.0.0 and 5.2.2. The test changed staged Python code and verified the new values
+after each reload while preserving the loaded PyArrow module. Both actual
+background-helper routes exported the accepted test recording afterward.
+Reports: `.test-artifacts/development-test-lku4u3rt/` (3.0.0) and
+`.test-artifacts/development-test-fylw0drf/` (5.2.2). The editor's network/debugger
+startup and interactive VS Code commands were not automated; only its real reload
+operator was executed with editor notification/redraw hooks replaced.
+
+The background CLI now accepts route, trajectory channel, run and sensor group.
+The release builder produces complete version-labelled packages; GitHub release
+workflow execution and publication remain untested remotely. Release candidates
+are limited to the Windows runtimes tested so far.
+
+Both routes passed against refreshed test data (222 frames) and sample data
+(1,108 frames): 124 landmarks and 61 segments each. All 13 applicable package
+combinations passed on Windows x64 across Blender **3.0.0, 3.6.0, 3.6.23,
+4.2.0, 4.2.23, 4.5.0, 4.5.14, and 5.2.2**. Nineteen offline unit tests also passed.
+Native positions and world rotations were checked at every frame; the legacy
+armature had 75 expected active constraints and responded to target perturbation.
+Both routes survived save/reopen. Nine invalid contract cases were rejected.
+Shared publication files, acceptance markers and calibration files were unchanged.
+
+For the six paired upper/lower-arm and lower-leg origins, the largest measured
+legacy/native distance was **0.567 mm** across both recordings. This is a scoped
+position comparison, not evidence that all bone rotation conventions coincide.
+
+Evidence: `.test-artifacts/suite-_51_xmf6/review-summary.json` combines the matrix
+with the focused rerun in `.test-artifacts/suite-57w9pbj_/summary.json`, preserving
+the initial failure history. An added mapped-input assertion initially assumed
+the pelvis itself must move under rigidification; its origin can legitimately
+remain unchanged. That test assumption was corrected to compare all landmarks.
+Blender 3.0.0 and 4.5.0 were rerun successfully. Mapped-input and standalone UI
+checks also passed on 4.5.14 and 5.2.2. Earlier matrix builds checked the two main
+landmark routes before those additional cases were added.
+
+The 5.2 Extension comparison scenes are in
+`.test-artifacts/suite-_51_xmf6/build-7/extension/*-both-routes.blend`.
+No macOS/Linux Blender runtime, 3.1 runtime, old-format full NPY recording, or
+FreeMoCap core invocation was exercised in this stage. Core integration remains
+an independent stage after the owner commits and pushes this add-on change.
+
+## Windows thumbnail-cache isolation
+
+Blender test subprocesses use disposable working directories (runtime probes use
+their ignored report directory), never the source checkout. On 2026-10-06 the
+agent environment's `SHGetSpecialFolderPathW(CSIDL_PROFILE)` returned failure.
+Blender's Windows thumbnail implementation does not check that return value
+before converting the output buffer. This is the suspected cause of malformed
+relative directories containing empty `.thumbnails/large` and
+`.thumbnails/fail/blender` trees during earlier tests. Working-directory isolation
+contains these incidental writes; it does not repair Blender's native code.
+Do not add Unicode-name ignore patterns or delete arbitrary Unicode directories.
+
+After this isolation change, 26 offline tests and the Blender 5.2.2 development
+reload/export test passed, exercising both Parquet routes without adding cache
+directories at the repository root.
+
+## Historical packaging/primitive results — 2026-10-05
+
+Nineteen unit tests passed. The full suite passed against these Launcher-managed
+Windows x64 builds (these are measured versions, not inferred family coverage):
+
+| Blender | Bundled Python | Package formats passed |
+| --- | --- | --- |
+| 3.0.0 | 3.9.7 | Legacy |
+| 3.6.0 | 3.10.12 | Legacy |
+| 4.2.0 | 3.11.7 | Legacy, Extension |
+| 4.5.0 | 3.11.11 | Legacy, Extension |
+| 5.2.2 | 3.13.13 | Legacy, Extension |
+
+All eight package combinations checked both accepted reference publications:
+222 test frames (216 finite pelvis positions) and 1,108 sample frames (1,076 finite
+pelvis positions), selected run 0, sensor group `camera_group:8491d7`. Original
+files remained unchanged. Both publications lack `MAPPED_KEYPOINTS_3D`; reports
+identify that prerequisite gap without relabeling old landmarks as mapped points.
+These are trajectory-primitive and packaging checks, not complete loader acceptance.
+
+The complete local evidence is retained in
+`.test-artifacts/suite-m0o9pmni/summary.json`, `junit.xml`, and per-build logs/scenes.

@@ -3,8 +3,8 @@ from typing import Dict
 
 import numpy as np
 
-from freemocap_blender_addon.data_models.bones.bone_definitions import BoneDefinition, get_bone_definitions
-from freemocap_blender_addon.data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
+from ....data_models.bones.bone_definitions import BoneDefinition, get_bone_definitions
+from ....data_models.mediapipe_names.mediapipe_heirarchy import get_mediapipe_hierarchy
 from .calculate_body_dimensions import calculate_body_dimensions
 from ..enforce_rigid_bodies.calculate_bone_length_statistics import calculate_bone_length_statistics
 from ...handler import FreemocapDataHandler

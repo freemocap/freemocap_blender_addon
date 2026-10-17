@@ -1,6 +1,6 @@
 import bpy
 
-from freemocap_blender_addon.blender_ui.ui_utilities.ui_utilities import find_matching_bone_in_target_list
+from .....blender_ui.ui_utilities.ui_utilities import find_matching_bone_in_target_list
 
 class FREEMOCAP_OT_detect_bone_mapping(bpy.types.Operator):
     bl_idname = 'freemocap._detect_bone_mapping'

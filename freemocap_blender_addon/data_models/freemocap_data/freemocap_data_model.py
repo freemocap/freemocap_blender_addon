@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Optional, Union, Literal
 
 import numpy as np
-from freemocap_blender_addon.core_functions.setup_scene.get_path_to_sample_data import get_path_to_sample_data
+from ...core_functions.setup_scene.get_path_to_sample_data import get_path_to_sample_data
 
 from .helpers.freemocap_component_data import FreemocapComponentData
 from .helpers.freemocap_data_paths import FreemocapDataPaths
@@ -10,14 +10,7 @@ from .helpers.freemocap_data_stats import FreemocapDataStats
 from ..mediapipe_names.mediapipe_trajectory_names import MediapipeTrajectoryNames, \
     HumanTrajectoryNames
 
-try:
-    import tomllib
-except ModuleNotFoundError:
-    tomllib = None
-    try:
-        import toml
-    except ModuleNotFoundError:
-        toml = None
+from ...utilities.dependencies import load_toml
 
 
 FREEMOCAP_DATA_COMPONENT_TYPES = Literal["body", "right_hand", "left_hand", "face", "other"]
@@ -184,16 +177,7 @@ class FreemocapData:
         groundplane_calibration: bool = False
 
         if data_paths.calibration_toml is not None:
-            if tomllib is not None:
-                with open(data_paths.calibration_toml, "rb") as f:
-                    calibration_data = tomllib.load(f)
-            elif toml is not None:
-                with open(data_paths.calibration_toml, "r", encoding="utf-8") as f:
-                    calibration_data = toml.load(f)
-            else:
-                raise ImportError(
-                    "Could not load calibration TOML: neither tomllib nor toml is available."
-                )
+            calibration_data = load_toml(data_paths.calibration_toml)
 
             calibration_metadata = calibration_data.get("metadata", {})
 

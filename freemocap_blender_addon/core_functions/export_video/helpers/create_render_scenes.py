@@ -1,6 +1,6 @@
 import bpy
 from pathlib import Path
-from freemocap_blender_addon.data_models.parameter_models.video_config import (
+from ....data_models.parameter_models.video_config import (
     EXPORT_PROFILES,
 )
 

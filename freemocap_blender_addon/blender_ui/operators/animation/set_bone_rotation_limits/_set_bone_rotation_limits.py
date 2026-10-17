@@ -1,7 +1,7 @@
 import bpy
 import math
 
-from freemocap_blender_addon.blender_ui.ui_utilities.bone_rotation_limits import BONE_ROTATION_LIMITS
+from .....blender_ui.ui_utilities.bone_rotation_limits import BONE_ROTATION_LIMITS
 
 
 class FREEMOCAP_OT_set_bone_rotation_limits(bpy.types.Operator):

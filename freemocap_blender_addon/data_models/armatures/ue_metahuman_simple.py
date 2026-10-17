@@ -1,4 +1,4 @@
-from freemocap_blender_addon.data_models.armatures.armature_bone_info import (
+from ...data_models.armatures.armature_bone_info import (
     ArmatureBoneInfo,
 )
 

@@ -1,5 +1,5 @@
 import bpy
-from freemocap_blender_addon.data_models.bones.bone_definitions import (
+from .....data_models.bones.bone_definitions import (
     is_hand_bone,
 )
 
