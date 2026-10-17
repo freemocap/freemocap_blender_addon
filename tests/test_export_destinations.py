@@ -36,7 +36,7 @@ class ExportDestinationTests(unittest.TestCase):
                                 route=route, config={'export_3d_model': {'formats': formats}}), str(output.resolve()))
                         if formats:
                             exporter.assert_called_once_with(scene['root'], scene['rig'], formats=formats,
-                                destination_folder=str(recording / 'exports'), add_subfolder=True)
+                                destination_folder=str(recording.resolve() / 'exports'), add_subfolder=True)
                         else:
                             exporter.assert_not_called()
                         self.assertTrue(output.is_file())
