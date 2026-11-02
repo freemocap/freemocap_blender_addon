@@ -22,5 +22,4 @@ substituting data. Find existing conversions before implementing another one.
 Resume authorized work once purpose, ownership and evidence are clear; ask only
 for consequential intent that targeted inspection cannot resolve. Dated test
 results are not current coverage. Preserve user data and edits, use ignored or
-external test outputs, follow workspace policy when present, and leave Git state
-to the human. Blender/dependency setup requires its own task authorization.
+external test outputs, follow workspace policy when present, and follow the workspace Git authorization and repository-scope policy. Blender/dependency setup requires its own task authorization.
