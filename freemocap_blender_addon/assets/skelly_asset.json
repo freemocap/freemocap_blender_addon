@@ -1,0 +1,10 @@
+{
+  "name": "Skelly FreeMoCap",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "notice": "Skelly FreeMoCap is provided under CC0 1.0. Credit to the FreeMoCap Foundation is appreciated but not required. We also ask that Skelly-related assets be made available free of charge to end users. These are voluntary requests, not license conditions; commercial use, modification, and redistribution remain permitted.",
+  "scope": "Skelly FreeMoCap artwork in skelly_full_mesh_20k_faces.blend, its portable skelly_mesh.json.gz representation, and Skelly VRM avatars generated from that artwork.",
+  "provenance": "Existing FreeMoCap Blender addon Skelly artwork, fitted to the established SkellyForge model. This notice does not assert an individual creator attribution.",
+  "softwareLicense": "The software license is unchanged; this asset notice does not relicense application or exporter code.",
+  "vrm1LicenseNote": "VRM1 retains its required VRM Public License metadata. This asset is also separately offered under CC0 1.0; otherLicenseUrl records that separate grant and is not asserted to override the format license."
+}

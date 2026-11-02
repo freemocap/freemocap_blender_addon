@@ -1,7 +1,7 @@
 """Build/export Skelly in factory-startup background Blender with an explicit exporter.
 
-No package installation or saved preferences. Uses the official VRM exporter
-[@vrmAddon4103] and VRM0 humanoid contract [@vrm0Specification].
+No package installation or saved preferences. Uses the official versioned VRM
+exporter and humanoid APIs [@vrmAddon4103].
 """
 from __future__ import annotations
 
@@ -34,7 +34,6 @@ def load_exporter(path: Path):
 
 
 def build_avatar(payload: dict):
-    scale = payload['bodyHeightMeters']
     for obj in list(bpy.data.objects):
         bpy.data.objects.remove(obj, do_unlink=True)
     rest = {bone['name']: bone for bone in payload['bones']}
@@ -45,7 +44,7 @@ def build_avatar(payload: dict):
         used, remapped = np.unique(triangles, return_inverse=True)
         local = np.asarray(part['positions']).reshape(-1, 3)[used]
         rotation = np.asarray(Quaternion(rest[name]['orientation']).to_matrix())
-        world = (local @ rotation.T + rest[name]['origin']) * scale
+        world = local @ rotation.T * rest[name]['artworkScaleMeters'] + rest[name]['fittedOriginMeters']
         base = len(points)
         groups[name] = list(range(base, base + len(world)))
         points.extend(world.tolist())
@@ -66,9 +65,16 @@ def build_avatar(payload: dict):
     bone_axis = Matrix(((1, 0, 0), (0, 0, -1), (0, 1, 0))).to_4x4()
     for item in payload['bones']:
         bone = armature.data.edit_bones.new(item['name'])
-        position = Vector(item['origin']) * scale + origin_shift
-        bone.matrix = Matrix.Translation(position) @ Quaternion(item['orientation']).to_matrix().to_4x4() @ bone_axis
-        bone.length = max(item['length'] * scale, .001)
+        position = Vector(item['fittedOriginMeters']) + origin_shift
+        orientation = Quaternion(item['orientation']).to_matrix()
+        if payload.get('vrmVersion') == '1.0':
+            # VRM0 freezes rest rotations itself. For VRM1, normalize only the
+            # presentation rig: cancel the assembly orientation and glTF's bone
+            # basis change [@blenderGltfJointExport]. World surfaces/heads stay
+            # unchanged; source rest orientations remain in the input manifest.
+            orientation = Matrix(payload['coordinateBindings']['exporterInputFromSource']).transposed()
+        bone.matrix = Matrix.Translation(position) @ orientation.to_4x4() @ bone_axis
+        bone.length = max(item['fittedLengthMeters'], .001)
     for item in payload['bones']:
         parent = payload['avatarParents'][item['name']]
         if parent:
@@ -96,6 +102,9 @@ def build_avatar(payload: dict):
     modifier = body.modifiers.new('Forge rigid segment binding', 'ARMATURE')
     modifier.object = armature
     body.select_set(True)
+    # Rotate the complete presentation assembly into the official exporter's
+    # VRM0 authoring-facing convention. Source geometry/rest data stay canonical.
+    armature.matrix_world = Matrix(payload['coordinateBindings']['exporterInputFromSource']).to_4x4()
     bpy.context.view_layer.update()
     return armature, body, groups, floor_offset
 
@@ -140,27 +149,57 @@ def main():
     scratch.mkdir(parents=True, exist_ok=True)
     tempfile.tempdir = str(scratch)
     payload = json.loads(args.input.read_text(encoding='utf-8'))
+    asset_policy = json.loads((Path(__file__).resolve().parents[1] /
+        'freemocap_blender_addon/assets/skelly_asset.json').read_text(encoding='utf-8'))
     exporter = load_exporter(args.exporter.resolve())
     bpy.context.preferences.filepaths.file_preview_type = 'NONE'
+    bpy.context.preferences.filepaths.save_version = 0
     armature, body, groups, offset = build_avatar(payload)
     articulation = verify_articulation(armature, body, groups, payload['humanoid'])
     extension = armature.data.vrm_addon_extension
-    extension.spec_version = '0.0'
-    humanoid = extension.vrm0.humanoid
+    vrm_version = payload.get('vrmVersion', '0.0')
+    extension.spec_version = vrm_version
+    humanoid = extension.vrm0.humanoid if vrm_version == '0.0' else extension.vrm1.humanoid
     humanoid.pose = humanoid.POSE_REST_POSITION_POSE.identifier
-    type(humanoid).fixup_human_bones(armature)
-    for mapping in humanoid.human_bones:
-        if mapping.bone in payload['humanoid']:
-            mapping.node.bone_name = payload['humanoid'][mapping.bone]
-    type(humanoid).update_all_bone_name_candidates(bpy.context, armature.data.name, force=True)
-    meta = extension.vrm0.meta
-    meta.title = 'Skelly'
-    meta.version = '0.1-local-review'
-    meta.author = 'FreeMoCap Project'
-    meta.reference = 'Existing FreeMoCap Blender artwork and SkellyForge rest model; local review export'
-    meta.allowed_user_name = 'ExplicitlyLicensedPerson'
-    meta.license_name = 'Redistribution_Prohibited'
-    extension.vrm0.first_person.first_person_bone.bone_name = payload['humanoid']['head']
+    if vrm_version == '0.0':
+        type(humanoid).fixup_human_bones(armature)
+        for mapping in humanoid.human_bones:
+            if mapping.bone in payload['humanoid']:
+                mapping.node.bone_name = payload['humanoid'][mapping.bone]
+        type(humanoid).update_all_bone_name_candidates(bpy.context, armature.data.name, force=True)
+        meta = extension.vrm0.meta
+        meta.title = asset_policy['name']
+        meta.version = ''
+        meta.author = 'FreeMoCap Project'
+        meta.reference = asset_policy['notice']
+        meta.license_name = 'CC0'
+        meta.other_license_url = asset_policy['licenseUrl']
+        meta.allowed_user_name = 'Everyone'
+        meta.violent_ussage_name = 'Allow'
+        meta.sexual_ussage_name = 'Allow'
+        meta.commercial_ussage_name = 'Allow'
+        extension.vrm0.first_person.first_person_bone.bone_name = payload['humanoid']['head']
+    else:
+        for name, mapping in humanoid.human_bones.human_bone_name_to_human_bone().items():
+            if name.value in payload['humanoid']:
+                mapping.node.bone_name = payload['humanoid'][name.value]
+        type(humanoid.human_bones).update_all_bone_name_candidates(bpy.context, armature.data.name, force=True)
+        meta = extension.vrm1.meta
+        meta.vrm_name = asset_policy['name']
+        meta.version = ''
+        meta.authors.add().value = 'FreeMoCap Project'
+        meta.copyright_information = asset_policy['notice']
+        meta.references.add().value = asset_policy['licenseUrl']
+        meta.other_license_url = asset_policy['licenseUrl']
+        meta.avatar_permission = 'everyone'
+        meta.allow_excessively_violent_usage = True
+        meta.allow_excessively_sexual_usage = True
+        meta.allow_political_or_religious_usage = True
+        meta.allow_antisocial_or_hate_usage = True
+        meta.commercial_usage = 'corporation'
+        meta.credit_notation = 'unnecessary'
+        meta.allow_redistribution = True
+        meta.modification = 'allowModificationRedistribution'
     validation = sys.modules['io_scene_vrm.editor.validation']
     preferences = sys.modules['io_scene_vrm.common.preferences'].get_preferences(bpy.context)
     preferences.export_only_selections = True
@@ -178,18 +217,29 @@ def main():
         use_addon_preferences=False, ignore_warning=True)
     if result != {'FINISHED'} or not args.output.is_file():
         raise RuntimeError(f'VRM export failed: {result}')
-    report = dict(exporterVersion=list(exporter.bl_info['version']),
+    args.output.with_suffix('.LICENSE.txt').write_text(
+        asset_policy['notice'] + '\n\n' + asset_policy['licenseUrl'] + '\n\n' +
+        asset_policy['scope'] + '\n' + asset_policy['softwareLicense'] + '\n' +
+        (asset_policy['vrm1LicenseNote'] + '\n' if vrm_version == '1.0' else ''), encoding='utf-8')
+    if vrm_version == '1.0':
+        # The exporter substitutes "undefined" for an empty author revision.
+        # This field is optional, unlike specVersion [@vrm1MetadataSchema].
+        glb = sys.modules['io_scene_vrm.common.gltf']
+        document, binary = glb.parse_glb(args.output.read_bytes())
+        document['extensions']['VRMC_vrm']['meta'].pop('version', None)
+        args.output.write_bytes(glb.pack_glb(document, binary))
+    report = dict(vrmVersion=vrm_version, exporterVersion=list(exporter.bl_info['version']),
                   boneCount=len(armature.data.bones), humanoidCount=len(payload['humanoid']),
                   triangles=len(body.data.polygons), vertexCount=len(body.data.vertices),
-                  artworkSha256=payload['artworkSha256'], bodyHeightMeters=payload['bodyHeightMeters'],
+                  artworkSha256=payload['artworkSha256'], bodyHeightMeters=payload['bodyHeightMeters'], fitMode=payload['fitMode'],
+                  coordinateBindings=payload['coordinateBindings'],
                   floorOffsetMeters=offset, articulation=articulation,
                   exporterDiagnostics=diagnostics,
                   avatarParentProjection=[dict(bone=item['name'], sourceParent=item['parent'],
                       avatarParent=payload['avatarParents'][item['name']]) for item in payload['bones']
                       if item['parent'] != payload['avatarParents'][item['name']]],
                   userReceiverAcceptance=False,
-                  limitations=['VSeeFace acceptance pending', 'No face expressions or eye tracking',
-                               'Asset redistribution metadata needs owner provenance review'])
+                  limitations=['Live receiver acceptance pending', 'No face expressions or eye tracking'])
     # Round-trip our just-created local asset; no external file or license grant
     # is involved. The direct API avoids a GUI license dialog in background mode.
     for obj in list(bpy.data.objects):
@@ -202,8 +252,13 @@ def main():
     if imported != {'FINISHED'} or len(imported_rigs) != 1:
         raise ValueError('Official importer did not reconstruct one avatar')
     rig = imported_rigs[0]
-    imported_mapping = {item.bone: item.node.bone_name for item in rig.data.vrm_addon_extension.vrm0.humanoid.human_bones
-                        if item.node.bone_name}
+    if vrm_version == '0.0':
+        imported_mapping = {item.bone: item.node.bone_name for item in rig.data.vrm_addon_extension.vrm0.humanoid.human_bones
+                            if item.node.bone_name}
+    else:
+        imported_mapping = {name.value: item.node.bone_name for name, item in
+                            rig.data.vrm_addon_extension.vrm1.humanoid.human_bones.human_bone_name_to_human_bone().items()
+                            if item.node.bone_name}
     if imported_mapping != payload['humanoid']:
         raise ValueError(f'Roundtrip humanoid mappings changed: {imported_mapping}')
     expected_parents = payload['avatarParents']
