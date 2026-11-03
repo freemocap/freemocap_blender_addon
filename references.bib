@@ -27,3 +27,79 @@
   claim = {VSeeFace supports VRM0 rather than VRM1; its VMC receiver accepts motion and local tracking can override received motion},
   note = {Reviewed download compatibility, VMC protocol support and receiver troubleshooting sections.}
 }
+@misc{vseeFacePreviewNodeImporter,
+  title = {{VSeeFacePreview} bundled {UniGLTF} NodeImporter},
+  author = {{VSeeFacePreview and UniGLTF contributors}},
+  url = {https://github.com/emilianavt/VSeeFacePreview/blob/69a46c17564bce4789918e8ca92b117c532f5948/Assets/UniGLTF/Runtime/UniGLTF/IO/NodeImporter.cs},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {FixCoordinate reverses Z for world positions and rotations; skin inverse bind matrices also reverse Z.},
+  note = {Public preview source inspection only; installed proprietary VSeeFace execution was not verified.}
+}
+@misc{uniVrm0ImportAxis,
+  title = {{UniVRM} VRM0 importer context},
+  author = {{UniVRM contributors}},
+  url = {https://github.com/vrm-c/UniVRM/blob/efd20f62f1bf0ac3fcc34de1e497324c5197d146/Packages/VRM/Runtime/IO/VRMImporterContext.cs},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {The VRM0 constructor defaults to ImporterContextSettings(false), leaving the settings default reflection axis in effect.},
+  note = {Constructor inspected; no Unity execution.}
+}
+@misc{uniVrmImportAxisSettings,
+  title = {{UniGLTF} importer context settings},
+  author = {{UniVRM contributors}},
+  url = {https://github.com/vrm-c/UniVRM/blob/efd20f62f1bf0ac3fcc34de1e497324c5197d146/Packages/UniGLTF/Runtime/UniGLTF/IO/ImporterContextSettings.cs},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {ImporterContextSettings defaults invertAxis to Axes.Z; its first boolean argument controls animation loading.},
+  note = {Constructor inspected; no Unity execution.}
+}
+@misc{uniVrm1ImportAxis,
+  title = {{UniVRM} VRM1 importer},
+  author = {{UniVRM contributors}},
+  url = {https://github.com/vrm-c/UniVRM/blob/efd20f62f1bf0ac3fcc34de1e497324c5197d146/Packages/VRM10/Runtime/IO/Vrm10Importer.cs},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {The VRM1 importer explicitly creates import settings with Axes.X.},
+  note = {Constructor inspected; this does not establish arbitrary avatar retargeting compatibility.}
+}
+
+@misc{uniVrmCoordinateSystems,
+  title = {UniVRM coordinate-system conversion},
+  author = {{VRM Consortium}},
+  url = {https://vrm.dev/en/api/coordinate/},
+  urldate = {2026-11-02},
+  review = {full-text},
+  claim = {VRM0 uses right/up/backward axes and ReverseZ at Unity import; VRM1 uses left/up/forward axes and ReverseX},
+  note = {Reviewed the version table and position/quaternion/matrix conversion examples.}
+}
+
+@misc{blenderGltfJointExport,
+  title = {glTF-Blender-IO joint export and bone basis},
+  author = {{glTF-Blender-IO contributors}},
+  url = {https://github.com/KhronosGroup/glTF-Blender-IO/blob/main/addons/io_scene_gltf2/blender/exp/tree.py},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {Blender glTF Y-up export uses (X,Z,-Y) and an explicit bone axis-basis change},
+  note = {Inspected installed Blender 5.2.2 copies of blender/exp/tree.py axis_basis_change and blender/exp/joints.py swizzle functions; VRM Add-on 4.10.3 VRM1 delegates to this exporter.}
+}
+
+@misc{vseeFaceLocalReceiver,
+  title = {VSeeFacePreview bundled EVMC4U receiver},
+  author = {{VSeeFacePreview and EVMC4U contributors}},
+  url = {https://github.com/emilianavt/VSeeFacePreview/blob/69a46c17564bce4789918e8ca92b117c532f5948/Assets/EVMC4U/ExternalReceiver.cs},
+  urldate = {2026-11-02},
+  review = {source-code},
+  claim = {BoneSynchronizeSingle assigns received local rotations and optionally local positions to named humanoid transforms},
+  note = {Inspected by streaming owner for the independent replay fixture; public preview evidence does not establish the installed proprietary application's complete Animator behavior.}
+}
+
+@misc{vrm1MetadataSchema,
+  title = {VRMC_vrm 1.0 metadata schema},
+  author = {{VRM Consortium}},
+  url = {https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/schema/VRMC_vrm.meta.schema.json},
+  urldate = {2026-11-02},
+  review = {full-text},
+  claim = {Author revision is optional; name, authors and licenseUrl are required, and permission fields have restrictive defaults},
+  note = {Inspected properties, enums, defaults and required list. The schema is not a legal interpretation of the license.}
+}
