@@ -24,6 +24,7 @@ def ajc27_run_as_main_function(recording_path: str,
     controller.load_data()
 
     print("Done!!!")
+    return controller.exported_files
 
 
 if __name__ == "__main__" or __name__ == "<run_path>":

@@ -1,5 +1,6 @@
 import bpy
 import os
+from pathlib import Path
 
 from ...core_functions.export_3d_model.helpers.set_armature_pose_by_markers import set_armature_pose_by_markers
 from ...core_functions.export_3d_model.helpers.set_armature_rest_pose import set_armature_rest_pose
@@ -24,7 +25,7 @@ def export_3d_model(
         fbx_add_leaf_bones: bool = True,
         fbx_primary_bone_axis: str = 'Y',
         fbx_secondary_bone_axis: str = 'X',
-) -> None:
+) -> tuple[str, ...]:
     if data_parent_empty.get('import_route', '').startswith('parquet_'):
         from .parquet_export import export
         return export(data_parent_empty, armature, formats, destination_folder, add_subfolder,
@@ -104,6 +105,7 @@ def export_3d_model(
         bpy.ops.object.mode_set(mode="OBJECT")
         armature.select_set(False)
 
+    written_files = []
     # Export the file formats
     for format in formats:
         
@@ -120,7 +122,7 @@ def export_3d_model(
                 for child_object in child_objects:
                     child_object.select_set(True)
 
-                bpy.ops.export_scene.fbx(
+                outcome = bpy.ops.export_scene.fbx(
                     filepath=export_path,
                     check_existing=True,
                     use_selection=True,
@@ -143,7 +145,7 @@ def export_3d_model(
                 # set armature as active object
                 bpy.context.view_layer.objects.active = armature
 
-                bpy.ops.export_anim.bvh(
+                outcome = bpy.ops.export_anim.bvh(
                     filepath=export_path,
                     check_existing=True,
                     frame_start=bpy.context.scene.frame_start,
@@ -154,7 +156,7 @@ def export_3d_model(
 
             elif format == "gltf":
                 # TODO - Fix glTF export of animations - output appears broken
-                bpy.ops.export_scene.gltf(
+                outcome = bpy.ops.export_scene.gltf(
                     filepath=export_path,
                     check_existing=True,
                     export_cameras=True,
@@ -163,6 +165,8 @@ def export_3d_model(
                 )
             else:
                 raise ValueError(f"Unsupported file format: {format}")
+            if outcome == {'FINISHED'} and Path(export_path).is_file() and Path(export_path).stat().st_size:
+                written_files.append(str(Path(export_path).resolve()))
         except Exception as e:
             print(f"Error exporting {format} file: {e}")
             raise
@@ -333,4 +337,4 @@ def export_3d_model(
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
-    return
+    return tuple(written_files)

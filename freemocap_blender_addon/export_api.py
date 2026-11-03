@@ -4,7 +4,7 @@ from .export_options import CAPABILITIES, parquet_options
 
 
 def export_recording(*, recording_path, blend_file_path, config=None, route='legacy_npy',
-                     trajectory_channel='LANDMARKS_3D', run_id=None, sensor_group=None):
+                     trajectory_channel='LANDMARKS_3D', run_id=None, sensor_group=None, artifact_report=None):
     recording = Path(recording_path).expanduser().resolve()
     output = Path(blend_file_path).expanduser().resolve()
     if not recording.is_dir() and not (recording.is_file() and recording.suffix.lower() == '.parquet'):
@@ -13,6 +13,7 @@ def export_recording(*, recording_path, blend_file_path, config=None, route='leg
         raise ValueError("Output must be a .blend file")
     if not output.parent.is_dir():
         raise ValueError("Output directory does not exist: {}".format(output.parent))
+    written_files = ()
     if route == 'legacy_npy':
         if not recording.is_dir():
             raise ValueError('Legacy NPY loading requires a recording folder')
@@ -21,7 +22,7 @@ def export_recording(*, recording_path, blend_file_path, config=None, route='leg
         if isinstance(config, dict):
             from .data_models.parameter_models.load_parameters_config import load_parameters_config_from_dict
             config = load_parameters_config_from_dict(config)
-        ajc27_run_as_main_function(str(recording), str(output),
+        written_files = ajc27_run_as_main_function(str(recording), str(output),
                                   config if config is not None else load_default_parameters_config())
     elif route in ('parquet_segments', 'parquet_constraints'):
         options = parquet_options(route, {} if config is None else config)
@@ -33,12 +34,22 @@ def export_recording(*, recording_path, blend_file_path, config=None, route='leg
         apply_cleanup(result['root'], foot_locking=options['foot_locking'], hand_limits=options['hand_limits'])
         if options['formats']:
             from .core_functions.export_3d_model.export_3d_model import export_3d_model
-            export_3d_model(result['root'], result['rig'], formats=options['formats'],
+            written_files = export_3d_model(result['root'], result['rig'], formats=options['formats'],
                             destination_folder=str((recording if recording.is_dir() else recording.parent) / 'exports'),
                             add_subfolder=True)
-        bpy.ops.wm.save_as_mainfile(filepath=str(output))
+        if bpy.ops.wm.save_as_mainfile(filepath=str(output)) != {'FINISHED'}:
+            raise RuntimeError("Blender did not finish saving " + str(output))
     else:
         raise ValueError('Unknown import route: ' + route)
     if not output.is_file() or output.stat().st_size == 0:
         raise RuntimeError("Blender export did not produce a nonempty output: {}".format(output))
+    if artifact_report is not None:
+        artifact_report(tuple(dict.fromkeys((*written_files, str(output)))))
     return str(output)
+
+
+def export_recording_result(**kwargs):
+    """Return producer-confirmed artifacts while preserving the string entry point."""
+    files = []
+    output = export_recording(**kwargs, artifact_report=files.extend)
+    return {'output': output, 'files': files}

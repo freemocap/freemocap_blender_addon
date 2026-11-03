@@ -47,6 +47,7 @@ class MainController:
     """
 
     def __init__(self, recording_path: str, blend_file_path: str, config: Config):
+        self.exported_files = ()
         self.rig = None
         self.empties = None
         self._data_parent_empty = None
@@ -445,7 +446,8 @@ class MainController:
         print("Saving blender file...")
         import bpy
 
-        bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path))
+        if bpy.ops.wm.save_as_mainfile(filepath=str(self.blend_file_path)) != {'FINISHED'}:
+            raise RuntimeError("Blender did not finish saving " + str(self.blend_file_path))
         print(f"Saved .blend file to: {self.blend_file_path}")
 
 
@@ -456,7 +458,7 @@ class MainController:
             return
         print("Exporting 3D model...")
         try:
-            export_3d_model(
+            self.exported_files = export_3d_model(
                 data_parent_empty=self.data_parent_empty,
                 armature = self.rig,
                 formats=formats,

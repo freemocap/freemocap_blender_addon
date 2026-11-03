@@ -352,3 +352,14 @@ These are trajectory-primitive and packaging checks, not complete loader accepta
 
 The complete local evidence is retained in
 `.test-artifacts/suite-m0o9pmni/summary.json`, `junit.xml`, and per-build logs/scenes.
+
+### Export artifact result
+
+`export_api.export_recording_result(**kwargs)` returns `output` and `files` for a
+successful export. The original `export_recording` still returns a string.
+Parquet FBX/BVH and segment BVH metadata are collected at their writers; no
+filesystem glob admits stale files. A cancelled scene save raises even when an
+old destination exists. Partial files left by a failed export are not returned.
+Run `.venv/bin/python -m unittest discover -s tests -p 'test_*.py'` for offline
+coverage, including actual Parquet BVH inventory assembly with isolated Blender
+operators. These tests do not certify Blender runtime or package compatibility.

@@ -9,7 +9,7 @@ from ...utilities.get_fcurves_from_object_action import get_fcurves_from_object_
 
 
 @contextmanager
-def bvh_armature(root, armature, path):
+def bvh_armature(root, armature, path, written_files=None):
     """BVH has no scale/visibility channel; isolate native missing-sample display."""
     if root.get('import_route') != 'parquet_segments':
         yield armature
@@ -47,6 +47,8 @@ def bvh_armature(root, armature, path):
             sensor_group=root.get('sensor_group'), source=root.get('source'),
             missing_sample_policy='Existing zero-location/identity-rotation placeholders; visibility is not encoded in BVH',
             missing_frames_by_bone=missing), indent=2), encoding='utf-8')
+        if written_files is not None:
+            written_files.append(str(path.with_suffix('.bvh.metadata.json').resolve()))
     finally:
         bpy.data.objects.remove(copy, do_unlink=True)
         bpy.data.armatures.remove(data)
@@ -67,6 +69,7 @@ def export(root, armature, formats, destination_folder, add_subfolder,
         raise ValueError('This model has no Skelly mesh to export')
     folder = Path(destination_folder) / '3d_models' if add_subfolder else Path(destination_folder)
     folder.mkdir(parents=True, exist_ok=True)
+    written_files = []
     selected = list(bpy.context.selected_objects)
     active = bpy.context.view_layer.objects.active
     frame = bpy.context.scene.frame_current
@@ -79,6 +82,7 @@ def export(root, armature, formats, destination_folder, add_subfolder,
             obj.select_set(True)
         bpy.context.view_layer.objects.active = armature
         for kind in formats:
+            path = folder / (root.name + '.' + kind)
             if kind == 'fbx':
                 outcome = bpy.ops.export_scene.fbx(
                     filepath=str(folder / (root.name + '.fbx')), use_selection=True,
@@ -92,7 +96,7 @@ def export(root, armature, formats, destination_folder, add_subfolder,
                 # Blender evaluates the loaded rig, including constraints. Keep
                 # non-root translations, as in the legacy Blender export path.
                 path = folder / (root.name + '.bvh')
-                with bvh_armature(root, armature, path):
+                with bvh_armature(root, armature, path, written_files):
                     outcome = bpy.ops.export_anim.bvh(
                         filepath=str(path),
                         frame_start=bpy.context.scene.frame_start,
@@ -102,6 +106,9 @@ def export(root, armature, formats, destination_folder, add_subfolder,
                         raise RuntimeError('Blender did not finish BVH export')
             if outcome != {'FINISHED'}:
                 raise RuntimeError('Blender did not finish ' + kind.upper() + ' export')
+            if not path.is_file() or not path.stat().st_size:
+                raise RuntimeError('Blender did not write a nonempty export: ' + str(path))
+            written_files.append(str(path.resolve()))
     finally:
         bpy.context.scene.frame_set(frame)
         bpy.ops.object.select_all(action='DESELECT')
@@ -110,3 +117,5 @@ def export(root, armature, formats, destination_folder, add_subfolder,
         for obj in selected:
             obj.select_set(True)
         bpy.context.view_layer.objects.active = active
+
+    return tuple(written_files)
